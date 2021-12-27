@@ -1,5 +1,5 @@
 import $config from '../helpers/configuration'
-import { Product } from '../models'
+import { BulkImport, Product } from '../models'
 import { IVuexModule } from '../interfaces'
 import { HttpMethod, MutationName } from '../enums'
 import { UserService, RequestService } from './'
@@ -47,6 +47,11 @@ export class ProductService {
 
     public UploadImage (imagePath: string, productId: string) {
       this._requestService.FormdataRequest('/products/image', HttpMethod.POST, 'Image', imagePath, [{ name: 'GuidId', value: productId }])
+    }
+
+    public async BulkImport (model: BulkImport): Promise<any> {
+      const response = await this._requestService.PostRequest('/products/bulk-import', model)
+      return this.ParsedResponse(response, 'Kunne ikke importere')
     }
 
     public GetStoreProductsAndSetState = ({ storeId, thenHandler, catchHandler }) => {
