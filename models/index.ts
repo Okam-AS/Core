@@ -60,3 +60,6 @@ export { StatisticOrders } from './statistic/statistic-orders'
 
 // BankAccount
 export { BankAccount } from './bankaccount/bank-account'
+
+// Culture
+export { Culture } from './culture/culture'
