@@ -1,5 +1,5 @@
-import { OrderStatus, DeliveryType } from '~/core/enums'
-import { OrderLineItem, TaxDetail } from '~/core/models'
+import { OrderStatus, DeliveryType } from '../../enums'
+import { OrderLineItem, TaxDetail } from '../../models'
 export class Order {
     id: string;
     userId: string;

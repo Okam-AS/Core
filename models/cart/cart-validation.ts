@@ -1,4 +1,4 @@
-import { Product } from '~/core/models'
+import { Product } from '../../models'
 export class CartValidation {
   itemsOutOfStock: Array<Product>;
   deliveryAddressError: boolean;

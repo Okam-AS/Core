@@ -4,7 +4,7 @@ import $config from '../helpers/configuration'
 
 import { MutationName } from '../enums'
 import { RequestService } from './request-service'
-import { debounce } from '~/core/helpers/ts-debounce'
+import { debounce } from '../helpers/ts-debounce'
 
 export class CartService {
     private _requestService: RequestService;
@@ -53,7 +53,7 @@ export class CartService {
       return parsedResponse !== undefined
     }
 
-    public UpdateCartInDbAndSetState = debounce((storeId) => {
+    public UpdateCartInDbAndSetState = debounce((storeId, thenFunction?: Function, catchFunction?: Function) => {
       const _this = this
       if (!this._vuexModule.getters.userIsLoggedIn) { return }
       const updatedCart = this._vuexModule.getters.cartByStoreId(storeId)
@@ -63,14 +63,15 @@ export class CartService {
       _this.Update(updatedCart).then((cart) => {
         _this._vuexModule.commit(MutationName.SetCarts, [cart])
         _this._vuexModule.commit(MutationName.SetCartIsLoading, false)
+        if(typeof thenFunction === 'function') thenFunction()
       }).catch(() => {
         _this._vuexModule.commit(MutationName.SetCartIsLoading, false)
-      })
+        if(typeof catchFunction === 'function') thenFunction()      })
     }, 400);
 
-    public SetCartRootProperties = (props: ICartRootProperties) => {
+    public SetCartRootProperties = (props: ICartRootProperties, thenFunction?: Function, catchFunction?: Function) => {
       this._vuexModule.commit(MutationName.SetCartRootProperties, props)
-      this.UpdateCartInDbAndSetState(props.storeId)
+      this.UpdateCartInDbAndSetState(props.storeId, thenFunction, catchFunction)
     }
 
     public SetLineItem = ({ storeId, lineItem }) => {

@@ -1,5 +1,5 @@
-import { DeliveryType } from '~/core/enums'
-import { DeliveryMethod, CartLineItem, CartCalculation } from '~/core/models'
+import { DeliveryType } from '../../enums'
+import { DeliveryMethod, CartLineItem, CartCalculation } from '../../models'
 export class Cart {
   id: string;
   items: Array<CartLineItem> = [];

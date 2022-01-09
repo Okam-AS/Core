@@ -1,5 +1,5 @@
-import { DiscountType, DiscountApplicability } from '~/core/enums'
-import { DiscountProducts, DiscountUsages } from '~/core/models'
+import { DiscountType, DiscountApplicability } from '../../enums'
+import { DiscountProducts, DiscountUsages } from '../../models'
 export class Discount {
     id: string;
     storeId: number;

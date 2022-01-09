@@ -1,4 +1,4 @@
-import { Address, Category, DeliveryMethod, OpeningHour, User } from '~/core/models'
+import { Address, Category, DeliveryMethod, OpeningHour, User } from '../../models'
 
 export class Store {
     id: number;

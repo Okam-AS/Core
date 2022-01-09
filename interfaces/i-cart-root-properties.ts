@@ -1,4 +1,4 @@
-import { DeliveryType } from '~/core/enums'
+import { DeliveryType } from '../enums'
 
 export interface ICartRootProperties {
    storeId: number;

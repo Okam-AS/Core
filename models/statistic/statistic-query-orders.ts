@@ -1,4 +1,4 @@
-import { OrderStatusFilter, DeliveryType } from '~/core/enums'
+import { OrderStatusFilter, DeliveryType } from '../../enums'
 
 export class StatisticQueryOrders {
     storeId: number;

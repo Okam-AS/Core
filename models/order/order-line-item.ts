@@ -1,4 +1,4 @@
-import { ProductImage, OrderLineItemOption } from '~/core/models'
+import { ProductImage, OrderLineItemOption } from '../../models'
 
 export class OrderLineItem {
   id: string;

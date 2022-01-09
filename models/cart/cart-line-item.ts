@@ -1,4 +1,4 @@
-import { Product, ProductImage } from '~/core/models'
+import { Product, ProductImage } from '../../models'
 
 export class CartLineItem {
   id: number;

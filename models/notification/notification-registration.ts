@@ -1,4 +1,4 @@
-import { NotificationPlatform } from '~/core/enums'
+import { NotificationPlatform } from '../../enums'
 export class NotificationRegistration {
     registrationId: string;
     platform: NotificationPlatform;

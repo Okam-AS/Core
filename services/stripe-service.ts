@@ -11,10 +11,10 @@ export class StripeService {
       this._vuexModule = vuexModule
     }
 
-    public async GetPaymentMethods (storeId: number): Promise<any> {
-      const response = await this._requestService.GetRequest('/payment/paymentMethods/' + storeId)
+    public async GetPaymentMethods (cartId?: string): Promise<any> {
+      const response = await this._requestService.GetRequest('/payment/paymentMethods/cart/' + (!!cartId ? cartId : ''))
       const parsedResponse = this._requestService.TryParseResponse(response)
-      if (parsedResponse === undefined) { throw new Error('Kunne ikke hente kort') }
+      if (parsedResponse === undefined) { throw new Error('Kunne ikke hente betalingsmetoder') }
       return parsedResponse
     }
 
