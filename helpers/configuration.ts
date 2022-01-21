@@ -8,6 +8,7 @@ class Configuration {
   version: string;
   stripePublishableKey: string;
   platformFileSuffix: string;
+  notificationHub: string;
 
   constructor () {
     this.okamApiBaseUrl = process.env.API_BASE_URL
@@ -16,6 +17,7 @@ class Configuration {
     this.isProduction = process.env.IS_PRODUCTION === 'true'
     this.stripePublishableKey = process.env.STRIPE_PUBLISHABLE_KEY
     this.platformFileSuffix = process.env.PLATFORM_FILE_SUFFIX
+    this.notificationHub = process.env.NOTIFICATION_HUB
   }
 }
 

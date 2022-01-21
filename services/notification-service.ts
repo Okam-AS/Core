@@ -78,7 +78,7 @@ export class NotificationService {
     }
 
     private async CreateRegistrationId (handle: string): Promise<string> {
-      const response = await this._requestService.GetRequest('/notification/consumer/' + handle)
+      const response = await this._requestService.GetRequest('/notification/'+ $config.notificationHub +'/' + handle)
       const parsedResponse = this._requestService.TryParseResponse(response)
       if (parsedResponse === undefined) { return '' }
       this._vuexModule.dispatch(ActionName.SetNotificationId, parsedResponse.id)
@@ -86,12 +86,12 @@ export class NotificationService {
     }
 
     private async Update (model: NotificationRegistration): Promise<boolean> {
-      const response = await this._requestService.PutRequest('/notification/consumer', model)
+      const response = await this._requestService.PutRequest('/notification/'+ $config.notificationHub +'', model)
       return this._requestService.TryParseResponse(response) !== undefined
     }
 
     private async Delete (registrationId: string): Promise<boolean> {
-      const response = await this._requestService.DeleteRequest('/notification/consumer/' + registrationId)
+      const response = await this._requestService.DeleteRequest('/notification/'+ $config.notificationHub +'/' + registrationId)
       return this._requestService.TryParseResponse(response) !== undefined
     }
 }
