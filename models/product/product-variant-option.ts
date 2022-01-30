@@ -3,6 +3,7 @@ export class ProductVariantOption {
     orderIndex: number;
     name: string;
     negativeAmount: boolean;
+    amount: number;
     wholeAmount: number;
     fractionAmount: number;
     otherInformation: string;
