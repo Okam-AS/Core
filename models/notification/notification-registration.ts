@@ -3,13 +3,16 @@ export class NotificationRegistration {
     registrationId: string;
     platform: NotificationPlatform;
     handle: string;
+    storeId: number;
 
     constructor (
       registrationId: string,
       platform: NotificationPlatform,
-      handle: string) {
+      handle: string,
+      storeId: number) {
       this.registrationId = registrationId
       this.platform = platform
       this.handle = handle
+      this.storeId = storeId
     }
 }

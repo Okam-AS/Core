@@ -55,7 +55,8 @@ export class NotificationService {
         const model = new NotificationRegistration(
           notificationId,
           $config.isAndroid ? NotificationPlatform.Fcm : NotificationPlatform.Apns,
-          token
+          token,
+          this._vuexModule?.state?.currentStore?.id ? this._vuexModule.state.currentStore.id : 0
         )
         this.Update(model)
       })
