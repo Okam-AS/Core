@@ -118,7 +118,7 @@ export class RequestService {
       request[HttpProperty.Url] = this._baseUrl + path
       request[HttpProperty.Method] = method
       request.headers[HttpProperty.ContentType] = 'application/json; charset=utf-8'
-      request.headers[HttpProperty.ClientPlatform] = this.GetClientPlatformName()
+      request.headers[HttpProperty.ClientPlatform] = this._vuexModule.getters.clientPlatformName || 'Unknown'
       request.headers[HttpProperty.ClientAppVersion] = $config.version
 
       if (content) {
@@ -140,10 +140,4 @@ export class RequestService {
       return request
     };
 
-    private GetClientPlatformName (): string {
-      if (!$config.isNativeScript) { return 'Web' }
-      if ($config.isIOS) { return 'iOS' }
-      if ($config.isAndroid) { return 'Android' }
-      return 'Unknown'
-    }
 }

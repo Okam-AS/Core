@@ -15,7 +15,7 @@ class NotificationModuleNS implements INotificationModule {
       this.addOnMessageReceivedCallback = fb.messaging.addOnMessageReceivedCallback
 
       const localNotifications = require('@nativescript/local-notifications' + '')
-      this.schedule = localNotifications.schedule
+      this.schedule = localNotifications.LocalNotifications.schedule
     }
 }
 

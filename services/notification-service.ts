@@ -54,7 +54,7 @@ export class NotificationService {
       this.CreateRegistrationId(token).then((notificationId) => {
         const model = new NotificationRegistration(
           notificationId,
-          $config.isAndroid ? NotificationPlatform.Fcm : NotificationPlatform.Apns,
+          this._vuexModule?.getters?.clientPlatformName === "Android" ? NotificationPlatform.Fcm : NotificationPlatform.Apns,
           token,
           this._vuexModule?.state?.currentStore?.id ? this._vuexModule.state.currentStore.id : 0
         )
@@ -64,7 +64,7 @@ export class NotificationService {
 
     private MessageReceivedCallback (data, onNotificationReceived) {
       setTimeout(() => {
-        if ($config.isAndroid) {
+        if (this._vuexModule?.getters?.clientPlatformName === "Android") {
           this._notificationModule.schedule([
             {
               title: 'Okam',
