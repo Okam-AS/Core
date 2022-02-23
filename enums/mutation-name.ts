@@ -20,6 +20,7 @@ export enum MutationName {
     FileUploadEvent = 'FileUploadEvent',
     ClearFileUploadEvent = 'ClearFileUploadEvent',
     SetProductsQuery = 'SetProductsQuery',
+    SetNotificationStatus = 'SetNotificationStatus',
     StartNewOrderNotificationsInterval = 'StartNewOrderNotificationsInterval',
     StopNewOrderNotificationsInterval = 'StopNewOrderNotificationsInterval'
 }
