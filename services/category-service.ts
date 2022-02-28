@@ -55,8 +55,8 @@ export class CategoryService {
       if (response.statusCode >= 300 || response.statusCode < 200) { throw new Error('Kunne ikke slette rad i produktlisten') }
     }
 
-    public async GetAll (storeId: number): Promise<Array<Category>> {
-      const response = await this._requestService.GetRequest('/categories/store/' + storeId)
+    public async GetAll (storeId: number, forStore: boolean): Promise<Array<Category>> {
+      const response = await this._requestService.GetRequest('/categories/store/' + storeId + (forStore ? '?forStore=true' : ''))
       return this.ParsedResponse(response, 'Kunne ikke hente kategorier')
     }
 
