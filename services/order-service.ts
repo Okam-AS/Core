@@ -21,6 +21,14 @@ export class OrderService {
       return parsedResponse
     }
 
+    public async GetAllOngoing (): Promise<Array<Order>> {
+      const response = await this._requestService.GetRequest('/orders/ongoing')
+      const parsedResponse = this._requestService.TryParseResponse(response)
+      if (parsedResponse === undefined) { throw new Error('Failed to get orders') }
+
+      return parsedResponse
+    }
+
     public async UpdateStatus (orderId: string, status: OrderStatus): Promise<Order> {
       const response = await this._requestService.PutRequest('/orders/update/', { id: orderId, status })
       const parsedResponse = this._requestService.TryParseResponse(response)
