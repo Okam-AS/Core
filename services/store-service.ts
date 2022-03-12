@@ -73,6 +73,12 @@ export class StoreService {
       return parsedResponse !== undefined
     }
 
+    public async UpdateTipEnabled (storeId: number, newValue: boolean): Promise<boolean> {
+      const response = await this._requestService.PutRequest('/stores/' + storeId + '/tipenabled/' + newValue)
+      const parsedResponse = this._requestService.TryParseResponse(response)
+      return parsedResponse !== undefined
+    }
+
     public async UpdateSelfCheckout (storeId: number, newValue: boolean): Promise<boolean> {
       const response = await this._requestService.PutRequest('/stores/' + storeId + '/selfcheckout/' + newValue)
       const parsedResponse = this._requestService.TryParseResponse(response)
