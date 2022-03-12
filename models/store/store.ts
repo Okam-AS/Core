@@ -14,9 +14,18 @@ export class Store {
     homeDeliveryMethods: Array<DeliveryMethod>;
     approved: boolean;
     selfCheckout: boolean;
-    selfPickUp: boolean;
-    tableDelivery: boolean;
     registered: Date;
     bankAccountId: string;
     minimumOrderPriceForHomeDelivery: number;
+
+    selfPickUp: boolean;
+    tableDeliveryEnabled: boolean;
+    homeDeliveryEnabled: boolean;
+
+    payInStoreEnabled: boolean;
+    stripeEnabled: boolean;
+    vippsEnabled: boolean;
+
+    tipEnabled: boolean;
+    tipLabel: string;
 }
