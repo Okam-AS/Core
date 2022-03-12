@@ -59,6 +59,7 @@ export class CartService {
       const updatedCart = this._vuexModule.getters.cartByStoreId(storeId)
       if (!updatedCart || !updatedCart.storeId) { return }
       updatedCart.ignoreLegecyIsSelfPickupBool = true
+      updatedCart.IgnoreLegecyIsWaiterOrderBool = true
       this._vuexModule.commit(MutationName.SetCartIsLoading, true)
       _this.Update(updatedCart).then((cart) => {
         _this._vuexModule.commit(MutationName.SetCarts, [cart])

@@ -3,8 +3,8 @@ import { DeliveryType } from '../enums'
 export interface ICartRootProperties {
    storeId: number;
    homeDeliveryMethodId: string;
-   isWaiterOrder: boolean;
    ignoreLegecyIsSelfPickupBool: boolean;
+   ignoreLegecyIsWaiterOrderBool: boolean;
    deliveryType: DeliveryType;
    discountCode: string;
    fullAddress: string;

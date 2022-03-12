@@ -1,6 +1,7 @@
-import { DeliveryType } from '../../enums'
+import { ICartRootProperties } from  '../../interfaces';
+import { DeliveryType, PaymentType } from '../../enums'
 import { DeliveryMethod, CartLineItem, CartCalculation } from '../../models'
-export class Cart {
+export class Cart implements ICartRootProperties {
   id: string;
   items: Array<CartLineItem> = [];
   storeId: number;
@@ -11,6 +12,9 @@ export class Cart {
   ignoreLegecyIsSelfPickupBool: boolean;
   deliveryType: DeliveryType;
 
+  ignoreLegecyIsWaiterOrderBool: boolean;
+  paymentType: PaymentType;
+
   discountCode: string;
   fullAddress: string;
   zipCode: string;
@@ -19,6 +23,7 @@ export class Cart {
   comment: string;
 
   tipPercent: number;
+  tipAmount: number;
   tableName: string;
 
   itemsCountInCategory;

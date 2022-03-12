@@ -1,7 +1,9 @@
-import { OrderStatus, DeliveryType } from '../../enums'
+import { OrderStatus, DeliveryType, PaymentType} from '../../enums'
 import { OrderLineItem, TaxDetail } from '../../models'
 export class Order {
     id: string;
+    friendlyOrderId: string;
+
     userId: string;
     storeId: string;
     pickup: Date;
@@ -21,8 +23,9 @@ export class Order {
     deliveryAmount: number;
     finalAmount: number;
 
-    isWaiterOrder: boolean;
+    paymentType: PaymentType;
     deliveryType: DeliveryType;
+
     fullAddress: string;
     zipCode: string;
     city: string;
