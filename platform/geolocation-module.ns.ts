@@ -5,10 +5,9 @@ class GeolocationModuleNS implements IGeolocationModule {
     isEnabled: boolean;
 
     constructor () {
-      import('@nativescript/geolocation' + '').then((x) => {
-        this.getCurrentLocation = x.geolocation.getCurrentLocation
-        this.isEnabled = x.geolocation.isEnabled
-      })
+      const geolocation = require('@nativescript/geolocation' + '')
+      this.getCurrentLocation = geolocation.getCurrentLocation
+      this.isEnabled = geolocation.isEnabled
     }
 }
 

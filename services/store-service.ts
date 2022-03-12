@@ -9,11 +9,13 @@ export class StoreService {
     private _requestService: RequestService;
     private _vuexModule: IVuexModule;
     private _userService: UserService;
+    private _geolocationModule: typeof GeolocationModule;
 
     constructor (vuexModule: IVuexModule) {
       this._requestService = new RequestService(vuexModule, $config.okamApiBaseUrl)
       this._vuexModule = vuexModule
       this._userService = new UserService(vuexModule)
+      this._geolocationModule = new GeolocationModule();
     }
 
     public async ImageExists (imageUrl: string) {
@@ -139,9 +141,9 @@ export class StoreService {
     public async GetAllTryLocationSorted (): Promise<Array<Store>> {
       const comp = this
       try {
-        const locationEnabled = await GeolocationModule.isEnabled({ timeout: 3000 })
+        const locationEnabled = await this._geolocationModule.isEnabled({ timeout: 3000 })
         if (locationEnabled) {
-          const currentLocation = await GeolocationModule.getCurrentLocation({ timeout: 3000, desiredAccuracy: 100 })
+          const currentLocation = await this._geolocationModule.getCurrentLocation({ timeout: 3000 })
           return await comp.GetAll(currentLocation)
         } else {
           return await comp.GetAll()
