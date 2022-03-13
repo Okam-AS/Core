@@ -36,5 +36,7 @@ export class Order {
     storeZipCode: string;
     storeCity: string;
 
+    tipAmount: number;
+
     comment: string;
 }
