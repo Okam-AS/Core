@@ -1,3 +1,4 @@
 export class StoreTip {
-    label: string;
+    percentEnabled: boolean;
+    heading: string;
 }

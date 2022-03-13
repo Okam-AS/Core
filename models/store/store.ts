@@ -1,4 +1,5 @@
-import { Address, Category, DeliveryMethod, OpeningHour, User } from '../../models'
+import { Address, Category, DeliveryMethod, OpeningHour, User, StorePayment, StoreTip } from '../../models'
+import {  } from './store-tip';
 
 export class Store {
     id: number;
@@ -22,10 +23,7 @@ export class Store {
     tableDeliveryEnabled: boolean;
     homeDeliveryEnabled: boolean;
 
-    payInStoreEnabled: boolean;
-    stripeEnabled: boolean;
-    vippsEnabled: boolean;
-
-    tipEnabled: boolean;
-    tipLabel: string;
+    payment: StorePayment;
+    
+    tip: StoreTip
 }

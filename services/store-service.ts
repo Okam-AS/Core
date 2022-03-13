@@ -1,5 +1,5 @@
 import $config from '../helpers/configuration'
-import { Store, StoreTip, StoreRegistration, OpeningHour, Address, StoreUserSetting, BrregData } from '../models'
+import { Store, StoreTip, StoreRegistration, OpeningHour, Address, StoreUserSetting, BrregData, StorePayment } from '../models'
 import { MutationName, HttpMethod } from '../enums'
 import { GeolocationModule } from '../platform'
 import { IVuexModule } from '../interfaces'
@@ -79,12 +79,6 @@ export class StoreService {
       return parsedResponse !== undefined
     }
 
-    public async UpdateTipEnabled (storeId: number, newValue: boolean): Promise<boolean> {
-      const response = await this._requestService.PutRequest('/stores/' + storeId + '/tipenabled/' + newValue)
-      const parsedResponse = this._requestService.TryParseResponse(response)
-      return parsedResponse !== undefined
-    }
-
     public async UpdateSelfCheckout (storeId: number, newValue: boolean): Promise<boolean> {
       const response = await this._requestService.PutRequest('/stores/' + storeId + '/selfcheckout/' + newValue)
       const parsedResponse = this._requestService.TryParseResponse(response)
@@ -105,6 +99,12 @@ export class StoreService {
 
     public async UpdateTableDelivery (storeId: number, newValue: boolean): Promise<boolean> {
       const response = await this._requestService.PutRequest('/stores/' + storeId + '/tabledelivery/' + newValue)
+      const parsedResponse = this._requestService.TryParseResponse(response)
+      return parsedResponse !== undefined
+    }
+
+    public async UpdatePayment (storeId: number, model: StorePayment): Promise<boolean> {
+      const response = await this._requestService.PostRequest('/stores/' + storeId + '/payment', model)
       const parsedResponse = this._requestService.TryParseResponse(response)
       return parsedResponse !== undefined
     }
