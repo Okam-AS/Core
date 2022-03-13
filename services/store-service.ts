@@ -1,5 +1,5 @@
 import $config from '../helpers/configuration'
-import { Store, StoreTip, StoreRegistration, OpeningHour, Address, StoreUserSetting, BrregData, StorePayment } from '../models'
+import { Store, StoreTip, StoreRegistration, OpeningHour, Address, StoreUserSetting, BrregData, StorePayment, StoreFees } from '../models'
 import { MutationName, HttpMethod } from '../enums'
 import { GeolocationModule } from '../platform'
 import { IVuexModule } from '../interfaces'
@@ -109,12 +109,6 @@ export class StoreService {
       return parsedResponse !== undefined
     }
 
-    public async UpdateBankAccount (storeId: number, bankAccountId: string): Promise<boolean> {
-      const response = await this._requestService.PutRequest('/stores/' + storeId + '/bankaccount/' + bankAccountId)
-      const parsedResponse = this._requestService.TryParseResponse(response)
-      return parsedResponse !== undefined
-    }
-
     public async CreateOrUpdateStoreUserSetting (storeId: number, model: StoreUserSetting): Promise<boolean> {
       const response = await this._requestService.PostRequest('/stores/' + storeId + '/usersettings', model)
       const parsedResponse = this._requestService.TryParseResponse(response)
@@ -132,6 +126,13 @@ export class StoreService {
       const parsedResponse = this._requestService.TryParseResponse(response)
       if (parsedResponse === undefined) { throw new Error('Failed to get Brreg data') }
 
+      return parsedResponse
+    }
+
+    public async GetFees (id: number): Promise<StoreFees> {
+      const response = await this._requestService.GetRequest('/stores/' + id + '/fees')
+      const parsedResponse = this._requestService.TryParseResponse(response)
+      if (parsedResponse === undefined) { throw new Error('Failed to get store fees') }
       return parsedResponse
     }
 

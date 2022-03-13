@@ -13,6 +13,7 @@ export { StoreRegistration } from './store/store-registration'
 export { StoreUserSetting } from './store/store-user-setting'
 export { StoreTip } from './store/store-tip'
 export { StorePayment } from './store/store-payment'
+export { StoreFees } from './store/store-fees'
 
 // Discount
 export { Discount } from './discount/discount'
