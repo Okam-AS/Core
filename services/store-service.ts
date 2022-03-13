@@ -1,5 +1,5 @@
 import $config from '../helpers/configuration'
-import { Store, StoreRegistration, OpeningHour, Address, StoreUserSetting, BrregData } from '../models'
+import { Store, StoreTip, StoreRegistration, OpeningHour, Address, StoreUserSetting, BrregData } from '../models'
 import { MutationName, HttpMethod } from '../enums'
 import { GeolocationModule } from '../platform'
 import { IVuexModule } from '../interfaces'
@@ -69,6 +69,12 @@ export class StoreService {
 
     public async UpdateAddress (storeId: number, address: Address): Promise<boolean> {
       const response = await this._requestService.PutRequest('/stores/' + storeId + '/address', address)
+      const parsedResponse = this._requestService.TryParseResponse(response)
+      return parsedResponse !== undefined
+    }
+
+    public async UpdateTip (storeId: number, tip: StoreTip): Promise<boolean> {
+      const response = await this._requestService.PutRequest('/stores/' + storeId + '/tip', tip)
       const parsedResponse = this._requestService.TryParseResponse(response)
       return parsedResponse !== undefined
     }

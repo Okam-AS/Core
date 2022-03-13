@@ -11,6 +11,7 @@ export { DeliveryMethod } from './store/delivery-method'
 export { BrregData } from './store/brreg-data'
 export { StoreRegistration } from './store/store-registration'
 export { StoreUserSetting } from './store/store-user-setting'
+export { StoreTip } from './store/store-tip'
 
 // Discount
 export { Discount } from './discount/discount'
