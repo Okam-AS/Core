@@ -1,6 +1,7 @@
 import { Category, CategoryProductListItem } from '../models'
 import $config from '../helpers/configuration'
 import { IVuexModule } from '../interfaces'
+import { HttpMethod } from '../enums'
 import { RequestService, UserService } from '../services'
 export class CategoryService {
     private _requestService: RequestService;
@@ -11,6 +12,15 @@ export class CategoryService {
       this._requestService = new RequestService(vuexModule, $config.okamApiBaseUrl)
       this._vuexModule = vuexModule
       this._userService = new UserService(vuexModule)
+    }
+
+    public UploadImage (imagePath: string, categoryId: string) {
+      this._requestService.FormdataRequest('/categories/'+ categoryId +'/image', HttpMethod.POST, 'Image', imagePath)
+    }
+
+    public async DeleteImage (imageSourceId: string): Promise<void> {
+      const response = await this._requestService.DeleteRequest('/categories/image/' + imageSourceId)
+      if (response.statusCode >= 300 || response.statusCode < 200) { throw new Error('Kunne ikke slette kategoribilde') }
     }
 
     public async GetImageSelection (categoryId: string): Promise<Category> {
