@@ -12,6 +12,7 @@ export interface ICartRootProperties {
    city: string;
    paymentIntentId: string;
    comment: string;
+   requestedCompletion: Date;
    tipPercent: number;
    tableName: string;
 }
