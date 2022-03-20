@@ -6,6 +6,8 @@ export class Cart implements ICartRootProperties {
   items: Array<CartLineItem> = [];
   storeId: number;
 
+  requestedCompletion: Date;
+
   homeDeliveryMethodId: string;
   homeDeliveryMethod: DeliveryMethod;
 

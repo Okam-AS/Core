@@ -4,6 +4,8 @@ export class Order {
     id: string;
     friendlyOrderId: string;
 
+    requestedCompletion: Date;
+
     userId: string;
     storeId: string;
     pickup: Date;
