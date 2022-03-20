@@ -3,6 +3,9 @@ export class Product {
     id: string;
     name: string;
     description: string;
+
+    hide: boolean;
+
     image: ImageSource;
     barcode: string;
     soldOut: boolean;

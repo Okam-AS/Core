@@ -6,6 +6,7 @@ export class Category {
     name: string;
     image: ImageSource;
 
+    hide: boolean;
     published: boolean;
 
     imageCarouselEnabled: boolean;
