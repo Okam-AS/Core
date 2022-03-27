@@ -6,6 +6,7 @@ export class Order {
 
     requestedCompletion: Date;
 
+    platform: string;
     userId: string;
     storeId: string;
     pickup: Date;
