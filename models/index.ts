@@ -66,3 +66,8 @@ export { BankAccount } from './bankaccount/bank-account'
 
 // Culture
 export { Culture } from './culture/culture'
+
+// Vipps
+export { InitiateVippsResponse } from './vipps/initiate-vipps-response'
+
+

@@ -1,6 +1,4 @@
 import { Address, Category, DeliveryMethod, OpeningHour, User, StorePayment, StoreTip } from '../../models'
-import {  } from './store-tip';
-
 export class Store {
     id: number;
     name: string;
