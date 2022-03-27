@@ -22,6 +22,7 @@ export class Cart implements ICartRootProperties {
   zipCode: string;
   city: string;
   paymentIntentId: string;
+  vippsOrderId: string;
   comment: string;
 
   tipPercent: number;

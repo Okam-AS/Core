@@ -16,6 +16,9 @@ export class Order {
     items: Array<OrderLineItem>;
     taxDetails: Array<TaxDetail>;
 
+    paymentIntentId: string;
+    vippsOrderId: string;
+
     tableName: string;
     dateTimeNow: Date;
     countdownEndTime: Date;

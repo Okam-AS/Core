@@ -11,20 +11,13 @@ export class StripeService {
       this._vuexModule = vuexModule
     }
 
-    public async GetPaymentMethods (cartId?: string): Promise<any> {
-      const response = await this._requestService.GetRequest('/payment/paymentMethods/cart/' + (!!cartId ? cartId : ''))
-      const parsedResponse = this._requestService.TryParseResponse(response)
-      if (parsedResponse === undefined) { throw new Error('Kunne ikke hente betalingsmetoder') }
-      return parsedResponse
-    }
-
     public async DeletePaymentMethod (paymentMethodId: string): Promise<boolean> {
-      const response = await this._requestService.DeleteRequest('/payment/paymentMethod/' + paymentMethodId)
+      const response = await this._requestService.DeleteRequest('/stripe/paymentMethod/' + paymentMethodId)
       return response && response.statusCode === 200
     }
 
     public async CreatePaymentIntent (amount: number, currency: string, paymentMethodId: string, cartId: string, setupFutureUsage: boolean): Promise<any> {
-      const response = await this._requestService.PostRequest('/payment/createPaymentIntent/', {
+      const response = await this._requestService.PostRequest('/stripe/createPaymentIntent/', {
         amount,
         currency,
         paymentMethodId,

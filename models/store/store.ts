@@ -15,6 +15,7 @@ export class Store {
     selfCheckout: boolean;
     registered: Date;
     bankAccountId: string;
+    vippsMsn: string;
     minimumOrderPriceForHomeDelivery: number;
 
     selfPickUp: boolean;

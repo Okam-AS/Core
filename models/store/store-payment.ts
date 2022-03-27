@@ -5,4 +5,5 @@ export class StorePayment {
     stripeBankAccountId: string;
 
     vippsEnabled?: boolean;
+    vippsMsn: string;
 }
