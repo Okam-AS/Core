@@ -15,7 +15,7 @@ export class CategoryService {
     }
 
     public UploadImage (imagePath: string, categoryId: string) {
-      this._requestService.FormdataRequest('/categories/'+ categoryId +'/image', HttpMethod.POST, 'Image', imagePath)
+      this._requestService.FormdataRequest('/categories/' + categoryId + '/image', HttpMethod.POST, 'Image', imagePath)
     }
 
     public async DeleteImage (imageSourceId: string): Promise<void> {

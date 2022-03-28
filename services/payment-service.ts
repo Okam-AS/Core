@@ -13,7 +13,7 @@ export class PaymentService {
     }
 
     public async GetPaymentMethods (cartId?: string): Promise<PaymentMethod> {
-      const response = await this._requestService.PostRequest('/payment/paymentMethods/', { cartId:  (!!cartId ? cartId : '') })
+      const response = await this._requestService.PostRequest('/payment/paymentMethods/', { cartId: (cartId || '') })
       const parsedResponse = this._requestService.TryParseResponse(response)
       if (parsedResponse === undefined) { throw new Error('Kunne ikke hente betalingsmetoder') }
       return parsedResponse

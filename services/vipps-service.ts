@@ -13,7 +13,7 @@ export class VippsService {
     }
 
     public async Initiate (cartId: string, amount: number, isApp: boolean): Promise<InitiateVippsResponse> {
-      const response = await this._requestService.PostRequest('/vipps/initiate/', {cartId,amount,isApp})
+      const response = await this._requestService.PostRequest('/vipps/initiate/', { cartId, amount, isApp })
       const parsedResponse = this._requestService.TryParseResponse(response)
       if (parsedResponse === undefined) { throw new Error('Kunne ikke betale med Vipps') }
       return parsedResponse

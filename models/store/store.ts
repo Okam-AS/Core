@@ -23,6 +23,6 @@ export class Store {
     homeDeliveryEnabled: boolean;
 
     payment: StorePayment;
-    
+
     tip: StoreTip
 }

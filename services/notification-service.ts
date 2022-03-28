@@ -16,8 +16,8 @@ export class NotificationService {
     // Turn off (called when user logges off)
     public async Deactivate () {
       const registrationId = this._vuexModule.state.notificationId
-      if(!registrationId || !$config.notificationHub) return
-      const response = await this._requestService.DeleteRequest('/notification/'+ $config.notificationHub +'/' + registrationId)
+      if (!registrationId || !$config.notificationHub) { return }
+      const response = await this._requestService.DeleteRequest('/notification/' + $config.notificationHub + '/' + registrationId)
       return this._requestService.TryParseResponse(response) !== undefined
     }
 
@@ -25,7 +25,7 @@ export class NotificationService {
       this.CreateRegistrationId(token).then((notificationId) => {
         const model = new NotificationRegistration(
           notificationId,
-          this._vuexModule?.getters?.clientPlatformName === "Android" ? NotificationPlatform.Fcm : NotificationPlatform.Apns,
+          this._vuexModule?.getters?.clientPlatformName === 'Android' ? NotificationPlatform.Fcm : NotificationPlatform.Apns,
           token,
           this._vuexModule?.state?.currentStore?.id ? this._vuexModule.state.currentStore.id : 0
         )
@@ -34,7 +34,7 @@ export class NotificationService {
     }
 
     private async CreateRegistrationId (handle: string): Promise<string> {
-      const response = await this._requestService.GetRequest('/notification/'+ $config.notificationHub +'/' + handle)
+      const response = await this._requestService.GetRequest('/notification/' + $config.notificationHub + '/' + handle)
       const parsedResponse = this._requestService.TryParseResponse(response)
       if (parsedResponse === undefined) { return '' }
       this._vuexModule.dispatch(ActionName.SetNotificationId, parsedResponse.id)
@@ -42,8 +42,7 @@ export class NotificationService {
     }
 
     private async Update (model: NotificationRegistration): Promise<boolean> {
-      const response = await this._requestService.PutRequest('/notification/'+ $config.notificationHub, model)
+      const response = await this._requestService.PutRequest('/notification/' + $config.notificationHub, model)
       return this._requestService.TryParseResponse(response) !== undefined
     }
-   
 }

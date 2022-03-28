@@ -15,7 +15,7 @@ export class StoreService {
       this._requestService = new RequestService(vuexModule, $config.okamApiBaseUrl)
       this._vuexModule = vuexModule
       this._userService = new UserService(vuexModule)
-      this._geolocationModule = new GeolocationModule();
+      this._geolocationModule = new GeolocationModule()
     }
 
     public async ImageExists (imageUrl: string) {

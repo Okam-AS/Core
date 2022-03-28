@@ -13,7 +13,6 @@ export class NotificationRegistration {
       this.registrationId = registrationId
       this.platform = platform
       this.handle = handle
-      if(storeId)
-      this.storeId = storeId
+      if (storeId) { this.storeId = storeId }
     }
 }

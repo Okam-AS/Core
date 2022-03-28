@@ -70,5 +70,3 @@ export { Culture } from './culture/culture'
 // Payment
 export { InitiateVippsResponse } from './payment/initiate-vipps-response'
 export { PaymentMethod } from './payment/payment-method'
-
-

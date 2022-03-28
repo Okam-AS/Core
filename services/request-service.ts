@@ -139,5 +139,4 @@ export class RequestService {
       request[HttpProperty.Method] = method
       return request
     };
-
 }

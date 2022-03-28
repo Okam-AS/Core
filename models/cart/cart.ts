@@ -1,4 +1,4 @@
-import { ICartRootProperties } from  '../../interfaces';
+import { ICartRootProperties } from '../../interfaces'
 import { DeliveryType, PaymentType } from '../../enums'
 import { DeliveryMethod, CartLineItem, CartCalculation } from '../../models'
 export class Cart implements ICartRootProperties {

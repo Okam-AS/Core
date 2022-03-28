@@ -1,4 +1,4 @@
-import { OrderStatus, DeliveryType, PaymentType} from '../../enums'
+import { OrderStatus, DeliveryType, PaymentType } from '../../enums'
 import { OrderLineItem, TaxDetail } from '../../models'
 export class Order {
     id: string;

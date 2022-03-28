@@ -3,8 +3,8 @@ import { ICartRootProperties, IVuexModule } from '../interfaces'
 import $config from '../helpers/configuration'
 
 import { MutationName } from '../enums'
-import { RequestService } from './request-service'
 import { debounce } from '../helpers/ts-debounce'
+import { RequestService } from './request-service'
 
 export class CartService {
     private _requestService: RequestService;
@@ -64,10 +64,11 @@ export class CartService {
       _this.Update(updatedCart).then((cart) => {
         _this._vuexModule.commit(MutationName.SetCarts, [cart])
         _this._vuexModule.commit(MutationName.SetCartIsLoading, false)
-        if(typeof thenFunction === 'function') thenFunction()
+        if (typeof thenFunction === 'function') { thenFunction() }
       }).catch(() => {
         _this._vuexModule.commit(MutationName.SetCartIsLoading, false)
-        if(typeof catchFunction === 'function') thenFunction()      })
+        if (typeof catchFunction === 'function') { thenFunction() }
+      })
     }, 400);
 
     public SetCartRootProperties = (props: ICartRootProperties, thenFunction?: Function, catchFunction?: Function) => {
