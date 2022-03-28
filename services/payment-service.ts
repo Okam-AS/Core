@@ -1,5 +1,6 @@
 import $config from '../helpers/configuration'
 import { IVuexModule } from '../interfaces'
+import { PaymentMethod } from '../models'
 import { RequestService } from '.'
 
 export class PaymentService {
@@ -11,8 +12,8 @@ export class PaymentService {
       this._vuexModule = vuexModule
     }
 
-    public async GetPaymentMethods (cartId?: string): Promise<any> {
-      const response = await this._requestService.GetRequest('/payment/paymentMethods/cart/' + (!!cartId ? cartId : ''))
+    public async GetPaymentMethods (cartId?: string): Promise<PaymentMethod> {
+      const response = await this._requestService.PostRequest('/payment/paymentMethods/', { cartId:  (!!cartId ? cartId : '') })
       const parsedResponse = this._requestService.TryParseResponse(response)
       if (parsedResponse === undefined) { throw new Error('Kunne ikke hente betalingsmetoder') }
       return parsedResponse
