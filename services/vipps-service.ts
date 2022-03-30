@@ -1,6 +1,6 @@
 import $config from '../helpers/configuration'
 import { IVuexModule } from '../interfaces'
-import { InitiateVippsResponse } from '../models'
+import { VippsInitiateResponse, VippsVerifyResponse } from '../models'
 import { RequestService } from '.'
 
 export class VippsService {
@@ -12,10 +12,17 @@ export class VippsService {
       this._vuexModule = vuexModule
     }
 
-    public async Initiate (cartId: string, amount: number, isApp: boolean): Promise<InitiateVippsResponse> {
+    public async Initiate (cartId: string, amount: number, isApp: boolean): Promise<VippsInitiateResponse> {
       const response = await this._requestService.PostRequest('/vipps/initiate/', { cartId, amount, isApp })
       const parsedResponse = this._requestService.TryParseResponse(response)
       if (parsedResponse === undefined) { throw new Error('Kunne ikke betale med Vipps') }
+      return parsedResponse
+    }
+
+    public async Verify (orderId: string): Promise<VippsVerifyResponse> {
+      const response = await this._requestService.GetRequest('/vipps/verify/' + orderId)
+      const parsedResponse = this._requestService.TryParseResponse(response)
+      if (parsedResponse === undefined) { throw new Error('Kunne ikke verifisere Vipps-betaling') }
       return parsedResponse
     }
 }

@@ -68,5 +68,6 @@ export { BankAccount } from './bankaccount/bank-account'
 export { Culture } from './culture/culture'
 
 // Payment
-export { InitiateVippsResponse } from './payment/initiate-vipps-response'
+export { VippsInitiateResponse } from './payment/vipps-initiate-response'
+export { VippsVerifyResponse } from './payment/vipps-verify-response'
 export { PaymentMethod } from './payment/payment-method'
