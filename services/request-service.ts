@@ -99,7 +99,7 @@ export class RequestService {
       if (statusCode === 200) {
         let parsedResponse
         try {
-          parsedResponse = $config.isNativeScript ? response.content.toJSON() : response.data
+          parsedResponse = $config.isNativeScript && response.content ? response.content.toJSON() : response.data
         } catch (e) {
           return undefined
         }

@@ -191,8 +191,8 @@ export class StoreService {
           this._vuexModule.commit(mutationName, store)
         }
         if (thenHandler) { thenHandler(store) }
-      }).catch(() => {
-        if (catchHandler) { catchHandler() }
+      }).catch((error) => {
+        if (catchHandler) { catchHandler(error) }
       })
     }
 }
