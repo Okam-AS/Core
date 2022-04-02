@@ -28,8 +28,8 @@ export class VippsService {
     }
 
     public PullVerifyResult = (orderId: string, successHandler, failHandler) => {
-      if(orderId && failHandler) failHandler()
-      if(orderId) return;
+      if(!orderId && failHandler) failHandler()
+      if(!orderId) return;
       const _this = this
       setTimeout(() => {
         const intervalId = setInterval(() => {
