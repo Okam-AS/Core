@@ -13,7 +13,8 @@ export class VippsService {
     }
 
     public async Initiate (cartId: string, amount: number, isApp: boolean): Promise<VippsInitiateResponse> {
-      const response = await this._requestService.PostRequest('/vipps/initiate/', { cartId, amount, isApp })
+      let payload =  { cartId, amount, isApp }
+      const response = await this._requestService.PostRequest('/vipps/initiate/', payload)
       const parsedResponse = this._requestService.TryParseResponse(response)
       if (parsedResponse === undefined) { throw new Error('Kunne ikke betale med Vipps') }
       return parsedResponse
@@ -24,5 +25,29 @@ export class VippsService {
       const parsedResponse = this._requestService.TryParseResponse(response)
       if (parsedResponse === undefined) { throw new Error('Kunne ikke verifisere Vipps-betaling') }
       return parsedResponse
+    }
+
+    public PullVerifyResult = (orderId: string, successHandler, failHandler) => {
+      if(orderId && failHandler) failHandler()
+      if(orderId) return;
+      const _this = this
+      setTimeout(() => {
+        const intervalId = setInterval(() => {
+          _this.Verify(orderId)
+            .then((result) => { // result.status: 'Waiting', 'Success', or 'Fail'
+              if (result.status === "Success") {
+                clearInterval(intervalId);
+                if(successHandler) successHandler(result.storeId)
+              } else if (result.status === "Fail") {
+                clearInterval(intervalId);
+                if(failHandler) failHandler(result.storeId);
+              }
+            })
+            .catch(() => {
+              clearInterval(intervalId);
+              failHandler();
+            });
+        }, 2000);
+      }, 3000);
     }
 }
