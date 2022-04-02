@@ -7,7 +7,8 @@ class Configuration {
   isProduction: boolean;
   version: string;
   stripePublishableKey: string;
-  vippsAppScheme:  string;
+  vippsiOSPath: string;
+  vippsAndroidPath: string;
   platformFileSuffix: string;
   notificationHub: string;
 
@@ -17,7 +18,8 @@ class Configuration {
     this.isNativeScript = process.env.IS_NATIVESCRIPT === 'true'
     this.isProduction = process.env.IS_PRODUCTION === 'true'
     this.stripePublishableKey = process.env.STRIPE_PUBLISHABLE_KEY
-    this.vippsAppScheme = process.env.VIPPS_APP_SCHEME
+    this.vippsiOSPath = process.env.VIPPS_IOS_PATH
+    this.vippsAndroidPath = process.env.VIPPS_ANDROID_PATH
     this.platformFileSuffix = process.env.PLATFORM_FILE_SUFFIX
     this.notificationHub = process.env.NOTIFICATION_HUB
   }
