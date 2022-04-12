@@ -30,24 +30,21 @@ export class VippsService {
     public PullVerifyResult = (orderId: string, successHandler, failHandler) => {
       if(!orderId && failHandler) failHandler()
       if(!orderId) return;
-      const _this = this
-      setTimeout(() => {
-        const intervalId = setInterval(() => {
-          _this.Verify(orderId)
-            .then((result) => { // result.status: 'Waiting', 'Success', or 'Fail'
-              if (result.status === "Success") {
-                clearInterval(intervalId);
-                if(successHandler) successHandler(result.storeId)
-              } else if (result.status === "Fail") {
-                clearInterval(intervalId);
-                if(failHandler) failHandler(result.storeId);
-              }
-            })
-            .catch(() => {
+      const intervalId = setInterval(() => {
+        this.Verify(orderId)
+          .then((result) => { // result.status: 'Waiting', 'Success', or 'Fail'
+            if (result.status === "Success") {
               clearInterval(intervalId);
-              failHandler();
-            });
-        }, 2000);
-      }, 3000);
+              if(successHandler) successHandler(result.storeId)
+            } else if (result.status === "Fail") {
+              clearInterval(intervalId);
+              if(failHandler) failHandler(result.storeId);
+            }
+          })
+          .catch(() => {
+            clearInterval(intervalId);
+            failHandler();
+          });
+      }, 2000);
     }
 }
