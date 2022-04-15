@@ -3,6 +3,7 @@ export enum MutationName {
     SetIntroIsSeen = 'SetIntroIsSeen',
     SetCurrentUser = 'SetCurrentUser',
     SetDeliveryAddress = 'SetDeliveryAddress',
+    SetUserPosition = 'SetUserPosition',
     ClearCurrentUser = 'ClearCurrentUser',
     SetCarts = 'SetCarts',
     SetOrders = 'SetOrders',

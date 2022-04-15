@@ -16,7 +16,7 @@ export class ProductService {
 
     public async GetByBarcode (storeId: number, barcode: string): Promise<Product> {
       const response = await this._requestService.GetRequest('/products/consumer/search/' + storeId + '/' + (barcode || false))
-      return this.ParsedResponse(response, 'Utsalgsstedet har ikke registrert denne varen')
+      return this.ParsedResponse(response, 'Butikken har ikke registrert denne varen')
     }
 
     public async Get (productId: string): Promise<Product> {

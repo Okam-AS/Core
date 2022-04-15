@@ -1,7 +1,6 @@
 import $config from '../helpers/configuration'
 import { Store, StoreTip, StoreRegistration, OpeningHour, Address, StoreUserSetting, BrregData, StorePayment, StoreFees } from '../models'
 import { MutationName, HttpMethod } from '../enums'
-import { GeolocationModule } from '../platform'
 import { IVuexModule } from '../interfaces'
 import { RequestService, UserService } from './'
 
@@ -9,13 +8,11 @@ export class StoreService {
     private _requestService: RequestService;
     private _vuexModule: IVuexModule;
     private _userService: UserService;
-    private _geolocationModule: typeof GeolocationModule;
 
     constructor (vuexModule: IVuexModule) {
       this._requestService = new RequestService(vuexModule, $config.okamApiBaseUrl)
       this._vuexModule = vuexModule
       this._userService = new UserService(vuexModule)
-      this._geolocationModule = new GeolocationModule()
     }
 
     public async ImageExists (imageUrl: string) {
@@ -151,23 +148,14 @@ export class StoreService {
       return parsedResponse
     }
 
-    public async GetAllTryLocationSorted (): Promise<Array<Store>> {
-      const comp = this
-      try {
-        const locationEnabled = await this._geolocationModule.isEnabled({ timeout: 3000 })
-        if (locationEnabled) {
-          const currentLocation = await this._geolocationModule.getCurrentLocation({ timeout: 3000 })
-          return await comp.GetAll(currentLocation)
-        } else {
-          return await comp.GetAll()
-        }
-      } catch (error) {
-        return await comp.GetAll()
+    public GetStoresAndSetState = (sort, thenHandler?, catchHandler?) => {
+      let location = { latitude: 0,longitude: 0 }
+      if(sort && sort === 'nearest'){
+        location.latitude = this._vuexModule.state.userLat ?? 0;
+        location.longitude = this._vuexModule.state.userLng ?? 0;
       }
-    }
-
-    public GetStoresAndSetState = (thenHandler?, catchHandler?) => {
-      this.GetAllTryLocationSorted().then((stores) => {
+      this.GetAll(location)
+      .then((stores) => {
         if (Array.isArray(stores)) {
           this._vuexModule.commit(MutationName.SetStores, stores)
         }
