@@ -149,20 +149,20 @@ export class StoreService {
     }
 
     public GetStoresAndSetState = (sort, thenHandler?, catchHandler?) => {
-      let location = { latitude: 0,longitude: 0 }
-      if(sort && sort === 'nearest'){
-        location.latitude = this._vuexModule.state.userLat ?? 0;
-        location.longitude = this._vuexModule.state.userLng ?? 0;
+      const location = { latitude: 0, longitude: 0 }
+      if (sort && sort === 'nearest') {
+        location.latitude = this._vuexModule.state.userLat ?? 0
+        location.longitude = this._vuexModule.state.userLng ?? 0
       }
       this.GetAll(location)
-      .then((stores) => {
-        if (Array.isArray(stores)) {
-          this._vuexModule.commit(MutationName.SetStores, stores)
-        }
-        if (thenHandler) { thenHandler(stores) }
-      }).catch(() => {
-        if (catchHandler) { catchHandler() }
-      })
+        .then((stores) => {
+          if (Array.isArray(stores)) {
+            this._vuexModule.commit(MutationName.SetStores, stores)
+          }
+          if (thenHandler) { thenHandler(stores) }
+        }).catch(() => {
+          if (catchHandler) { catchHandler() }
+        })
     }
 
     public GetStoreAndSetCurrentStoreState = (storeId, thenHandler?, catchHandler?) => {
