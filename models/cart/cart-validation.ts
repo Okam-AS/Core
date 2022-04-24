@@ -8,6 +8,7 @@ export class CartValidation {
   storeIsClosed: boolean;
   cartIsEmpty: boolean;
   itemsInStock: boolean;
+  paymentTypeError: boolean;
   hasErrors: boolean;
   minimumPrice: number;
 }
