@@ -38,6 +38,12 @@ export class UserService {
       return true
     }
 
+    public async VerifyToken (phoneNumber: string, token: string): Promise<boolean> {
+      const response = await this._requestService.PostRequest('/user/login', new Login(phoneNumber, token))
+      const parsedResponse = this._requestService.TryParseResponse(response)
+      return parsedResponse !== undefined
+    }
+
     public async LoginAdmin (phoneNumber: string, token: string, setCurrentStoreFunction?: Function): Promise<boolean> {
       const _this = this
       const response = await _this._requestService.PostRequest('/user/login', new Login(phoneNumber, token))
