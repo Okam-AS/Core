@@ -1,3 +1,4 @@
+import { DeliveryType } from '../../enums'
 import { ImageSource, ProductVariant } from '../index'
 export class Product {
     id: string;
@@ -5,6 +6,7 @@ export class Product {
     description: string;
 
     hide: boolean;
+    hideFromDeliveryTypes: Array<DeliveryType>;
 
     image: ImageSource;
     barcode: string;
