@@ -1,6 +1,6 @@
 import $config from '../helpers/configuration'
-import { Store, StoreTip, StoreRegistration, OpeningHour, Address, StoreUserSetting, BrregData, StorePayment, StoreFees } from '../models'
-import { MutationName, HttpMethod } from '../enums'
+import { Store, StoreTip, StoreRegistration, OpeningHour, Address, StoreUserSetting, BrregData, StorePayment, StoreFees, CategorySearchOptions } from '../models'
+import { MutationName, HttpMethod, DeliveryType } from '../enums'
 import { IVuexModule } from '../interfaces'
 import { RequestService, UserService } from './'
 
@@ -22,6 +22,14 @@ export class StoreService {
 
     public async Get (id: number): Promise<Store> {
       const response = await this._requestService.GetRequest('/stores/' + id)
+      const parsedResponse = this._requestService.TryParseResponse(response)
+      if (parsedResponse === undefined) { throw new Error('Failed to get store') }
+
+      return parsedResponse
+    }
+
+    public async GetForConsumer (id: number, searchOptions: CategorySearchOptions): Promise<Store> {
+      const response = await this._requestService.PostRequest('/stores/' + id + '/consumer', searchOptions)
       const parsedResponse = this._requestService.TryParseResponse(response)
       if (parsedResponse === undefined) { throw new Error('Failed to get store') }
 
@@ -173,8 +181,19 @@ export class StoreService {
       this._getStoreAndSetState(storeId, thenHandler, catchHandler, MutationName.SetStore)
     }
 
-    private _getStoreAndSetState (storeId: any, thenHandler: any, catchHandler: any, mutationName: MutationName) {
-      this.Get(storeId).then((store) => {
+    public GetStoreAndSetCurrentStoreStateForConsumer = (storeId, thenHandler?, catchHandler?) => {
+      const cart = this._vuexModule.getters.cartByStoreId(storeId) || { deliveryType: DeliveryType.NotSet };
+      this._getStoreAndSetState(storeId, thenHandler, catchHandler, MutationName.SetCurrentStore, { deliveryType: cart.deliveryType })
+    }
+
+    public GetStoreAndSetStateForConsumer = (storeId, thenHandler?, catchHandler?) => {
+      const cart = this._vuexModule.getters.cartByStoreId(storeId) || { deliveryType: DeliveryType.NotSet };
+      this._getStoreAndSetState(storeId, thenHandler, catchHandler, MutationName.SetStore, { deliveryType: cart.deliveryType })
+    }
+
+    private _getStoreAndSetState (storeId: any, thenHandler: any, catchHandler: any, mutationName: MutationName, searchOptions?: CategorySearchOptions) {
+      const getFunction = searchOptions === undefined ? this.Get(storeId) : this.GetForConsumer(storeId,searchOptions);
+      getFunction.then((store) => {
         if (store && store.id) {
           this._vuexModule.commit(mutationName, store)
         }

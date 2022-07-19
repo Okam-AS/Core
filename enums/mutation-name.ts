@@ -11,6 +11,7 @@ export enum MutationName {
     SetStore = 'SetStore',
     SetNotificationId = 'SetNotificationId',
     RemoveCart = 'RemoveCart',
+    RemoveCartItems = 'RemoveCartItems',
     SetCartIsLoading = 'SetCartIsLoading',
     SetLineItem = 'SetLineItem',
     SetCartRootProperties = 'SetCartRootProperties',

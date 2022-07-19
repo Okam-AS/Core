@@ -49,6 +49,7 @@ export { ImageCarouselItem } from './category/image-carousel-item'
 export { ImageCarouselItemMarker } from './category/image-carousel-item-marker'
 export { CategoryProductListItem } from './category/category-product-list-item'
 export { CategoryImageSelection } from './category/category-image-selection'
+export { CategorySearchOptions } from './category/category-search-options'
 
 // Image
 export { ImageSource } from './image/image-source'
