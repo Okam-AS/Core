@@ -7,5 +7,6 @@ export enum ActionName {
     FileUploadEvent = 'FileUploadEvent',
     ClearFileUploadEvent = 'ClearFileUploadEvent',
     SetProductsQuery = 'SetProductsQuery',
+    SetLastViewedProductId = 'SetLastViewedProductId',
     ClearState = 'ClearState'
 }
