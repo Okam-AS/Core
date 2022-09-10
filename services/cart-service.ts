@@ -55,14 +55,14 @@ export class CartService {
 
     public UpdateCartInDbAndSetState = debounce((storeId, thenFunction?: Function, catchFunction?: Function) => {
       const _this = this
-      if (!this._vuexModule.getters.userIsLoggedIn) { 
+      if (!this._vuexModule.getters.userIsLoggedIn) {
         if (typeof thenFunction === 'function') { thenFunction() }
-        return;
+        return
       }
       const updatedCart = this._vuexModule.getters.cartByStoreId(storeId)
-      if (!updatedCart || !updatedCart.storeId) { 
+      if (!updatedCart || !updatedCart.storeId) {
         if (typeof thenFunction === 'function') { thenFunction() }
-        return;
+        return
       }
       updatedCart.ignoreLegecyIsSelfPickupBool = true
       updatedCart.ignoreLegecyIsWaiterOrderBool = true

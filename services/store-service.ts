@@ -182,17 +182,17 @@ export class StoreService {
     }
 
     public GetStoreAndSetCurrentStoreStateForConsumer = (storeId, thenHandler?, catchHandler?) => {
-      const cart = this._vuexModule.getters.cartByStoreId(storeId) || { deliveryType: DeliveryType.NotSet };
+      const cart = this._vuexModule.getters.cartByStoreId(storeId) || { deliveryType: DeliveryType.NotSet }
       this._getStoreAndSetState(storeId, thenHandler, catchHandler, MutationName.SetCurrentStore, { deliveryType: cart.deliveryType })
     }
 
     public GetStoreAndSetStateForConsumer = (storeId, thenHandler?, catchHandler?) => {
-      const cart = this._vuexModule.getters.cartByStoreId(storeId) || { deliveryType: DeliveryType.NotSet };
+      const cart = this._vuexModule.getters.cartByStoreId(storeId) || { deliveryType: DeliveryType.NotSet }
       this._getStoreAndSetState(storeId, thenHandler, catchHandler, MutationName.SetStore, { deliveryType: cart.deliveryType })
     }
 
     private _getStoreAndSetState (storeId: any, thenHandler: any, catchHandler: any, mutationName: MutationName, searchOptions?: CategorySearchOptions) {
-      const getFunction = searchOptions === undefined ? this.Get(storeId) : this.GetForConsumer(storeId,searchOptions);
+      const getFunction = searchOptions === undefined ? this.Get(storeId) : this.GetForConsumer(storeId, searchOptions)
       getFunction.then((store) => {
         if (store && store.id) {
           this._vuexModule.commit(mutationName, store)

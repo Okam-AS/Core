@@ -20,7 +20,7 @@ export class CategoryService {
       return this.ParsedResponse(response, 'Kunne ikke hente kategori')
     }
 
-    public async GetForConsumer(categoryId: string, searchOptions: CategorySearchOptions): Promise<Category> {
+    public async GetForConsumer (categoryId: string, searchOptions: CategorySearchOptions): Promise<Category> {
       const response = await this._requestService.PostRequest('/categories/' + categoryId + '/consumer', searchOptions)
       if (response.statusCode === 401 && this._vuexModule.state.currentUser.token) { this._userService.Logout() }
       return this.ParsedResponse(response, 'Kunne ikke hente kategori')
@@ -32,7 +32,7 @@ export class CategoryService {
     }
 
     public async GetAllForConsumer (storeId: number, searchOptions: CategorySearchOptions): Promise<Category> {
-      const response = await this._requestService.PostRequest('/categories/store/' + storeId + '/consumer', searchOptions);
+      const response = await this._requestService.PostRequest('/categories/store/' + storeId + '/consumer', searchOptions)
       return this.ParsedResponse(response, 'Kunne ikke hente kategorier')
     }
 
