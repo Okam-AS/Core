@@ -78,6 +78,12 @@ export class StoreService {
       return parsedResponse !== undefined
     }
 
+    public async CreateOrUpdateHomeDeliveryFromAddress(storeId: number, address: Address): Promise<boolean> {
+      const response = await this._requestService.PostRequest('/stores/' + storeId + '/homedeliveryfromaddress', address)
+      const parsedResponse = this._requestService.TryParseResponse(response)
+      return parsedResponse !== undefined
+    }
+
     public async UpdateTip (storeId: number, tip: StoreTip): Promise<boolean> {
       const response = await this._requestService.PutRequest('/stores/' + storeId + '/tip', tip)
       const parsedResponse = this._requestService.TryParseResponse(response)
