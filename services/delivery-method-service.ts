@@ -23,14 +23,14 @@ export class DeliveryMethodService {
     public async Create (deliveryMethod: DeliveryMethod): Promise<DeliveryMethod> {
       const response = await this._requestService.PostRequest('/deliverymethods', deliveryMethod)
       const parsedResponse = this._requestService.TryParseResponse(response)
-      if (parsedResponse === undefined) { throw new Error('Kunne ikke opprette fraktregel') }
+      if (parsedResponse === undefined) { throw new Error('Kunne ikke opprette fraktpris') }
       return parsedResponse
     }
 
     public async Update (deliveryMethod: DeliveryMethod): Promise<DeliveryMethod> {
       const response = await this._requestService.PutRequest('/deliverymethods', deliveryMethod)
       const parsedResponse = this._requestService.TryParseResponse(response)
-      if (parsedResponse === undefined) { throw new Error('Kunne ikke lagre fraktregel') }
+      if (parsedResponse === undefined) { throw new Error('Kunne ikke lagre fraktpris') }
 
       return parsedResponse
     }

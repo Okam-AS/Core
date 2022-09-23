@@ -5,6 +5,7 @@ export class Store {
     phoneNumber: string;
     logoUrl: string;
     address: Address;
+    homeDeliveryFromAddress: Address;
     categories: Array<Category>;
     allowOrdersAfterOpeningHours: boolean;
     openingHours: Array<OpeningHour>;
