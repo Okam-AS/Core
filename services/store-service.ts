@@ -96,6 +96,12 @@ export class StoreService {
       return parsedResponse !== undefined
     }
 
+    public async UpdateAllowOrdersAfterOpeningHours (storeId: number, newValue: boolean): Promise<boolean> {
+      const response = await this._requestService.PutRequest('/stores/' + storeId + '/allowordersafteropeninghours/' + newValue)
+      const parsedResponse = this._requestService.TryParseResponse(response)
+      return parsedResponse !== undefined
+    }
+
     public async UpdateSelfPickUp (storeId: number, newValue: boolean): Promise<boolean> {
       const response = await this._requestService.PutRequest('/stores/' + storeId + '/selfpickup/' + newValue)
       const parsedResponse = this._requestService.TryParseResponse(response)

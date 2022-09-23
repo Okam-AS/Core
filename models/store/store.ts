@@ -6,6 +6,7 @@ export class Store {
     logoUrl: string;
     address: Address;
     categories: Array<Category>;
+    allowOrdersAfterOpeningHours: boolean;
     openingHours: Array<OpeningHour>;
     isOpenNow: boolean;
     admins: Array<User>;
