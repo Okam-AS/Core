@@ -1,14 +1,13 @@
 import { BulkImport, Product } from '../models'
-import { IServiceCtor } from '../interfaces'
-import { HttpMethod, MutationName } from '../enums'
-import { UserService, RequestService } from './'
+import { ICoreInitializer } from '../interfaces'
+import { RequestService, UserService } from './'
 export class ProductService {
     private _requestService: RequestService;
     private _userService: UserService
 
-    constructor (serviceCtor: IServiceCtor) {
-      this._requestService = new RequestService(serviceCtor)
-      this._userService = new UserService(serviceCtor)
+    constructor (coreInitializer: ICoreInitializer) {
+      this._requestService = new RequestService(coreInitializer)
+      this._userService = new UserService(coreInitializer)
     }
 
     public async GetByBarcode (storeId: number, barcode: string): Promise<Product> {

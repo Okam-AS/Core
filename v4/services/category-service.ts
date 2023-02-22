@@ -1,12 +1,12 @@
 import { Category, CategoryProductListItem, CategorySearchOptions } from '../models'
-import { IServiceCtor } from '../interfaces'
+import { ICoreInitializer } from '../interfaces'
 import { RequestService } from '../services'
 
 export class CategoryService {
     private _requestService: RequestService;
 
-    constructor (serviceCtor: IServiceCtor) {
-      this._requestService = new RequestService(serviceCtor)
+    constructor (coreInitializer: ICoreInitializer) {
+      this._requestService = new RequestService(coreInitializer)
     }
 
     public async Get (categoryId: string, forStore: boolean): Promise<Category> {

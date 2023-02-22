@@ -1,14 +1,14 @@
 import { Store, StoreTip, StoreRegistration, OpeningHour, Address, StoreUserSetting, BrregData, StorePayment, StoreFees, CategorySearchOptions } from '../models'
-import { IServiceCtor } from '../interfaces'
+import { ICoreInitializer } from '../interfaces'
 import { RequestService, UserService } from './'
 
 export class StoreService {
     private _requestService: RequestService;
     private _userService: UserService;
 
-    constructor (serviceCtor: IServiceCtor) {
-      this._requestService = new RequestService(serviceCtor)
-      this._userService = new UserService(serviceCtor)
+    constructor (coreInitializer: ICoreInitializer) {
+      this._requestService = new RequestService(coreInitializer)
+      this._userService = new UserService(coreInitializer)
     }
 
     public async ImageExists (imageUrl: string) {

@@ -1,12 +1,12 @@
-import { IServiceCtor } from '../interfaces'
+import { ICoreInitializer } from '../interfaces'
 import { StatisticOrders, StatisticQueryOrders } from '../models'
 import { RequestService } from './request-service'
 
 export class StatisticsService {
     private _requestService: RequestService;
 
-    constructor (serviceCtor: IServiceCtor) {
-      this._requestService = new RequestService(serviceCtor)
+    constructor (coreInitializer: ICoreInitializer) {
+      this._requestService = new RequestService(coreInitializer)
     }
 
     public async Get (model: StatisticQueryOrders): Promise<StatisticOrders> {

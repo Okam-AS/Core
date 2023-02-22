@@ -1,6 +1,6 @@
+export { UserService } from './user-service'
 export { CartService } from './cart-service'
 export { RequestService } from './request-service'
-export { UserService } from './user-service'
 export { OrderService } from './order-service'
 export { StoreService } from './store-service'
 export { NotificationService } from './notification-service'
