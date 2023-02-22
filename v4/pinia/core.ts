@@ -3,8 +3,8 @@ import { defineStore } from "pinia";
 import { ICoreInitializer } from "../interfaces";
 import { UserService, StoreService } from "../services";
 
-export const useCoreStore = defineStore({
-  id: "coreStore",
+export const useCore = defineStore({
+  id: "useCore",
   state: ():ICoreInitializer =>
     ({
       bearerToken: 'en',
