@@ -5,4 +5,5 @@ export class User {
   phoneNumber: string;
   address: Address;
   token: string;
+  favoriteProductIds: string[];
 }

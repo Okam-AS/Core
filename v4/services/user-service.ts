@@ -14,6 +14,18 @@ export class UserService {
       this._notificationService = new NotificationService(coreInitializer)
     }
 
+    public async AddFavoriteProduct (productId: string): Promise<boolean> {
+      if(!productId) return false;
+      await this._requestService.PostRequest('/user/favorite/add/'+ productId)
+      return true
+    }
+
+    public async RemoveFavoriteProduct (productId: string): Promise<boolean> {
+      if(!productId) return false;
+      await this._requestService.PostRequest('/user/favorite/remove/'+ productId)
+      return true
+    }
+
     public Logout (notificationId: string, clearState?: Function) {
       this._notificationService.Deactivate(notificationId)
       if(clearState) clearState()
