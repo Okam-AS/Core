@@ -24,7 +24,7 @@ export class CategoryService {
       return this.ParsedResponse(response, 'Kunne ikke hente kategorier')
     }
 
-    public async GetAllForConsumer (storeId: number, searchOptions: CategorySearchOptions): Promise<Category> {
+    public async GetAllForConsumer (storeId: number, searchOptions: CategorySearchOptions): Promise<Array<Category>> {
       const response = await this._requestService.PostRequest('/categories/store/' + storeId + '/consumer', searchOptions)
       return this.ParsedResponse(response, 'Kunne ikke hente kategorier')
     }

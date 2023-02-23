@@ -1,5 +1,6 @@
 // Cart
-export { Cart, CartValidation, CartCalculation, CartLineItem } from '../../models/'
+export { Cart } from '../../v4/models/cart/cart'
+export { CartValidation, CartCalculation, CartLineItem } from '../../models/'
 
 // Store
 export { Store, OpeningHour, DeliveryMethod, BrregData, StoreRegistration, StoreUserSetting, StoreTip, StorePayment, StoreFees } from '../../models/'

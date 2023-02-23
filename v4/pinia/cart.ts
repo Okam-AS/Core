@@ -1,16 +1,15 @@
 
 import { defineStore } from "pinia";
 import { Cart, CartLineItem, Product} from "../models";
-import { ICartRootProperties } from "../interfaces";
-import { useCore, useStore } from "./"
+import { useServices, useStore } from "./"
 import { ref, computed } from "vue";
-import { keys } from 'ts-transformer-keys';
 
 export const useCart = defineStore("cart", () => {
-  const { cartService } = useCore()
+  const { cartService } = useServices()
   const { currentStore } = useStore()
 
   const carts = ref([] as Cart[]);
+  const viewingLineItems = ref([] as CartLineItem[]);
 
   const createEmptyCart = () => {
     const cart = new Cart();
@@ -26,14 +25,15 @@ export const useCart = defineStore("cart", () => {
     return cart ?? createEmptyCart();
   })
 
-  const cartRootProperties = keys<ICartRootProperties>();
+  const disabledProperties = ["storeId", "items", "homeDeliveryMethod", "deliveryType", "paymentType", "calculations"]
+  const availableProperties = Object.keys(new Cart()).filter(x => !disabledProperties.includes(x))
   const setCartRootProperties = (payload) => {
     if(!currentStore.id) return;
     if(!currentCart.value){
       carts.value.push(createEmptyCart())
     }
-    cartRootProperties.forEach((propertyName) => {
-      if (payload[propertyName] != undefined && propertyName != 'storeId'){
+    availableProperties.forEach((propertyName) => {
+      if (payload[propertyName] != undefined){
         currentCart.value[propertyName.toString()] = payload[propertyName]
       }
     })
@@ -47,12 +47,12 @@ export const useCart = defineStore("cart", () => {
   }
 
   const loadProductLineItem = (productId: string) => {
-    let lineItem: CartLineItem;
-    let product: Product;
+    let lineItem = new CartLineItem()
+    let product = new Product()
     product.id = productId;
     lineItem.product = product;
     lineItem.quantity = 1;
-    return cartService.GetCartLineItem(lineItem);
+    return cartService.GetCartLineItem(lineItem)
   }
 
   return {

@@ -5,7 +5,6 @@ Client-side models and core logic
 ## Required npm packages in project that runs Okam Core:
 
 * typescript
-* ts-transformer-keys
 * pinia 
 * vue
 

@@ -1,2 +1,4 @@
 export { useStore } from './store'
-export { useCore } from './core'
+export { useServices } from './services'
+export { useCart } from './cart'
+export { useCategory } from './category'

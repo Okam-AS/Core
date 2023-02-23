@@ -1,11 +1,11 @@
 
 import { defineStore } from "pinia";
 import { Store } from "../models";
-import { useCore } from "./core"
+import { useServices } from "./services"
 import { ref } from "vue";
 
 export const useStore = defineStore("store", () => {
-  const { storeService } = useCore()
+  const { storeService } = useServices()
 
   const stores = ref([] as Store[]);
   const currentStore = ref({} as Store);
