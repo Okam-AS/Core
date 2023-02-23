@@ -15,13 +15,13 @@ export class UserService {
     }
 
     public async AddFavoriteProduct (productId: string): Promise<boolean> {
-      if(!productId) return false;
+      if(!productId || !this._bearerToken) return false;
       await this._requestService.PostRequest('/user/favorite/add/'+ productId)
       return true
     }
 
     public async RemoveFavoriteProduct (productId: string): Promise<boolean> {
-      if(!productId) return false;
+      if(!productId || !this._bearerToken) return false;
       await this._requestService.PostRequest('/user/favorite/remove/'+ productId)
       return true
     }
