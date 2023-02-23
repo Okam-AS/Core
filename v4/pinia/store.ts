@@ -14,8 +14,8 @@ export const useStore = defineStore("store", () => {
     currentStore.value = store
   }
 
-  const loadStores = () => {
-    storeService.GetAll().then((s) => {
+  const loadStores = async () => {
+    return storeService.GetAll().then((s) => {
       stores.value = s
     })
   }

@@ -9,7 +9,7 @@ export const useCategory = defineStore("category", () => {
 
   const categories = ref([] as Category[]);
 
-  const loadCategories = (searchOptions: CategorySearchOptions) => {
+  const loadCategories = async (searchOptions: CategorySearchOptions) => {
    const currentStore = useStore().currentStore
     if(!currentStore.id || !searchOptions) return Promise.reject();
     return categoryService.GetAllForConsumer(currentStore.id, searchOptions).then((result) => {
@@ -17,7 +17,7 @@ export const useCategory = defineStore("category", () => {
     })
   }
 
-  const loadCategory = (categoryId: string, searchOptions: CategorySearchOptions) => {
+  const loadCategory = async (categoryId: string, searchOptions: CategorySearchOptions) => {
     const currentStore = useStore().currentStore
     if(!currentStore.id || !searchOptions) return Promise.reject();
     return categoryService.GetForConsumer(categoryId, searchOptions).then((result) => {

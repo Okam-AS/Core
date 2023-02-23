@@ -9,7 +9,6 @@ export const useCart = defineStore("cart", () => {
   const { currentStore } = useStore()
 
   const carts = ref([] as Cart[]);
-  const viewingLineItems = ref([] as CartLineItem[]);
 
   const createEmptyCart = () => {
     const cart = new Cart();
@@ -39,14 +38,14 @@ export const useCart = defineStore("cart", () => {
     })
   }
 
-  const loadCartLineItem = (lineItem: CartLineItem) => {
+  const loadCartLineItem = async (lineItem: CartLineItem) => {
     if(lineItem.quantity < 1){
       lineItem.quantity = 1;
     }
     return cartService.GetCartLineItem(lineItem);
   }
 
-  const loadProductLineItem = (productId: string) => {
+  const loadProductLineItem = async (productId: string) => {
     let lineItem = new CartLineItem()
     let product = new Product()
     product.id = productId;
