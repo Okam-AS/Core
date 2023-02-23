@@ -1,13 +1,13 @@
 import { Order } from '../models'
 import { OrderStatus } from '../enums'
-import { IServiceCtor } from '../interfaces'
+import { ICoreInitializer } from '../interfaces'
 import { RequestService } from './request-service'
 
 export class OrderService {
     private _requestService: RequestService;
 
-    constructor (serviceCtor: IServiceCtor) {
-      this._requestService = new RequestService(serviceCtor)
+    constructor (coreInitializer: ICoreInitializer) {
+      this._requestService = new RequestService(coreInitializer)
     }
 
     public async GetAll (): Promise<Array<Order>> {

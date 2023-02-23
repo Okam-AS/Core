@@ -1,14 +1,14 @@
 import { NotificationPlatform } from '../enums'
 import { NotificationRegistration } from '../models'
-import { IServiceCtor } from '../interfaces'
+import { ICoreInitializer } from '../interfaces'
 import $config from '../../helpers/configuration'
 import { RequestService } from './request-service'
 
 export class NotificationService {
     private _requestService: RequestService;
 
-    constructor (serviceCtor: IServiceCtor) {
-      this._requestService = new RequestService(serviceCtor)
+    constructor (coreInitializer: ICoreInitializer) {
+      this._requestService = new RequestService(coreInitializer)
     }
 
     // Turn off (called when user logges off)

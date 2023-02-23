@@ -1,14 +1,14 @@
 import { HttpMethod, HttpProperty } from '../enums'
 import { HttpModule } from '../platform'
-import { IServiceCtor } from '../interfaces'
+import { ICoreInitializer } from '../interfaces'
 import $config from '../../helpers/configuration'
 
 export class RequestService {
-    private _serviceCtor: IServiceCtor
+    private _coreInitializer: ICoreInitializer
     private _httpModule: typeof HttpModule
 
-    constructor (serviceCtor: IServiceCtor) {
-      this._serviceCtor = serviceCtor
+    constructor (coreInitializer: ICoreInitializer) {
+      this._coreInitializer = coreInitializer
       this._httpModule = new HttpModule()
     }
 
@@ -63,7 +63,7 @@ export class RequestService {
     }
 
     private DefaultRequest (path: string, payload: any, method: HttpMethod): any {
-      return this.BuildRequest(path, method, payload ? JSON.stringify(payload) : '', this._serviceCtor.bearerToken)
+      return this.BuildRequest(path, method, payload ? JSON.stringify(payload) : '', this._coreInitializer.bearerToken)
     };
 
     private BuildRequest (path: string, method: HttpMethod, content?: string, bearerToken?: string): any {
@@ -71,7 +71,7 @@ export class RequestService {
       request[HttpProperty.Url] = $config.okamApiBaseUrl + path
       request[HttpProperty.Method] = method
       request.headers[HttpProperty.ContentType] = 'application/json; charset=utf-8'
-      request.headers[HttpProperty.ClientPlatform] = this._serviceCtor.clientPlatformName || 'Unknown'
+      request.headers[HttpProperty.ClientPlatform] = this._coreInitializer.clientPlatformName || 'Unknown'
       request.headers[HttpProperty.ClientAppVersion] = $config.version
 
       if (content) {

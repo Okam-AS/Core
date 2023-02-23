@@ -1,12 +1,12 @@
-import { IServiceCtor } from '../interfaces'
+import { ICoreInitializer } from '../interfaces'
 import { VippsInitiateResponse, VippsVerifyResponse } from '../models'
 import { RequestService } from '.'
 
 export class VippsService {
     private _requestService: RequestService;
 
-    constructor (serviceCtor: IServiceCtor) {
-      this._requestService = new RequestService(serviceCtor)
+    constructor (coreInitializer: ICoreInitializer) {
+      this._requestService = new RequestService(coreInitializer)
     }
 
     public async Initiate (cartId: string, amount: number, isApp: boolean): Promise<VippsInitiateResponse> {

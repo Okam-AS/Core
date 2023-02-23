@@ -1,13 +1,12 @@
 import { Cart, CartValidation, Order, CartLineItem } from '../models'
-import { ICartRootProperties, IServiceCtor } from '../interfaces'
-import { MutationName } from '../enums'
+import { ICoreInitializer } from '../interfaces'
 import { RequestService } from './request-service'
 
 export class CartService {
     private _requestService: RequestService;
 
-    constructor (serviceCtor: IServiceCtor) {
-      this._requestService = new RequestService(serviceCtor)
+    constructor (coreInitializer: ICoreInitializer) {
+      this._requestService = new RequestService(coreInitializer)
     }
 
     public async GetCartLineItem (cartLineItem: CartLineItem): Promise<CartLineItem> {

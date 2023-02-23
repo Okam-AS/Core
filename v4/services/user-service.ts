@@ -1,5 +1,5 @@
 import { Login, SendVerificationToken, Address } from '../models'
-import { IServiceCtor } from '../interfaces'
+import { ICoreInitializer } from '../interfaces'
 import { RequestService, NotificationService } from './index'
 
 export class UserService {
@@ -8,10 +8,10 @@ export class UserService {
     private _requestService: RequestService;
     private _notificationService: NotificationService;
 
-    constructor (serviceCtor: IServiceCtor) {
-      this._bearerToken = serviceCtor.bearerToken;
-      this._requestService = new RequestService(serviceCtor)
-      this._notificationService = new NotificationService(serviceCtor)
+    constructor (coreInitializer: ICoreInitializer) {
+      this._bearerToken = coreInitializer.bearerToken;
+      this._requestService = new RequestService(coreInitializer)
+      this._notificationService = new NotificationService(coreInitializer)
     }
 
     public Logout (notificationId: string, clearState?: Function) {
