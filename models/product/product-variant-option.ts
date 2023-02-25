@@ -8,4 +8,6 @@ export class ProductVariantOption {
     fractionAmount: number;
     otherInformation: string;
     productVariantId: string;
+
+    selected: boolean;
 }
