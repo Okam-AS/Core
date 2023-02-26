@@ -20,7 +20,7 @@ export const useCart = defineStore("cart", () => {
   }
 
   const currentCart = computed(() => {
-    if (!currentStore.id) return {} as Cart
+    if (!currentStore.id) return createEmptyCart()
     const cart = carts.value.find(c => c.storeId === currentStore.id)
     return cart ?? createEmptyCart();
   })
@@ -59,7 +59,7 @@ export const useCart = defineStore("cart", () => {
     })
   }
 
-  const saveLineItem = async () => {
+  const unsavedLineItemSave = async () => {
     if (unsavedLineItemInvalidFields()) return;
 
     if (!unsavedLineItem.value.id && unsavedLineItem.value.quantity === 0) return;
@@ -78,10 +78,36 @@ export const useCart = defineStore("cart", () => {
 
     if (unsavedLineItem.value.product.soldOut) unsavedLineItem.value.quantity = 0;
 
-    // TODO MutationName.SetLineItem
+    const itemIndex = currentCart.value.items.findIndex(item => item.id === unsavedLineItem.value.id)
+    const copyUnsavedLineItem = JSON.parse(JSON.stringify(unsavedLineItem.value));
+    if (itemIndex >= 0) {
+      currentCart.value.items[itemIndex] = copyUnsavedLineItem
+    } else {
+      currentCart.value.items.unshift(copyUnsavedLineItem);
+    }
   }
 
-  const addQuantity = (addQuantity: number) => {
+  const setCart = (cart: Cart) => {
+    const cartIndex = carts.value.findIndex(c => c.storeId === currentStore.id)
+    if(cartIndex >= 0) {
+      carts.value[cartIndex] = cart;
+    }
+  }
+
+  const clearCart = () => {
+    setCart(createEmptyCart());
+  }
+
+  const clearLineItems = () => {
+    currentCart.value.items = [];
+  }
+
+  const removeLineItem = (lineItemId: string) => {
+    const index = currentCart.value.items.findIndex(item => item.id === lineItemId)
+    delete currentCart.value.items[index];
+  }
+
+  const unsavedLineItemAddQuantity = (addQuantity: number) => {
     if (!unsavedLineItem.value) return;
     const newQuantity = unsavedLineItem.value.quantity + addQuantity;
     if (newQuantity < 0 || (unsavedLineItem.value.product.soldOut && addQuantity > 0))
@@ -101,7 +127,7 @@ export const useCart = defineStore("cart", () => {
 
   }
 
-  const toggleProductVariantOption = (productVariantOptionId: string) => {
+  const unsavedLineItemToggleProductVariantOption = (productVariantOptionId: string) => {
     const productVariants = unsavedLineItem.value.product.productVariants || [];
     if (!productVariants.length) return;
 
@@ -131,11 +157,15 @@ export const useCart = defineStore("cart", () => {
   return {
     currentCart,
     unsavedLineItem,
-    addQuantity,
+    setCart,
+    setCartRootProperties,
+    clearCart,
+    clearLineItems,
+    removeLineItem,
+    unsavedLineItemAddQuantity,
+    unsavedLineItemSave,
+    unsavedLineItemToggleProductVariantOption,
     loadUnsavedLineItem,
     loadNewUnsavedLineItem,
-    saveLineItem,
-    toggleProductVariantOption,
-    setCartRootProperties
   }
 })

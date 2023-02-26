@@ -1,4 +1,4 @@
-import { Login, SendVerificationToken, Address } from '../models'
+import { Login, SendVerificationToken, User } from '../models'
 import { ICoreInitializer } from '../interfaces'
 import { RequestService, NotificationService } from './index'
 
@@ -38,10 +38,10 @@ export class UserService {
       return response.statusCode !== 401 && parsedResponse !== undefined
     }
 
-    public async Login (phoneNumber: string, token: string): Promise<boolean> {
+    public async Login (phoneNumber: string, token: string): Promise<User> {
       const response = await this._requestService.PostRequest('/user/login', new Login(phoneNumber, token))
       const parsedResponse = this._requestService.TryParseResponse(response)
-      if (parsedResponse === undefined) { return false }
+      if (parsedResponse === undefined) return Promise.reject();
       return parsedResponse
     }
 
