@@ -37,12 +37,14 @@ export const useCart = defineStore("cart", () => {
         currentCart.value[propertyName.toString()] = payload[propertyName]
       }
     })
+    // TODO: lagre til db med userService.Update(cart)
   }
 
   const loadUnsavedLineItem = async (lineItem: CartLineItem) => {
     if (lineItem.quantity < 1) {
       lineItem.quantity = 1;
     }
+    //TODO: if not loggedIn unsavedLineItem.value = lineItem
     return cartService.GetCartLineItem(lineItem).then(() => {
       unsavedLineItem.value = lineItem;
     })
@@ -54,6 +56,7 @@ export const useCart = defineStore("cart", () => {
     product.id = productId;
     lineItem.product = product;
     lineItem.quantity = 1;
+     //TODO: if not loggedIn unsavedLineItem.value = lineItem
     return cartService.GetCartLineItem(lineItem).then(() => {
       unsavedLineItem.value = lineItem;
     })
@@ -85,6 +88,7 @@ export const useCart = defineStore("cart", () => {
     } else {
       currentCart.value.items.unshift(copyUnsavedLineItem);
     }
+    // TODO: lagre til db med userService.Update(cart)
   }
 
   const setCart = (cart: Cart) => {
@@ -113,6 +117,10 @@ export const useCart = defineStore("cart", () => {
     if (newQuantity < 0 || (unsavedLineItem.value.product.soldOut && addQuantity > 0))
       return;
     unsavedLineItem.value.quantity = newQuantity;
+  }
+
+  const unsavedLineItemSetNotes = (notes: string) => {
+    unsavedLineItem.value.notes = notes;
   }
 
   const unsavedLineItemInvalidFields = () => {
@@ -165,6 +173,7 @@ export const useCart = defineStore("cart", () => {
     unsavedLineItemAddQuantity,
     unsavedLineItemSave,
     unsavedLineItemToggleProductVariantOption,
+    unsavedLineItemSetNotes,
     loadUnsavedLineItem,
     loadNewUnsavedLineItem,
   }
