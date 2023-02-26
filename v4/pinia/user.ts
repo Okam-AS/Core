@@ -13,8 +13,8 @@ export const useUser = defineStore("user", () => {
 
 
   const toggleFavoriteProduct = async (productId: string) => {
-    if(!isLoggedIn) return Promise.reject();
-    if(user.value.favoriteProductIds?.includes(productId))
+    if (!isLoggedIn) return Promise.reject();
+    if (user.value.favoriteProductIds?.includes(productId))
       await userService.RemoveFavoriteProduct(productId)
     else
       await userService.AddFavoriteProduct(productId)
@@ -25,13 +25,13 @@ export const useUser = defineStore("user", () => {
   const secondsToWaitForVerificationToken = ref(0);
   const waitingOnVerificationTokenCountdownIntervalId = ref(null);
   const startWaitingOnVerificationTokenCountdown = () => {
-    if(waitingOnVerificationTokenCountdownIntervalId.value)
+    if (waitingOnVerificationTokenCountdownIntervalId.value)
       clearInterval(waitingOnVerificationTokenCountdownIntervalId.value);
-    
+
     secondsToWaitForVerificationToken.value = 30;
     waitingOnVerificationTokenCountdownIntervalId.value = setInterval(() => {
       secondsToWaitForVerificationToken.value = secondsToWaitForVerificationToken.value - 1;
-      if(secondsToWaitForVerificationToken.value < 1){
+      if (secondsToWaitForVerificationToken.value < 1) {
         secondsToWaitForVerificationToken.value = 0
         clearInterval(waitingOnVerificationTokenCountdownIntervalId.value);
         waitingOnVerificationTokenCountdownIntervalId.value = null;
@@ -45,15 +45,15 @@ export const useUser = defineStore("user", () => {
   }
 
   const sendVerificationToken = async (landcode, phoneNumber) => {
-    if(!phoneNumberIsValid(landcode, phoneNumber)) return Promise.reject();
+    if (!phoneNumberIsValid(landcode, phoneNumber)) return Promise.reject();
     const success = await userService.SendVerificationToken(landcode + phoneNumber);
-    if(!success) return Promise.reject()
+    if (!success) return Promise.reject()
     startWaitingOnVerificationTokenCountdown();
     return Promise.resolve();
   }
 
   const verifyToken = async (landcode, phoneNumber, token) => {
-    if(!token || !phoneNumberIsValid(landcode, phoneNumber)) return Promise.reject();
+    if (!token || !phoneNumberIsValid(landcode, phoneNumber)) return Promise.reject();
     return userService.Login(landcode + phoneNumber, token).then((response) => {
       user.value = response
     });
@@ -67,5 +67,5 @@ export const useUser = defineStore("user", () => {
     verifyToken,
     toggleFavoriteProduct
   }
-  
+
 });

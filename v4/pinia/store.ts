@@ -26,5 +26,5 @@ export const useStore = defineStore("store", () => {
     setCurrentStore,
     loadStores
   }
-  
+
 });

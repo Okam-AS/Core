@@ -89,7 +89,7 @@ export const useCart = defineStore("cart", () => {
 
   const setCart = (cart: Cart) => {
     const cartIndex = carts.value.findIndex(c => c.storeId === currentStore.id)
-    if(cartIndex >= 0) {
+    if (cartIndex >= 0) {
       carts.value[cartIndex] = cart;
     }
   }

@@ -1,7 +1,7 @@
 
 import { defineStore } from "pinia";
 import { ICoreInitializer } from "../interfaces";
-import { 
+import {
   UserService,
   StoreService,
   CartService,
@@ -24,7 +24,10 @@ export const useServices = defineStore({
   },
   getters: {
     coreInitializer(): ICoreInitializer {
-      return ({ bearerToken: this.bearerToken, clientPlatformName: this.clientPlatformName })
+      return ({
+        bearerToken: this.bearerToken,
+        clientPlatformName: this.clientPlatformName
+      })
     },
     userService() { return new UserService(this.coreInitializer) },
     storeService() { return new StoreService(this.coreInitializer) },
