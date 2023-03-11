@@ -6,8 +6,9 @@ import { defaultTheme } from "../themes";
 export const useColors = defineStore("colors", () => {
   const colors = ref({
     white: "#FFFFFF",
-    lightBlue: '#F2F4FA',
-    darkBlue: '#20283B',
+    lightBlue: '#F2F4FB',
+    darkBlue: '#1E283D',
+    red: '#CC0000',
   });
 
   const $color = (key: string, darkmodeKey?: string) => {
