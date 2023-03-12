@@ -19,4 +19,6 @@ export class Category {
     storeId: number;
 
     hideFromDeliveryTypes: Array<DeliveryType>;
+
+    loaded: boolean;
 }

@@ -11,13 +11,14 @@ const fractionAmountTool = (amount: Number): string => {
 }
 
 const priceLabelTool = (totalPrice: Number, hideFractionIfZero: Boolean) => {
-  const prefix = 'kr '
+  const prefix = ''
   const wholeAmount = wholeAmountTool(totalPrice)
   let fraction = ''
   if (!hideFractionIfZero || parseInt(fractionAmountTool(totalPrice)) > 0) {
     fraction = ',' + fractionAmountTool(totalPrice)
   }
-  return prefix + wholeAmount + fraction
+  const suffix = ',–'
+  return prefix + wholeAmount + fraction + suffix
 }
 
 const formatStringTool = (str: String, format: Object) => {

@@ -23,6 +23,7 @@ export const useCategory = defineStore("category", () => {
     return categoryService.GetForConsumer(categoryId, searchOptions).then((result) => {
       const index = categories.value.findIndex(x => x.id === categoryId);
       if (index >= 0) {
+        result.loaded = true
         categories.value[index] = result
       }
     })
