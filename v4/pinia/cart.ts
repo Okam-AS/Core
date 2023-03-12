@@ -47,13 +47,13 @@ export const useCart = defineStore("cart", () => {
     //TODO: if not loggedIn unsavedLineItem.value = lineItem
     return cartService.GetCartLineItem(lineItem).then(() => {
       unsavedLineItem.value = lineItem;
+    }).catch(() => {
+      unsavedLineItem.value = lineItem;
     })
   }
 
-  const loadNewUnsavedLineItem = async (productId: string) => {
+  const loadNewUnsavedLineItem = async (product: Product) => {
     let lineItem = new CartLineItem()
-    let product = new Product()
-    product.id = productId;
     lineItem.product = product;
     lineItem.quantity = 1;
      //TODO: if not loggedIn unsavedLineItem.value = lineItem
