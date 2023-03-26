@@ -3,6 +3,7 @@ import { defineStore } from "pinia";
 import { Cart, CartLineItem, Product } from "../models";
 import { useServices, useStore } from "./"
 import { ref, computed } from "vue";
+import { priceLabel } from "../helpers/tools"
 
 export const useCart = defineStore("cart", () => {
   const { cartService } = useServices()
@@ -25,6 +26,25 @@ export const useCart = defineStore("cart", () => {
     return cart ?? createEmptyCart();
   })
 
+  const displayFirstProductVariantAsDropdown = computed(() => {
+   if(!unsavedLineItem?.value?.product?.productVariants?.length) return false;
+
+   const firstProductVariant = unsavedLineItem.value.product.productVariants[0];
+   return firstProductVariant.required && !firstProductVariant.multiselect
+  })
+
+  const firstProductVariantDropdownLabel = computed(() => {
+   if(!displayFirstProductVariantAsDropdown.value) return '';
+
+   const firstProductVariant = unsavedLineItem.value.product.productVariants[0];
+   const selectedOption = firstProductVariant.options.find(x => x.selected);
+   if(!selectedOption) return firstProductVariant.name
+
+   return selectedOption.name + (selectedOption.amount ? (' ' + priceLabel(selectedOption.amount, true)) : '')
+   
+  })
+
+
   const disabledProperties = ["storeId", "items", "homeDeliveryMethod", "deliveryType", "paymentType", "calculations"]
   const availableProperties = Object.keys(new Cart()).filter(x => !disabledProperties.includes(x))
   const setCartRootProperties = (payload) => {
@@ -44,10 +64,9 @@ export const useCart = defineStore("cart", () => {
     if (lineItem.quantity < 1) {
       lineItem.quantity = 1;
     }
-    //TODO: if not loggedIn unsavedLineItem.value = lineItem
-    return cartService.GetCartLineItem(lineItem).then(() => {
-      unsavedLineItem.value = lineItem;
-    }).catch(() => {
+    return cartService.GetCartLineItem(lineItem).then((response) => {
+      unsavedLineItem.value = response;
+    }).catch((e) => {
       unsavedLineItem.value = lineItem;
     })
   }
@@ -56,9 +75,8 @@ export const useCart = defineStore("cart", () => {
     let lineItem = new CartLineItem()
     lineItem.product = product;
     lineItem.quantity = 1;
-     //TODO: if not loggedIn unsavedLineItem.value = lineItem
-    return cartService.GetCartLineItem(lineItem).then(() => {
-      unsavedLineItem.value = lineItem;
+    return cartService.GetCartLineItem(lineItem).then((response) => {
+      unsavedLineItem.value = response;
     })
   }
 
@@ -162,9 +180,12 @@ export const useCart = defineStore("cart", () => {
     unsavedLineItem.value.product.selectedOptionsAmount = optionsAmount;
   }
 
+  
   return {
     currentCart,
     unsavedLineItem,
+    displayFirstProductVariantAsDropdown,
+    firstProductVariantDropdownLabel,
     setCart,
     setCartRootProperties,
     clearCart,
