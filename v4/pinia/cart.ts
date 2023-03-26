@@ -44,6 +44,13 @@ export const useCart = defineStore("cart", () => {
    
   })
 
+  const firstProductVariantIsSelected = computed(() => {
+    if(!unsavedLineItem?.value?.product?.productVariants?.length) return false;
+    const firstProductVariant = unsavedLineItem.value.product.productVariants[0];
+    const selectedOption = firstProductVariant.options.find(x => x.selected);
+    return selectedOption
+   })
+
 
   const disabledProperties = ["storeId", "items", "homeDeliveryMethod", "deliveryType", "paymentType", "calculations"]
   const availableProperties = Object.keys(new Cart()).filter(x => !disabledProperties.includes(x))
@@ -186,6 +193,7 @@ export const useCart = defineStore("cart", () => {
     unsavedLineItem,
     displayFirstProductVariantAsDropdown,
     firstProductVariantDropdownLabel,
+    firstProductVariantIsSelected,
     setCart,
     setCartRootProperties,
     clearCart,
