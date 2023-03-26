@@ -20,10 +20,19 @@ export const useCart = defineStore("cart", () => {
     return cart;
   }
 
-  const currentCart = computed(() => {
-    if (!currentStore.id) return createEmptyCart()
-    const cart = carts.value.find(c => c.storeId === currentStore.id)
-    return cart ?? createEmptyCart();
+  const getCurrentCart = () => {
+    console.log("currentStore.id:" +  useStore().currentStore.id)
+    if(!currentStore.id) return null;
+    const cart = carts.value.find(x => x.storeId === currentStore.id);
+    if(cart) return cart
+    carts.value.push(createEmptyCart())
+    return carts.value.find(x => x.storeId === currentStore.id);
+  }
+
+  const totalItemCount = computed(() => {
+    return getCurrentCart()?.items?.map(item => item.quantity)?.reduce((total, q) => {
+      return total + q;
+    }, 0) ?? 0;
   })
 
   const displayFirstProductVariantAsDropdown = computed(() => {
@@ -55,13 +64,12 @@ export const useCart = defineStore("cart", () => {
   const disabledProperties = ["storeId", "items", "homeDeliveryMethod", "deliveryType", "paymentType", "calculations"]
   const availableProperties = Object.keys(new Cart()).filter(x => !disabledProperties.includes(x))
   const setCartRootProperties = (payload) => {
-    if (!currentStore.id) return;
-    if (!currentCart.value) {
-      carts.value.push(createEmptyCart())
-    }
+    const currentCart = getCurrentCart();
+    if (!currentCart) return;
+  
     availableProperties.forEach((propertyName) => {
       if (payload[propertyName] != undefined) {
-        currentCart.value[propertyName.toString()] = payload[propertyName]
+        currentCart[propertyName.toString()] = payload[propertyName]
       }
     })
     // TODO: lagre til db med userService.Update(cart)
@@ -88,7 +96,10 @@ export const useCart = defineStore("cart", () => {
   }
 
   const unsavedLineItemSave = async () => {
-    if (unsavedLineItemInvalidFields()) return;
+    console.log("unsavedLineItemSave store: " + useStore().currentStore.id)
+    
+    const currentCart = getCurrentCart();
+    if (!currentCart || unsavedLineItemInvalidFields()) return;
 
     if (!unsavedLineItem.value.id && unsavedLineItem.value.quantity === 0) return;
 
@@ -106,12 +117,12 @@ export const useCart = defineStore("cart", () => {
 
     if (unsavedLineItem.value.product.soldOut) unsavedLineItem.value.quantity = 0;
 
-    const itemIndex = currentCart.value.items.findIndex(item => item.id === unsavedLineItem.value.id)
+    const itemIndex = currentCart.items.findIndex(item => item.id === unsavedLineItem.value.id)
     const copyUnsavedLineItem = JSON.parse(JSON.stringify(unsavedLineItem.value));
     if (itemIndex >= 0) {
-      currentCart.value.items[itemIndex] = copyUnsavedLineItem
+      currentCart.items[itemIndex] = copyUnsavedLineItem
     } else {
-      currentCart.value.items.unshift(copyUnsavedLineItem);
+      currentCart.items.unshift(copyUnsavedLineItem);
     }
     // TODO: lagre til db med userService.Update(cart)
   }
@@ -128,12 +139,16 @@ export const useCart = defineStore("cart", () => {
   }
 
   const clearLineItems = () => {
-    currentCart.value.items = [];
+    const currentCart = getCurrentCart();
+    if(!currentCart) return;
+    currentCart.items = [];
   }
 
   const removeLineItem = (lineItemId: string) => {
-    const index = currentCart.value.items.findIndex(item => item.id === lineItemId)
-    delete currentCart.value.items[index];
+    const currentCart = getCurrentCart();
+    if(!currentCart) return;
+    const index = currentCart.items.findIndex(item => item.id === lineItemId)
+    delete currentCart.items[index];
   }
 
   const unsavedLineItemAddQuantity = (addQuantity: number) => {
@@ -189,7 +204,7 @@ export const useCart = defineStore("cart", () => {
 
   
   return {
-    currentCart,
+    totalItemCount,
     unsavedLineItem,
     displayFirstProductVariantAsDropdown,
     firstProductVariantDropdownLabel,
