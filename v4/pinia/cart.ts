@@ -6,27 +6,27 @@ import { ref, computed } from "vue";
 import { priceLabel } from "../helpers/tools"
 
 export const useCart = defineStore("cart", () => {
+
   const { cartService } = useServices()
-  const { currentStore } = useStore()
+  const _store = useStore()
 
   const carts = ref([] as Cart[]);
   const unsavedLineItem = ref({} as CartLineItem);
 
   const createEmptyCart = () => {
     const cart = new Cart();
-    cart.storeId = currentStore.id;
+    cart.storeId = _store.currentStore.id;
     cart.ignoreLegecyIsSelfPickupBool = true;
     cart.ignoreLegecyIsWaiterOrderBool = true;
     return cart;
   }
 
   const getCurrentCart = () => {
-    console.log("currentStore.id:" +  useStore().currentStore.id)
-    if(!currentStore.id) return null;
-    const cart = carts.value.find(x => x.storeId === currentStore.id);
+    if(!_store.currentStore.id) return null;
+    const cart = carts.value.find(x => x.storeId === _store.currentStore.id);
     if(cart) return cart
     carts.value.push(createEmptyCart())
-    return carts.value.find(x => x.storeId === currentStore.id);
+    return carts.value.find(x => x.storeId === _store.currentStore.id);
   }
 
   const totalItemCount = computed(() => {
@@ -96,8 +96,6 @@ export const useCart = defineStore("cart", () => {
   }
 
   const unsavedLineItemSave = async () => {
-    console.log("unsavedLineItemSave store: " + useStore().currentStore.id)
-    
     const currentCart = getCurrentCart();
     if (!currentCart || unsavedLineItemInvalidFields()) return;
 
@@ -128,7 +126,7 @@ export const useCart = defineStore("cart", () => {
   }
 
   const setCart = (cart: Cart) => {
-    const cartIndex = carts.value.findIndex(c => c.storeId === currentStore.id)
+    const cartIndex = carts.value.findIndex(c => c.storeId === _store.currentStore.id)
     if (cartIndex >= 0) {
       carts.value[cartIndex] = cart;
     }
