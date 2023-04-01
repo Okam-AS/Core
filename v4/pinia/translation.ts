@@ -5,7 +5,7 @@ import { ref, computed } from "vue";
 
 export const useTranslation = defineStore("translation", () => {
 
-  const selectedLanguage = ref('no');
+  const selectedLanguage = ref('en');
   const translations = ref({ en, no });
 
   const setLanguage = (lang: string) => {
