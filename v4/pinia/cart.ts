@@ -207,6 +207,7 @@ export const useCart = defineStore("cart", () => {
     displayFirstProductVariantAsDropdown,
     firstProductVariantDropdownLabel,
     firstProductVariantIsSelected,
+    getCurrentCart,
     setCart,
     setCartRootProperties,
     clearCart,
