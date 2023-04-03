@@ -7,31 +7,40 @@ import {
   CartService,
   CategoryService
 } from "../services";
+import { ref, computed } from "vue";
 
-export const useServices = defineStore({
-  id: "useServices",
-  state: (): ICoreInitializer => ({
-    bearerToken: 'en',
-    clientPlatformName: 'web',
-  }),
-  actions: {
-    setBearerToken(bearerToken: string) {
-      this.bearerToken = bearerToken
-    },
-    setClientPlatformName(clientPlatformName: string) {
-      this.clientPlatformName = clientPlatformName
-    },
-  },
-  getters: {
-    coreInitializer(): ICoreInitializer {
-      return ({
-        bearerToken: this.bearerToken,
-        clientPlatformName: this.clientPlatformName
-      })
-    },
-    userService() { return new UserService(this.coreInitializer) },
-    storeService() { return new StoreService(this.coreInitializer) },
-    cartService() { return new CartService(this.coreInitializer) },
-    categoryService() { return new CategoryService(this.coreInitializer) }
+export const useServices = defineStore("services", () => {
+
+  const bearerToken = ref('');
+  const clientPlatformName = ref('');
+
+
+  const setBearerToken = (token: string) => {
+    bearerToken.value = token
+  }
+
+  const setClientPlatformName = (name: string) => {
+    clientPlatformName.value = name
+  }
+  
+  const coreInitializer = computed(() => ({
+    bearerToken: bearerToken.value,
+    clientPlatformName: clientPlatformName.value
+  } as ICoreInitializer))
+  
+
+  const userService = computed(() => new UserService(coreInitializer.value))
+  const storeService = computed(() => new StoreService(coreInitializer.value))
+  const cartService = computed(() => new CartService(coreInitializer.value))
+  const categoryService = computed(() => new CategoryService(coreInitializer.value))
+  
+
+  return {
+    setBearerToken,
+    setClientPlatformName,
+    userService,
+    storeService,
+    cartService,
+    categoryService
   }
 });

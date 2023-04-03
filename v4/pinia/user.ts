@@ -59,10 +59,17 @@ export const useUser = defineStore("user", () => {
     });
   }
 
+  const logout = () => {
+    userService.Logout('notificationId', () => {
+      user.value = {} as User;
+    })
+  }
+
   return {
     user,
     secondsToWaitForVerificationToken,
     isLoggedIn,
+    logout,
     sendVerificationToken,
     verifyToken,
     toggleFavoriteProduct
