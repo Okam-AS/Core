@@ -69,6 +69,7 @@ export const useUser = defineStore("user", () => {
     user,
     secondsToWaitForVerificationToken,
     isLoggedIn,
+    phoneNumberIsValid,
     logout,
     sendVerificationToken,
     verifyToken,
