@@ -3,4 +3,5 @@ export default {
   storeSearchPage_search: "Search",
   storeSearchPage_shareLocation: "Share location",
   productPage_addToCart: "Add to cart",
+  loginModal_invalidPhoneNumber: "Invalid phone number",
 }

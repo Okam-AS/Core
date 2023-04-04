@@ -3,4 +3,5 @@ export default {
   storeSearchPage_search: "Søk",
   storeSearchPage_shareLocation: "Del posisjon",
   productPage_addToCart: "Legg i kurv",
+  loginModal_invalidPhoneNumber: "Ugyldig telefonnummer",
 }
