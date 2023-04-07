@@ -6,9 +6,11 @@ import { ref, computed } from "vue";
 
 export const useUser = defineStore("user", () => {
 
-  const { userService } = useServices()
+  const { userService, persistenceService } = useServices()
 
-  const user = ref({} as User);
+  const user = ref(persistenceService.load<User>('user') || {} as User);
+  persistenceService.watchAndStore(user, 'user');
+
   const isLoggedIn = computed(() => { return !!user?.value?.id });
 
 

@@ -5,10 +5,12 @@ import { useServices } from "./services"
 import { ref } from "vue";
 
 export const useStore = defineStore("store", () => {
-  const { storeService } = useServices()
+  const { storeService, persistenceService } = useServices()
 
   const stores = ref([] as Store[]);
-  const currentStore = ref({} as Store);
+
+  const currentStore = ref(persistenceService.load<Store>('currentStore') || {} as Store);
+  persistenceService.watchAndStore(currentStore, 'currentStore');
 
   const setCurrentStore = (store: Store) => {
     currentStore.value = store

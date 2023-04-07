@@ -1,5 +1,6 @@
 export { IVuexModule } from './i-vuex-module'
 export { IHttpModule } from './i-http-module'
 export { ICartRootProperties } from './i-cart-root-properties'
+export { IPersistenceModule } from './i-persistence-module'
 export { ILocation } from './i-location'
 export { ICoreInitializer } from './i-core-initializer'

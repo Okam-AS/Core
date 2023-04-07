@@ -7,10 +7,12 @@ import { priceLabel } from "../helpers/tools"
 
 export const useCart = defineStore("cart", () => {
 
-  const { cartService } = useServices()
+  const { cartService, persistenceService } = useServices()
   const _store = useStore()
 
-  const carts = ref([] as Cart[]);
+  const carts = ref(persistenceService.load<Cart[]>('carts') || [] as Cart[]);
+  persistenceService.watchAndStore(carts, 'carts');
+
   const unsavedLineItem = ref({} as CartLineItem);
 
   const createEmptyCart = () => {
@@ -200,7 +202,6 @@ export const useCart = defineStore("cart", () => {
     unsavedLineItem.value.product.selectedOptionsAmount = optionsAmount;
   }
 
-  
   return {
     totalItemCount,
     unsavedLineItem,
