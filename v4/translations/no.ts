@@ -4,6 +4,7 @@ export default {
   storeSearchPage_shareLocation: "Del posisjon",
   productPage_addToCart: "Legg i kurv",
   checkoutPage_heading: "Din bestilling",
+  checkoutPage_cartIsEmpty: "Du har ingen varer i handlekurven",
   checkoutPage_discount: "Rabatt",
   checkoutPage_delivery: "Levering",
   checkoutPage_total: "Totalt",

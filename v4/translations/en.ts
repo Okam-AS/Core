@@ -4,6 +4,7 @@ export default {
   storeSearchPage_shareLocation: "Share location",
   productPage_addToCart: "Add to cart",
   checkoutPage_heading: "Your order",
+  checkoutPage_cartIsEmpty: "You have no items in your cart",
   checkoutPage_discount: "Discount",
   checkoutPage_delivery: "Delivery",
   checkoutPage_total: "Total",

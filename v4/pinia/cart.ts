@@ -24,7 +24,7 @@ export const useCart = defineStore("cart", () => {
   }
 
   const getCurrentCart = () => {
-    if(!_store.currentStore.id) return null;
+    if(!_store.currentStore.id) return new Cart();
     const cart = carts.value.find(x => x.storeId === _store.currentStore.id);
     if(cart) return cart
     carts.value.push(createEmptyCart())
