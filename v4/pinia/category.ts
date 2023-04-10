@@ -29,10 +29,15 @@ export const useCategory = defineStore("category", () => {
     })
   }
 
+  const clearCategories = () => {
+    categories.value = [] as Category[]
+  }
+
   return {
     categories,
     loadCategories,
-    loadCategory
+    loadCategory,
+    clearCategories
   }
 
 })
