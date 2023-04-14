@@ -23,7 +23,7 @@ export default {
   checkoutPage_tipCustomAmountToggle: "Gi et kronebeløp",
   checkoutPage_tipCustomAmount: "Hvor mye vil du gi i tips?",
   checkoutPage_commentHeading: "Kommentarer",
-  checkoutPage_commentHint: "Her kan du skrive kommentarer til bestillingen din",
+  checkoutPage_commentHint: "Har du en beskjed til den som behandler din bestilling kan du skrive den inn her",
   loginModal_invalidPhoneNumber: "Ugyldig telefonnummer",
   general_today: 'I dag',
   general_tomorrow: 'I morgen',
