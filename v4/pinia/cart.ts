@@ -1,15 +1,18 @@
 
 import { defineStore } from "pinia";
 import { Cart, CartLineItem, Product } from "../models";
-import { useServices, useStore } from "./"
+import { useServices, useStore, useUser } from "./"
 import { ref, computed } from "vue";
 import { priceLabel } from "../helpers/tools"
+import { debounce } from "../helpers/ts-debounce"
 
 export const useCart = defineStore("cart", () => {
 
   const { cartService, persistenceService } = useServices()
   const _store = useStore()
+  const _useUser = useUser()
 
+  const isLoading = ref(false)
   const carts = ref(persistenceService.load<Cart[]>('carts') || [] as Cart[]);
   persistenceService.watchAndStore(carts, 'carts');
 
@@ -74,7 +77,8 @@ export const useCart = defineStore("cart", () => {
         currentCart[propertyName.toString()] = payload[propertyName]
       }
     })
-    // TODO: lagre til db med userService.Update(cart)
+
+    syncWithDb()
   }
 
   const loadUnsavedLineItem = async (lineItem: CartLineItem) => {
@@ -96,6 +100,24 @@ export const useCart = defineStore("cart", () => {
       unsavedLineItem.value = response;
     })
   }
+
+  const syncWithDb = debounce(function () {
+    if(!_useUser.isLoggedIn) return;
+    const currentCart = getCurrentCart();
+    if(!currentCart || !currentCart.storeId) return;
+    isLoading.value = true;
+    cartService.Update(currentCart).then((cart) => {
+      const cartIndex = carts.value.findIndex(c => c.storeId === _store.currentStore.id)
+      if (cartIndex >= 0) {
+        carts.value[cartIndex] = cart
+      } 
+    }).catch((err) => {
+      console.log(err)
+    }).finally(() => {
+      isLoading.value = false;
+    })
+
+  }, 400)
 
   const unsavedLineItemSave = async () => {
     const currentCart = getCurrentCart();
@@ -124,7 +146,8 @@ export const useCart = defineStore("cart", () => {
     } else {
       currentCart.items.unshift(copyUnsavedLineItem);
     }
-    // TODO: lagre til db med userService.Update(cart)
+
+    syncWithDb()
   }
 
   const setCart = (cart: Cart) => {

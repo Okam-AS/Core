@@ -6,7 +6,7 @@ import { ref, computed } from "vue";
 
 export const useUser = defineStore("user", () => {
 
-  const { userService, persistenceService } = useServices()
+  const { userService, persistenceService, setBearerToken } = useServices()
 
   const user = ref(persistenceService.load<User>('user') || {} as User);
   persistenceService.watchAndStore(user, 'user');
@@ -58,12 +58,14 @@ export const useUser = defineStore("user", () => {
     if (!token || !phoneNumberIsValid(landcode, phoneNumber)) return Promise.reject();
     return userService.Login(landcode + phoneNumber, token).then((response) => {
       user.value = response
+      setBearerToken(user.value.token)
     });
   }
 
   const logout = () => {
     userService.Logout('notificationId', () => {
       user.value = {} as User;
+      setBearerToken('')
     })
   }
 

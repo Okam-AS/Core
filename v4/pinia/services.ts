@@ -13,9 +13,13 @@ import { ref, computed } from "vue";
 
 export const useServices = defineStore("services", () => {
 
-  const bearerToken = ref('');
-  const clientPlatformName = ref('');
+  const persistenceService = computed(() => new PersistenceService())
 
+  const bearerToken = ref(persistenceService.value.load<string>('bearerToken') || '');
+  persistenceService.value.watchAndStore(bearerToken, 'bearerToken');
+
+  const clientPlatformName = ref(persistenceService.value.load<string>('clientPlatformName') || '');
+  persistenceService.value.watchAndStore(clientPlatformName, 'clientPlatformName');
 
   const setBearerToken = (token: string) => {
     bearerToken.value = token
@@ -36,7 +40,6 @@ export const useServices = defineStore("services", () => {
   const cartService = computed(() => new CartService(coreInitializer.value))
   const categoryService = computed(() => new CategoryService(coreInitializer.value))
   const paymentService = computed(() => new PaymentService(coreInitializer.value))
-  const persistenceService = computed(() => new PersistenceService())
   
 
   return {

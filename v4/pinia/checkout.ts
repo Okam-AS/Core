@@ -2,7 +2,7 @@
 import { defineStore } from "pinia";
 import { useCart, useTranslation, useServices } from "."
 import { ref, computed, watch } from "vue";
-import { debounce} from "../helpers/ts-debounce"
+import { debounce } from "../helpers/ts-debounce"
 
 export const useCheckout = defineStore("checkout", () => {
 
