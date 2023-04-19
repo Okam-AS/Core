@@ -9,6 +9,7 @@ export const useStore = defineStore("store", () => {
   const { storeService, persistenceService } = useServices()
   const _category = useCategory()
   const stores = ref([] as Store[]);
+  const isLoading = ref(false);
 
   const currentStore = ref(persistenceService.load<Store>('currentStore') || {} as Store);
   persistenceService.watchAndStore(currentStore, 'currentStore');
@@ -19,13 +20,17 @@ export const useStore = defineStore("store", () => {
   }
 
   const loadStores = async () => {
+    isLoading.value = true
     return storeService().GetAll().then((s) => {
       stores.value = s
+    }).finally(() => {
+      isLoading.value = false
     })
   }
 
   return {
     stores,
+    isLoading,
     currentStore,
     setCurrentStore,
     loadStores
