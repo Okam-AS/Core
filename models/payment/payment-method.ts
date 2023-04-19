@@ -5,5 +5,6 @@ export class PaymentMethod {
     last4: string;
     expMonth: string;
     expYear: string;
+    brand: string;
     paymentType: PaymentType;
 }

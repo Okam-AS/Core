@@ -108,7 +108,6 @@ export const useCart = defineStore("cart", () => {
     if(!currentCart || !currentCart.storeId) return;
     isLoading.value = true;
     return cartService().Update(currentCart).then((cart) => {
-      console.log('cart updated')
       const cartIndex = carts.value.findIndex(c => c.storeId === _store.currentStore.id)
       if (cartIndex >= 0) {
         carts.value[cartIndex] = cart
