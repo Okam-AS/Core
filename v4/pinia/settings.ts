@@ -5,6 +5,7 @@ export const useSettings = defineStore("settings", () => {
 
   const fontSizeScale = ref(1);
   const darkmode = ref(false);
+  const disableActionBarToggleAnimation = ref(false);
   const location = reactive({
     lat: 0,
     lng: 0,
@@ -17,6 +18,10 @@ export const useSettings = defineStore("settings", () => {
 
   const setFontSizeScale = (scale: number) => {
     fontSizeScale.value = scale
+  }
+
+  const setDisableActionBarToggleAnimation = (value: boolean) => {
+    disableActionBarToggleAnimation.value = value
   }
 
   const setDarkmode = (value: boolean) => {
@@ -41,10 +46,16 @@ export const useSettings = defineStore("settings", () => {
     return location
   })
 
+  const $disableActionBarToggleAnimation = computed(() => { 
+    return disableActionBarToggleAnimation
+  })
+
   return {
     $fontSizeScale,
     $isDarkmode,
     $location,
+    $disableActionBarToggleAnimation,
+    setDisableActionBarToggleAnimation,
     setLocation,
     setFontSizeScale,
     setDarkmode,
