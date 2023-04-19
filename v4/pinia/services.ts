@@ -35,11 +35,11 @@ export const useServices = defineStore("services", () => {
   } as ICoreInitializer))
   
 
-  const userService = computed(() => new UserService(coreInitializer.value))
-  const storeService = computed(() => new StoreService(coreInitializer.value))
-  const cartService = computed(() => new CartService(coreInitializer.value))
-  const categoryService = computed(() => new CategoryService(coreInitializer.value))
-  const paymentService = computed(() => new PaymentService(coreInitializer.value))
+  const userService =  () => new UserService(coreInitializer.value) 
+  const storeService = () => new StoreService(coreInitializer.value)
+  const cartService = () => new CartService(coreInitializer.value) 
+  const categoryService = () => new CategoryService(coreInitializer.value) 
+  const paymentService = () => new PaymentService(coreInitializer.value) 
   
 
   return {

@@ -121,7 +121,7 @@ export const useCheckout = defineStore("checkout", () => {
   const getAvailablePaymentMethods = () => {
     const currentCart = _cart.getCurrentCart()
     isLoadingCards.value = true;
-    return paymentService
+    return paymentService()
       .GetPaymentMethods(currentCart.id)
       .then((result) => {
        

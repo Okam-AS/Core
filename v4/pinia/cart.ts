@@ -78,14 +78,14 @@ export const useCart = defineStore("cart", () => {
       }
     })
 
-    syncWithDb()
+    syncWithDbDebounced()
   }
 
   const loadUnsavedLineItem = async (lineItem: CartLineItem) => {
     if (lineItem.quantity < 1) {
       lineItem.quantity = 1;
     }
-    return cartService.GetCartLineItem(lineItem).then((response) => {
+    return cartService().GetCartLineItem(lineItem).then((response) => {
       unsavedLineItem.value = response;
     }).catch((e) => {
       unsavedLineItem.value = lineItem;
@@ -96,28 +96,33 @@ export const useCart = defineStore("cart", () => {
     let lineItem = new CartLineItem()
     lineItem.product = product;
     lineItem.quantity = 1;
-    return cartService.GetCartLineItem(lineItem).then((response) => {
+    return cartService().GetCartLineItem(lineItem).then((response) => {
       unsavedLineItem.value = response;
     })
   }
 
-  const syncWithDb = debounce(function () {
+
+  const syncWithDb = async () => {
     if(!_useUser.isLoggedIn) return;
     const currentCart = getCurrentCart();
     if(!currentCart || !currentCart.storeId) return;
     isLoading.value = true;
-    cartService.Update(currentCart).then((cart) => {
+    return cartService().Update(currentCart).then((cart) => {
+      console.log('cart updated')
       const cartIndex = carts.value.findIndex(c => c.storeId === _store.currentStore.id)
       if (cartIndex >= 0) {
         carts.value[cartIndex] = cart
       } 
     }).catch((err) => {
+      console.log('Failed to sync cart with db')
       console.log(err)
     }).finally(() => {
       isLoading.value = false;
     })
+  }
 
-  }, 400)
+  const syncWithDbDebounced = debounce(syncWithDb, 400)
+
 
   const unsavedLineItemSave = async () => {
     const currentCart = getCurrentCart();
@@ -147,7 +152,7 @@ export const useCart = defineStore("cart", () => {
       currentCart.items.unshift(copyUnsavedLineItem);
     }
 
-    syncWithDb()
+    syncWithDbDebounced()
   }
 
   const setCart = (cart: Cart) => {
@@ -231,6 +236,7 @@ export const useCart = defineStore("cart", () => {
     displayFirstProductVariantAsDropdown,
     firstProductVariantDropdownLabel,
     firstProductVariantIsSelected,
+    syncWithDb,
     getCurrentCart,
     setCart,
     setCartRootProperties,

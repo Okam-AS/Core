@@ -12,7 +12,7 @@ export const useCategory = defineStore("category", () => {
   const loadCategories = async (searchOptions: CategorySearchOptions) => {
     const currentStore = useStore().currentStore
     if (!currentStore.id || !searchOptions) return Promise.reject();
-    return categoryService.GetAllForConsumer(currentStore.id, searchOptions).then((result) => {
+    return categoryService().GetAllForConsumer(currentStore.id, searchOptions).then((result) => {
       categories.value = result
     })
   }
@@ -20,7 +20,7 @@ export const useCategory = defineStore("category", () => {
   const loadCategory = async (categoryId: string, searchOptions: CategorySearchOptions) => {
     const currentStore = useStore().currentStore
     if (!currentStore.id || !searchOptions) return Promise.reject();
-    return categoryService.GetForConsumer(categoryId, searchOptions).then((result) => {
+    return categoryService().GetForConsumer(categoryId, searchOptions).then((result) => {
       const index = categories.value.findIndex(x => x.id === categoryId);
       if (index >= 0) {
         result.loaded = true

@@ -17,9 +17,9 @@ export const useUser = defineStore("user", () => {
   const toggleFavoriteProduct = async (productId: string) => {
     if (!isLoggedIn) return Promise.reject();
     if (user.value.favoriteProductIds?.includes(productId))
-      await userService.RemoveFavoriteProduct(productId)
+      await userService().RemoveFavoriteProduct(productId)
     else
-      await userService.AddFavoriteProduct(productId)
+      await userService().AddFavoriteProduct(productId)
 
     return Promise.resolve();
   }
@@ -48,7 +48,7 @@ export const useUser = defineStore("user", () => {
 
   const sendVerificationToken = async (landcode, phoneNumber) => {
     if (!phoneNumberIsValid(landcode, phoneNumber)) return Promise.reject();
-    const success = await userService.SendVerificationToken(landcode + phoneNumber);
+    const success = await userService().SendVerificationToken(landcode + phoneNumber);
     if (!success) return Promise.reject()
     startWaitingOnVerificationTokenCountdown();
     return Promise.resolve();
@@ -56,14 +56,14 @@ export const useUser = defineStore("user", () => {
 
   const verifyToken = async (landcode, phoneNumber, token) => {
     if (!token || !phoneNumberIsValid(landcode, phoneNumber)) return Promise.reject();
-    return userService.Login(landcode + phoneNumber, token).then((response) => {
+    return userService().Login(landcode + phoneNumber, token).then((response) => {
       user.value = response
       setBearerToken(user.value.token)
     });
   }
 
   const logout = () => {
-    userService.Logout('notificationId', () => {
+    userService().Logout('notificationId', () => {
       user.value = {} as User;
       setBearerToken('')
     })
