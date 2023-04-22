@@ -9,12 +9,21 @@ export const useColors = defineStore("colors", () => {
     lightBlue: '#F2F4FB',
     darkBlue: '#1E283D',
     red: '#CC0000',
+    lightOkamGreen: '#D5F6E5',
+    okamGreen: '#1BB776',
   });
 
   const $color = (key: string, darkmodeKey?: string) => {
-    return darkmodeKey && useSettings().$isDarkmode && colors.value.hasOwnProperty(darkmodeKey) ?
-      colors.value[darkmodeKey] :
-      colors.value[key]
+    const useDarkModeKey = darkmodeKey && useSettings().$isDarkmode && colors.value.hasOwnProperty(darkmodeKey)
+    const keyToUse = useDarkModeKey ? darkmodeKey : key
+
+    if(keyToUse === 'primary') return $primaryColor.value
+    if(keyToUse === 'secondary') return $secondaryColor.value
+    if(keyToUse === 'background') return $backgroundColor.value
+    if(keyToUse === 'text') return $textColor.value
+
+    return colors.value[keyToUse]
+      
   }
 
   const $primaryColor = computed(() => {
