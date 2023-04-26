@@ -1,4 +1,4 @@
-import { IPersistenceModule } from '../interfaces'
+import { IPersistenceModule } from '../../interfaces'
 class IPersistenceModuleNS implements IPersistenceModule {
   exists: any;
   get: any;
@@ -7,16 +7,16 @@ class IPersistenceModuleNS implements IPersistenceModule {
 
   constructor () {
     this.exists = (key) => {
-      return require('@nativescript/core/application-settings' + '').hasKey(key)
+      return require('@nativescript/core/' + 'application-settings').hasKey(key)
     }
     this.get = (key) => {
-      return require('@nativescript/core/application-settings' + '').getString(key)
+      return require('@nativescript/core/' + 'application-settings').getString(key)
     }
     this.set = (key, value) => {
-      return require('@nativescript/core/application-settings' + '').setString(key, value)
+      return require('@nativescript/core/' + 'application-settings').setString(key, value)
     }
     this.delete = (key) => {
-      return require('@nativescript/core/application-settings' + '').remove(key)
+      return require('@nativescript/core/' + 'application-settings').remove(key)
     }
   }
 }

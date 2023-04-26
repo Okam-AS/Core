@@ -1,5 +1,4 @@
 import $config from '../helpers/configuration'
-const fileSuffix = $config.platformFileSuffix
 
-export const { HttpModule } = require(`./http-module${fileSuffix}`)
-export const { PersistenceModule } = require(`./persistence-module${fileSuffix}`)
+export const { HttpModule } = await import(`./http-module${$config.platformFileSuffix}`);
+export const { PersistenceModule } = await import(`./persistence-module${$config.platformFileSuffix}`);
