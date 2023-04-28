@@ -17,7 +17,7 @@ export default {
   checkoutPage_deliveryAddress: "Leveringsadresse",
   checkoutPage_deliveryZip: "Postnr.",
   checkoutPage_deliveryPostalplace: "Poststed",
-  checkoutPage_deliveryTimeToggle: "Endre leveringstidspunkt for senere",
+  checkoutPage_deliveryTimeToggle: "Endre leveringstidspunkt",
   checkoutPage_paymentHeading: "Betaling",
   checkoutPage_paymentDiscountCodeToggle: "Har du en rabattkode?",
   checkoutPage_paymentYourDiscountCode: "Din rabattkode",

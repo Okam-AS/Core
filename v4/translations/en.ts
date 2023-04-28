@@ -17,7 +17,7 @@ export default {
   checkoutPage_deliveryAddress: "Delivery address",
   checkoutPage_deliveryZip: "Zip",
   checkoutPage_deliveryPostalplace: "Place",
-  checkoutPage_deliveryTimeToggle: "Change delivery time for later",
+  checkoutPage_deliveryTimeToggle: "Change delivery time",
   checkoutPage_paymentHeading: "Payment",
   checkoutPage_paymentDiscountCodeToggle: "Do you have a discount code?",
   checkoutPage_paymentYourDiscountCode: "Discount code",

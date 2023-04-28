@@ -246,8 +246,8 @@ export const useCart = defineStore("cart", () => {
   const singleLineDeliveryAddressInCart = computed(() => {
     const currentCart = getCurrentCart()
     let singleLineAddress =  currentCart?.fullAddress?.toString()
-    if(singleLineAddress){
-      singleLineAddress += ", " + (currentCart?.zipCode ?? '') + " " + (currentCart?.city?? '');
+    if(singleLineAddress && currentCart.zipCode){
+      singleLineAddress += ", " + (currentCart.zipCode ?? '') + " " + (currentCart.city?? '');
     }
     return singleLineAddress
   })
