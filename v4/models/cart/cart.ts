@@ -1,32 +1,32 @@
 import { DeliveryType, PaymentType } from '../../enums'
 import { DeliveryMethod, CartLineItem, CartCalculation } from '../../models'
 export class Cart {
-  id: string;
+  id: string = '';
   items: Array<CartLineItem> = [];
-  storeId: number;
+  storeId: number = 0;
 
-  requestedCompletion: Date;
+  requestedCompletion?: Date = undefined;
 
-  homeDeliveryMethodId: string;
-  homeDeliveryMethod: DeliveryMethod;
+  homeDeliveryMethodId?: string = undefined;
+  homeDeliveryMethod?: DeliveryMethod = undefined;
 
-  ignoreLegecyIsSelfPickupBool: boolean;
-  deliveryType: DeliveryType;
+  ignoreLegecyIsSelfPickupBool: boolean = true;
+  deliveryType: DeliveryType = DeliveryType.NotSet;
 
-  ignoreLegecyIsWaiterOrderBool: boolean;
-  paymentType: PaymentType;
+  ignoreLegecyIsWaiterOrderBool: boolean = true;
+  paymentType: PaymentType = PaymentType.NotSet;
 
-  discountCode: string;
-  fullAddress: string;
-  zipCode: string;
-  city: string;
-  paymentIntentId: string;
-  vippsOrderId: string;
-  comment: string;
+  discountCode?: string = undefined;
+  fullAddress?: string = undefined;
+  zipCode?: string = undefined;
+  city?: string = undefined;
+  paymentIntentId?: string = undefined;
+  vippsOrderId?: string = undefined;
+  comment?: string = undefined;
 
-  tipPercent: number;
-  tipAmount: number;
-  tableName: string;
+  tipPercent: number = 0;
+  tipAmount: number = 0;
+  tableName?: string = undefined;
 
   itemsCountInCategory;
 

@@ -229,14 +229,39 @@ export const useCart = defineStore("cart", () => {
     unsavedLineItem.value.product.selectedOptionsAmount = optionsAmount;
   }
 
+  const getQuanityOfProductInCart = (productId) => {
+    if(!productId) return 0;
+    const currentCart = getCurrentCart()
+    let lineItems  = (currentCart?.items || []).filter(
+      (x) => x.product && x.product.id === productId
+    );
+    if (lineItems.length === 0) return 0;
+    let q = 0;
+    lineItems.forEach((item) => {
+      q += item.quantity;
+    });
+    return q;
+  }
+
+  const singleLineDeliveryAddressInCart = computed(() => {
+    const currentCart = getCurrentCart()
+    let singleLineAddress =  currentCart?.fullAddress?.toString()
+    if(singleLineAddress){
+      singleLineAddress += ", " + (currentCart?.zipCode ?? '') + " " + (currentCart?.city?? '');
+    }
+    return singleLineAddress
+  })
+
   return {
     totalItemCount,
     unsavedLineItem,
     displayFirstProductVariantAsDropdown,
     firstProductVariantDropdownLabel,
     firstProductVariantIsSelected,
+    singleLineDeliveryAddressInCart,
     syncWithDb,
     getCurrentCart,
+    getQuanityOfProductInCart,
     setCart,
     setCartRootProperties,
     clearCart,

@@ -3,22 +3,35 @@ import { defineStore } from "pinia";
 import { useCart, useTranslation, useServices } from "."
 import { ref, computed, watch } from "vue";
 import { debounce } from "../helpers/ts-debounce"
+import { priceLabel } from "../helpers/tools";
+
 
 export const useCheckout = defineStore("checkout", () => {
 
   const { $i } = useTranslation()
   const _cart = useCart()
-  const { paymentService } = useServices()
+  const { paymentService, persistenceService } = useServices()
+
+  const submitButtonLabel = computed(() => { 
+    const currentCart = _cart.getCurrentCart()
+    const priceAmount = currentCart?.calculations?.finalAmount ?? 0
+    return $i['checkoutPage_submit'] + (priceAmount > 0 ? ' ' + priceLabel(priceAmount, true) : '')
+  })
 
   // Requested Completion Date
-  const selectedRequestedCompletionDateOptionIndex = ref(0)
-  const selectedRequestedCompletionTime = ref(new Date())
-  const tempRequestedCompletion = ref('')
+  const selectedRequestedCompletionDateOptionIndex = ref(persistenceService.load<number>('selectedRequestedCompletionDateOptionIndex') || 0);
+  persistenceService.watchAndStore(selectedRequestedCompletionDateOptionIndex, 'selectedRequestedCompletionDateOptionIndex');
 
+  const selectedRequestedCompletionTime = ref(persistenceService.load<Date>('selectedRequestedCompletionTime') || (new Date()));
+  persistenceService.watchAndStore(selectedRequestedCompletionTime, 'selectedRequestedCompletionTime');
+
+
+  const tempRequestedCompletion = ref('')
   const requestedCompletionDateOptions = computed(() => {
     const getRequestedCompletionDateLabel = (index, date) => {
-      if (index === 0) return $i['general_today'] 
-      if (index === 1) return $i['general_tomorrow']
+      if (index === 0) return $i['general_asap'] 
+      if (index === 1) return $i['general_today'] 
+      if (index === 2) return $i['general_tomorrow']
       const days =  [$i['general_threeLetterSunday'], 
       $i['general_threeLetterMonday'],
       $i['general_threeLetterTuesday'],
@@ -64,19 +77,44 @@ export const useCheckout = defineStore("checkout", () => {
     requestedCompletionChange()
   }
 
+  const singleLineSelectedDateTime = computed(() => {
+    if(selectedRequestedCompletionDateOptionIndex.value === 0 || 
+      !selectedRequestedCompletionDate.value || 
+      !selectedRequestedCompletionTime.value ||
+      requestedCompletionDateOptions.value.length <= selectedRequestedCompletionDateOptionIndex.value)
+    return $i['general_asap']?.toLowerCase()
+
+    return (requestedCompletionDateOptions.value[selectedRequestedCompletionDateOptionIndex.value]?.label?.toLowerCase()) + ', ' + (('0'+selectedRequestedCompletionTimeHours()).slice(-2)) + ':' + (('0'+selectedRequestedCompletionTimeMinutes()).slice(-2))
+  })
+
+
+  const selectedRequestedCompletionTimeHours = () => {
+    return new Date(selectedRequestedCompletionTime.value).getHours()
+  }
+
+  const selectedRequestedCompletionTimeMinutes = () => {
+    return new Date(selectedRequestedCompletionTime.value).getMinutes()
+  }
+
   const requestedCompletionChange = () => {
-    const selectedDateTime = new Date(
-      selectedRequestedCompletionDate.value.getFullYear(),
-      selectedRequestedCompletionDate.value.getMonth(),
-      selectedRequestedCompletionDate.value.getDate(),
-      selectedRequestedCompletionTime.value.getHours(),
-      selectedRequestedCompletionTime.value.getMinutes()
-    );
-  
-    const tzoffset = selectedDateTime.getTimezoneOffset() * 60000;
-    const localDateTime = new Date(selectedDateTime.getTime() - tzoffset);
-    const localDateTimeISOString = localDateTime.toISOString().slice(0, -1);
-    tempRequestedCompletion.value = localDateTimeISOString;
+    if(selectedRequestedCompletionDateOptionIndex.value === 0 || 
+      !selectedRequestedCompletionDate.value || 
+      !selectedRequestedCompletionTime.value) {
+      tempRequestedCompletion.value = ''
+    }
+    else {
+      const selectedDateTime = new Date(
+        selectedRequestedCompletionDate.value.getFullYear(),
+        selectedRequestedCompletionDate.value.getMonth(),
+        selectedRequestedCompletionDate.value.getDate(),
+        selectedRequestedCompletionTimeHours(),
+        selectedRequestedCompletionTimeMinutes(),
+      );
+      const tzoffset = selectedDateTime.getTimezoneOffset() * 60000;
+      const localDateTime = new Date(selectedDateTime.getTime() - tzoffset);
+      const localDateTimeISOString = localDateTime.toISOString().slice(0, -1);
+      tempRequestedCompletion.value = localDateTimeISOString;
+    }
   };
 
   watch(tempRequestedCompletion, debounce(function () {
@@ -143,11 +181,16 @@ export const useCheckout = defineStore("checkout", () => {
 
 
   return {
+    submitButtonLabel,
+
     // Requested Completion Date
     selectedRequestedCompletionDate,
     selectedRequestedCompletionTime,
     selectedRequestedCompletionDateOptionIndex,
     requestedCompletionDateOptions,
+    singleLineSelectedDateTime,
+    selectedRequestedCompletionTimeHours,
+    selectedRequestedCompletionTimeMinutes,
     dateOptionIndexChange,
     timeChange,
 
