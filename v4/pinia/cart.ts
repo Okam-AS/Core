@@ -66,7 +66,7 @@ export const useCart = defineStore("cart", () => {
    })
 
 
-  const disabledProperties = ["storeId", "items", "homeDeliveryMethod", "deliveryType", "paymentType", "calculations"]
+  const disabledProperties = ["storeId", "items", "homeDeliveryMethod", "calculations"]
   const availableProperties = Object.keys(new Cart()).filter(x => !disabledProperties.includes(x))
   const setCartRootProperties = (payload) => {
     const currentCart = getCurrentCart();
