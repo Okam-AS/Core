@@ -34,6 +34,8 @@ export default {
   checkoutPage_commentHeading: "Comments",
   checkoutPage_commentHint: "Here you can write any comments you have to your order",
   checkoutPage_tableName: "Table number",
+  checkoutPage_payInStore: "Pay in store",
+  checkoutPage_newCard: "New card",
   loginModal_invalidPhoneNumber: "Invalid phone number",
   deliveryType_selfPickup: 'Self pickup',
   deliveryType_instantHomeDelivery: 'Home delivery',

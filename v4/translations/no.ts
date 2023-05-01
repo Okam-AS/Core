@@ -34,6 +34,8 @@ export default {
   checkoutPage_commentHeading: "Kommentarer",
   checkoutPage_commentHint: "Har du en beskjed til den som behandler din bestilling kan du skrive den inn her",
   checkoutPage_tableName: "Bordnummer",
+  checkoutPage_payInStore: "Betal på stedet",
+  checkoutPage_newCard: "Nytt kort",
   loginModal_invalidPhoneNumber: "Ugyldig telefonnummer",
   deliveryType_selfPickup: 'Hent selv',
   deliveryType_instantHomeDelivery: 'Hjemlevering',

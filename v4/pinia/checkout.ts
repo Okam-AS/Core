@@ -26,7 +26,7 @@ export const useCheckout = defineStore("checkout", () => {
     if (card.paymentType === PaymentType.Vipps)
       return 'Vipps'
     if (card.paymentType === PaymentType.PayInStore)
-      return 'Betal i butikk'
+      return $i['checkoutPage_payInStore']
     return ''
   }
 
