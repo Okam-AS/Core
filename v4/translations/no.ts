@@ -42,6 +42,7 @@ export default {
   deliveryType_groupedHomeDelivery: 'Hjemlevering',
   deliveryType_tableDelivery: 'Spis inne',
   deliveryType_notSet: 'Ikke valgt',
+  checkoutPage_rememberCard: 'Husk dette kortet',
   general_asap: 'Snarest',
   general_today: 'I dag',
   general_tomorrow: 'I morgen',

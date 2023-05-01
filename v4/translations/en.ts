@@ -42,6 +42,7 @@ export default {
   deliveryType_groupedHomeDelivery: 'Home delivery',
   deliveryType_tableDelivery: 'Eat in',
   deliveryType_notSet: 'Not set',
+  checkoutPage_rememberCard: 'Remember card',
   general_asap: 'ASAP',
   general_today: 'Today',
   general_tomorrow: 'Tomorrow',

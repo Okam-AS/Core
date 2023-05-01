@@ -167,7 +167,6 @@ export const useCheckout = defineStore("checkout", () => {
   const selectedPaymentMethodId = ref("")
   const isLoadingPaymentMethods = ref(true)
   const rememberCard = ref(true)
-  const creditCardError = ref(false)
   
   const cardNumber = ref('')
   const expMonth = ref('')
@@ -217,9 +216,36 @@ export const useCheckout = defineStore("checkout", () => {
       });
   }
 
+  const setCardInput = (key, value) => {
+    if(key === 'cardNumber') 
+      cardNumber.value = value
+    
+    if(key === 'expMonth')
+      expMonth.value = value
+
+    if(key === 'expYear')
+      expYear.value = value
+
+    if(key === 'cvc')
+      cvc.value = value
+  }
+
+  const toggleRememberCard = () => {
+    rememberCard.value = !rememberCard.value
+  }
+  
+
+  const isValid = () => {
+
+  }
+
+  const submitTap = () => {
+    
+  }
 
   return {
     submitButtonLabel,
+    submitTap,
 
     paymentLabel,
     addDiscountCode,
@@ -236,11 +262,15 @@ export const useCheckout = defineStore("checkout", () => {
     timeChange,
 
     // Payment
+    rememberCard,
     paymentMethods,
     selectedPaymentMethodId,
     isLoadingPaymentMethods,
+    toggleRememberCard,
     setPaymentMethod,
     getAvailablePaymentMethods,
-    getCardInfo
+    setCardInput,
+    getCardInfo,
+
   }
 })
