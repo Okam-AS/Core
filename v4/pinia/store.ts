@@ -3,7 +3,7 @@ import { defineStore } from "pinia";
 import { Store } from "../models";
 import { useServices } from "./services"
 import { useCategory } from "./category";
-import { ref } from "vue";
+import { ref, computed } from "vue";
 
 export const useStore = defineStore("store", () => {
   const { storeService, persistenceService } = useServices()
@@ -28,10 +28,19 @@ export const useStore = defineStore("store", () => {
     })
   }
 
+  const singleLineStoreAddress = computed(() => {
+    let singleLineAddress =   currentStore.value?.address?.fullAddress?.toString()
+    if(singleLineAddress && currentStore.value?.address?.zipCode){
+      singleLineAddress += ", " + (currentStore.value?.address?.zipCode ?? '') + " " + (currentStore.value?.address?.city?? '');
+    }
+    return singleLineAddress
+  })
+
   return {
     stores,
     isLoading,
     currentStore,
+    singleLineStoreAddress,
     setCurrentStore,
     loadStores
   }
