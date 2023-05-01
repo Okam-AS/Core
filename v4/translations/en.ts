@@ -52,4 +52,7 @@ export default {
   general_threeLetterThursday: 'Thu',
   general_threeLetterFriday: 'Fri',
   general_threeLetterSaturday: 'Sat',
+  general_termsUrl: 'https://vilkar.okam.no',
+  general_termsAcceptPrefix: 'By using Okam you accept our ',
+  general_terms: 'terms and privacy policy',
 }

@@ -52,4 +52,7 @@ export default {
   general_threeLetterThursday: 'Tor',
   general_threeLetterFriday: 'Fre',
   general_threeLetterSaturday: 'Lør',
+  general_termsUrl: 'https://vilkar.okam.no',
+  general_termsAcceptPrefix: 'Ved å benytte Okam aksepterer du våre ',
+  general_terms: 'brukervilkår',
 }

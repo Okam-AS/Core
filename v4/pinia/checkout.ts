@@ -163,10 +163,10 @@ export const useCheckout = defineStore("checkout", () => {
 
   // Payment
   const selectedPaymentType = ref('NotSet')
-  const cards = ref([])
+  const paymentMethods = ref([])
   const selectedPaymentMethodId = ref("")
+  const isLoadingPaymentMethods = ref(true)
   const rememberCard = ref(true)
-  const isLoadingCards = ref(true)
   const creditCardError = ref(false)
   
   const cardNumber = ref('')
@@ -197,24 +197,23 @@ export const useCheckout = defineStore("checkout", () => {
 
   const getAvailablePaymentMethods = () => {
     const currentCart = _cart.getCurrentCart()
-    isLoadingCards.value = true;
+    isLoadingPaymentMethods.value = true;
     return paymentService()
       .GetPaymentMethods(currentCart.id)
       .then((result) => {
        
-        cards.value = Array.isArray(result) ? result : [];
+        paymentMethods.value = Array.isArray(result) ? result : [];
 
         if (selectedPaymentMethodId.value) {
           setPaymentMethod(
-            cards.value.find((x) => x.id === selectedPaymentMethodId.value)
+            paymentMethods.value.find((x) => x.id === selectedPaymentMethodId.value)
           );
-        } else if (cards.value.length >= 1) {
-          setPaymentMethod(cards.value[0]);
+        } else if (paymentMethods.value.length >= 1) {
+          setPaymentMethod(paymentMethods.value[0]);
         }
-        isLoadingCards.value = false;
       })
-      .catch(() => {
-        isLoadingCards.value = false;
+      .finally(() => {
+        isLoadingPaymentMethods.value = false;
       });
   }
 
@@ -237,7 +236,9 @@ export const useCheckout = defineStore("checkout", () => {
     timeChange,
 
     // Payment
-    cards,
+    paymentMethods,
+    selectedPaymentMethodId,
+    isLoadingPaymentMethods,
     setPaymentMethod,
     getAvailablePaymentMethods,
     getCardInfo
