@@ -8,6 +8,7 @@ export default {
   checkoutPage_submit: "Complete order",
   checkoutPage_discount: "Discount",
   checkoutPage_delivery: "Delivery",
+  checkoutPage_tip: "Tips",
   checkoutPage_total: "Total",
   checkoutPage_pcs: " pcs.",
   checkoutPage_deliveryHeading: "Delivery",

@@ -8,6 +8,7 @@ export default {
   checkoutPage_submit: "Fullør bestilling",
   checkoutPage_discount: "Rabatt",
   checkoutPage_delivery: "Levering",
+  checkoutPage_tip: "Tips",
   checkoutPage_total: "Totalt",
   checkoutPage_pcs: " stk.",
   checkoutPage_deliveryHeading: "Levering",
