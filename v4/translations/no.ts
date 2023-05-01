@@ -22,6 +22,8 @@ export default {
   checkoutPage_paymentHeading: "Betaling",
   checkoutPage_paymentDiscountCodeToggle: "Har du en rabattkode?",
   checkoutPage_paymentYourDiscountCode: "Din rabattkode",
+  checkoutPage_use: "Bruk",
+  checkoutPage_invalidDiscountCode: "Ugyldig rabattkode",
   checkoutPage_tipHeading: "Tips",
   checkoutPage_tipCustomAmountToggle: "Gi et kronebeløp",
   checkoutPage_tipCustomAmount: "Hvor mye vil du gi i tips?",

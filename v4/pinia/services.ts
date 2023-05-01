@@ -7,7 +7,8 @@ import {
   CartService,
   CategoryService,
   PersistenceService,
-  PaymentService
+  PaymentService,
+  DiscountService
 } from "../services";
 import { ref, computed } from "vue";
 
@@ -40,6 +41,7 @@ export const useServices = defineStore("services", () => {
   const cartService = () => new CartService(coreInitializer.value) 
   const categoryService = () => new CategoryService(coreInitializer.value) 
   const paymentService = () => new PaymentService(coreInitializer.value) 
+  const discountService = () => new DiscountService(coreInitializer.value) 
   
 
   return {
@@ -50,6 +52,7 @@ export const useServices = defineStore("services", () => {
     cartService,
     categoryService,
     paymentService,
+    discountService,
     persistenceService
   }
 });

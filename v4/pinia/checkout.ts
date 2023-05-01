@@ -4,19 +4,50 @@ import { useCart, useTranslation, useServices } from "."
 import { ref, computed, watch } from "vue";
 import { debounce } from "../helpers/ts-debounce"
 import { priceLabel } from "../helpers/tools";
+import { PaymentMethod } from "../models";
+import { PaymentType } from "../enums";
 
 
 export const useCheckout = defineStore("checkout", () => {
 
   const { $i } = useTranslation()
   const _cart = useCart()
-  const { paymentService, persistenceService } = useServices()
+  const { paymentService, persistenceService, discountService } = useServices()
 
   const submitButtonLabel = computed(() => { 
     const currentCart = _cart.getCurrentCart()
     const priceAmount = currentCart?.calculations?.finalAmount ?? 0
     return $i['checkoutPage_submit'] + (priceAmount > 0 ? ' ' + priceLabel(priceAmount, true) : '')
   })
+
+  const paymentLabel = (card: PaymentMethod) => {
+    if (card.paymentType === PaymentType.Stripe)
+      return 'xxxx xxxx xxxx ' + card.last4 + '   ' + card.expMonth + '/' + card.expYear
+    if (card.paymentType === PaymentType.Vipps)
+      return 'Vipps'
+    if (card.paymentType === PaymentType.PayInStore)
+      return 'Betal i butikk'
+    return ''
+  }
+
+  // Discount code
+  const addDiscountCode = async (code) => {
+    const currentCart = _cart.getCurrentCart()
+    if (code === currentCart.discountCode) return true;
+    return discountService()
+        .Exists(currentCart.storeId, code)
+        .then((exists) => {
+          if (exists || code === "") {
+            _cart.setCartRootProperties({ discountCode: code })
+            return true;
+          } else {
+            return false;
+          }
+        }).catch(() => {
+          return false;
+        })
+  }
+  
 
   // Requested Completion Date
   const selectedRequestedCompletionDateOptionIndex = ref(persistenceService.load<number>('selectedRequestedCompletionDateOptionIndex') || 0);
@@ -182,6 +213,9 @@ export const useCheckout = defineStore("checkout", () => {
 
   return {
     submitButtonLabel,
+
+    paymentLabel,
+    addDiscountCode,
 
     // Requested Completion Date
     selectedRequestedCompletionDate,

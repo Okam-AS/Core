@@ -22,6 +22,8 @@ export default {
   checkoutPage_paymentHeading: "Payment",
   checkoutPage_paymentDiscountCodeToggle: "Do you have a discount code?",
   checkoutPage_paymentYourDiscountCode: "Discount code",
+  checkoutPage_use: "Use",
+  checkoutPage_invalidDiscountCode: "Invalid discount code",
   checkoutPage_tipHeading: "Tip",
   checkoutPage_tipCustomAmountToggle: "Give a custom amount",
   checkoutPage_tipCustomAmount: "How much do you want to tip?",
