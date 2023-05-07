@@ -8,7 +8,8 @@ import {
   CategoryService,
   PersistenceService,
   PaymentService,
-  DiscountService
+  DiscountService,
+  OrderService
 } from "../services";
 import { ref, computed } from "vue";
 
@@ -42,8 +43,8 @@ export const useServices = defineStore("services", () => {
   const categoryService = () => new CategoryService(coreInitializer.value) 
   const paymentService = () => new PaymentService(coreInitializer.value) 
   const discountService = () => new DiscountService(coreInitializer.value) 
+  const orderService = () => new OrderService(coreInitializer.value) 
   
-
   return {
     setBearerToken,
     setClientPlatformName,
@@ -53,6 +54,7 @@ export const useServices = defineStore("services", () => {
     categoryService,
     paymentService,
     discountService,
+    orderService,
     persistenceService
   }
 });

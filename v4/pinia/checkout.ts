@@ -1,6 +1,6 @@
 
 import { defineStore } from "pinia";
-import { useCart, useTranslation, useServices } from "."
+import { useCart, useTranslation, useServices, useStore } from "."
 import { ref, computed, watch } from "vue";
 import { debounce } from "../helpers/ts-debounce"
 import { priceLabel } from "../helpers/tools";
@@ -12,6 +12,7 @@ export const useCheckout = defineStore("checkout", () => {
 
   const { $i } = useTranslation()
   const _cart = useCart()
+  const _store = useStore()
   const { paymentService, persistenceService, discountService } = useServices()
 
   const submitButtonLabel = computed(() => { 
@@ -240,6 +241,7 @@ export const useCheckout = defineStore("checkout", () => {
   }
 
   const submitTap = () => {
+    if(_cart.isLoading || isLoadingPaymentMethods.value) return;
     
   }
 
