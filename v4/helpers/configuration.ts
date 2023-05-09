@@ -1,3 +1,4 @@
+import getEnv from '../../../env'
 
 class Configuration {
   okamApiBaseUrl: string;
@@ -13,15 +14,15 @@ class Configuration {
   notificationHub: string;
 
   constructor () {
-    this.okamApiBaseUrl = process.env.API_BASE_URL
-    this.version = process.env.VERSION
-    this.isNativeScript = process.env.IS_NATIVESCRIPT === 'true'
-    this.isProduction = process.env.IS_PRODUCTION === 'true'
-    this.stripePublishableKey = process.env.STRIPE_PUBLISHABLE_KEY
-    this.vippsiOSPath = process.env.VIPPS_IOS_PATH
-    this.vippsAndroidPath = process.env.VIPPS_ANDROID_PATH
-    this.platformFileSuffix = process.env.PLATFORM_FILE_SUFFIX
-    this.notificationHub = process.env.NOTIFICATION_HUB
+    this.okamApiBaseUrl = getEnv('API_BASE_URL')
+    this.version = getEnv('VERSION')
+    this.isNativeScript = getEnv('IS_NATIVESCRIPT') === 'true'
+    this.isProduction = getEnv('IS_PRODUCTION') === 'true'
+    this.stripePublishableKey = getEnv('STRIPE_PUBLISHABLE_KEY')
+    this.vippsiOSPath = getEnv('VIPPS_IOS_PATH')
+    this.vippsAndroidPath = getEnv('VIPPS_ANDROID_PATH')
+    this.platformFileSuffix = getEnv('PLATFORM_FILE_SUFFIX')
+    this.notificationHub = getEnv('NOTIFICATION_HUB')
   }
 }
 

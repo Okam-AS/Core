@@ -1,7 +1,7 @@
 import { HttpMethod, HttpProperty } from '../enums'
 import { HttpModule } from '../platform'
 import { ICoreInitializer } from '../interfaces'
-import $config from '../../helpers/configuration'
+import $config from '../helpers/configuration'
 
 export class RequestService {
     private _coreInitializer: ICoreInitializer
@@ -28,6 +28,7 @@ export class RequestService {
 
     public PostRequest (path: string, payload?: any): Promise<any> {
       const request = this.DefaultRequest(path, payload, HttpMethod.POST)
+   
       return this._httpModule.httpClient(request).then((response) => {
         return response
       })

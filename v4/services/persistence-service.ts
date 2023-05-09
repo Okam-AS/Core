@@ -1,4 +1,4 @@
-import { PersistenceModule } from '../../platform'
+import { PersistenceModule } from '../platform'
 import { watch, toRaw } from 'vue'
 
 export class PersistenceService {

@@ -1,7 +1,7 @@
 import { NotificationPlatform } from '../enums'
 import { NotificationRegistration } from '../models'
 import { ICoreInitializer } from '../interfaces'
-import $config from '../../helpers/configuration'
+import $config from '../helpers/configuration'
 import { RequestService } from './request-service'
 
 export class NotificationService {
