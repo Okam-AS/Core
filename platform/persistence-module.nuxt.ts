@@ -6,17 +6,43 @@ class IPersistenceModuleNS implements IPersistenceModule {
   delete: any;
 
   constructor () {
+
+    const hasLocalStorage = () => {
+      try {
+        window.localStorage.setItem('localStorageTest', '1');
+        window.localStorage.removeItem('localStorageTest');
+        return true
+      } catch (e) {
+        return false
+      }
+    }
+
     this.exists = (key) => {
-      // TODO: implement this for web
+      return !!this.get(key)
     }
     this.get = (key) => {
-      // TODO: implement this for web
+      if (!hasLocalStorage()) return false;
+
+      const data = window.localStorage.getItem(key) || ''
+      try {
+        return JSON.parse(data)
+      } catch (e) {
+        return data
+      }
     }
     this.set = (key, value) => {
-      // TODO: implement this for web
+      if (!hasLocalStorage()) return
+       
+      let item = value
+      if (typeof value === 'object') {
+        item = JSON.stringify(value)
+      }
+      window.localStorage.setItem(key, item)
     }
     this.delete = (key) => {
-      // TODO: implement this for web
+      if (!hasLocalStorage()) return 
+      
+      window.localStorage.removeItem(key)
     }
   }
 }
