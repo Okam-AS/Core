@@ -22,13 +22,7 @@ class IPersistenceModuleNS implements IPersistenceModule {
     }
     this.get = (key) => {
       if (!hasLocalStorage()) return false;
-
-      const data = window.localStorage.getItem(key) || ''
-      try {
-        return JSON.parse(data)
-      } catch (e) {
-        return data
-      }
+      return window.localStorage.getItem(key) || ''
     }
     this.set = (key, value) => {
       if (!hasLocalStorage()) return

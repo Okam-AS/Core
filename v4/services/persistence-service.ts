@@ -21,8 +21,9 @@ export class PersistenceService {
     }
 
     public watchAndStore (item, key) {
-      watch(item, (result) => {
-        this._persistenceModule.set(key, JSON.stringify(toRaw(result)));
-      }, { deep: true });
+        watch(item, (result) => {
+           this._persistenceModule.set(key, JSON.stringify(toRaw(result)));
+          }, { deep: true });
+      
     }
 }

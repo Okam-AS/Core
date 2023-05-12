@@ -13,7 +13,6 @@ export const useUser = defineStore("user", () => {
 
   const isLoggedIn = computed(() => { return !!user?.value?.id });
 
-
   const toggleFavoriteProduct = async (productId: string) => {
     if (!isLoggedIn) return Promise.reject();
     if (user.value.favoriteProductIds?.includes(productId))
@@ -64,13 +63,17 @@ export const useUser = defineStore("user", () => {
 
   const logout = () => {
     userService().Logout('notificationId', () => {
-      user.value = {} as User;
+       user.value = {} as User;
       setBearerToken('')
     })
   }
 
+  const getUser = () => {
+    return user.value;
+  }
+
   return {
-    user,
+    getUser,
     secondsToWaitForVerificationToken,
     isLoggedIn,
     phoneNumberIsValid,
