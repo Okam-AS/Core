@@ -13,8 +13,9 @@ export const useCart = defineStore("cart", () => {
   const _useUser = useUser()
 
   const isLoading = ref(false)
-  const carts = ref(persistenceService.load<Cart[]>('carts') || [] as Cart[]);
-  persistenceService.watchAndStore(carts, 'carts');
+
+  const cartsRef = ref(persistenceService.load<Cart[]>('cartsRef') || [] as Cart[]);
+  persistenceService.watchAndStore(cartsRef, 'cartsRef');
 
   const unsavedLineItem = ref({} as CartLineItem);
 
@@ -28,10 +29,11 @@ export const useCart = defineStore("cart", () => {
 
   const getCurrentCart = () => {
     if(!_store.currentStore.id) return new Cart();
-    const cart = carts.value.find(x => x.storeId === _store.currentStore.id);
+    const cart = cartsRef.value.find(x => x.storeId === _store.currentStore.id);
     if(cart) return cart
-    carts.value.push(createEmptyCart())
-    return carts.value.find(x => x.storeId === _store.currentStore.id);
+    const newCart = createEmptyCart();
+    cartsRef.value.push(newCart)
+    return newCart;
   }
 
   const totalItemCount = computed(() => {
@@ -108,9 +110,9 @@ export const useCart = defineStore("cart", () => {
     if(!currentCart || !currentCart.storeId) return;
     isLoading.value = true;
     return cartService().Update(currentCart).then((cart) => {
-      const cartIndex = carts.value.findIndex(c => c.storeId === _store.currentStore.id)
+      const cartIndex = cartsRef.value.findIndex(c => c.storeId === _store.currentStore.id)
       if (cartIndex >= 0) {
-        carts.value[cartIndex] = cart
+        cartsRef.value[cartIndex] = cart
       } 
     }).catch((err) => {
       console.log('Failed to sync cart with db')
@@ -155,9 +157,9 @@ export const useCart = defineStore("cart", () => {
   }
 
   const setCart = (cart: Cart) => {
-    const cartIndex = carts.value.findIndex(c => c.storeId === _store.currentStore.id)
+    const cartIndex = cartsRef.value.findIndex(c => c.storeId === _store.currentStore.id)
     if (cartIndex >= 0) {
-      carts.value[cartIndex] = cart;
+      cartsRef.value[cartIndex] = cart;
     }
   }
 
@@ -245,9 +247,9 @@ export const useCart = defineStore("cart", () => {
 
   const singleLineDeliveryAddressInCart = computed(() => {
     const currentCart = getCurrentCart()
-    let singleLineAddress =  currentCart?.fullAddress?.toString()
-    if(singleLineAddress && currentCart.zipCode){
-      singleLineAddress += ", " + (currentCart.zipCode ?? '') + " " + (currentCart.city?? '');
+    let singleLineAddress = currentCart?.fullAddress?.toString()
+    if(singleLineAddress && currentCart?.zipCode){
+      singleLineAddress += ", " + (currentCart.zipCode ?? '') + " " + (currentCart.city ?? '');
     }
     return singleLineAddress
   })

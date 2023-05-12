@@ -8,14 +8,16 @@ export const useUser = defineStore("user", () => {
 
   const { userService, persistenceService, setBearerToken } = useServices()
 
-  const user = ref(persistenceService.load<User>('user') || {} as User);
-  persistenceService.watchAndStore(user, 'user');
+  const userRef = ref(persistenceService.load<User>('userRef') || {} as User);
+  persistenceService.watchAndStore(userRef, 'userRef');
 
-  const isLoggedIn = computed(() => { return !!user?.value?.id });
+  const user = computed(() => { return userRef.value })
+
+  const isLoggedIn = computed(() => { return !!userRef?.value?.id });
 
   const toggleFavoriteProduct = async (productId: string) => {
     if (!isLoggedIn) return Promise.reject();
-    if (user.value.favoriteProductIds?.includes(productId))
+    if (userRef.value.favoriteProductIds?.includes(productId))
       await userService().RemoveFavoriteProduct(productId)
     else
       await userService().AddFavoriteProduct(productId)
@@ -56,24 +58,20 @@ export const useUser = defineStore("user", () => {
   const verifyToken = async (landcode, phoneNumber, token) => {
     if (!token || !phoneNumberIsValid(landcode, phoneNumber)) return Promise.reject();
     return userService().Login(landcode + phoneNumber, token).then((response) => {
-      user.value = response
-      setBearerToken(user.value.token)
+      userRef.value = response
+      setBearerToken(userRef.value.token)
     });
   }
 
   const logout = () => {
     userService().Logout('notificationId', () => {
-       user.value = {} as User;
+      userRef.value = {} as User;
       setBearerToken('')
     })
   }
-
-  const getUser = () => {
-    return user.value;
-  }
-
+  
   return {
-    getUser,
+    user,
     secondsToWaitForVerificationToken,
     isLoggedIn,
     phoneNumberIsValid,

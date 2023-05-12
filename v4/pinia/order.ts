@@ -3,7 +3,7 @@ import { defineStore } from "pinia";
 import { Order } from "../models";
 import { DeliveryType, OrderStatus } from "../enums";
 import { useServices, useTranslation } from "."
-import { ref } from "vue";
+import { ref, computed } from "vue";
 import { orderStatusLabel } from "../helpers/tools";
 
 
@@ -13,18 +13,20 @@ export const useOrder = defineStore("order", () => {
   const { orderService, persistenceService } = useServices()
   const isLoading = ref(false);
 
-  const orders = ref(persistenceService.load<Order[]>('orders') || [] as Order[]);
-  persistenceService.watchAndStore(orders, 'orders');
+  const ordersRef = ref(persistenceService.load<Order[]>('ordersRef') || [] as Order[]);
+  persistenceService.watchAndStore(ordersRef, 'ordersRef');
+
+  const orders = computed(() => { return ordersRef.value })
 
   const ongoing = ref([] as Order[])
 
   const loadAll = async () => {
     isLoading.value = true
     return orderService().GetAll().then((s) => {
-      orders.value = s
+      ordersRef.value = s
     })
     .catch(() => {
-      orders.value = [] as Order[]
+      ordersRef.value = [] as Order[]
     })
     .finally(() => {
       isLoading.value = false

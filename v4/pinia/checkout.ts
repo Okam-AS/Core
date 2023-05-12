@@ -51,12 +51,13 @@ export const useCheckout = defineStore("checkout", () => {
   
 
   // Requested Completion Date
-  const selectedRequestedCompletionDateOptionIndex = ref(persistenceService.load<number>('selectedRequestedCompletionDateOptionIndex') || 0);
-  persistenceService.watchAndStore(selectedRequestedCompletionDateOptionIndex, 'selectedRequestedCompletionDateOptionIndex');
+  const srdRef = ref(persistenceService.load<number>('srdRef') || 0);
+  persistenceService.watchAndStore(srdRef, 'srdRef');
+  const selectedRequestedCompletionDateOptionIndex = computed(() => { return srdRef.value })
 
-  const selectedRequestedCompletionTime = ref(persistenceService.load<Date>('selectedRequestedCompletionTime') || (new Date()));
-  persistenceService.watchAndStore(selectedRequestedCompletionTime, 'selectedRequestedCompletionTime');
-
+  const srtRef = ref(persistenceService.load<Date>('srtRef') || (new Date()));
+  persistenceService.watchAndStore(srtRef, 'srtRef');
+  const selectedRequestedCompletionTime = computed(() => { return srtRef.value })
 
   const tempRequestedCompletion = ref('')
   const requestedCompletionDateOptions = computed(() => {
@@ -81,7 +82,7 @@ export const useCheckout = defineStore("checkout", () => {
       );
     }
     const today = new Date();
-    let options = [];
+    let options = [] as any[];
     for (let index = 0; index < 7; index++) {
       const tempDate = new Date(today);
       if(index > 1)
@@ -96,17 +97,17 @@ export const useCheckout = defineStore("checkout", () => {
 
   const selectedRequestedCompletionDate = computed(() => {
     return requestedCompletionDateOptions.value[
-      selectedRequestedCompletionDateOptionIndex.value
+      srdRef.value
     ].value;
   })
 
   const dateOptionIndexChange = (event) => {
-    selectedRequestedCompletionDateOptionIndex.value = event.value
+    srdRef.value = event.value
     requestedCompletionChange()
   }
 
   const timeChange = (event) => {
-    selectedRequestedCompletionTime.value = new Date(event.value)
+    srtRef.value = new Date(event.value)
     requestedCompletionChange()
   }
 
@@ -131,30 +132,28 @@ export const useCheckout = defineStore("checkout", () => {
   }
 
   const singleLineSelectedDateTime = computed(() => {
-    if(selectedRequestedCompletionDateOptionIndex.value === 0 || 
+    if(srdRef.value === 0 || 
       !selectedRequestedCompletionDate.value || 
-      !selectedRequestedCompletionTime.value ||
-      requestedCompletionDateOptions.value.length <= selectedRequestedCompletionDateOptionIndex.value || dateTimeIsUnderTenMinutesFromNow())
+      !srtRef.value ||
+      requestedCompletionDateOptions.value.length <= srdRef.value || dateTimeIsUnderTenMinutesFromNow())
     return $i['general_asap']?.toLowerCase()
 
-    return (requestedCompletionDateOptions.value[selectedRequestedCompletionDateOptionIndex.value]?.label?.toLowerCase()) + ', ' + (('0'+selectedRequestedCompletionTimeHours()).slice(-2)) + ':' + (('0'+selectedRequestedCompletionTimeMinutes()).slice(-2))
+    return (requestedCompletionDateOptions.value[srdRef.value]?.label?.toLowerCase()) + ', ' + (('0'+selectedRequestedCompletionTimeHours()).slice(-2)) + ':' + (('0'+selectedRequestedCompletionTimeMinutes()).slice(-2))
   })
 
 
-
-
   const selectedRequestedCompletionTimeHours = () => {
-    return new Date(selectedRequestedCompletionTime.value).getHours()
+    return new Date(srtRef.value).getHours()
   }
 
   const selectedRequestedCompletionTimeMinutes = () => {
-    return new Date(selectedRequestedCompletionTime.value).getMinutes()
+    return new Date(srtRef.value).getMinutes()
   }
 
   const requestedCompletionChange = () => {
-    tempRequestedCompletion.value = (selectedRequestedCompletionDateOptionIndex.value === 0 || 
+    tempRequestedCompletion.value = (srdRef.value === 0 || 
       !selectedRequestedCompletionDate.value || 
-      !selectedRequestedCompletionTime.value) ? '' : selectedDateTime(true).toISOString().slice(0, -1);
+      !srtRef.value) ? '' : selectedDateTime(true).toISOString().slice(0, -1);
   };
 
   watch(tempRequestedCompletion, debounce(function () {
@@ -164,7 +163,7 @@ export const useCheckout = defineStore("checkout", () => {
 
   // Payment
   const selectedPaymentType = ref('NotSet')
-  const paymentMethods = ref([])
+  const paymentMethods = ref([] as any[])
   const selectedPaymentMethodId = ref("")
   const isLoadingPaymentMethods = ref(true)
   const rememberCard = ref(true)
@@ -237,6 +236,7 @@ export const useCheckout = defineStore("checkout", () => {
   
 
   const isValid = () => {
+    // TODO: 
 
   }
 

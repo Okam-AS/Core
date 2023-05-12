@@ -11,12 +11,14 @@ export const useStore = defineStore("store", () => {
   const stores = ref([] as Store[]);
   const isLoading = ref(false);
 
-  const currentStore = ref(persistenceService.load<Store>('currentStore') || {} as Store);
-  persistenceService.watchAndStore(currentStore, 'currentStore');
+  const store = ref(persistenceService.load<Store>('store') || {} as Store);
+  persistenceService.watchAndStore(store, 'store');
 
-  const setCurrentStore = (store: Store) => {
+  const currentStore = computed(() => { return store.value })
+
+  const setCurrentStore = (value: Store) => {
     _category.clearCategories()
-    currentStore.value = store
+    store.value = value
   }
 
   const loadStores = async () => {
@@ -29,9 +31,9 @@ export const useStore = defineStore("store", () => {
   }
 
   const singleLineStoreAddress = computed(() => {
-    let singleLineAddress =   currentStore.value?.address?.fullAddress?.toString()
-    if(singleLineAddress && currentStore.value?.address?.zipCode){
-      singleLineAddress += ", " + (currentStore.value?.address?.zipCode ?? '') + " " + (currentStore.value?.address?.city?? '');
+    let singleLineAddress =   store.value?.address?.fullAddress?.toString()
+    if(singleLineAddress && store.value?.address?.zipCode){
+      singleLineAddress += ", " + (store.value?.address?.zipCode ?? '') + " " + (store.value?.address?.city?? '');
     }
     return singleLineAddress
   })
@@ -39,8 +41,8 @@ export const useStore = defineStore("store", () => {
   return {
     stores,
     isLoading,
-    currentStore,
     singleLineStoreAddress,
+    currentStore,
     setCurrentStore,
     loadStores
   }
