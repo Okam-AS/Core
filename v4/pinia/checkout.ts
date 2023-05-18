@@ -13,7 +13,7 @@ export const useCheckout = defineStore("checkout", () => {
   const { $i } = useTranslation()
   const _cart = useCart()
   const _store = useStore()
-  const { paymentService, persistenceService, discountService } = useServices()
+  const { paymentService, persistenceService, discountService, cartService} = useServices()
 
   const submitButtonLabel = computed(() => { 
     const currentCart = _cart.getCurrentCart()
@@ -237,11 +237,28 @@ export const useCheckout = defineStore("checkout", () => {
 
   const isValid = () => {
     // TODO: 
+    cartService().Validate(_store.currentStore.id).then((result) => {
+      // itemsOutOfStock: Array<Product>;
+      // deliveryAddressError: boolean;
+      // deliveryMethodError: boolean;
+      // priceDifferError: boolean;
+      // priceTooLowError: boolean;
+      // storeIsClosed: boolean;
+      // cartIsEmpty: boolean;
+      // itemsInStock: boolean;
+      // paymentTypeError: boolean;
+      // hasErrors: boolean;
+      // minimumPrice: number;
+    })
 
   }
 
   const submitTap = () => {
     if(_cart.isLoading || isLoadingPaymentMethods.value) return;
+
+    // cartService().Complete(_store.currentStore.id).then((order)=> {
+
+    // })
     
   }
 
