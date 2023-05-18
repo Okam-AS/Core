@@ -1,4 +1,5 @@
 import { DeliveryType, OrderStatus } from "../enums"
+import dayjs from "dayjs";
 
 const wholeAmountTool = (amount: Number): string => {
   if (!amount) { return '0' }
@@ -12,7 +13,7 @@ const fractionAmountTool = (amount: Number): string => {
   return fractionAmount.length < 2 ? '00' : fractionAmount
 }
 
-const priceLabelTool = (totalPrice: Number, hideFractionIfZero: Boolean) => {
+const priceLabelTool = (totalPrice: Number, hideFractionIfZero: Boolean = false) => {
   const prefix = ''
   const wholeAmount = wholeAmountTool(totalPrice)
   let fraction = ''
@@ -72,6 +73,10 @@ const formatStringTool = (str: String, format: Object) => {
   return str
 }
 
+const formatDateTimeTool = (dateTime, hideTime = false) => {
+  return (!dateTime) ? "" : dayjs(dateTime).format(hideTime ? 'DD.MM.YY' : 'DD.MM.YY HH:mm');
+}
+
 export const wholeAmount = wholeAmountTool
 export const fractionAmount = fractionAmountTool
 export const priceLabel = priceLabelTool
@@ -79,3 +84,4 @@ export const deliveryTypeLabel = deliveryTypeLabelTool
 export const formatString = formatStringTool
 export const orderStatusLabel = orderStatusLabelTool
 export const orderStatusHeading = orderStatusHeadingTool
+export const formatDateTime = formatDateTimeTool

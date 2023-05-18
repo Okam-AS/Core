@@ -13,12 +13,20 @@ export const useOrder = defineStore("order", () => {
   const { orderService, persistenceService } = useServices()
   const isLoading = ref(false);
 
-  const ordersRef = ref(persistenceService.load<Order[]>('ordersRef') || [] as Order[]);
+  const ongoing = ref([] as Order[])
+  const ordersRef = ref(persistenceService.load<Order[]>('ordersRef') || [] as Order[]);  
   persistenceService.watchAndStore(ordersRef, 'ordersRef');
-
   const orders = computed(() => { return ordersRef.value })
 
-  const ongoing = ref([] as Order[])
+  const viewingOrder = ref({} as Order);
+  const setViewingOrder = (orderId) => {
+    isLoading.value = true
+   return orderService().GetByCode(orderId).then((order) => {
+      viewingOrder.value = order
+    }).finally(() => {
+      isLoading.value = false
+    })
+  }
 
   const loadAll = async () => {
     isLoading.value = true
@@ -37,7 +45,7 @@ export const useOrder = defineStore("order", () => {
     isLoading.value = true
     return orderService().GetOngoing(storeId)
     .then((s) => {
-      ongoing.value = s ?? [] as Order[] //s?.length < 1? [] : s.slice(0, 2);  //TODO: Remove temp code. This should be: s ?? [] as Order[]
+      ongoing.value = s ?? [] as Order[]
     })
     .catch(() => {
       ongoing.value = [] as Order[]
@@ -92,6 +100,8 @@ export const useOrder = defineStore("order", () => {
     isLoading,
     orders,
     ongoing,
+    viewingOrder,
+    setViewingOrder,
     progressFlow,
     loadAll,
     loadOngoing

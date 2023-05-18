@@ -10,6 +10,14 @@ export class OrderService {
       this._requestService = new RequestService(coreInitializer)
     }
 
+    public async GetByCode (orderCode: string): Promise<Order> {
+      const response = await this._requestService.GetRequest('/orders/'+orderCode)
+      const parsedResponse = this._requestService.TryParseResponse(response)
+      if (parsedResponse === undefined) { throw new Error('Failed to get order') }
+
+      return parsedResponse
+    }
+
     public async GetAll (): Promise<Array<Order>> {
       const response = await this._requestService.GetRequest('/orders')
       const parsedResponse = this._requestService.TryParseResponse(response)

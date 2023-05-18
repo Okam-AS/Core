@@ -7,6 +7,7 @@ Client-side models and core logic
 * typescript
 * pinia 
 * vue
+* dayjs
 
 On NS:
 * @nativescript/core/http
