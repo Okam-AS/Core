@@ -37,6 +37,7 @@ export default {
   checkoutPage_payInStore: "Betal på stedet",
   checkoutPage_newCard: "Nytt kort",
   checkoutPage_rememberCard: 'Husk dette kortet',
+  checkoutPage_paymentFailedCheckCardDetails: 'Betalingen kunne ikke gjennomføres. Kontroller kortinformasjon og prøv igjen.',
   loginModal_invalidPhoneNumber: "Ugyldig telefonnummer",
   deliveryType_selfPickup: 'Hent selv',
   deliveryType_instantHomeDelivery: 'Hjemlevering',

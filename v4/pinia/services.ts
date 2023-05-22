@@ -9,7 +9,8 @@ import {
   PersistenceService,
   PaymentService,
   DiscountService,
-  OrderService
+  OrderService,
+  StripeService
 } from "../services";
 import { ref, computed } from "vue";
 
@@ -44,6 +45,7 @@ export const useServices = defineStore("services", () => {
   const paymentService = () => new PaymentService(coreInitializer.value) 
   const discountService = () => new DiscountService(coreInitializer.value) 
   const orderService = () => new OrderService(coreInitializer.value) 
+  const stripeService = () => new StripeService(coreInitializer.value) 
   
   return {
     setBearerToken,
@@ -55,6 +57,7 @@ export const useServices = defineStore("services", () => {
     paymentService,
     discountService,
     orderService,
+    stripeService,
     persistenceService
   }
 });

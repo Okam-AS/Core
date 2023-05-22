@@ -254,6 +254,14 @@ export const useCart = defineStore("cart", () => {
     return singleLineAddress
   })
 
+  const deliveryAddressInCartIsValid = () => {
+    const currentCart = getCurrentCart()
+      if (!currentCart?.fullAddress?.toString()?.trim()?.length) return false;
+      if (!currentCart?.zipCode || currentCart?.zipCode.trim().length !== 4) return false;
+      if (!currentCart?.city || currentCart?.city.trim().length < 3) return false;
+      return true;
+  }
+
   return {
     totalItemCount,
     unsavedLineItem,
@@ -262,6 +270,7 @@ export const useCart = defineStore("cart", () => {
     firstProductVariantIsSelected,
     singleLineDeliveryAddressInCart,
     isLoading,
+    deliveryAddressInCartIsValid,
     syncWithDb,
     getCurrentCart,
     getQuanityOfProductInCart,

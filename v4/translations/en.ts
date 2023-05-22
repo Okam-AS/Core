@@ -37,6 +37,7 @@ export default {
   checkoutPage_payInStore: "Pay in store",
   checkoutPage_newCard: "New card",
   checkoutPage_rememberCard: 'Remember card',
+  checkoutPage_paymentFailedCheckCardDetails: 'Payment failed. Check card details and try again.',
   loginModal_invalidPhoneNumber: "Invalid phone number",
   deliveryType_selfPickup: 'Self pickup',
   deliveryType_instantHomeDelivery: 'Home delivery',

@@ -4,8 +4,8 @@ import { useCart, useTranslation, useServices, useStore } from "."
 import { ref, computed, watch } from "vue";
 import { debounce } from "../helpers/ts-debounce"
 import { priceLabel } from "../helpers/tools";
-import { PaymentMethod } from "../models";
-import { PaymentType } from "../enums";
+import { PaymentMethod, CartValidation } from "../models";
+import { DeliveryType, PaymentType } from "../enums";
 
 
 export const useCheckout = defineStore("checkout", () => {
@@ -13,9 +13,9 @@ export const useCheckout = defineStore("checkout", () => {
   const { $i } = useTranslation()
   const _cart = useCart()
   const _store = useStore()
-  const { paymentService, persistenceService, discountService, cartService} = useServices()
+  const { paymentService, persistenceService, discountService, cartService, stripeService } = useServices()
 
-  const submitButtonLabel = computed(() => { 
+  const submitButtonLabel = computed(() => {
     const currentCart = _cart.getCurrentCart()
     const priceAmount = currentCart?.calculations?.finalAmount ?? 0
     return $i['checkoutPage_submit'] + (priceAmount > 0 ? ' ' + priceLabel(priceAmount, true) : '')
@@ -36,19 +36,19 @@ export const useCheckout = defineStore("checkout", () => {
     const currentCart = _cart.getCurrentCart()
     if (code === currentCart.discountCode) return true;
     return discountService()
-        .Exists(currentCart.storeId, code)
-        .then((exists) => {
-          if (exists || code === "") {
-            _cart.setCartRootProperties({ discountCode: code })
-            return true;
-          } else {
-            return false;
-          }
-        }).catch(() => {
+      .Exists(currentCart.storeId, code)
+      .then((exists) => {
+        if (exists || code === "") {
+          _cart.setCartRootProperties({ discountCode: code })
+          return true;
+        } else {
           return false;
-        })
+        }
+      }).catch(() => {
+        return false;
+      })
   }
-  
+
 
   // Requested Completion Date
   const srdRef = ref(persistenceService.load<number>('srdRef') || 0);
@@ -62,10 +62,10 @@ export const useCheckout = defineStore("checkout", () => {
   const tempRequestedCompletion = ref('')
   const requestedCompletionDateOptions = computed(() => {
     const getRequestedCompletionDateLabel = (index, date) => {
-      if (index === 0) return $i['general_asap'] 
-      if (index === 1) return $i['general_today'] 
+      if (index === 0) return $i['general_asap']
+      if (index === 1) return $i['general_today']
       if (index === 2) return $i['general_tomorrow']
-      const days =  [$i['general_threeLetterSunday'], 
+      const days = [$i['general_threeLetterSunday'],
       $i['general_threeLetterMonday'],
       $i['general_threeLetterTuesday'],
       $i['general_threeLetterWednesday'],
@@ -85,7 +85,7 @@ export const useCheckout = defineStore("checkout", () => {
     let options = [] as any[];
     for (let index = 0; index < 7; index++) {
       const tempDate = new Date(today);
-      if(index > 1)
+      if (index > 1)
         tempDate.setDate(tempDate.getDate() + index - 1);
       options.push({
         label: getRequestedCompletionDateLabel(index, tempDate),
@@ -119,7 +119,7 @@ export const useCheckout = defineStore("checkout", () => {
       selectedRequestedCompletionTimeHours(),
       selectedRequestedCompletionTimeMinutes(),
     );
-    if(!removeTimezoneOffset) return selected
+    if (!removeTimezoneOffset) return selected
     const tzoffset = selected.getTimezoneOffset() * 60000;
     const localDateTime = new Date(selected.getTime() - tzoffset);
     return localDateTime
@@ -132,13 +132,13 @@ export const useCheckout = defineStore("checkout", () => {
   }
 
   const singleLineSelectedDateTime = computed(() => {
-    if(srdRef.value === 0 || 
-      !selectedRequestedCompletionDate.value || 
+    if (srdRef.value === 0 ||
+      !selectedRequestedCompletionDate.value ||
       !srtRef.value ||
       requestedCompletionDateOptions.value.length <= srdRef.value || dateTimeIsUnderTenMinutesFromNow())
-    return $i['general_asap']?.toLowerCase()
+      return $i['general_asap']?.toLowerCase()
 
-    return (requestedCompletionDateOptions.value[srdRef.value]?.label?.toLowerCase()) + ', ' + (('0'+selectedRequestedCompletionTimeHours()).slice(-2)) + ':' + (('0'+selectedRequestedCompletionTimeMinutes()).slice(-2))
+    return (requestedCompletionDateOptions.value[srdRef.value]?.label?.toLowerCase()) + ', ' + (('0' + selectedRequestedCompletionTimeHours()).slice(-2)) + ':' + (('0' + selectedRequestedCompletionTimeMinutes()).slice(-2))
   })
 
 
@@ -151,8 +151,8 @@ export const useCheckout = defineStore("checkout", () => {
   }
 
   const requestedCompletionChange = () => {
-    tempRequestedCompletion.value = (srdRef.value === 0 || 
-      !selectedRequestedCompletionDate.value || 
+    tempRequestedCompletion.value = (srdRef.value === 0 ||
+      !selectedRequestedCompletionDate.value ||
       !srtRef.value) ? '' : selectedDateTime(true).toISOString().slice(0, -1);
   };
 
@@ -162,12 +162,12 @@ export const useCheckout = defineStore("checkout", () => {
 
 
   // Payment
-  const selectedPaymentType = ref('NotSet')
+  const selectedPaymentType = ref(PaymentType.NotSet)
   const paymentMethods = ref([] as any[])
   const selectedPaymentMethodId = ref("")
   const isLoadingPaymentMethods = ref(true)
   const rememberCard = ref(true)
-  
+
   const cardNumber = ref('')
   const expMonth = ref('')
   const expYear = ref('')
@@ -189,7 +189,7 @@ export const useCheckout = defineStore("checkout", () => {
 
   const setPaymentMethod = (item) => {
     selectedPaymentMethodId.value = item === undefined ? "" : item.id;
-    selectedPaymentType.value = item === undefined ? "NotSet" : item.paymentType;
+    selectedPaymentType.value = item === undefined ? PaymentType.NotSet : item.paymentType;
 
     _cart.setCartRootProperties({ paymentType: selectedPaymentType.value })
   }
@@ -200,7 +200,7 @@ export const useCheckout = defineStore("checkout", () => {
     return paymentService()
       .GetPaymentMethods(currentCart.id)
       .then((result) => {
-       
+
         paymentMethods.value = Array.isArray(result) ? result : [];
 
         if (selectedPaymentMethodId.value) {
@@ -217,55 +217,175 @@ export const useCheckout = defineStore("checkout", () => {
   }
 
   const setCardInput = (key, value) => {
-    if(key === 'cardNumber') 
+    if (key === 'cardNumber')
       cardNumber.value = value
-    
-    if(key === 'expMonth')
+
+    if (key === 'expMonth')
       expMonth.value = value
 
-    if(key === 'expYear')
+    if (key === 'expYear')
       expYear.value = value
 
-    if(key === 'cvc')
+    if (key === 'cvc')
       cvc.value = value
   }
 
   const toggleRememberCard = () => {
     rememberCard.value = !rememberCard.value
   }
-  
 
-  const isValid = () => {
-    // TODO: 
-    cartService().Validate(_store.currentStore.id).then((result) => {
-      // itemsOutOfStock: Array<Product>;
-      // deliveryAddressError: boolean;
-      // deliveryMethodError: boolean;
-      // priceDifferError: boolean;
-      // priceTooLowError: boolean;
-      // storeIsClosed: boolean;
-      // cartIsEmpty: boolean;
-      // itemsInStock: boolean;
-      // paymentTypeError: boolean;
-      // hasErrors: boolean;
-      // minimumPrice: number;
+  const isProcessingSubmit = ref(false)
+  const isLoading = computed(() => isLoadingPaymentMethods.value || isValidating.value || _cart.isLoading || isProcessingSubmit.value);
+  const isValidating = ref(false)
+  const errorMessage = ref('')
+
+  type CreateStripePaymentIntentResult = { isPaid: Boolean, redirectUrl: string, returnUrl: string };
+  const createStripePaymentIntent = async (paymentMethodId, setupFutureUsage): Promise<CreateStripePaymentIntentResult> => {
+    isProcessingSubmit.value = true;
+    return new Promise((resolve, reject) => {
+      const currentCart = _cart.getCurrentCart()
+      stripeService().CreatePaymentIntent(
+        currentCart?.calculations?.finalAmount ?? 0,
+        "NOK",
+        paymentMethodId,
+        currentCart.id,
+        setupFutureUsage
+      )
+        .then((result) => {
+          if (!result || !result.paymentIntentId) {
+            errorMessage.value = "Din betaling kunne ikke behandles akkurat nå. Vennligst prøv igjen litt senere.";
+            isProcessingSubmit.value = false;
+            return reject()
+          }
+
+          if (!result.nextAction) {
+            //SUCCESS
+            resolve({
+              isPaid: true,
+              redirectUrl: '',
+              returnUrl: '',
+            });
+          } else if (result.nextAction.type === "redirect_to_url") {
+            //3D SECURE
+            isProcessingSubmit.value = false;
+            resolve({
+              isPaid: false,
+              redirectUrl: result.nextAction.redirect_to_url.url,
+              returnUrl: result.nextAction.redirect_to_url.return_url,
+            });
+          } else {
+            //NOT HANDLED
+            errorMessage.value = "Oops! Din betaling kunne ikke behandles akkurat nå. Vennligst prøv igjen litt senere.";
+            isProcessingSubmit.value = false;
+            reject()
+          }
+        })
+        .catch(() => {
+          errorMessage.value = "Betalingen kunne ikke gjennomføres på grunn av manglende dekning eller ugyldig kortinformasjon";
+          isProcessingSubmit.value = false;
+          reject()
+        });
+
     })
-
   }
 
-  const submitTap = () => {
-    if(_cart.isLoading || isLoadingPaymentMethods.value) return;
+  const isValid = (): Promise<Boolean> => {
+    // TODO: Flytt til tekstene til no.ts og en.ts
+    return new Promise((resolve) => {
 
-    // cartService().Complete(_store.currentStore.id).then((order)=> {
+      if (_cart.isLoading || isLoading.value){
+        resolve(false);
+      }
 
-    // })
-    
+
+      errorMessage.value = '';
+      isValidating.value = true;
+
+      if (!(selectedPaymentMethodId.value || getCardInfo().isValid)) {
+        errorMessage.value = 'Kortinformasjonen er ugyldig';
+        isValidating.value = false;
+        resolve(false);
+      }
+
+      const currentCart = _cart.getCurrentCart()
+      if (currentCart.deliveryType === DeliveryType.InstantHomeDelivery && !_cart.deliveryAddressInCartIsValid()) {
+        errorMessage.value = "Legg inn en gyldig leveringsadresse";
+        isValidating.value = false;
+        resolve(false);
+      }
+
+      if (currentCart.deliveryType === DeliveryType.NotSet) {
+        errorMessage.value = "Velg leveringsmetode";
+        isValidating.value = false;
+        resolve(false);
+      }
+
+      cartService().Validate(_store.currentStore.id)
+        .then((result: CartValidation) => {
+
+          if (result.priceTooLowError)
+            errorMessage.value = 'Beløpet er for lite. Du må minst handle for ' + priceLabel(result.minimumPrice, true);
+
+          if (result.paymentTypeError)
+            errorMessage.value = 'Betalingsmetoden er midlertidig utilgjengelig';
+
+          if (result.priceDifferError)
+            errorMessage.value = "Prisene er endret siden sist. Gå tilbake for å oppdatere handlevogna.";
+
+          if (result.deliveryAddressError)
+            errorMessage.value = "Leveringsadressen er ikke gyldig";
+
+          if (result.deliveryMethodError)
+            errorMessage.value = "Butikken leverer ikke til din adresse for øyeblikket";
+
+          if (result.storeIsClosed)
+            errorMessage.value = _store.currentStore.name + " er stengt for øyeblikket";
+
+          if (result.cartIsEmpty)
+            errorMessage.value = "Handlevogna er tom";
+
+          if (result.itemsOutOfStock.length > 0) {
+            let itemNames = "";
+            if (result.itemsOutOfStock.length === 1) {
+              itemNames = `'${result.itemsOutOfStock[0].name}'`;
+            } else if (result.itemsOutOfStock.length === 2) {
+              itemNames = `'${result.itemsOutOfStock[0].name}' og '${result.itemsOutOfStock[1].name}'`;
+            } else {
+              itemNames = `'${result.itemsOutOfStock[0].name}', '${result.itemsOutOfStock[1].name
+                }' og ${result.itemsOutOfStock.length - 2} ${result.itemsOutOfStock.length - 2 === 1 ? "annen vare" : "andre varer"
+                }`;
+            }
+            errorMessage.value = `Det er ikke nok av ${itemNames} på lager. Gå tilbake for å fjerne ${result.itemsOutOfStock.length === 1 ? "den" : "de"
+              } fra handlevogna.`;
+          }
+
+          if (result.hasErrors && !errorMessage.value) {
+            errorMessage.value = "Beklager, vi støter på et problem med handlevognen din";
+          }
+
+          isValidating.value = false;
+          resolve(!result.hasErrors);
+        })
+        .catch(() => {
+          errorMessage.value = "Noe gikk galt. Prøv igjen senere";
+          isValidating.value = false;
+          resolve(false);
+        })
+    })
+  }
+
+  const completeCart = async () => {
+    isProcessingSubmit.value = true;
+    return cartService().Complete(_store.currentStore.id)
+      .catch(() => {
+        errorMessage.value = "Bestillingen kunne ikke gjennomføres. Vennligst prøv igjen litt senere.";
+      }).finally(() => {
+        isProcessingSubmit.value = false;
+      })
   }
 
   return {
     submitButtonLabel,
-    submitTap,
-
     paymentLabel,
     addDiscountCode,
 
@@ -289,7 +409,13 @@ export const useCheckout = defineStore("checkout", () => {
     setPaymentMethod,
     getAvailablePaymentMethods,
     setCardInput,
-    getCardInfo,
 
+    isLoading,
+    errorMessage,
+
+    getCardInfo,
+    isValid,
+    createStripePaymentIntent,
+    completeCart,
   }
 })
