@@ -16,9 +16,18 @@ export const useStore = defineStore("store", () => {
 
   const currentStore = computed(() => { return store.value })
 
-  const setCurrentStore = (value: Store) => {
+  const setCurrentStore = (id: number) => {
+    isLoading.value = true
     _category.clearCategories()
-    store.value = value
+    const cashedStore = stores.value.find(x => x.id === id)
+    if(cashedStore){
+      store.value = cashedStore
+    }
+    return storeService().Get(id).then((s) => {
+      store.value = s
+    }).finally(() => {
+      isLoading.value = false
+    })
   }
 
   const loadStores = async () => {
