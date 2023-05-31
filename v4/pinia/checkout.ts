@@ -234,15 +234,15 @@ export const useCheckout = defineStore("checkout", () => {
     rememberCard.value = !rememberCard.value
   }
 
-  const isProcessingSubmit = ref(false)
-  const isLoading = computed(() => isLoadingPaymentMethods.value || isValidating.value || _cart.isLoading || isProcessingSubmit.value);
+  const isProcessingPayment = ref(false)
+  const isLoading = computed(() => isLoadingPaymentMethods.value || isValidating.value || _cart.isLoading || isProcessingPayment.value);
   const isValidating = ref(false)
   const errorMessage = ref('')
 
   type CreatePaymentResult = { isPaid: Boolean, redirectUrl: string, returnUrl: string };
 
   const createStripePaymentIntent = async (paymentMethodId, setupFutureUsage): Promise<CreatePaymentResult> => {
-    isProcessingSubmit.value = true;
+    isProcessingPayment.value = true;
     return new Promise((resolve, reject) => {
       const currentCart = _cart.getCurrentCart()
       stripeService().CreatePaymentIntent(
@@ -255,7 +255,7 @@ export const useCheckout = defineStore("checkout", () => {
         .then((result) => {
           if (!result || !result.paymentIntentId) {
             errorMessage.value = "Din betaling kunne ikke behandles akkurat nå. Vennligst prøv igjen litt senere.";
-            isProcessingSubmit.value = false;
+            isProcessingPayment.value = false;
             return reject()
           }
 
@@ -268,7 +268,7 @@ export const useCheckout = defineStore("checkout", () => {
             });
           } else if (result.nextAction.type === "redirect_to_url") {
             //3D SECURE
-            isProcessingSubmit.value = false;
+            isProcessingPayment.value = false;
             resolve({
               isPaid: false,
               redirectUrl: result.nextAction.redirect_to_url.url,
@@ -277,13 +277,13 @@ export const useCheckout = defineStore("checkout", () => {
           } else {
             //NOT HANDLED
             errorMessage.value = "Oops! Din betaling kunne ikke behandles akkurat nå. Vennligst prøv igjen litt senere.";
-            isProcessingSubmit.value = false;
+            isProcessingPayment.value = false;
             reject()
           }
         })
         .catch(() => {
           errorMessage.value = "Betalingen kunne ikke gjennomføres på grunn av manglende dekning eller ugyldig kortinformasjon";
-          isProcessingSubmit.value = false;
+          isProcessingPayment.value = false;
           reject()
         });
 
@@ -291,7 +291,7 @@ export const useCheckout = defineStore("checkout", () => {
   }
 
   const initiateVippsPayment = async (): Promise<CreatePaymentResult> => {
-    isProcessingSubmit.value = true;
+    isProcessingPayment.value = true;
     return new Promise((resolve, reject) => {
       const currentCart = _cart.getCurrentCart()
       vippsService()
@@ -301,8 +301,6 @@ export const useCheckout = defineStore("checkout", () => {
           true
         )
         .then((result) => {
-        
-          isProcessingSubmit.value = false;
           resolve({
             isPaid: false,
             redirectUrl: result.url,
@@ -311,7 +309,7 @@ export const useCheckout = defineStore("checkout", () => {
         })
         .catch((err) => {
           errorMessage.value = "Betaling med Vipps kunne ikke gjennomføres for øyeblikket.";
-          isProcessingSubmit.value = false;
+          isProcessingPayment.value = false;
           return reject()
         });
     })
@@ -402,13 +400,15 @@ export const useCheckout = defineStore("checkout", () => {
     })
   }
 
+
+
   const completeCart = async () => {
-    isProcessingSubmit.value = true;
+    isProcessingPayment.value = true;
     return cartService().Complete(_store.currentStore.id)
       .catch(() => {
         errorMessage.value = "Bestillingen kunne ikke gjennomføres. Vennligst prøv igjen litt senere.";
       }).finally(() => {
-        isProcessingSubmit.value = false;
+        isProcessingPayment.value = false;
       })
   }
 
@@ -439,6 +439,7 @@ export const useCheckout = defineStore("checkout", () => {
     setCardInput,
 
     isLoading,
+    isProcessingPayment,
     errorMessage,
 
     getCardInfo,
