@@ -2,7 +2,7 @@
 import { defineStore } from "pinia";
 import { Order } from "../models";
 import { DeliveryType, OrderStatus } from "../enums";
-import { useServices, useTranslation } from "."
+import { useServices, useStore, useTranslation } from "."
 import { ref, computed } from "vue";
 import { orderStatusLabel } from "../helpers/tools";
 
@@ -10,6 +10,7 @@ import { orderStatusLabel } from "../helpers/tools";
 export const useOrder = defineStore("order", () => {
 
   const { $i } = useTranslation()
+  const { currentStore } = useStore()
   const { orderService, persistenceService } = useServices()
   const isLoading = ref(false);
 
@@ -32,6 +33,12 @@ export const useOrder = defineStore("order", () => {
     isLoading.value = true
     return orderService().GetAll().then((s) => {
       ordersRef.value = s
+      if(currentStore?.id){
+        loadOngoing(currentStore.id)
+      }
+      if(viewingOrder?.value?.id){
+        setViewingOrder(viewingOrder.value.id)
+      }
     })
     .catch(() => {
       ordersRef.value = [] as Order[]
