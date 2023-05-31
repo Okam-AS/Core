@@ -11,6 +11,7 @@ import {
   DiscountService,
   OrderService,
   StripeService,
+  VippsService,
   NotificationService
 } from "../services";
 import { ref, computed } from "vue";
@@ -47,6 +48,7 @@ export const useServices = defineStore("services", () => {
   const discountService = () => new DiscountService(coreInitializer.value) 
   const orderService = () => new OrderService(coreInitializer.value) 
   const stripeService = () => new StripeService(coreInitializer.value) 
+  const vippsService = () => new VippsService(coreInitializer.value) 
   const notificationService = () => new NotificationService(coreInitializer.value) 
   
   return {
@@ -60,6 +62,7 @@ export const useServices = defineStore("services", () => {
     discountService,
     orderService,
     stripeService,
+    vippsService,
     notificationService,
     persistenceService
   }

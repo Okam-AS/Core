@@ -13,7 +13,7 @@ export const useCheckout = defineStore("checkout", () => {
   const { $i } = useTranslation()
   const _cart = useCart()
   const _store = useStore()
-  const { paymentService, persistenceService, discountService, cartService, stripeService } = useServices()
+  const { paymentService, persistenceService, discountService, cartService, stripeService, vippsService } = useServices()
 
   const submitButtonLabel = computed(() => {
     const currentCart = _cart.getCurrentCart()
@@ -239,8 +239,9 @@ export const useCheckout = defineStore("checkout", () => {
   const isValidating = ref(false)
   const errorMessage = ref('')
 
-  type CreateStripePaymentIntentResult = { isPaid: Boolean, redirectUrl: string, returnUrl: string };
-  const createStripePaymentIntent = async (paymentMethodId, setupFutureUsage): Promise<CreateStripePaymentIntentResult> => {
+  type CreatePaymentResult = { isPaid: Boolean, redirectUrl: string, returnUrl: string };
+
+  const createStripePaymentIntent = async (paymentMethodId, setupFutureUsage): Promise<CreatePaymentResult> => {
     isProcessingSubmit.value = true;
     return new Promise((resolve, reject) => {
       const currentCart = _cart.getCurrentCart()
@@ -289,11 +290,38 @@ export const useCheckout = defineStore("checkout", () => {
     })
   }
 
+  const initiateVippsPayment = async (): Promise<CreatePaymentResult> => {
+    isProcessingSubmit.value = true;
+    return new Promise((resolve, reject) => {
+      const currentCart = _cart.getCurrentCart()
+      vippsService()
+        .Initiate(
+          currentCart.id,
+          currentCart.calculations.finalAmount,
+          true
+        )
+        .then((result) => {
+        
+          isProcessingSubmit.value = false;
+          resolve({
+            isPaid: false,
+            redirectUrl: result.url,
+            returnUrl: '',
+          });
+        })
+        .catch((err) => {
+          errorMessage.value = "Betaling med Vipps kunne ikke gjennomføres for øyeblikket.";
+          isProcessingSubmit.value = false;
+          return reject()
+        });
+    })
+  }
+
   const isValid = (): Promise<Boolean> => {
     // TODO: Flytt til tekstene til no.ts og en.ts
     return new Promise((resolve) => {
 
-      if (_cart.isLoading || isLoading.value){
+      if (_cart.isLoading || isLoading.value) {
         resolve(false);
       }
 
@@ -416,6 +444,7 @@ export const useCheckout = defineStore("checkout", () => {
     getCardInfo,
     isValid,
     createStripePaymentIntent,
+    initiateVippsPayment,
     completeCart,
   }
 })
