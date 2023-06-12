@@ -37,3 +37,6 @@ export { Culture } from '../../models/'
 
 // Payment
 export { VippsInitiateResponse, VippsVerifyResponse, PaymentMethod } from '../../models/'
+
+// Log
+export { EventLog } from '../../v4/models/log/event-log'
