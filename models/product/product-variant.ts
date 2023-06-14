@@ -8,4 +8,5 @@ export class ProductVariant {
     multiselect: boolean;
     required: boolean;
     productId: string;
+    hasError: boolean;
 }

@@ -28,9 +28,9 @@ export const useCart = defineStore("cart", () => {
   }
 
   const getCurrentCart = () => {
-    if(!_store.currentStore.id) return new Cart();
+    if (!_store.currentStore.id) return new Cart();
     const cart = cartsRef.value.find(x => x.storeId === _store.currentStore.id);
-    if(cart) return cart
+    if (cart) return cart
     const newCart = createEmptyCart();
     cartsRef.value.push(newCart)
     return newCart;
@@ -43,29 +43,29 @@ export const useCart = defineStore("cart", () => {
   })
 
   const displayFirstProductVariantAsDropdown = computed(() => {
-   if(!unsavedLineItem?.value?.product?.productVariants?.length) return false;
+    if (!unsavedLineItem?.value?.product?.productVariants?.length) return false;
 
-   const firstProductVariant = unsavedLineItem.value.product.productVariants[0];
-   return firstProductVariant.required && !firstProductVariant.multiselect
+    const firstProductVariant = unsavedLineItem.value.product.productVariants[0];
+    return firstProductVariant.required && !firstProductVariant.multiselect
   })
 
   const firstProductVariantDropdownLabel = computed(() => {
-   if(!displayFirstProductVariantAsDropdown.value) return '';
+    if (!displayFirstProductVariantAsDropdown.value) return '';
 
-   const firstProductVariant = unsavedLineItem.value.product.productVariants[0];
-   const selectedOption = firstProductVariant.options.find(x => x.selected);
-   if(!selectedOption) return firstProductVariant.name
+    const firstProductVariant = unsavedLineItem.value.product.productVariants[0];
+    const selectedOption = firstProductVariant.options.find(x => x.selected);
+    if (!selectedOption) return firstProductVariant.name
 
-   return selectedOption.name + (selectedOption.amount ? (' ' + priceLabel(selectedOption.amount, true)) : '')
-   
+    return selectedOption.name + (selectedOption.amount ? (' ' + priceLabel(selectedOption.amount, true)) : '')
+
   })
 
   const firstProductVariantIsSelected = computed(() => {
-    if(!unsavedLineItem?.value?.product?.productVariants?.length) return false;
+    if (!unsavedLineItem?.value?.product?.productVariants?.length) return false;
     const firstProductVariant = unsavedLineItem.value.product.productVariants[0];
     const selectedOption = firstProductVariant.options.find(x => x.selected);
     return selectedOption
-   })
+  })
 
 
   const disabledProperties = ["storeId", "items", "homeDeliveryMethod", "calculations"]
@@ -73,7 +73,7 @@ export const useCart = defineStore("cart", () => {
   const setCartRootProperties = (payload) => {
     const currentCart = getCurrentCart();
     if (!currentCart) return;
-  
+
     availableProperties.forEach((propertyName) => {
       if (payload[propertyName] != undefined) {
         currentCart[propertyName.toString()] = payload[propertyName]
@@ -105,15 +105,15 @@ export const useCart = defineStore("cart", () => {
 
 
   const syncWithDb = async () => {
-    if(!_useUser.isLoggedIn) return;
+    if (!_useUser.isLoggedIn) return;
     const currentCart = getCurrentCart();
-    if(!currentCart || !currentCart.storeId) return;
+    if (!currentCart || !currentCart.storeId) return;
     isLoading.value = true;
     return cartService().Update(currentCart).then((cart) => {
       const cartIndex = cartsRef.value.findIndex(c => c.storeId === _store.currentStore.id)
       if (cartIndex >= 0) {
         cartsRef.value[cartIndex] = cart
-      } 
+      }
     }).catch((err) => {
       console.log('Failed to sync cart with db')
       console.log(err)
@@ -127,7 +127,7 @@ export const useCart = defineStore("cart", () => {
 
   const unsavedLineItemSave = async () => {
     const currentCart = getCurrentCart();
-    if (!currentCart || unsavedLineItemInvalidFields()) return;
+    if (!currentCart || unsavedLineItemHasErrors()) return false;
 
     if (!unsavedLineItem.value.id && unsavedLineItem.value.quantity === 0) return;
 
@@ -154,6 +154,7 @@ export const useCart = defineStore("cart", () => {
     }
 
     syncWithDbDebounced()
+    return true;
   }
 
   const setCart = (cart: Cart) => {
@@ -169,13 +170,13 @@ export const useCart = defineStore("cart", () => {
 
   const clearLineItems = () => {
     const currentCart = getCurrentCart();
-    if(!currentCart) return;
+    if (!currentCart) return;
     currentCart.items = [];
   }
 
   const removeLineItem = (lineItemId: string) => {
     const currentCart = getCurrentCart();
-    if(!currentCart) return;
+    if (!currentCart) return;
     const index = currentCart.items.findIndex(item => item.id === lineItemId)
     delete currentCart.items[index];
   }
@@ -192,16 +193,22 @@ export const useCart = defineStore("cart", () => {
     unsavedLineItem.value.notes = notes;
   }
 
-  const unsavedLineItemInvalidFields = () => {
+  const unsavedLineItemHasErrors = () => {
     if (unsavedLineItem.value.quantity === 0 || unsavedLineItem.value.product.soldOut)
-      return ""
+      return false
 
-    // TODO: 
-    // Hvis unsavedLineItem.value.product.productVariants[x].required er true 
-    // og det ikke finnes noen unsavedLineItem.value.product.productVariants[x].options[y].selected
-    // så må bruker få feilmelding: 
-    // 'Velg ' + unsavedLineItem.value.product.productVariants[x].name + ' for å legge vare i handlevogn'
-
+    let hasErrors = false;
+    for (let variant of unsavedLineItem.value.product.productVariants) {
+      if (variant.required) {
+        let optionSelected = variant.options.some(option => option.selected);
+        if (!optionSelected) {
+          variant.hasError = true;
+          unsavedLineItem.value.product.errorMessage = "Velg '" + variant.name + "' for å legge vare i handlevogn";
+          hasErrors = true;
+        }
+      }
+    }
+    return hasErrors;
   }
 
   const unsavedLineItemToggleProductVariantOption = (productVariantOptionId: string) => {
@@ -209,6 +216,7 @@ export const useCart = defineStore("cart", () => {
     if (!productVariants.length) return;
 
     productVariants.forEach((variant) => {
+      variant.hasError = false;
       var optionIsInThisVariant = variant.options.find(
         (x) => x.id === productVariantOptionId
       );
@@ -229,12 +237,13 @@ export const useCart = defineStore("cart", () => {
       optionsAmount += option.amount * (option.negativeAmount ? -1 : 1);
     });
     unsavedLineItem.value.product.selectedOptionsAmount = optionsAmount;
+    unsavedLineItem.value.product.errorMessage = "";
   }
 
   const getQuanityOfProductInCart = (productId) => {
-    if(!productId) return 0;
+    if (!productId) return 0;
     const currentCart = getCurrentCart()
-    let lineItems  = (currentCart?.items || []).filter(
+    let lineItems = (currentCart?.items || []).filter(
       (x) => x.product && x.product.id === productId
     );
     if (lineItems.length === 0) return 0;
@@ -248,7 +257,7 @@ export const useCart = defineStore("cart", () => {
   const singleLineDeliveryAddressInCart = computed(() => {
     const currentCart = getCurrentCart()
     let singleLineAddress = currentCart?.fullAddress?.toString()
-    if(singleLineAddress && currentCart?.zipCode){
+    if (singleLineAddress && currentCart?.zipCode) {
       singleLineAddress += ", " + (currentCart.zipCode ?? '') + " " + (currentCart.city ?? '');
     }
     return singleLineAddress
@@ -256,10 +265,10 @@ export const useCart = defineStore("cart", () => {
 
   const deliveryAddressInCartIsValid = () => {
     const currentCart = getCurrentCart()
-      if (!currentCart?.fullAddress?.toString()?.trim()?.length) return false;
-      if (!currentCart?.zipCode || currentCart?.zipCode.trim().length !== 4) return false;
-      if (!currentCart?.city || currentCart?.city.trim().length < 3) return false;
-      return true;
+    if (!currentCart?.fullAddress?.toString()?.trim()?.length) return false;
+    if (!currentCart?.zipCode || currentCart?.zipCode.trim().length !== 4) return false;
+    if (!currentCart?.city || currentCart?.city.trim().length < 3) return false;
+    return true;
   }
 
   return {

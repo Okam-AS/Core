@@ -14,6 +14,7 @@ export class Product {
     depositAmount: number;
 
     productVariants: Array<ProductVariant>;
+    errorMessage: string;
     selectedOptionsAmount: number;
     selectedOptionNames: string;
     currency: string;
