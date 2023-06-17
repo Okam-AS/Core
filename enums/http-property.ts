@@ -6,5 +6,6 @@ export enum HttpProperty {
     Content = 'content',
     Authorization = 'Authorization',
     ClientAppVersion = 'ClientAppVersion',
-    ClientPlatform = 'ClientPlatform'
+    ClientPlatform = 'ClientPlatform',
+    Language = 'Language'
 }

@@ -27,6 +27,9 @@ export const useServices = defineStore("services", () => {
   const clientPlatformName = ref(persistenceService.value.load<string>('clientPlatformName') || '');
   persistenceService.value.watchAndStore(clientPlatformName, 'clientPlatformName');
 
+  const cultureCode = ref(persistenceService.value.load<string>('cultureCode') || '');
+  persistenceService.value.watchAndStore(cultureCode, 'cultureCode');
+
   const setBearerToken = (token: string) => {
     bearerToken.value = token
   }
@@ -34,10 +37,15 @@ export const useServices = defineStore("services", () => {
   const setClientPlatformName = (name: string) => {
     clientPlatformName.value = name
   }
-  
+
+  const setCultureCode = (code: string) => {
+    cultureCode.value = code
+  }
+
   const coreInitializer = computed(() => ({
     bearerToken: bearerToken.value,
-    clientPlatformName: clientPlatformName.value
+    clientPlatformName: clientPlatformName.value,
+    cultureCode: cultureCode.value
   } as ICoreInitializer))
   
 
@@ -54,8 +62,11 @@ export const useServices = defineStore("services", () => {
   const logService = () => new LogService(coreInitializer.value)
   
   return {
+    coreInitializer,
+    persistenceService,
     setBearerToken,
     setClientPlatformName,
+    setCultureCode,
     userService,
     storeService,
     cartService,
@@ -66,7 +77,6 @@ export const useServices = defineStore("services", () => {
     stripeService,
     vippsService,
     notificationService,
-    logService,
-    persistenceService
+    logService
   }
 });

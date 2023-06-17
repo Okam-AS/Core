@@ -73,6 +73,7 @@ export class RequestService {
       request[HttpProperty.Method] = method
       request.headers[HttpProperty.ContentType] = 'application/json; charset=utf-8'
       request.headers[HttpProperty.ClientPlatform] = this._coreInitializer.clientPlatformName || 'Unknown'
+      request.headers[HttpProperty.Language] = this._coreInitializer.cultureCode || 'no'
       request.headers[HttpProperty.ClientAppVersion] = $config.version
 
       if (content) {
@@ -88,9 +89,10 @@ export class RequestService {
     };
 
     private BuildHeadRequest (fullPath: string, method: HttpMethod): any {
-      const request = { type: 'HEAD' }
+      const request = { type: 'HEAD', headers: {} }
       request[HttpProperty.Url] = fullPath
       request[HttpProperty.Method] = method
+      request.headers[HttpProperty.Language] = this._coreInitializer.cultureCode || 'no'
       return request
     };
 }

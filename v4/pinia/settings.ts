@@ -1,7 +1,11 @@
 import { defineStore } from "pinia";
+import { useServices } from "./services"
 import { ref, computed, reactive } from "vue";
 
 export const useSettings = defineStore("settings", () => {
+
+  const { setCultureCode, coreInitializer } = useServices()
+
 
   const fontSizeScale = ref(1);
   const darkmode = ref(false);
@@ -11,6 +15,10 @@ export const useSettings = defineStore("settings", () => {
     lng: 0,
     isWatching: false,
   });
+
+  const $cultureCode = computed(() => {
+    return coreInitializer.cultureCode
+  })
 
   const $fontSize = (size: number) => {
     return size * fontSizeScale.value
@@ -34,6 +42,10 @@ export const useSettings = defineStore("settings", () => {
     location.isWatching = isWatching;
   }
 
+  const setCulture = (cultureCode: string) => {
+    setCultureCode(cultureCode)
+  }
+
   const $fontSizeScale = computed(() => {
     return fontSizeScale.value
   })
@@ -51,6 +63,7 @@ export const useSettings = defineStore("settings", () => {
   })
 
   return {
+    $cultureCode,
     $fontSizeScale,
     $isDarkmode,
     $location,
@@ -59,6 +72,7 @@ export const useSettings = defineStore("settings", () => {
     setLocation,
     setFontSizeScale,
     setDarkmode,
+    setCulture,
     $fontSize,
   }
 });
