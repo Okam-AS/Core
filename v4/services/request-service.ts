@@ -64,6 +64,7 @@ export class RequestService {
     }
 
     private DefaultRequest (path: string, payload: any, method: HttpMethod): any {
+      console.log(method + ": " + path)
       return this.BuildRequest(path, method, payload ? JSON.stringify(payload) : '', this._coreInitializer.bearerToken)
     };
 
