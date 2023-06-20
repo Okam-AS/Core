@@ -94,9 +94,10 @@ export const useCart = defineStore("cart", () => {
     })
   }
 
-  const loadNewUnsavedLineItem = async (product: Product) => {
+  const loadNewUnsavedLineItem = async (productId: string) => {
     let lineItem = new CartLineItem()
-    lineItem.product = product;
+    lineItem.product = new Product();
+    lineItem.product.id = productId;
     lineItem.quantity = 1;
     return cartService().GetCartLineItem(lineItem).then((response) => {
       unsavedLineItem.value = response;
