@@ -3,6 +3,7 @@ export { Cart } from './cart/cart'
 export { CartValidation } from './cart/cart-validation'
 export { CartCalculation } from './cart/cart-calculation'
 export { CartLineItem } from './cart/cart-line-item'
+export { RecommendProductsRequest } from './cart/recommend-products-request'
 
 // Store
 export { Store } from './store/store'

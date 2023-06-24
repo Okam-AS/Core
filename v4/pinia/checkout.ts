@@ -15,10 +15,10 @@ export const useCheckout = defineStore("checkout", () => {
   const _store = useStore()
   const { paymentService, persistenceService, discountService, cartService, stripeService, vippsService } = useServices()
 
-  const submitButtonLabel = computed(() => {
+  const totalAmountText = computed(() => {
     const currentCart = _cart.getCurrentCart()
     const priceAmount = currentCart?.calculations?.finalAmount ?? 0
-    return $i['checkoutPage_submit'] + (priceAmount > 0 ? ' ' + priceLabel(priceAmount, true) : '')
+    return (priceAmount > 0 ? ' ' + priceLabel(priceAmount, true) : '')
   })
 
   const paymentLabel = (card: PaymentMethod) => {
@@ -413,7 +413,7 @@ export const useCheckout = defineStore("checkout", () => {
   }
 
   return {
-    submitButtonLabel,
+    totalAmountText,
     paymentLabel,
     addDiscountCode,
 

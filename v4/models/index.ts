@@ -1,6 +1,6 @@
 // Cart
 export { Cart } from '../../v4/models/cart/cart'
-export { CartValidation, CartCalculation, CartLineItem } from '../../models/'
+export { CartValidation, CartCalculation, CartLineItem, RecommendProductsRequest } from '../../models/'
 
 // Store
 export { Store, OpeningHour, DeliveryMethod, BrregData, StoreRegistration, StoreUserSetting, StoreTip, StorePayment, StoreFees } from '../../models/'
@@ -15,7 +15,7 @@ export { User, Login, SendVerificationToken, Address } from '../../models/'
 export { Order, OrderLineItem, OrderLineItemOption, TaxDetail } from '../../models/'
 
 // Notification
-export { NotificationRegistration }from '../../models/'
+export { NotificationRegistration } from '../../models/'
 
 // Product
 export { Product, ProductImage, ProductVariant, ProductVariantOption, BulkImportRow, BulkImport } from '../../models/'

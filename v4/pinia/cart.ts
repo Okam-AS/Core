@@ -1,6 +1,6 @@
 
 import { defineStore } from "pinia";
-import { Cart, CartLineItem, Product } from "../models";
+import { Cart, CartLineItem, Product, RecommendProductsRequest } from "../models";
 import { useServices, useStore, useUser } from "./"
 import { ref, computed } from "vue";
 import { priceLabel } from "../helpers/tools"
@@ -13,6 +13,7 @@ export const useCart = defineStore("cart", () => {
   const _useUser = useUser()
 
   const isLoading = ref(false)
+  const isLoadingRecommendations = ref(false)
 
   const cartsRef = ref(persistenceService.load<Cart[]>('cartsRef') || [] as Cart[]);
   persistenceService.watchAndStore(cartsRef, 'cartsRef');
@@ -81,6 +82,24 @@ export const useCart = defineStore("cart", () => {
     })
 
     syncWithDbDebounced()
+  }
+
+
+  const loadRecommendations = async (): Promise<Product[]> => {
+    const currentCart = getCurrentCart();
+    if (!currentCart || !currentCart.storeId) return;
+    isLoadingRecommendations.value = true;
+    var requestModel = new RecommendProductsRequest();
+
+    requestModel.items = currentCart.items;
+    requestModel.storeId = currentCart.storeId;
+    requestModel.userId = _useUser.isLoggedIn ? _useUser.user.id : '';
+    requestModel.cartDiscountCode = currentCart.discountCode;
+    requestModel.searchOptions = { deliveryType: currentCart.deliveryType };
+
+    const result = await cartService().GetRecommendations(requestModel);
+    isLoadingRecommendations.value = false;
+    return result;
   }
 
   const loadUnsavedLineItem = async (lineItem: CartLineItem) => {
@@ -182,6 +201,18 @@ export const useCart = defineStore("cart", () => {
     delete currentCart.items[index];
   }
 
+  const cartLineItemAddQuantity = (lineItemId: string, addQuantity: number) => {
+    if (!addQuantity) return;
+    const currentCart = getCurrentCart();
+    if (!currentCart) return;
+    const index = currentCart.items.findIndex(item => item.id === lineItemId)
+    if (index < 0) return;
+    const newQuantity = currentCart.items[index].quantity + addQuantity;
+    if (newQuantity < 1)
+      return;
+    currentCart.items[index].quantity = newQuantity;
+  }
+
   const unsavedLineItemAddQuantity = (addQuantity: number) => {
     if (!unsavedLineItem.value) return;
     const newQuantity = unsavedLineItem.value.quantity + addQuantity;
@@ -280,6 +311,7 @@ export const useCart = defineStore("cart", () => {
     firstProductVariantIsSelected,
     singleLineDeliveryAddressInCart,
     isLoading,
+    isLoadingRecommendations,
     deliveryAddressInCartIsValid,
     syncWithDb,
     getCurrentCart,
@@ -289,11 +321,13 @@ export const useCart = defineStore("cart", () => {
     clearCart,
     clearLineItems,
     removeLineItem,
+    cartLineItemAddQuantity,
     unsavedLineItemAddQuantity,
     unsavedLineItemSave,
     unsavedLineItemToggleProductVariantOption,
     unsavedLineItemSetNotes,
     loadUnsavedLineItem,
     loadNewUnsavedLineItem,
+    loadRecommendations
   }
 })
