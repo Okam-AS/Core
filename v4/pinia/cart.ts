@@ -198,7 +198,9 @@ export const useCart = defineStore("cart", () => {
     const currentCart = getCurrentCart();
     if (!currentCart) return;
     const index = currentCart.items.findIndex(item => item.id === lineItemId)
-    delete currentCart.items[index];
+    if (index !== -1) {
+      currentCart.items.splice(index, 1);
+    }
   }
 
   const cartLineItemAddQuantity = (lineItemId: string, addQuantity: number) => {
