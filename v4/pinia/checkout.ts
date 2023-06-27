@@ -102,11 +102,17 @@ export const useCheckout = defineStore("checkout", () => {
   })
 
   const dateOptionIndexChange = (event) => {
+    if (!event.value) { 
+       return
+    }
     srdRef.value = event.value
     requestedCompletionChange()
   }
 
   const timeChange = (event) => {
+    if (!event.value) { 
+      return
+    }
     srtRef.value = new Date(event.value)
     requestedCompletionChange()
   }
