@@ -17,12 +17,21 @@ export const useUser = defineStore("user", () => {
 
   const toggleFavoriteProduct = async (productId: string) => {
     if (!isLoggedIn) return Promise.reject();
-    if (userRef.value.favoriteProductIds?.includes(productId))
-      await userService().RemoveFavoriteProduct(productId)
-    else
-      await userService().AddFavoriteProduct(productId)
+    const previouslyFavorite = userRef.value.favoriteProductIds?.includes(productId);
+    const serverFunction = previouslyFavorite ? userService().RemoveFavoriteProduct(productId) : userService().AddFavoriteProduct(productId);
 
-    return Promise.resolve();
+    serverFunction.then((success) => {
+      if (!success) return;
+
+      if (previouslyFavorite) {
+        userRef.value.favoriteProductIds = userRef.value.favoriteProductIds.filter(id => id !== productId);
+      } else {
+        userRef.value.favoriteProductIds = [...userRef.value.favoriteProductIds, productId];
+      }
+
+      return Promise.resolve();
+    }).catch(Promise.reject);
+
   }
 
   const secondsToWaitForVerificationToken = ref(0);
@@ -69,7 +78,7 @@ export const useUser = defineStore("user", () => {
       setBearerToken('')
     })
   }
-  
+
   return {
     user,
     secondsToWaitForVerificationToken,
