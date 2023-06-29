@@ -80,6 +80,7 @@ export default {
   confirmationPage_orderIsSent: 'Your order is now sent',
   confirmationPage_viewOrder: 'Se status',
   categoriesPage_yourFavorites: 'Your favorites',
+  categoriesPage_noFavorites: 'Tap ♡ on a product to collect them here',
   categoriesPage_allCategories: 'All categories',
   general_asap: 'ASAP',
   general_today: 'Today',

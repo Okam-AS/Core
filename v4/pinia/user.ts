@@ -43,6 +43,7 @@ export const useUser = defineStore("user", () => {
     } else {
       productService().GetFavorites(useStore().currentStore.id).then((products) => {
         favoriteProducts.value = products;
+        userRef.value.favoriteProductIds = products.map(p => p.id);
       })
     }
   }

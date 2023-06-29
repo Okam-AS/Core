@@ -80,6 +80,7 @@ export default {
   confirmationPage_orderIsSent: 'Din bestilling er nå sendt',
   confirmationPage_viewOrder: 'Se status',
   categoriesPage_yourFavorites: 'Dine favoritter',
+  categoriesPage_noFavorites: 'Trykk ♡ på produkter for å samle de her',
   categoriesPage_allCategories: 'Alle kategorier',
   general_asap: 'Snarest',
   general_today: 'I dag',
