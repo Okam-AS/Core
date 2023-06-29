@@ -79,6 +79,8 @@ export default {
   confirmationPage_thankYou: 'Thank you for your order!',
   confirmationPage_orderIsSent: 'Your order is now sent',
   confirmationPage_viewOrder: 'Se status',
+  categoriesPage_yourFavorites: 'Your favorites',
+  categoriesPage_allCategories: 'All categories',
   general_asap: 'ASAP',
   general_today: 'Today',
   general_tomorrow: 'Tomorrow',

@@ -79,6 +79,8 @@ export default {
   confirmationPage_thankYou: 'Takk for at du støtter lokal handel',
   confirmationPage_orderIsSent: 'Din bestilling er nå sendt',
   confirmationPage_viewOrder: 'Se status',
+  categoriesPage_yourFavorites: 'Dine favoritter',
+  categoriesPage_allCategories: 'Alle kategorier',
   general_asap: 'Snarest',
   general_today: 'I dag',
   general_tomorrow: 'I morgen',

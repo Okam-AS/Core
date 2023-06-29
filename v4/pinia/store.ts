@@ -2,12 +2,14 @@
 import { defineStore } from "pinia";
 import { Store } from "../models";
 import { useServices } from "./services"
+import { useUser } from "./user"
 import { useCategory } from "./category";
 import { ref, computed } from "vue";
 
 export const useStore = defineStore("store", () => {
   const { storeService, persistenceService } = useServices()
   const _category = useCategory()
+  const _user = useUser()
   const stores = ref([] as Store[]);
   const isLoading = ref(false);
 
@@ -20,13 +22,14 @@ export const useStore = defineStore("store", () => {
     isLoading.value = true
     _category.clearCategories()
     const cashedStore = stores.value.find(x => x.id === id)
-    if(cashedStore){
+    if (cashedStore) {
       store.value = cashedStore
     }
     return storeService().Get(id).then((s) => {
       store.value = s
     }).finally(() => {
       isLoading.value = false
+      _user.loadFavoriteProducts()
     })
   }
 
@@ -40,9 +43,9 @@ export const useStore = defineStore("store", () => {
   }
 
   const singleLineStoreAddress = computed(() => {
-    let singleLineAddress =   store.value?.address?.fullAddress?.toString()
-    if(singleLineAddress && store.value?.address?.zipCode){
-      singleLineAddress += ", " + (store.value?.address?.zipCode ?? '') + " " + (store.value?.address?.city?? '');
+    let singleLineAddress = store.value?.address?.fullAddress?.toString()
+    if (singleLineAddress && store.value?.address?.zipCode) {
+      singleLineAddress += ", " + (store.value?.address?.zipCode ?? '') + " " + (store.value?.address?.city ?? '');
     }
     return singleLineAddress
   })

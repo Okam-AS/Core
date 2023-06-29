@@ -13,7 +13,8 @@ import {
   StripeService,
   VippsService,
   NotificationService,
-  LogService
+  LogService,
+  ProductService
 } from "../services";
 import { ref, computed } from "vue";
 
@@ -47,20 +48,21 @@ export const useServices = defineStore("services", () => {
     clientPlatformName: clientPlatformName.value,
     cultureCode: cultureCode.value
   } as ICoreInitializer))
-  
 
-  const userService =  () => new UserService(coreInitializer.value) 
+
+  const userService = () => new UserService(coreInitializer.value)
   const storeService = () => new StoreService(coreInitializer.value)
-  const cartService = () => new CartService(coreInitializer.value) 
-  const categoryService = () => new CategoryService(coreInitializer.value) 
-  const paymentService = () => new PaymentService(coreInitializer.value) 
-  const discountService = () => new DiscountService(coreInitializer.value) 
-  const orderService = () => new OrderService(coreInitializer.value) 
-  const stripeService = () => new StripeService(coreInitializer.value) 
-  const vippsService = () => new VippsService(coreInitializer.value) 
+  const cartService = () => new CartService(coreInitializer.value)
+  const categoryService = () => new CategoryService(coreInitializer.value)
+  const paymentService = () => new PaymentService(coreInitializer.value)
+  const discountService = () => new DiscountService(coreInitializer.value)
+  const orderService = () => new OrderService(coreInitializer.value)
+  const stripeService = () => new StripeService(coreInitializer.value)
+  const vippsService = () => new VippsService(coreInitializer.value)
   const notificationService = () => new NotificationService(coreInitializer.value)
   const logService = () => new LogService(coreInitializer.value)
-  
+  const productService = () => new ProductService(coreInitializer.value)
+
   return {
     coreInitializer,
     persistenceService,
@@ -77,6 +79,7 @@ export const useServices = defineStore("services", () => {
     stripeService,
     vippsService,
     notificationService,
-    logService
+    logService,
+    productService
   }
 });

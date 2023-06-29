@@ -1,15 +1,18 @@
 
 import { defineStore } from "pinia";
-import { User } from "../models";
+import { User, Product } from "../models";
 import { useServices } from "./services"
+import { useStore } from "./store";
 import { ref, computed } from "vue";
 
 export const useUser = defineStore("user", () => {
 
-  const { userService, persistenceService, setBearerToken } = useServices()
+  const { userService, persistenceService, productService, setBearerToken } = useServices()
 
   const userRef = ref(persistenceService.load<User>('userRef') || {} as User);
   persistenceService.watchAndStore(userRef, 'userRef');
+
+  const favoriteProducts = ref([] as Product[])
 
   const user = computed(() => { return userRef.value })
 
@@ -32,6 +35,16 @@ export const useUser = defineStore("user", () => {
       return Promise.resolve();
     }).catch(Promise.reject);
 
+  }
+
+  const loadFavoriteProducts = () => {
+    if (!isLoggedIn || !useStore().currentStore) {
+      favoriteProducts.value = [];
+    } else {
+      productService().GetFavorites(useStore().currentStore.id).then((products) => {
+        favoriteProducts.value = products;
+      })
+    }
   }
 
   const secondsToWaitForVerificationToken = ref(0);
@@ -75,6 +88,7 @@ export const useUser = defineStore("user", () => {
   const logout = () => {
     userService().Logout('notificationId', () => {
       userRef.value = {} as User;
+      favoriteProducts.value = [];
       setBearerToken('')
     })
   }
@@ -83,11 +97,13 @@ export const useUser = defineStore("user", () => {
     user,
     secondsToWaitForVerificationToken,
     isLoggedIn,
+    favoriteProducts,
     phoneNumberIsValid,
     logout,
     sendVerificationToken,
     verifyToken,
-    toggleFavoriteProduct
+    toggleFavoriteProduct,
+    loadFavoriteProducts
   }
 
 });
