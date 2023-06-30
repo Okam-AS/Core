@@ -2,6 +2,7 @@ export default {
   storeSearchPage_whereToShop: "Hvor ønsker du å handle?",
   storeSearchPage_search: "Søk",
   storeSearchPage_shareLocation: "Del posisjon",
+  storePage_orderHere: 'Bestill her',
   productPage_addToCart: "Legg i kurv",
   checkoutPage_heading: "Din bestilling",
   checkoutPage_cartIsEmpty: "Du har ingen varer i handlekurven",

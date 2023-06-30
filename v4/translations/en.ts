@@ -2,6 +2,7 @@ export default {
   storeSearchPage_whereToShop: "Where do you wish to shop?",
   storeSearchPage_search: "Search",
   storeSearchPage_shareLocation: "Share location",
+  storePage_orderHere: 'Order here',
   productPage_addToCart: "Add to cart",
   checkoutPage_heading: "Your order",
   checkoutPage_cartIsEmpty: "You have no items in your cart",
