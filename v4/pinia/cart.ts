@@ -87,7 +87,7 @@ export const useCart = defineStore("cart", () => {
 
   const loadRecommendations = async (): Promise<Product[]> => {
     const currentCart = getCurrentCart();
-    if (!currentCart || !currentCart.storeId) return;
+    if (!currentCart || !currentCart.storeId) return Promise.resolve([]);
     isLoadingRecommendations.value = true;
     var requestModel = new RecommendProductsRequest();
 
@@ -97,9 +97,9 @@ export const useCart = defineStore("cart", () => {
     requestModel.cartDiscountCode = currentCart.discountCode;
     requestModel.searchOptions = { deliveryType: currentCart.deliveryType };
 
-    const result = await cartService().GetRecommendations(requestModel);
-    isLoadingRecommendations.value = false;
-    return result;
+    return cartService().GetRecommendations(requestModel).finally(() => {
+      isLoadingRecommendations.value = false;
+    });
   }
 
   const loadUnsavedLineItem = async (lineItem: CartLineItem) => {

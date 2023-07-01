@@ -19,7 +19,7 @@ export const useUser = defineStore("user", () => {
   const isLoggedIn = computed(() => { return !!userRef?.value?.id });
 
   const toggleFavoriteProduct = async (productId: string) => {
-    if (!isLoggedIn) return Promise.reject();
+    if (!isLoggedIn.value) return Promise.reject();
     const previouslyFavorite = userRef.value.favoriteProductIds?.includes(productId);
     const serverFunction = previouslyFavorite ? userService().RemoveFavoriteProduct(productId) : userService().AddFavoriteProduct(productId);
 
@@ -38,7 +38,7 @@ export const useUser = defineStore("user", () => {
   }
 
   const loadFavoriteProducts = () => {
-    if (!isLoggedIn || !useStore().currentStore) {
+    if (!isLoggedIn.value || !useStore().currentStore) {
       favoriteProducts.value = [];
     } else {
       productService().GetFavorites(useStore().currentStore.id).then((products) => {
