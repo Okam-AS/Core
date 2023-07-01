@@ -83,6 +83,8 @@ export default {
   categoriesPage_yourFavorites: 'Dine favoritter',
   categoriesPage_noFavorites: 'Trykk ♡ på produkter for å samle de her',
   categoriesPage_allCategories: 'Alle kategorier',
+  general_closed: 'Stengt',
+  general_openTo: 'Åpent til',
   general_asap: 'Snarest',
   general_today: 'I dag',
   general_tomorrow: 'I morgen',

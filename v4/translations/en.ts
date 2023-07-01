@@ -83,6 +83,8 @@ export default {
   categoriesPage_yourFavorites: 'Your favorites',
   categoriesPage_noFavorites: 'Tap ♡ on a product to collect them here',
   categoriesPage_allCategories: 'All categories',
+  general_closed: 'Closed',
+  general_openTo: 'Open to',
   general_asap: 'ASAP',
   general_today: 'Today',
   general_tomorrow: 'Tomorrow',

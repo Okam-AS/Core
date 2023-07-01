@@ -4,12 +4,14 @@ import { Store } from "../models";
 import { useServices } from "./services"
 import { useUser } from "./user"
 import { useCategory } from "./category";
+import { useTranslation } from "./translation";
 import { ref, computed } from "vue";
 
 export const useStore = defineStore("store", () => {
   const { storeService, persistenceService } = useServices()
   const _category = useCategory()
   const _user = useUser()
+  const { $i } = useTranslation()
   const stores = ref([] as Store[]);
   const isLoading = ref(false);
 
@@ -18,9 +20,11 @@ export const useStore = defineStore("store", () => {
 
   const currentStore = computed(() => { return store.value })
 
-  const setCurrentStore = (id: number) => {
-    isLoading.value = true
-    _category.clearCategories()
+  const setCurrentStore = (id: number, reload: boolean = false) => {
+    if (!reload) {
+      isLoading.value = true
+      _category.clearCategories()
+    }
     const cashedStore = stores.value.find(x => x.id === id)
     if (cashedStore) {
       store.value = cashedStore
@@ -31,6 +35,10 @@ export const useStore = defineStore("store", () => {
       isLoading.value = false
       _user.loadFavoriteProducts()
     })
+  }
+
+  const reloadCurrentStore = () => {
+    setCurrentStore(store.value.id, true)
   }
 
   const loadStores = async () => {
@@ -50,11 +58,22 @@ export const useStore = defineStore("store", () => {
     return singleLineAddress
   })
 
+  const openingHourLabel = computed(() => {
+    if (store.value?.openingHours?.length === 0 || !store.value.isOpenNow) return $i['general_closed']
+    const day = new Date().getDay();
+    const dayOfWeekNow = day === 0 ? 6 : day - 1;
+    const todaysOpening = store.value?.openingHours?.find(x => x.dayOfWeek === dayOfWeekNow);
+    if (!todaysOpening || !todaysOpening.open) return $i['general_closed']
+    return $i['general_openTo'] + ' ' + todaysOpening.closingTime;
+  })
+
   return {
     stores,
     isLoading,
     singleLineStoreAddress,
+    openingHourLabel,
     currentStore,
+    reloadCurrentStore,
     setCurrentStore,
     loadStores
   }
