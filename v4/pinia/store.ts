@@ -67,12 +67,31 @@ export const useStore = defineStore("store", () => {
     return $i['general_openTo'] + ' ' + todaysOpening.closingTime;
   })
 
+  const openingHoursList = computed(() => {
+    if (store.value?.openingHours?.length === 0) return [];
+    const days = [$i['general_monday'], $i['general_tuesday'], $i['general_wednesday'], $i['general_thursday'], $i['general_friday'], $i['general_saturday'], $i['general_sunday']];
+    const result = [];
+    const day = new Date().getDay();
+    const dayOfWeekNow = day === 0 ? 6 : day - 1;
+    days.forEach((day, index) => {
+      const openingHour = store.value?.openingHours?.find(x => x.dayOfWeek === index);
+      if (!openingHour) return;
+      result.push({
+        day,
+        openingHour,
+        isToday: dayOfWeekNow === openingHour.dayOfWeek
+      })
+    });
+    return result;
+  })
+
   return {
     stores,
     isLoading,
     singleLineStoreAddress,
     openingHourLabel,
     currentStore,
+    openingHoursList,
     reloadCurrentStore,
     setCurrentStore,
     loadStores

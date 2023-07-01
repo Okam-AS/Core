@@ -3,4 +3,7 @@ export class Address {
     fullAddress: string;
     zipCode: string;
     city: string;
+
+    latitude: string;
+    longitude: string;
 }
