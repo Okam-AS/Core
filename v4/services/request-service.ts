@@ -49,7 +49,7 @@ export class RequestService {
   public TryParseResponse(response) {
     if (typeof response === 'undefined' || !response) { return undefined }
     const statusCode = $config.isNativeScript ? response.statusCode : response.status
-    console.log('📲 Response status code: ' + statusCode)
+    console.log('📲 HTTP ' + statusCode)
     if (statusCode === 200) {
       let parsedResponse
       try {
@@ -64,7 +64,7 @@ export class RequestService {
   }
 
   private DefaultRequest(path: string, payload: any, method: HttpMethod): any {
-    console.log('🚀 ' + method + ": " + path)
+    console.log('🚀 ' + method + " " + path)
     return this.BuildRequest(path, method, payload ? JSON.stringify(payload) : '', this._coreInitializer.bearerToken)
   };
 

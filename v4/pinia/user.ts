@@ -1,22 +1,41 @@
 
 import { defineStore } from "pinia";
-import { User, Product } from "../models";
+import { User, Product, PaymentMethod } from "../models";
 import { useServices } from "./services"
 import { useStore } from "./store";
 import { ref, computed } from "vue";
+import { debounce } from "../helpers/ts-debounce"
 
 export const useUser = defineStore("user", () => {
 
-  const { userService, persistenceService, productService, setBearerToken } = useServices()
+  const { userService, persistenceService, productService, setBearerToken, paymentService } = useServices()
 
   const userRef = ref(persistenceService.load<User>('userRef') || {} as User);
   persistenceService.watchAndStore(userRef, 'userRef');
 
-  const favoriteProducts = ref([] as Product[])
+  const favoriteProductsPrivate = ref([] as Product[])
+  const registeredCardsPrivate = ref([] as PaymentMethod[]);
+  const isLoadingCardsPrivate = ref(false);
 
   const user = computed(() => { return userRef.value })
-
   const isLoggedIn = computed(() => { return !!userRef?.value?.id });
+  const favoriteProducts = computed(() => { return favoriteProductsPrivate.value });
+  const registeredCards = computed(() => { return registeredCardsPrivate.value });
+  const isLoadingCards = computed(() => { return isLoadingCardsPrivate.value });
+
+  const loadRegisteredCards = () => {
+    if (!isLoggedIn.value) return;
+    isLoadingCardsPrivate.value = true;
+    paymentService().GetPaymentMethods()
+      .then((result) => {
+        if (Array.isArray(result)) {
+          registeredCardsPrivate.value = result;
+        }
+      })
+      .finally(() => {
+        isLoadingCardsPrivate.value = false;
+      });
+  }
 
   const toggleFavoriteProduct = async (productId: string) => {
     if (!isLoggedIn.value) return Promise.reject();
@@ -37,12 +56,33 @@ export const useUser = defineStore("user", () => {
 
   }
 
+  const updateAddress = debounce((address) => {
+    if (!isLoggedIn.value || !address) return;
+    const fullAddress = address.fullAddress || userRef.value.fullAddress;
+    const zipCode = address.zipCode || userRef.value.zipCode;
+    const city = address.city || userRef.value.city;
+
+    // No need to update if nothing has changed
+    if (fullAddress === userRef.value.fullAddress &&
+      zipCode === userRef.value.zipCode &&
+      city === userRef.value.city) return;
+
+    userService().UpdateAddress(fullAddress, zipCode, city
+    ).then((success) => {
+      if (success) {
+        userRef.value.fullAddress = fullAddress;
+        userRef.value.zipCode = zipCode;
+        userRef.value.city = city;
+      }
+    })
+  }, 800)
+
   const loadFavoriteProducts = () => {
     if (!isLoggedIn.value || !useStore().currentStore) {
-      favoriteProducts.value = [];
+      favoriteProductsPrivate.value = [];
     } else {
       productService().GetFavorites(useStore().currentStore.id).then((products) => {
-        favoriteProducts.value = products;
+        favoriteProductsPrivate.value = products;
         userRef.value.favoriteProductIds = products.map(p => p.id);
       })
     }
@@ -89,7 +129,8 @@ export const useUser = defineStore("user", () => {
   const logout = () => {
     userService().Logout('notificationId', () => {
       userRef.value = {} as User;
-      favoriteProducts.value = [];
+      favoriteProductsPrivate.value = [];
+      registeredCardsPrivate.value = [];
       setBearerToken('')
     })
   }
@@ -99,6 +140,10 @@ export const useUser = defineStore("user", () => {
     secondsToWaitForVerificationToken,
     isLoggedIn,
     favoriteProducts,
+    updateAddress,
+    registeredCards,
+    isLoadingCards,
+    loadRegisteredCards,
     phoneNumberIsValid,
     logout,
     sendVerificationToken,

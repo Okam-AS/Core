@@ -10,7 +10,7 @@ export const useCart = defineStore("cart", () => {
 
   const { cartService, persistenceService } = useServices()
   const _store = useStore()
-  const _useUser = useUser()
+  const _user = useUser()
 
   const isLoading = ref(false)
   const isLoadingRecommendations = ref(false)
@@ -93,7 +93,7 @@ export const useCart = defineStore("cart", () => {
 
     requestModel.items = currentCart.items;
     requestModel.storeId = currentCart.storeId;
-    requestModel.userId = _useUser.isLoggedIn ? _useUser.user.id : '';
+    requestModel.userId = _user.isLoggedIn ? _user.user.id : '';
     requestModel.cartDiscountCode = currentCart.discountCode;
     requestModel.searchOptions = { deliveryType: currentCart.deliveryType };
 
@@ -125,10 +125,18 @@ export const useCart = defineStore("cart", () => {
 
 
   const syncWithDb = async () => {
-    if (!_useUser.isLoggedIn) return;
+    if (!_user.isLoggedIn) return;
     const currentCart = getCurrentCart();
     if (!currentCart || !currentCart.storeId) return;
     isLoading.value = true;
+
+    // Set default delivery address
+    if (!currentCart.fullAddress && !currentCart.city && !currentCart.zipCode) {
+      currentCart.fullAddress = _user.user.fullAddress
+      currentCart.city = _user.user.city
+      currentCart.zipCode = _user.user.zipCode
+    }
+
     return cartService().Update(currentCart).then((cart) => {
       const cartIndex = cartsRef.value.findIndex(c => c.storeId === _store.currentStore.id)
       if (cartIndex >= 0) {
@@ -142,8 +150,7 @@ export const useCart = defineStore("cart", () => {
     })
   }
 
-  const syncWithDbDebounced = debounce(syncWithDb, 400)
-
+  const syncWithDbDebounced = debounce(syncWithDb, 700)
 
   const unsavedLineItemSave = async () => {
     const currentCart = getCurrentCart();
