@@ -119,4 +119,6 @@ export default {
   general_termsUrl: 'https://vilkar.okam.no',
   general_termsAcceptPrefix: 'By using Okam you accept our ',
   general_terms: 'terms and privacy policy',
+  menu_findStore: 'Find store',
+  menu_myOrders: 'My orders',
 }
