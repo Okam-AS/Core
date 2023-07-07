@@ -43,6 +43,7 @@ export default {
   checkoutPage_rememberCard: 'Remember card',
   checkoutPage_paymentFailedCheckCardDetails: 'Payment failed. Check card details and try again.',
   cartPage_heading: "Your cart",
+  cartPage_confirmDelete: "Fjerne vare?",
   cartPage_submit: "To checkout",
   cartPage_recommendations: "Recommendations",
   loginModal_invalidPhoneNumber: "Invalid phone number",

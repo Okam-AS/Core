@@ -43,6 +43,7 @@ export default {
   checkoutPage_rememberCard: 'Husk dette kortet',
   checkoutPage_paymentFailedCheckCardDetails: 'Betalingen kunne ikke gjennomføres. Kontroller kortinformasjon og prøv igjen.',
   cartPage_heading: "Din handlekurv",
+  cartPage_confirmDelete: "Fjerne vare?",
   cartPage_submit: "Til kasse",
   cartPage_recommendations: "Anbefalinger",
   loginModal_invalidPhoneNumber: "Ugyldig telefonnummer",
