@@ -10,6 +10,7 @@ export const useColors = defineStore("colors", () => {
     darkBlue: '#1E283D',
     red: '#CC0000',
     lightOkamGreen: '#D5F6E5',
+    lightYellow: '#FFF8E5',
     green: '#1BB776',
     okamGreen: '#1BB776',
     transparent: 'transparent',

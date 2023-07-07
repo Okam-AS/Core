@@ -20,6 +20,9 @@ export class Store {
     vippsMsn: string;
     minimumOrderPriceForHomeDelivery: number;
 
+    warningMessage: string;
+    statusMessage: string;
+
     selfPickUp: boolean;
     tableDeliveryEnabled: boolean;
     homeDeliveryEnabled: boolean;
