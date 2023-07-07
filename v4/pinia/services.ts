@@ -43,11 +43,17 @@ export const useServices = defineStore("services", () => {
     cultureCode.value = code
   }
 
-  const coreInitializer = computed(() => ({
-    bearerToken: bearerToken.value,
-    clientPlatformName: clientPlatformName.value,
-    cultureCode: cultureCode.value
-  } as ICoreInitializer))
+  const coreInitializer = computed(() => {
+    return ({
+      bearerToken: bearerToken.value,
+      clientPlatformName: clientPlatformName.value,
+      cultureCode: cultureCode.value
+    } as ICoreInitializer)
+  })
+
+  const getCoreInitializer = () => {
+    return coreInitializer.value
+  }
 
 
   const userService = () => new UserService(coreInitializer.value)
@@ -64,8 +70,8 @@ export const useServices = defineStore("services", () => {
   const productService = () => new ProductService(coreInitializer.value)
 
   return {
-    coreInitializer,
     persistenceService,
+    getCoreInitializer,
     setBearerToken,
     setClientPlatformName,
     setCultureCode,

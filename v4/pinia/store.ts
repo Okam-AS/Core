@@ -59,17 +59,17 @@ export const useStore = defineStore("store", () => {
   })
 
   const openingHourLabel = computed(() => {
-    if (store.value?.openingHours?.length === 0 || !store.value.isOpenNow) return $i['general_closed']
+    if (store.value?.openingHours?.length === 0 || !store.value.isOpenNow) return $i('general_closed')
     const day = new Date().getDay();
     const dayOfWeekNow = day === 0 ? 6 : day - 1;
     const todaysOpening = store.value?.openingHours?.find(x => x.dayOfWeek === dayOfWeekNow);
-    if (!todaysOpening || !todaysOpening.open) return $i['general_closed']
-    return $i['general_openTo'] + ' ' + todaysOpening.closingTime;
+    if (!todaysOpening || !todaysOpening.open) return $i('general_closed')
+    return $i('general_openTo') + ' ' + todaysOpening.closingTime;
   })
 
   const openingHoursList = computed(() => {
     if (store.value?.openingHours?.length === 0) return [];
-    const days = [$i['general_monday'], $i['general_tuesday'], $i['general_wednesday'], $i['general_thursday'], $i['general_friday'], $i['general_saturday'], $i['general_sunday']];
+    const days = [$i('general_monday'), $i('general_tuesday'), $i('general_wednesday'), $i('general_thursday'), $i('general_friday'), $i('general_saturday'), $i('general_sunday')];
     const result = [];
     const day = new Date().getDay();
     const dayOfWeekNow = day === 0 ? 6 : day - 1;

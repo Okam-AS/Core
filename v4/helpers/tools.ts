@@ -1,5 +1,6 @@
 import { DeliveryType, OrderStatus } from "../enums"
 import dayjs from "dayjs";
+import { useTranslation } from "../pinia"
 
 const wholeAmountTool = (amount: Number): string => {
   if (!amount) { return '0' }
@@ -25,43 +26,43 @@ const priceLabelTool = (totalPrice: Number, hideFractionIfZero: Boolean = false)
 }
 
 
-const orderStatusLabelTool = (type: OrderStatus, i: Object) => {
+const orderStatusLabelTool = (type: OrderStatus) => {
   const map = {
-    [OrderStatus.Accepted]: i['orderStatus_accepted'],
-    [OrderStatus.Processing]: i['orderStatus_processing'],
-    [OrderStatus.ReadyForPickup]: i['orderStatus_readyForPickup'],
-    [OrderStatus.ReadyForDriver]: i['orderStatus_readyForDriver'],
-    [OrderStatus.DriverPickedUp]: i['orderStatus_driverPickedUp'],
-    [OrderStatus.Served]: i['orderStatus_served'],
-    [OrderStatus.Completed]: i['orderStatus_completed'],
-    [OrderStatus.Canceled]: i['orderStatus_canceled'],
+    [OrderStatus.Accepted]: useTranslation().$i('orderStatus_accepted'),
+    [OrderStatus.Processing]: useTranslation().$i('orderStatus_processing'),
+    [OrderStatus.ReadyForPickup]: useTranslation().$i('orderStatus_readyForPickup'),
+    [OrderStatus.ReadyForDriver]: useTranslation().$i('orderStatus_readyForDriver'),
+    [OrderStatus.DriverPickedUp]: useTranslation().$i('orderStatus_driverPickedUp'),
+    [OrderStatus.Served]: useTranslation().$i('orderStatus_served'),
+    [OrderStatus.Completed]: useTranslation().$i('orderStatus_completed'),
+    [OrderStatus.Canceled]: useTranslation().$i('orderStatus_canceled'),
     default: ''
   };
   return map[type] || map.default;
 }
 
-const orderStatusHeadingTool = (type: OrderStatus, i: Object) => {
+const orderStatusHeadingTool = (type: OrderStatus) => {
   const map = {
-    [OrderStatus.Accepted]: i['orderStatus_acceptedHeading'],
-    [OrderStatus.Processing]: i['orderStatus_processingHeading'],
-    [OrderStatus.ReadyForPickup]: i['orderStatus_readyForPickupHeading'],
-    [OrderStatus.ReadyForDriver]: i['orderStatus_readyForDriverHeading'],
-    [OrderStatus.DriverPickedUp]: i['orderStatus_driverPickedUpHeading'],
-    [OrderStatus.Served]: i['orderStatus_servedHeading'],
-    [OrderStatus.Completed]: i['orderStatus_completedHeading'],
-    [OrderStatus.Canceled]: i['orderStatus_canceledHeading'],
+    [OrderStatus.Accepted]: useTranslation().$i('orderStatus_acceptedHeading'),
+    [OrderStatus.Processing]: useTranslation().$i('orderStatus_processingHeading'),
+    [OrderStatus.ReadyForPickup]: useTranslation().$i('orderStatus_readyForPickupHeading'),
+    [OrderStatus.ReadyForDriver]: useTranslation().$i('orderStatus_readyForDriverHeading'),
+    [OrderStatus.DriverPickedUp]: useTranslation().$i('orderStatus_driverPickedUpHeading'),
+    [OrderStatus.Served]: useTranslation().$i('orderStatus_servedHeading'),
+    [OrderStatus.Completed]: useTranslation().$i('orderStatus_completedHeading'),
+    [OrderStatus.Canceled]: useTranslation().$i('orderStatus_canceledHeading'),
     default: ''
   };
   return map[type] || map.default;
 }
 
-const deliveryTypeLabelTool = (type: DeliveryType, i: Object) => {
+const deliveryTypeLabelTool = (type: DeliveryType) => {
   const map = {
-    [DeliveryType.SelfPickup]: i['deliveryType_selfPickup'],
-    [DeliveryType.InstantHomeDelivery]: i['deliveryType_instantHomeDelivery'],
-    [DeliveryType.GroupedHomeDelivery]: i['deliveryType_groupedHomeDelivery'],
-    [DeliveryType.TableDelivery]: i['deliveryType_tableDelivery'],
-    default: i['deliveryType_notSet']
+    [DeliveryType.SelfPickup]: useTranslation().$i('deliveryType_selfPickup'),
+    [DeliveryType.InstantHomeDelivery]: useTranslation().$i('deliveryType_instantHomeDelivery'),
+    [DeliveryType.GroupedHomeDelivery]: useTranslation().$i('deliveryType_groupedHomeDelivery'),
+    [DeliveryType.TableDelivery]: useTranslation().$i('deliveryType_tableDelivery'),
+    default: useTranslation().$i('deliveryType_notSet')
   };
   return map[type] || map.default;
 };

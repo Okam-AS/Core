@@ -70,7 +70,7 @@ export const useOrder = defineStore("order", () => {
       return flow.map(s => ({
         completed: flow.indexOf(s) < flow.indexOf(currentStatus) || currentStatus === OrderStatus.Completed || s === OrderStatus.Accepted,
         current: s === status,
-        label: orderStatusLabel(s, $i),
+        label: orderStatusLabel(s),
         isLastStep: s === OrderStatus.Completed
       }))
     }

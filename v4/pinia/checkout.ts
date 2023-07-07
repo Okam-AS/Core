@@ -27,7 +27,7 @@ export const useCheckout = defineStore("checkout", () => {
     if (card.paymentType === PaymentType.Vipps)
       return 'Vipps'
     if (card.paymentType === PaymentType.PayInStore)
-      return $i['checkoutPage_payInStore']
+      return $i('checkoutPage_payInStore')
     return ''
   }
 
@@ -62,16 +62,16 @@ export const useCheckout = defineStore("checkout", () => {
   const tempRequestedCompletion = ref('')
   const requestedCompletionDateOptions = computed(() => {
     const getRequestedCompletionDateLabel = (index, date) => {
-      if (index === 0) return $i['general_asap']
-      if (index === 1) return $i['general_today']
-      if (index === 2) return $i['general_tomorrow']
-      const days = [$i['general_threeLetterSunday'],
-      $i['general_threeLetterMonday'],
-      $i['general_threeLetterTuesday'],
-      $i['general_threeLetterWednesday'],
-      $i['general_threeLetterThursday'],
-      $i['general_threeLetterFriday'],
-      $i['general_threeLetterSaturday']];
+      if (index === 0) return $i('general_asap')
+      if (index === 1) return $i('general_today')
+      if (index === 2) return $i('general_tomorrow')
+      const days = [$i('general_threeLetterSunday'),
+      $i('general_threeLetterMonday'),
+      $i('general_threeLetterTuesday'),
+      $i('general_threeLetterWednesday'),
+      $i('general_threeLetterThursday'),
+      $i('general_threeLetterFriday'),
+      $i('general_threeLetterSaturday')];
       return (
         days[date.getDay()] +
         ". " +
@@ -142,7 +142,7 @@ export const useCheckout = defineStore("checkout", () => {
       !selectedRequestedCompletionDate.value ||
       !srtRef.value ||
       requestedCompletionDateOptions.value.length <= srdRef.value || dateTimeIsUnderTenMinutesFromNow())
-      return $i['general_asap']?.toLowerCase()
+      return $i('general_asap')?.toLowerCase()
 
     return (requestedCompletionDateOptions.value[srdRef.value]?.label?.toLowerCase()) + ', ' + (('0' + selectedRequestedCompletionTimeHours()).slice(-2)) + ':' + (('0' + selectedRequestedCompletionTimeMinutes()).slice(-2))
   })
