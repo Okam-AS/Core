@@ -5,7 +5,7 @@ export default {
   storePage_orderHere: 'Bestill her',
   storePage_findUsHere: 'Finn oss her',
   productPage_addToCart: "Legg i kurv",
-  productPage_saveToCart: "Lagre endringer",
+  productPage_saveToCart: "Lagre",
   checkoutPage_heading: "Din bestilling",
   checkoutPage_cartIsEmpty: "Du har ingen varer i handlekurven",
   checkoutPage_submit: "Fullør bestilling",
