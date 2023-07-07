@@ -5,6 +5,7 @@ export default {
   storePage_orderHere: 'Order here',
   storePage_findUsHere: 'Find us here',
   productPage_addToCart: "Add to cart",
+  productPage_saveToCart: "Save changes",
   checkoutPage_heading: "Your order",
   checkoutPage_cartIsEmpty: "You have no items in your cart",
   checkoutPage_submit: "Complete order",

@@ -199,6 +199,7 @@ export const useCart = defineStore("cart", () => {
     const currentCart = getCurrentCart();
     if (!currentCart) return;
     currentCart.items = [];
+    syncWithDbDebounced()
   }
 
   const removeLineItem = (lineItemId: string) => {
@@ -208,6 +209,7 @@ export const useCart = defineStore("cart", () => {
     if (index !== -1) {
       currentCart.items.splice(index, 1);
     }
+    syncWithDbDebounced()
   }
 
   const cartLineItemAddQuantity = (lineItemId: string, addQuantity: number) => {
@@ -220,6 +222,7 @@ export const useCart = defineStore("cart", () => {
     if (newQuantity < 1)
       return;
     currentCart.items[index].quantity = newQuantity;
+    syncWithDbDebounced()
   }
 
   const unsavedLineItemAddQuantity = (addQuantity: number) => {
