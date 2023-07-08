@@ -98,6 +98,8 @@ export default {
   settings_textSize_large: 'Large',
   settings_delivery: 'Delivery',
   settings_savedCards: 'Saved cards',
+  settings_savedCardsDescription: 'Your card information is securely stored with our payment provider. You can add a new card the next time you shop.',
+  settings_noSavedCards: 'You have no saved cards',
   settings_deleteAccount: 'Delete account',
   settings_confirmDelete: 'Confirm delete',
   settings_cancelDelete: 'Cancel delete',

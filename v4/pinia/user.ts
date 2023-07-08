@@ -8,7 +8,7 @@ import { debounce } from "../helpers/ts-debounce"
 
 export const useUser = defineStore("user", () => {
 
-  const { userService, persistenceService, productService, setBearerToken, paymentService } = useServices()
+  const { userService, persistenceService, productService, setBearerToken, paymentService, stripeService } = useServices()
 
   const userRef = ref(persistenceService.load<User>('userRef') || {} as User);
   persistenceService.watchAndStore(userRef, 'userRef');
@@ -22,6 +22,19 @@ export const useUser = defineStore("user", () => {
   const favoriteProducts = computed(() => { return favoriteProductsPrivate.value });
   const registeredCards = computed(() => { return registeredCardsPrivate.value });
   const isLoadingCards = computed(() => { return isLoadingCardsPrivate.value });
+
+  const deleteRegisteredCard = (cardId: string) => {
+    if (!isLoggedIn.value) return;
+    isLoadingCardsPrivate.value = true;
+
+    stripeService().DeletePaymentMethod(cardId)
+      .then((success) => {
+        if (!success) return;
+        registeredCardsPrivate.value = registeredCardsPrivate.value.filter(card => card.id !== cardId);
+      }).finally(() => {
+        isLoadingCardsPrivate.value = false;
+      })
+  }
 
   const loadRegisteredCards = () => {
     if (!isLoggedIn.value) return;
@@ -149,6 +162,7 @@ export const useUser = defineStore("user", () => {
     updateAddress,
     registeredCards,
     isLoadingCards,
+    deleteRegisteredCard,
     loadRegisteredCards,
     phoneNumberIsValid,
     logout,

@@ -98,6 +98,8 @@ export default {
   settings_textSize_large: 'Større',
   settings_delivery: 'Levering',
   settings_savedCards: 'Lagrede kort',
+  settings_savedCardsDescription: 'Din kortinformasjon blir lagret trygt hos vår betalingsleverandør. Du kan legge til et nytt kort neste gang du handler.',
+  settings_noSavedCards: 'Du har ingen lagrede kort',
   settings_user: 'Bruker',
   settings_deleteAccount: 'Slett bruker',
   settings_confirmDelete: 'Bekreft sletting',
