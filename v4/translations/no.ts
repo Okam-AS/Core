@@ -1,7 +1,10 @@
 export default {
   storeSearchPage_whereToShop: "Hvor ønsker du å handle?",
   storeSearchPage_search: "Søk",
-  storeSearchPage_shareLocation: "Del posisjon",
+  storeSearchPage_previouslyVisitedStores: "Tidligere besøk",
+  storeSearchPage_nearest: "Nærmeste",
+  storeSearchPage_shareLocation: "Søk i nærheten",
+  storeSearchPage_noHits: "Søket ga ingen treff",
   storePage_orderHere: 'Bestill her',
   storePage_findUsHere: 'Finn oss her',
   productPage_addToCart: "Legg i kurv",

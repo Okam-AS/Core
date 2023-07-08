@@ -41,9 +41,9 @@ export const useStore = defineStore("store", () => {
     setCurrentStore(store.value.id, true)
   }
 
-  const loadStores = async () => {
+  const loadStores = async (latitude?, longitude?) => {
     isLoading.value = true
-    return storeService().GetAll().then((s) => {
+    return storeService().GetAll({ latitude, longitude }).then((s) => {
       stores.value = s
     }).finally(() => {
       isLoading.value = false

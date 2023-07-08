@@ -1,7 +1,10 @@
 export default {
   storeSearchPage_whereToShop: "Where do you wish to shop?",
   storeSearchPage_search: "Search",
-  storeSearchPage_shareLocation: "Share location",
+  storeSearchPage_previouslyVisitedStores: "Previously visited",
+  storeSearchPage_nearest: "Nearest",
+  storeSearchPage_shareLocation: "Search nearby",
+  storeSearchPage_noHits: "No results",
   storePage_orderHere: 'Order here',
   storePage_findUsHere: 'Find us here',
   productPage_addToCart: "Add to cart",
