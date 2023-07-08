@@ -101,17 +101,18 @@ export const useUser = defineStore("user", () => {
     }
   }
 
-  const secondsToWaitForVerificationToken = ref(0);
+  const secondsToWaitForVerificationTokenPrivate = ref(0);
+  const secondsToWaitForVerificationToken = computed(() => { return secondsToWaitForVerificationTokenPrivate.value });
   const waitingOnVerificationTokenCountdownIntervalId = ref();
   const startWaitingOnVerificationTokenCountdown = () => {
     if (waitingOnVerificationTokenCountdownIntervalId.value)
       clearInterval(waitingOnVerificationTokenCountdownIntervalId.value);
 
-    secondsToWaitForVerificationToken.value = 30;
+    secondsToWaitForVerificationTokenPrivate.value = 30;
     waitingOnVerificationTokenCountdownIntervalId.value = setInterval(() => {
-      secondsToWaitForVerificationToken.value = secondsToWaitForVerificationToken.value - 1;
-      if (secondsToWaitForVerificationToken.value < 1) {
-        secondsToWaitForVerificationToken.value = 0
+      secondsToWaitForVerificationTokenPrivate.value = secondsToWaitForVerificationTokenPrivate.value - 1;
+      if (secondsToWaitForVerificationTokenPrivate.value < 1) {
+        secondsToWaitForVerificationTokenPrivate.value = 0
         clearInterval(waitingOnVerificationTokenCountdownIntervalId.value);
         waitingOnVerificationTokenCountdownIntervalId.value = undefined;
       }
