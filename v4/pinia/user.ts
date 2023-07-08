@@ -127,12 +127,18 @@ export const useUser = defineStore("user", () => {
   }
 
   const logout = () => {
+    // TODO 'notificationId' should be the actual notificationId
     userService().Logout('notificationId', () => {
       userRef.value = {} as User;
       favoriteProductsPrivate.value = [];
       registeredCardsPrivate.value = [];
       setBearerToken('')
     })
+  }
+
+  const deleteAccount = () => {
+    if (!isLoggedIn.value) return;
+    userService().Delete(logout);
   }
 
   return {
@@ -149,7 +155,8 @@ export const useUser = defineStore("user", () => {
     sendVerificationToken,
     verifyToken,
     toggleFavoriteProduct,
-    loadFavoriteProducts
+    loadFavoriteProducts,
+    deleteAccount
   }
 
 });

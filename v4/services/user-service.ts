@@ -66,11 +66,11 @@ export class UserService {
     return parsedResponse
   }
 
-  public async Delete(notificationId: string): Promise<boolean> {
+  public async Delete(logoutFunction): Promise<boolean> {
     const response = await this._requestService.DeleteRequest('/user')
     const parsedResponse = this._requestService.TryParseResponse(response)
     if (parsedResponse === undefined) { return false }
-    this.Logout(notificationId)
+    if (logoutFunction) logoutFunction()
     return true
   }
 
