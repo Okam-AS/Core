@@ -38,7 +38,7 @@ export const useStore = defineStore("store", () => {
   }
 
   const reloadCurrentStore = () => {
-    setCurrentStore(store.value.id, true)
+    return setCurrentStore(store.value.id, true)
   }
 
   const loadStores = async (latitude?, longitude?) => {
