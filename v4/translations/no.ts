@@ -12,6 +12,8 @@ export default {
   productPage_saveToCart: "Oppdater",
   productPage_removeFromCart: "Fjern",
   productPage_close: "Lukk",
+  productPage_commentHeading: "Kommentar",
+  productPage_commentHint: "Andre spesielle ønsker?",
   checkoutPage_heading: "Din bestilling",
   checkoutPage_cartIsEmpty: "Du har ingen varer i handlekurven",
   checkoutPage_submit: "Fullør bestilling",

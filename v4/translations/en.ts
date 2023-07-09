@@ -12,6 +12,8 @@ export default {
   productPage_saveToCart: "Update",
   productPage_removeFromCart: "Remove",
   productPage_close: "Close",
+  productPage_commentHeading: "Comment",
+  productPage_commentHint: "Other special requests?",
   checkoutPage_heading: "Your order",
   checkoutPage_cartIsEmpty: "You have no items in your cart",
   checkoutPage_submit: "Complete order",
