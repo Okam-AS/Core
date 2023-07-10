@@ -8,6 +8,8 @@ export default {
   storePage_orderHere: 'Order here',
   storePage_ongoingOrders: 'Ongoing orders',
   storePage_findUsHere: 'Find us here',
+  storePage_youStoreHereHeading: 'Want your store here?',
+  storePage_youStoreHereDescription: 'Download Okam Admin to register your store for free',
   productPage_addToCart: "Add to cart",
   productPage_saveToCart: "Update",
   productPage_removeFromCart: "Remove",

@@ -8,6 +8,8 @@ export default {
   storePage_orderHere: 'Bestill her',
   storePage_ongoingOrders: 'Pågående bestillinger',
   storePage_findUsHere: 'Finn oss her',
+  storePage_youStoreHereHeading: 'Ønsker du din butikk her?',
+  storePage_youStoreHereDescription: 'Last ned Okam Admin for å registrere din butikk gratis',
   productPage_addToCart: "Legg i kurv",
   productPage_saveToCart: "Oppdater",
   productPage_removeFromCart: "Fjern",
