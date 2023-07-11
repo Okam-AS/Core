@@ -23,7 +23,7 @@ export const useOrder = defineStore("order", () => {
   const orders = computed(() => { return ordersRef.value })
 
   const viewingOrderPrivate = ref({} as Order);
-  const viewingOrder = computed(() => { return viewingOrder.value })
+  const viewingOrder = computed(() => { return viewingOrderPrivate.value })
   const setViewingOrder = (orderId) => {
     isLoadingPrivate.value = true
     return orderService().GetByCode(orderId).then((order) => {

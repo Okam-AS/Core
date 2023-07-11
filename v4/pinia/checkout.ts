@@ -248,7 +248,7 @@ export const useCheckout = defineStore("checkout", () => {
     isProcessingPaymentPrivate.value = value;
   }
 
-  const isProcessingPayment = computed(() => isProcessingPayment.value)
+  const isProcessingPayment = computed(() => isProcessingPaymentPrivate.value)
   const isProcessingPaymentPrivate = ref(false)
   const isProcessingLabelPrivate = ref('')
   const isProcessingLabel = computed(() => isProcessingLabelPrivate.value)
@@ -306,7 +306,7 @@ export const useCheckout = defineStore("checkout", () => {
     })
   }
 
-  const initiateVippsPayment = async (): Promise<CreatePaymentResult> => {
+  const initiateVippsPayment = async (isApp): Promise<CreatePaymentResult> => {
     isProcessingPaymentPrivate.value = true;
     return new Promise((resolve, reject) => {
       const currentCart = _cart.getCurrentCart()
@@ -314,7 +314,7 @@ export const useCheckout = defineStore("checkout", () => {
         .Initiate(
           currentCart.id,
           currentCart.calculations.finalAmount,
-          true
+          isApp
         )
         .then((result) => {
           resolve({
