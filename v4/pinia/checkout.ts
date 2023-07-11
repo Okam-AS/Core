@@ -240,7 +240,13 @@ export const useCheckout = defineStore("checkout", () => {
     rememberCard.value = !rememberCard.value
   }
 
+  const setIsProcessingLabel = (value) => {
+    isProcessingLabelPrivate.value = value;
+  }
+
   const isProcessingPayment = ref(false)
+  const isProcessingLabelPrivate = ref('')
+  const isProcessingLabel = computed(() => isProcessingLabelPrivate.value)
   const isLoading = computed(() => isLoadingPaymentMethods.value || isValidating.value || _cart.isLoading || isProcessingPayment.value);
   const isValidating = ref(false)
   const errorMessage = ref('')
@@ -329,7 +335,7 @@ export const useCheckout = defineStore("checkout", () => {
         resolve(false);
       }
 
-
+      setIsProcessingLabel('')
       errorMessage.value = '';
       isValidating.value = true;
 
@@ -446,7 +452,9 @@ export const useCheckout = defineStore("checkout", () => {
 
     isLoading,
     isProcessingPayment,
+    isProcessingLabel,
     errorMessage,
+    setIsProcessingLabel,
 
     getCardInfo,
     isValid,
