@@ -13,54 +13,57 @@ export const useOrder = defineStore("order", () => {
   const { currentStore } = useStore()
   const _user = useUser()
   const { orderService, persistenceService } = useServices()
-  const isLoading = ref(false);
+  const isLoadingPrivate = ref(false);
+  const isLoading = computed(() => { return isLoadingPrivate.value })
 
-  const ongoing = ref([] as Order[])
+  const ongoingPrivate = ref([] as Order[])
+  const ongoing = computed(() => { return ongoing.value })
   const ordersRef = ref(persistenceService.load<Order[]>('ordersRef') || [] as Order[]);
   persistenceService.watchAndStore(ordersRef, 'ordersRef');
   const orders = computed(() => { return ordersRef.value })
 
-  const viewingOrder = ref({} as Order);
+  const viewingOrderPrivate = ref({} as Order);
+  const viewingOrder = computed(() => { return viewingOrder.value })
   const setViewingOrder = (orderId) => {
-    isLoading.value = true
+    isLoadingPrivate.value = true
     return orderService().GetByCode(orderId).then((order) => {
-      viewingOrder.value = order
+      viewingOrderPrivate.value = order
     }).finally(() => {
-      isLoading.value = false
+      isLoadingPrivate.value = false
     })
   }
 
   const loadAll = async () => {
-    isLoading.value = true
+    isLoadingPrivate.value = true
     return orderService().GetAll().then((s) => {
       ordersRef.value = s
       if (currentStore?.id) {
         loadOngoing(currentStore.id)
       }
-      if (viewingOrder?.value?.id) {
-        setViewingOrder(viewingOrder.value.id)
+      if (viewingOrderPrivate?.value?.id) {
+        setViewingOrder(viewingOrderPrivate.value.id)
       }
     })
       .catch(() => {
         ordersRef.value = [] as Order[]
       })
       .finally(() => {
-        isLoading.value = false
+        isLoadingPrivate.value = false
       })
   }
 
   const loadOngoing = (storeId: number) => {
     if (!_user.isLoggedIn) return Promise.resolve()
-    isLoading.value = true
+    isLoadingPrivate.value = true
     return orderService().GetOngoing(storeId)
       .then((s) => {
-        ongoing.value = s ?? [] as Order[]
+        ongoingPrivate.value = s ?? [] as Order[]
       })
       .catch(() => {
-        ongoing.value = [] as Order[]
+        ongoingPrivate.value = [] as Order[]
       })
       .finally(() => {
-        isLoading.value = false
+        isLoadingPrivate.value = false
       })
   }
 

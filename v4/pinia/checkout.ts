@@ -244,17 +244,22 @@ export const useCheckout = defineStore("checkout", () => {
     isProcessingLabelPrivate.value = value;
   }
 
-  const isProcessingPayment = ref(false)
+  const setIsProcessingPayment = (value) => {
+    isProcessingPaymentPrivate.value = value;
+  }
+
+  const isProcessingPayment = computed(() => isProcessingPayment.value)
+  const isProcessingPaymentPrivate = ref(false)
   const isProcessingLabelPrivate = ref('')
   const isProcessingLabel = computed(() => isProcessingLabelPrivate.value)
-  const isLoading = computed(() => isLoadingPaymentMethods.value || isValidating.value || _cart.isLoading || isProcessingPayment.value);
+  const isLoading = computed(() => isLoadingPaymentMethods.value || isValidating.value || _cart.isLoading);
   const isValidating = ref(false)
   const errorMessage = ref('')
 
   type CreatePaymentResult = { isPaid: Boolean, redirectUrl: string, returnUrl: string };
 
   const createStripePaymentIntent = async (paymentMethodId, setupFutureUsage): Promise<CreatePaymentResult> => {
-    isProcessingPayment.value = true;
+    isProcessingPaymentPrivate.value = true;
     return new Promise((resolve, reject) => {
       const currentCart = _cart.getCurrentCart()
       stripeService().CreatePaymentIntent(
@@ -267,7 +272,7 @@ export const useCheckout = defineStore("checkout", () => {
         .then((result) => {
           if (!result || !result.paymentIntentId) {
             errorMessage.value = "Din betaling kunne ikke behandles akkurat nå. Vennligst prøv igjen litt senere.";
-            isProcessingPayment.value = false;
+            isProcessingPaymentPrivate.value = false;
             return reject()
           }
 
@@ -280,7 +285,6 @@ export const useCheckout = defineStore("checkout", () => {
             });
           } else if (result.nextAction.type === "redirect_to_url") {
             //3D SECURE
-            isProcessingPayment.value = false;
             resolve({
               isPaid: false,
               redirectUrl: result.nextAction.redirect_to_url.url,
@@ -289,13 +293,13 @@ export const useCheckout = defineStore("checkout", () => {
           } else {
             //NOT HANDLED
             errorMessage.value = "Oops! Din betaling kunne ikke behandles akkurat nå. Vennligst prøv igjen litt senere.";
-            isProcessingPayment.value = false;
+            isProcessingPaymentPrivate.value = false;
             reject()
           }
         })
         .catch(() => {
           errorMessage.value = "Betalingen kunne ikke gjennomføres på grunn av manglende dekning eller ugyldig kortinformasjon";
-          isProcessingPayment.value = false;
+          isProcessingPaymentPrivate.value = false;
           reject()
         });
 
@@ -303,7 +307,7 @@ export const useCheckout = defineStore("checkout", () => {
   }
 
   const initiateVippsPayment = async (): Promise<CreatePaymentResult> => {
-    isProcessingPayment.value = true;
+    isProcessingPaymentPrivate.value = true;
     return new Promise((resolve, reject) => {
       const currentCart = _cart.getCurrentCart()
       vippsService()
@@ -321,7 +325,7 @@ export const useCheckout = defineStore("checkout", () => {
         })
         .catch((err) => {
           errorMessage.value = "Betaling med Vipps kunne ikke gjennomføres for øyeblikket.";
-          isProcessingPayment.value = false;
+          isProcessingPaymentPrivate.value = false;
           return reject()
         });
     })
@@ -415,12 +419,12 @@ export const useCheckout = defineStore("checkout", () => {
 
 
   const completeCart = async () => {
-    isProcessingPayment.value = true;
+    isProcessingPaymentPrivate.value = true;
     return cartService().Complete(_store.currentStore.id)
       .catch(() => {
         errorMessage.value = "Bestillingen kunne ikke gjennomføres. Vennligst prøv igjen litt senere.";
       }).finally(() => {
-        isProcessingPayment.value = false;
+        isProcessingPaymentPrivate.value = false;
       })
   }
 
@@ -455,6 +459,7 @@ export const useCheckout = defineStore("checkout", () => {
     isProcessingLabel,
     errorMessage,
     setIsProcessingLabel,
+    setIsProcessingPayment,
 
     getCardInfo,
     isValid,
