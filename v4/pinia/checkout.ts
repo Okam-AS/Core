@@ -248,13 +248,18 @@ export const useCheckout = defineStore("checkout", () => {
     isProcessingPaymentPrivate.value = value;
   }
 
+  const setErrorMessage = (value) => {
+    errorMessagePrivate.value = value;
+  }
+
   const isProcessingPayment = computed(() => isProcessingPaymentPrivate.value)
   const isProcessingPaymentPrivate = ref(false)
   const isProcessingLabelPrivate = ref('')
   const isProcessingLabel = computed(() => isProcessingLabelPrivate.value)
   const isLoading = computed(() => isLoadingPaymentMethods.value || isValidating.value || _cart.isLoading);
   const isValidating = ref(false)
-  const errorMessage = ref('')
+  const errorMessagePrivate = ref('')
+  const errorMessage = computed(() => errorMessagePrivate.value)
 
   type CreatePaymentResult = { isPaid: Boolean, redirectUrl: string, returnUrl: string };
 
@@ -271,7 +276,7 @@ export const useCheckout = defineStore("checkout", () => {
       )
         .then((result) => {
           if (!result || !result.paymentIntentId) {
-            errorMessage.value = "Din betaling kunne ikke behandles akkurat nå. Vennligst prøv igjen litt senere.";
+            errorMessagePrivate.value = "Din betaling kunne ikke behandles akkurat nå. Vennligst prøv igjen litt senere.";
             isProcessingPaymentPrivate.value = false;
             return reject()
           }
@@ -292,13 +297,13 @@ export const useCheckout = defineStore("checkout", () => {
             });
           } else {
             //NOT HANDLED
-            errorMessage.value = "Oops! Din betaling kunne ikke behandles akkurat nå. Vennligst prøv igjen litt senere.";
+            errorMessagePrivate.value = "Oops! Din betaling kunne ikke behandles akkurat nå. Vennligst prøv igjen litt senere.";
             isProcessingPaymentPrivate.value = false;
             reject()
           }
         })
         .catch(() => {
-          errorMessage.value = "Betalingen kunne ikke gjennomføres på grunn av manglende dekning eller ugyldig kortinformasjon";
+          errorMessagePrivate.value = "Betalingen kunne ikke gjennomføres på grunn av manglende dekning eller ugyldig kortinformasjon";
           isProcessingPaymentPrivate.value = false;
           reject()
         });
@@ -324,7 +329,7 @@ export const useCheckout = defineStore("checkout", () => {
           });
         })
         .catch((err) => {
-          errorMessage.value = "Betaling med Vipps kunne ikke gjennomføres for øyeblikket.";
+          errorMessagePrivate.value = "Betaling med Vipps kunne ikke gjennomføres for øyeblikket.";
           isProcessingPaymentPrivate.value = false;
           return reject()
         });
@@ -340,24 +345,24 @@ export const useCheckout = defineStore("checkout", () => {
       }
 
       setIsProcessingLabel('')
-      errorMessage.value = '';
+      errorMessagePrivate.value = '';
       isValidating.value = true;
 
       if (!(selectedPaymentMethodId.value || getCardInfo().isValid)) {
-        errorMessage.value = 'Kortinformasjonen er ugyldig';
+        errorMessagePrivate.value = 'Kortinformasjonen er ugyldig';
         isValidating.value = false;
         resolve(false);
       }
 
       const currentCart = _cart.getCurrentCart()
       if (currentCart.deliveryType === DeliveryType.InstantHomeDelivery && !_cart.deliveryAddressInCartIsValid()) {
-        errorMessage.value = "Legg inn en gyldig leveringsadresse";
+        errorMessagePrivate.value = "Legg inn en gyldig leveringsadresse";
         isValidating.value = false;
         resolve(false);
       }
 
       if (currentCart.deliveryType === DeliveryType.NotSet) {
-        errorMessage.value = "Velg leveringsmetode";
+        errorMessagePrivate.value = "Velg leveringsmetode";
         isValidating.value = false;
         resolve(false);
       }
@@ -366,25 +371,25 @@ export const useCheckout = defineStore("checkout", () => {
         .then((result: CartValidation) => {
 
           if (result.priceTooLowError)
-            errorMessage.value = 'Beløpet er for lite. Du må minst handle for ' + priceLabel(result.minimumPrice, true);
+            errorMessagePrivate.value = 'Beløpet er for lite. Du må minst handle for ' + priceLabel(result.minimumPrice, true);
 
           if (result.paymentTypeError)
-            errorMessage.value = 'Betalingsmetoden er midlertidig utilgjengelig';
+            errorMessagePrivate.value = 'Betalingsmetoden er midlertidig utilgjengelig';
 
           if (result.priceDifferError)
-            errorMessage.value = "Prisene er endret siden sist. Gå tilbake for å oppdatere handlevogna.";
+            errorMessagePrivate.value = "Prisene er endret siden sist. Gå tilbake for å oppdatere handlevogna.";
 
           if (result.deliveryAddressError)
-            errorMessage.value = "Leveringsadressen er ikke gyldig";
+            errorMessagePrivate.value = "Leveringsadressen er ikke gyldig";
 
           if (result.deliveryMethodError)
-            errorMessage.value = "Butikken leverer ikke til din adresse for øyeblikket";
+            errorMessagePrivate.value = "Butikken leverer ikke til din adresse for øyeblikket";
 
           if (result.storeIsClosed)
-            errorMessage.value = _store.currentStore.name + " er stengt for øyeblikket";
+            errorMessagePrivate.value = _store.currentStore.name + " er stengt for øyeblikket";
 
           if (result.cartIsEmpty)
-            errorMessage.value = "Handlevogna er tom";
+            errorMessagePrivate.value = "Handlevogna er tom";
 
           if (result.itemsOutOfStock.length > 0) {
             let itemNames = "";
@@ -397,19 +402,19 @@ export const useCheckout = defineStore("checkout", () => {
                 }' og ${result.itemsOutOfStock.length - 2} ${result.itemsOutOfStock.length - 2 === 1 ? "annen vare" : "andre varer"
                 }`;
             }
-            errorMessage.value = `Det er ikke nok av ${itemNames} på lager. Gå tilbake for å fjerne ${result.itemsOutOfStock.length === 1 ? "den" : "de"
+            errorMessagePrivate.value = `Det er ikke nok av ${itemNames} på lager. Gå tilbake for å fjerne ${result.itemsOutOfStock.length === 1 ? "den" : "de"
               } fra handlevogna.`;
           }
 
-          if (result.hasErrors && !errorMessage.value) {
-            errorMessage.value = "Beklager, vi støter på et problem med handlevognen din";
+          if (result.hasErrors && !errorMessagePrivate.value) {
+            errorMessagePrivate.value = "Beklager, vi støter på et problem med handlevognen din";
           }
 
           isValidating.value = false;
           resolve(!result.hasErrors);
         })
         .catch(() => {
-          errorMessage.value = "Noe gikk galt. Prøv igjen senere";
+          errorMessagePrivate.value = "Noe gikk galt. Prøv igjen senere";
           isValidating.value = false;
           resolve(false);
         })
@@ -419,11 +424,13 @@ export const useCheckout = defineStore("checkout", () => {
 
 
   const completeCart = async () => {
-    isProcessingPaymentPrivate.value = true;
+    if (isValidating.value) return;
+    isValidating.value = true;
     return cartService().Complete(_store.currentStore.id)
       .catch(() => {
-        errorMessage.value = "Bestillingen kunne ikke gjennomføres. Vennligst prøv igjen litt senere.";
+        errorMessagePrivate.value = "Bestillingen kunne ikke gjennomføres";
       }).finally(() => {
+        isValidating.value = false;
         isProcessingPaymentPrivate.value = false;
       })
   }
@@ -458,6 +465,7 @@ export const useCheckout = defineStore("checkout", () => {
     isProcessingPayment,
     isProcessingLabel,
     errorMessage,
+    setErrorMessage,
     setIsProcessingLabel,
     setIsProcessingPayment,
 

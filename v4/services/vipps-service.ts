@@ -33,10 +33,10 @@ export class VippsService {
           .then((result) => { // result.status: 'Waiting', 'Success', or 'Fail'
             if (result.status === 'Success') {
               clearInterval(intervalId)
-              if (successHandler) { successHandler(result.storeId) }
+              if (successHandler) { successHandler(result) }
             } else if (result.status === 'Fail') {
               clearInterval(intervalId)
-              if (failHandler) { failHandler(result.storeId) }
+              if (failHandler) { failHandler(result) }
             }
           })
           .catch(() => {
