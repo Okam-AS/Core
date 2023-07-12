@@ -51,6 +51,8 @@ export default {
   checkoutPage_newCard: "Nytt kort",
   checkoutPage_rememberCard: 'Husk dette kortet',
   checkoutPage_paymentFailedCheckCardDetails: 'Betalingen kunne ikke gjennomføres. Kontroller kortinformasjon og prøv igjen.',
+  checkoutPage_isClosedForNow: 'er stengt for øyeblikket',
+  checkoutPage_canTakeLonger: 'Svartiden kan være noe lengere enn vanlig.',
   cartPage_heading: "Din handlekurv",
   cartPage_confirmDelete: "Fjerne vare?",
   cartPage_submit: "Til kasse",
