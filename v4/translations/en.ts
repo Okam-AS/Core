@@ -101,6 +101,7 @@ export default {
   orderPage_total: 'Total',
   orderListPage_heading: 'Your orders',
   orderListPage_noOrders: 'You haven\'t placed any orders yet',
+  orderListPage_turnOnNotifcationMessage: 'Get updates on your orders',
   confirmationPage_thankYou: 'Thank you for your order!',
   confirmationPage_orderIsSent: 'Your order is now sent',
   confirmationPage_turnOnNotifcationButton: 'Turn on notifications',
@@ -156,6 +157,7 @@ export default {
   general_termsAcceptPrefix: 'By using Okam you accept our ',
   general_terms: 'terms and privacy policy',
   general_processingPayment: 'Processing payment',
+  general_noWifi: 'Bad internet connection',
   menu_findStore: 'Find store',
   menu_myOrders: 'My orders',
 }

@@ -101,6 +101,7 @@ export default {
   orderPage_total: 'Totalt',
   orderListPage_heading: 'Dine bestillinger',
   orderListPage_noOrders: 'Du har ikke lagt inn noen bestillinger enda',
+  orderListPage_turnOnNotifcationMessage: 'Få beskjed når bestillingene dine er klare',
   confirmationPage_thankYou: 'Takk for at du støtter lokal handel',
   confirmationPage_orderIsSent: 'Din bestilling er nå sendt',
   confirmationPage_turnOnNotifcationButton: 'Slå på varslinger',
@@ -156,6 +157,7 @@ export default {
   general_termsAcceptPrefix: 'Ved å benytte Okam aksepterer du våre ',
   general_terms: 'brukervilkår',
   general_processingPayment: 'Prosesserer betaling',
+  general_noWifi: 'Dårlig internettforbindelse',
   menu_findStore: 'Finn butikk',
   menu_myOrders: 'Mine bestillinger',
 }
