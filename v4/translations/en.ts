@@ -158,6 +158,7 @@ export default {
   general_terms: 'terms and privacy policy',
   general_processingPayment: 'Processing payment',
   general_noWifi: 'Bad internet connection',
+  general_vippsNotInstalled: 'Vipps is not installed on this device',
   menu_findStore: 'Find store',
   menu_myOrders: 'My orders',
 }

@@ -158,6 +158,7 @@ export default {
   general_terms: 'brukervilkår',
   general_processingPayment: 'Prosesserer betaling',
   general_noWifi: 'Dårlig internettforbindelse',
+  general_vippsNotInstalled: 'Vipps er ikke installert på denne enheten',
   menu_findStore: 'Finn butikk',
   menu_myOrders: 'Mine bestillinger',
 }
