@@ -66,6 +66,14 @@ export const useOrder = defineStore("order", () => {
       })
   }
 
+  const cancelViewingOrder = () => {
+    if (!_user.isLoggedIn || !viewingOrderPrivate.value) return Promise.resolve()
+    return orderService().UpdateStatus(viewingOrderPrivate.value.id, OrderStatus.Canceled)
+      .finally(() => {
+        setViewingOrder(viewingOrderPrivate.value.id)
+      })
+  }
+
   const payedLabel = (paymentType: PaymentType) => {
     if (paymentType === PaymentType.Stripe)
       return $i('paymentType_stripe')
@@ -122,6 +130,7 @@ export const useOrder = defineStore("order", () => {
     orders,
     ongoing,
     viewingOrder,
+    cancelViewingOrder,
     payedLabel,
     setViewingOrder,
     progressFlow,
