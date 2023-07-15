@@ -5,6 +5,8 @@ export const useSettings = defineStore("settings", () => {
 
   const fontSizeScale = ref(1);
   const darkmode = ref(false);
+  const launchIdPrivate = ref('')
+  const resumeIdPrivate = ref('')
   const disableActionBarToggleAnimation = ref(false);
   const location = reactive({
     lat: 0,
@@ -12,8 +14,27 @@ export const useSettings = defineStore("settings", () => {
     isWatching: false,
   });
 
+  const createId = () => {
+    let result = 'h'
+    const characters = 'abcdefghijklmnopqrstuvwxyz0123456789'
+    for (let i = 0; i < 10; i++) {
+      result += characters.charAt(Math.floor(Math.random() * characters.length))
+    }
+    return result
+  }
+
   const $fontSize = (size: number) => {
     return size * fontSizeScale.value
+  }
+
+
+
+  const createLaunchId = () => {
+    launchIdPrivate.value = createId();
+  }
+
+  const createResumeId = () => {
+    resumeIdPrivate.value = createId();
   }
 
   const setFontSizeScale = (scale: number) => {
@@ -50,15 +71,27 @@ export const useSettings = defineStore("settings", () => {
     return disableActionBarToggleAnimation
   })
 
+  const $launchId = computed(() => {
+    return launchIdPrivate.value;
+  })
+
+  const $resumeId = computed(() => {
+    return resumeIdPrivate.value;
+  })
+
   return {
     $fontSizeScale,
     $isDarkmode,
     $location,
     $disableActionBarToggleAnimation,
+    $launchId,
+    $resumeId,
     setDisableActionBarToggleAnimation,
     setLocation,
     setFontSizeScale,
     setDarkmode,
     $fontSize,
+    createLaunchId,
+    createResumeId,
   }
 });

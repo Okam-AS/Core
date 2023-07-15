@@ -21,12 +21,12 @@ export const useCheckout = defineStore("checkout", () => {
     return (priceAmount > 0 ? ' ' + priceLabel(priceAmount, true) : '')
   })
 
-  const paymentLabel = (card: PaymentMethod) => {
-    if (card.paymentType === PaymentType.Stripe)
-      return 'xxxx xxxx xxxx ' + card.last4 + '   ' + card.expMonth + '/' + card.expYear
-    if (card.paymentType === PaymentType.Vipps)
+  const paymentLabel = (paymentMethod: PaymentMethod) => {
+    if (paymentMethod?.paymentType === PaymentType.Stripe)
+      return 'xxxx xxxx xxxx ' + paymentMethod.last4 + '   ' + paymentMethod.expMonth + '/' + paymentMethod.expYear
+    if (paymentMethod?.paymentType === PaymentType.Vipps)
       return 'Vipps'
-    if (card.paymentType === PaymentType.PayInStore)
+    if (paymentMethod?.paymentType === PaymentType.PayInStore)
       return $i('checkoutPage_payInStore')
     return ''
   }

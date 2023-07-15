@@ -1,11 +1,10 @@
 
 import { defineStore } from "pinia";
 import { Order } from "../models";
-import { DeliveryType, OrderStatus } from "../enums";
+import { DeliveryType, OrderStatus, PaymentType } from "../enums";
 import { useServices, useStore, useTranslation, useUser } from "."
 import { ref, computed } from "vue";
 import { orderStatusLabel } from "../helpers/tools";
-
 
 export const useOrder = defineStore("order", () => {
 
@@ -67,6 +66,16 @@ export const useOrder = defineStore("order", () => {
       })
   }
 
+  const payedLabel = (paymentType: PaymentType) => {
+    if (paymentType === PaymentType.Stripe)
+      return $i('paymentType_stripe')
+    if (paymentType === PaymentType.Vipps)
+      return $i('paymentType_vipps')
+    if (paymentType === PaymentType.PayInStore)
+      return $i('paymentType_payInStore')
+    return $i('paymentType_unknown')
+  }
+
   const progressFlow = (deliveryType: DeliveryType, currentStatus: OrderStatus) => {
 
     const createSteps = (status, flow) => {
@@ -113,6 +122,7 @@ export const useOrder = defineStore("order", () => {
     orders,
     ongoing,
     viewingOrder,
+    payedLabel,
     setViewingOrder,
     progressFlow,
     loadAll,
