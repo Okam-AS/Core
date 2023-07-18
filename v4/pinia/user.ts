@@ -155,6 +155,13 @@ export const useUser = defineStore("user", () => {
     userService().Delete(logout);
   }
 
+  const logoutIfTokenExpired = () => {
+    if (!isLoggedIn.value) return;
+    userService().TokenIsValid().then((isValid) => {
+      if (!isValid) logout();
+    })
+  }
+
   return {
     user,
     secondsToWaitForVerificationToken,
@@ -171,7 +178,8 @@ export const useUser = defineStore("user", () => {
     verifyToken,
     toggleFavoriteProduct,
     loadFavoriteProducts,
-    deleteAccount
+    deleteAccount,
+    logoutIfTokenExpired
   }
 
 });
