@@ -4,7 +4,7 @@ import { User, Product, PaymentMethod } from "../models";
 import { useServices } from "./services"
 import { useStore } from "./store";
 import { ref, computed } from "vue";
-import { debounce } from "../helpers/ts-debounce"
+import { debounce } from "../helpers/ts-debounce";
 
 export const useUser = defineStore("user", () => {
 
@@ -18,13 +18,15 @@ export const useUser = defineStore("user", () => {
   const isLoadingCardsPrivate = ref(false);
 
   const user = computed(() => { return userRef.value })
-  const isLoggedIn = computed(() => { return !!userRef?.value?.id });
+  const isLoggedIn = () => {
+    return !!userRef?.value?.id
+  }
   const favoriteProducts = computed(() => { return favoriteProductsPrivate.value });
   const registeredCards = computed(() => { return registeredCardsPrivate.value });
   const isLoadingCards = computed(() => { return isLoadingCardsPrivate.value });
 
   const deleteRegisteredCard = (cardId: string) => {
-    if (!isLoggedIn.value) return;
+    if (!isLoggedIn()) return;
     isLoadingCardsPrivate.value = true;
 
     stripeService().DeletePaymentMethod(cardId)
@@ -37,7 +39,7 @@ export const useUser = defineStore("user", () => {
   }
 
   const loadRegisteredCards = () => {
-    if (!isLoggedIn.value) return;
+    if (!isLoggedIn()) return;
     isLoadingCardsPrivate.value = true;
     paymentService().GetPaymentMethods()
       .then((result) => {
@@ -51,7 +53,7 @@ export const useUser = defineStore("user", () => {
   }
 
   const toggleFavoriteProduct = async (productId: string) => {
-    if (!isLoggedIn.value) return Promise.reject();
+    if (!isLoggedIn()) return Promise.reject();
     const previouslyFavorite = userRef.value.favoriteProductIds?.includes(productId);
     const serverFunction = previouslyFavorite ? userService().RemoveFavoriteProduct(productId) : userService().AddFavoriteProduct(productId);
 
@@ -70,7 +72,7 @@ export const useUser = defineStore("user", () => {
   }
 
   const updateAddress = debounce((address) => {
-    if (!isLoggedIn.value || !address) return;
+    if (!isLoggedIn() || !address) return;
     const fullAddress = address.fullAddress || userRef.value.fullAddress;
     const zipCode = address.zipCode || userRef.value.zipCode;
     const city = address.city || userRef.value.city;
@@ -91,7 +93,7 @@ export const useUser = defineStore("user", () => {
   }, 800)
 
   const loadFavoriteProducts = () => {
-    if (!isLoggedIn.value || !useStore().currentStore) {
+    if (!isLoggedIn() || !useStore().currentStore) {
       favoriteProductsPrivate.value = [];
     } else {
       productService().GetFavorites(useStore().currentStore.id).then((products) => {
@@ -140,25 +142,25 @@ export const useUser = defineStore("user", () => {
     });
   }
 
-  const logout = () => {
-    // TODO 'notificationId' should be the actual notificationId
-    userService().Logout('notificationId', () => {
+  const logout = (notificationId, clearNotificationIdFunction?) => {
+    userService().Logout(notificationId, () => {
       userRef.value = {} as User;
       favoriteProductsPrivate.value = [];
       registeredCardsPrivate.value = [];
       setBearerToken('')
+      if (clearNotificationIdFunction) clearNotificationIdFunction()
     })
   }
 
   const deleteAccount = () => {
-    if (!isLoggedIn.value) return;
+    if (!isLoggedIn()) return;
     userService().Delete(logout);
   }
 
-  const logoutIfTokenExpired = () => {
-    if (!isLoggedIn.value) return;
+  const logoutIfTokenExpired = (notificationId, clearNotificationIdFunction?) => {
+    if (!isLoggedIn()) return;
     userService().TokenIsValid().then((isValid) => {
-      if (!isValid) logout();
+      if (!isValid) logout(notificationId, clearNotificationIdFunction);
     })
   }
 

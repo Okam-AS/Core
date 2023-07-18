@@ -27,8 +27,6 @@ export const useSettings = defineStore("settings", () => {
     return size * fontSizeScale.value
   }
 
-
-
   const createLaunchId = () => {
     launchIdPrivate.value = createId();
   }

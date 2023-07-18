@@ -52,7 +52,7 @@ export const useOrder = defineStore("order", () => {
   }
 
   const loadOngoing = (storeId: number) => {
-    if (!_user.isLoggedIn) return Promise.resolve()
+    if (!_user.isLoggedIn()) return Promise.resolve()
     isLoadingPrivate.value = true
     return orderService().GetOngoing(storeId)
       .then((s) => {
@@ -67,7 +67,7 @@ export const useOrder = defineStore("order", () => {
   }
 
   const cancelViewingOrder = () => {
-    if (!_user.isLoggedIn || !viewingOrderPrivate.value) return Promise.resolve()
+    if (!_user.isLoggedIn() || !viewingOrderPrivate.value) return Promise.resolve()
     return orderService().UpdateStatus(viewingOrderPrivate.value.id, OrderStatus.Canceled)
       .finally(() => {
         setViewingOrder(viewingOrderPrivate.value.id)

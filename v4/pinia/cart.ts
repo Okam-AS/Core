@@ -93,7 +93,7 @@ export const useCart = defineStore("cart", () => {
 
     requestModel.items = currentCart.items;
     requestModel.storeId = currentCart.storeId;
-    requestModel.userId = _user.isLoggedIn ? _user.user.id : '';
+    requestModel.userId = _user.isLoggedIn() ? _user.user.id : '';
     requestModel.cartDiscountCode = currentCart.discountCode;
     requestModel.searchOptions = { deliveryType: currentCart.deliveryType };
 
@@ -125,7 +125,7 @@ export const useCart = defineStore("cart", () => {
 
 
   const syncWithDb = async () => {
-    if (!_user.isLoggedIn) return;
+    if (!_user.isLoggedIn()) return;
     const currentCart = getCurrentCart();
     if (!currentCart || !currentCart.storeId) return;
     isLoading.value = true;
