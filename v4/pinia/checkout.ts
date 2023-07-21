@@ -283,14 +283,14 @@ export const useCheckout = defineStore("checkout", () => {
 
           if (!result.nextAction) {
             //SUCCESS
-            resolve({
+            return resolve({
               isPaid: true,
               redirectUrl: '',
               returnUrl: '',
             });
           } else if (result.nextAction.type === "redirect_to_url") {
             //3D SECURE
-            resolve({
+            return resolve({
               isPaid: false,
               redirectUrl: result.nextAction.redirect_to_url.url,
               returnUrl: result.nextAction.redirect_to_url.return_url,
@@ -322,7 +322,7 @@ export const useCheckout = defineStore("checkout", () => {
           isApp
         )
         .then((result) => {
-          resolve({
+          return resolve({
             isPaid: false,
             redirectUrl: result.url,
             returnUrl: '',
@@ -341,7 +341,7 @@ export const useCheckout = defineStore("checkout", () => {
     return new Promise((resolve) => {
 
       if (_cart.isLoading || isLoading.value) {
-        resolve(false);
+        return resolve(false);
       }
 
       setIsProcessingLabel('')
@@ -351,20 +351,20 @@ export const useCheckout = defineStore("checkout", () => {
       if (!(selectedPaymentMethodId.value || getCardInfo().isValid)) {
         errorMessagePrivate.value = 'Kortinformasjonen er ugyldig';
         isValidating.value = false;
-        resolve(false);
+        return resolve(false);
       }
 
       const currentCart = _cart.getCurrentCart()
       if (currentCart.deliveryType === DeliveryType.InstantHomeDelivery && !_cart.deliveryAddressInCartIsValid()) {
         errorMessagePrivate.value = "Legg inn en gyldig leveringsadresse";
         isValidating.value = false;
-        resolve(false);
+        return resolve(false);
       }
 
       if (currentCart.deliveryType === DeliveryType.NotSet) {
         errorMessagePrivate.value = "Velg leveringsmetode";
         isValidating.value = false;
-        resolve(false);
+        return resolve(false);
       }
 
       cartService().Validate(_store.currentStore.id)
@@ -411,12 +411,12 @@ export const useCheckout = defineStore("checkout", () => {
           }
 
           isValidating.value = false;
-          resolve(!result.hasErrors);
+          return resolve(!result.hasErrors);
         })
         .catch(() => {
           errorMessagePrivate.value = "Noe gikk galt. Prøv igjen senere";
           isValidating.value = false;
-          resolve(false);
+          return resolve(false);
         })
     })
   }
