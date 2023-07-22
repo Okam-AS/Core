@@ -356,13 +356,13 @@ export const useCheckout = defineStore("checkout", () => {
 
       const currentCart = _cart.getCurrentCart()
       if (currentCart.deliveryType === DeliveryType.InstantHomeDelivery && !_cart.deliveryAddressInCartIsValid()) {
-        errorMessagePrivate.value = "Legg inn en gyldig leveringsadresse";
+        errorMessagePrivate.value = "Legg inn en gyldig leveringsadresse lengre opp";
         isValidating.value = false;
         return resolve(false);
       }
 
       if (currentCart.deliveryType === DeliveryType.NotSet) {
-        errorMessagePrivate.value = "Velg leveringsmetode";
+        errorMessagePrivate.value = "Gå tilbake og velg leveringsmetode";
         isValidating.value = false;
         return resolve(false);
       }
