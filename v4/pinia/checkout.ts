@@ -202,7 +202,7 @@ export const useCheckout = defineStore("checkout", () => {
 
   const getAvailablePaymentMethods = () => {
     const currentCart = _cart.getCurrentCart()
-    if (!currentCart.id || currentCart.deliveryType === DeliveryType.NotSet) return;
+    if (!currentCart.id || currentCart.deliveryType === DeliveryType.NotSet) return Promise.resolve()
     isLoadingPaymentMethods.value = true;
     return paymentService()
       .GetPaymentMethods(currentCart.id)
