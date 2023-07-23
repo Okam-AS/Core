@@ -264,7 +264,7 @@ export const useCheckout = defineStore("checkout", () => {
 
   type CreatePaymentResult = { isPaid: Boolean, redirectUrl: string, returnUrl: string };
 
-  const createStripePaymentIntent = async (paymentMethodId, setupFutureUsage): Promise<CreatePaymentResult> => {
+  const createStripePaymentIntent = async (paymentMethodId, setupFutureUsage, isApp, clientMajorVersion): Promise<CreatePaymentResult> => {
     isProcessingPaymentPrivate.value = true;
     return new Promise((resolve, reject) => {
       const currentCart = _cart.getCurrentCart()
@@ -273,7 +273,9 @@ export const useCheckout = defineStore("checkout", () => {
         "NOK",
         paymentMethodId,
         currentCart.id,
-        setupFutureUsage
+        setupFutureUsage,
+        isApp,
+        clientMajorVersion
       )
         .then((result) => {
           if (!result || !result.paymentIntentId) {
