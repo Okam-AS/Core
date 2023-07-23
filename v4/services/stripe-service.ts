@@ -13,14 +13,13 @@ export class StripeService {
     return response && response.statusCode === 200
   }
 
-  public async CreatePaymentIntent(amount: number, currency: string, paymentMethodId: string, cartId: string, setupFutureUsage: boolean, isApp: boolean, clientMajorVersion: number): Promise<any> {
+  public async CreatePaymentIntent(amount: number, currency: string, paymentMethodId: string, cartId: string, setupFutureUsage: boolean, clientMajorVersion: number): Promise<any> {
     const response = await this._requestService.PostRequest('/stripe/createPaymentIntent/', {
       amount,
       currency,
       paymentMethodId,
       cartId,
       setupFutureUsage,
-      isApp,
       clientMajorVersion
     })
 
