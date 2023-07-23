@@ -178,6 +178,7 @@ export const useCheckout = defineStore("checkout", () => {
   const expMonth = ref('')
   const expYear = ref('')
   const cvc = ref('')
+  const overrideIsValidCardInfo = ref(false)
 
   const getCardInfo = () => {
     return {
@@ -185,11 +186,11 @@ export const useCheckout = defineStore("checkout", () => {
       expMonth: parseInt(expMonth.value),
       expYear: parseInt(expYear.value),
       cvc: cvc.value,
-      isValid:
-        (cardNumber.value || "").replace(/\s+/g, "").length === 16 &&
-        !isNaN(parseInt(expMonth.value)) &&
-        !isNaN(parseInt(expYear.value)) &&
-        (cvc.value || "").toString().length === 3,
+      isValid: overrideIsValidCardInfo.value ||
+        ((cardNumber.value || "").replace(/\s+/g, "").length === 16 &&
+          !isNaN(parseInt(expMonth.value)) &&
+          !isNaN(parseInt(expYear.value)) &&
+          (cvc.value || "").toString().length === 3),
     };
   }
 
@@ -226,15 +227,14 @@ export const useCheckout = defineStore("checkout", () => {
   const setCardInput = (key, value) => {
     if (key === 'cardNumber')
       cardNumber.value = value
-
     if (key === 'expMonth')
       expMonth.value = value
-
     if (key === 'expYear')
       expYear.value = value
-
     if (key === 'cvc')
       cvc.value = value
+    if (key === 'overrideIsValidCardInfo')
+      overrideIsValidCardInfo.value = value
   }
 
   const toggleRememberCard = () => {
@@ -350,7 +350,7 @@ export const useCheckout = defineStore("checkout", () => {
       isValidating.value = true;
 
       if (!(selectedPaymentMethodId.value || getCardInfo().isValid)) {
-        errorMessagePrivate.value = 'Kortinformasjonen er ugyldig';
+        errorMessagePrivate.value = $i("checkoutPage_paymentFailedCheckCardDetails");
         isValidating.value = false;
         return resolve(false);
       }
