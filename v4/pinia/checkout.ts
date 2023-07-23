@@ -426,7 +426,7 @@ export const useCheckout = defineStore("checkout", () => {
 
 
   const completeCart = async () => {
-    if (isValidating.value) return;
+    if (isValidating.value || !_store.currentStore.id) return Promise.reject()
     isValidating.value = true;
     return cartService().Complete(_store.currentStore.id)
       .catch(() => {
