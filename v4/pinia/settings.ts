@@ -1,9 +1,13 @@
 import { defineStore } from "pinia";
 import { ref, computed, reactive } from "vue";
+import { useServices } from "./services"
 
 export const useSettings = defineStore("settings", () => {
+  const { persistenceService } = useServices()
 
-  const fontSizeScale = ref(1);
+  const fontSizeScale = ref(persistenceService.load<number>('fontSizeScale') || 1);
+  persistenceService.watchAndStore(fontSizeScale, 'fontSizeScale');
+
   const darkmode = ref(false);
   const launchIdPrivate = ref('')
   const resumeIdPrivate = ref('')
@@ -53,9 +57,9 @@ export const useSettings = defineStore("settings", () => {
     location.isWatching = isWatching;
   }
 
-  const $fontSizeScale = computed(() => {
+  const $fontSizeScale = () => {
     return fontSizeScale.value
-  })
+  }
 
   const $isDarkmode = computed(() => {
     return darkmode.value
@@ -78,7 +82,6 @@ export const useSettings = defineStore("settings", () => {
   })
 
   return {
-    $fontSizeScale,
     $isDarkmode,
     $location,
     $disableActionBarToggleAnimation,
@@ -89,6 +92,7 @@ export const useSettings = defineStore("settings", () => {
     setFontSizeScale,
     setDarkmode,
     $fontSize,
+    $fontSizeScale,
     createLaunchId,
     createResumeId,
   }
