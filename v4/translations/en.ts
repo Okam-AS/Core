@@ -124,7 +124,7 @@ export default {
   confirmationPage_turnOnNotifcationButton: 'Turn on notifications',
   confirmationPage_turnOnNotifcationMessage: 'Get updates on your order',
   confirmationPage_notifcationIsOn: 'Du får en varsel når ordre er bekreftet',
-  confirmationPage_viewOrders: 'View orders',
+  confirmationPage_viewOrder: 'View order',
   categoriesPage_yourFavorites: 'Your favorites',
   categoriesPage_noFavorites: 'Tap ♡ on a product to collect them here',
   categoriesPage_allCategories: 'All categories',
