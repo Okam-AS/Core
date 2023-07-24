@@ -171,7 +171,7 @@ export const useCheckout = defineStore("checkout", () => {
   const selectedPaymentType = ref(PaymentType.NotSet)
   const paymentMethods = ref([] as any[])
   const selectedPaymentMethodId = ref("")
-  const isLoadingPaymentMethods = ref(true)
+  const isLoadingPaymentMethods = ref(false)
   const rememberCard = ref(true)
 
   const cardNumber = ref('')
@@ -422,8 +422,6 @@ export const useCheckout = defineStore("checkout", () => {
         })
     })
   }
-
-
 
   const completeCart = async () => {
     if (isValidating.value || !_store.currentStore.id) return Promise.reject()
