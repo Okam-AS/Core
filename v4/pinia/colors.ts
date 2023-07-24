@@ -14,6 +14,7 @@ export const useColors = defineStore("colors", () => {
     green: '#1BB776',
     okamGreen: '#1BB776',
     transparent: 'transparent',
+    gray: 'gray'
   });
 
   const $color = (key: string, darkmodeKey?: string) => {
