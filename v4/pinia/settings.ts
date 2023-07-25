@@ -8,6 +8,9 @@ export const useSettings = defineStore("settings", () => {
   const fontSizeScale = ref(persistenceService.load<number>('fontSizeScale') || 1);
   persistenceService.watchAndStore(fontSizeScale, 'fontSizeScale');
 
+  const introIsSeen = ref(persistenceService.load<boolean>('introIsSeen') || false);
+  persistenceService.watchAndStore(introIsSeen, 'introIsSeen');
+
   const darkmode = ref(false);
   const launchIdPrivate = ref('')
   const resumeIdPrivate = ref('')
@@ -25,6 +28,10 @@ export const useSettings = defineStore("settings", () => {
       result += characters.charAt(Math.floor(Math.random() * characters.length))
     }
     return result
+  }
+
+  const $introIsSeen = () => {
+    return introIsSeen.value
   }
 
   const $fontSize = (size: number) => {
@@ -49,6 +56,10 @@ export const useSettings = defineStore("settings", () => {
 
   const setDarkmode = (value: boolean) => {
     darkmode.value = value
+  }
+
+  const setIntroIsSeen = (value: boolean) => {
+    introIsSeen.value = value
   }
 
   const setLocation = (lat: number, lng: number, isWatching: boolean = true) => {
@@ -87,6 +98,8 @@ export const useSettings = defineStore("settings", () => {
     $disableActionBarToggleAnimation,
     $launchId,
     $resumeId,
+    $introIsSeen,
+    setIntroIsSeen,
     setDisableActionBarToggleAnimation,
     setLocation,
     setFontSizeScale,
