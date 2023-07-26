@@ -259,7 +259,10 @@ export const useCheckout = defineStore("checkout", () => {
   const isProcessingLabel = computed(() => isProcessingLabelPrivate.value)
   const isLoading = computed(() => isLoadingPaymentMethods.value || isValidating.value || _cart.isLoading);
   const isValidating = ref(false)
-  const errorMessagePrivate = ref('')
+
+  const errorMessagePrivate = ref(persistenceService.load<String>('errorMessagePrivate') || '');
+  persistenceService.watchAndStore(errorMessagePrivate, 'errorMessagePrivate');
+
   const errorMessage = computed(() => errorMessagePrivate.value)
 
   type CreatePaymentResult = { isPaid: Boolean, redirectUrl: string, returnUrl: string };
@@ -425,6 +428,7 @@ export const useCheckout = defineStore("checkout", () => {
 
   const completeCart = async () => {
     if (isValidating.value || !_store.currentStore.id) return Promise.reject()
+    errorMessagePrivate.value = '';
     isValidating.value = true;
     return cartService().Complete(_store.currentStore.id)
       .catch(() => {
