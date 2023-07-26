@@ -11,6 +11,7 @@ export const useSettings = defineStore("settings", () => {
   const introIsSeen = ref(persistenceService.load<boolean>('introIsSeen') || false);
   persistenceService.watchAndStore(introIsSeen, 'introIsSeen');
 
+  const hasInternet = ref(true);
   const darkmode = ref(false);
   const launchIdPrivate = ref('')
   const resumeIdPrivate = ref('')
@@ -28,6 +29,14 @@ export const useSettings = defineStore("settings", () => {
       result += characters.charAt(Math.floor(Math.random() * characters.length))
     }
     return result
+  }
+
+  const setHasInternet = (value) => {
+    hasInternet.value = value;
+  }
+
+  const $hasInternet = () => {
+    return hasInternet.value
   }
 
   const $introIsSeen = () => {
@@ -98,6 +107,8 @@ export const useSettings = defineStore("settings", () => {
     $disableActionBarToggleAnimation,
     $launchId,
     $resumeId,
+    $hasInternet,
+    setHasInternet,
     $introIsSeen,
     setIntroIsSeen,
     setDisableActionBarToggleAnimation,
