@@ -26,10 +26,10 @@ export const useUser = defineStore("user", () => {
   const isLoadingCards = computed(() => { return isLoadingCardsPrivate.value });
 
   const deleteRegisteredCard = (cardId: string) => {
-    if (!isLoggedIn()) return;
+    if (!isLoggedIn()) return Promise.reject();
     isLoadingCardsPrivate.value = true;
 
-    stripeService().DeletePaymentMethod(cardId)
+    return stripeService().DeletePaymentMethod(cardId)
       .then((success) => {
         if (!success) return;
         registeredCardsPrivate.value = registeredCardsPrivate.value.filter(card => card.id !== cardId);
