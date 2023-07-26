@@ -95,7 +95,7 @@ export default {
   orderStatus_canceled: 'Canceled',
   orderProgress_youOrder: 'You order ',
   orderProgress_willBeReady: ' will be ready ',
-  orderProgress_anyMomentNow: ' any moment now.',
+  orderProgress_anyMomentNow: 'any moment now.',
   orderProgress_inAbout: 'in about ',
   orderProgress_isRequested: ' is requested ',
   orderProgress_isReadyForPickupWithCode: ' is ready for pickup ',

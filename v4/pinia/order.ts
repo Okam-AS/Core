@@ -16,7 +16,7 @@ export const useOrder = defineStore("order", () => {
   const isLoading = computed(() => { return isLoadingPrivate.value })
 
   const ongoingPrivate = ref([] as Order[])
-  const ongoing = computed(() => { return ongoing.value })
+  const ongoing = computed(() => { return ongoingPrivate.value })
   const ordersRef = ref(persistenceService.load<Order[]>('ordersRef') || [] as Order[]);
   persistenceService.watchAndStore(ordersRef, 'ordersRef');
   const orders = computed(() => { return ordersRef.value })

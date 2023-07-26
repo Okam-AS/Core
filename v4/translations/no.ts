@@ -95,7 +95,7 @@ export default {
   orderStatus_canceled: 'Kansellert',
   orderProgress_youOrder: 'Din ordre ',
   orderProgress_willBeReady: ' vil bli klar ',
-  orderProgress_anyMomentNow: ' hvert øyeblikk nå.',
+  orderProgress_anyMomentNow: 'hvert øyeblikk nå.',
   orderProgress_inAbout: 'om ca. ',
   orderProgress_isRequested: ' er forespurt, men ikke godkjent enda',
   orderProgress_isReadyForPickupWithCode: ' er klar for å hentes ',
