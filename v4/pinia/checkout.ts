@@ -15,11 +15,11 @@ export const useCheckout = defineStore("checkout", () => {
   const _store = useStore()
   const { paymentService, persistenceService, discountService, cartService, stripeService, vippsService } = useServices()
 
-  const totalAmountText = computed(() => {
+  const totalAmountText = () => {
     const currentCart = _cart.getCurrentCart()
     const priceAmount = currentCart?.calculations?.finalAmount ?? 0
     return (priceAmount > 0 ? ' ' + priceLabel(priceAmount, true) : '')
-  })
+  }
 
   const paymentLabel = (paymentMethod: PaymentMethod) => {
     if (paymentMethod?.paymentType === PaymentType.Stripe)
