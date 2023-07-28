@@ -352,22 +352,22 @@ export const useCheckout = defineStore("checkout", () => {
       setIsProcessingLabel('')
       errorMessagePrivate.value = '';
       isValidating.value = true;
+      const currentCart = _cart.getCurrentCart()
 
-      if (!(selectedPaymentMethodId.value || getCardInfo().isValid)) {
-        errorMessagePrivate.value = $i("checkoutPage_paymentFailedCheckCardDetails");
+      if (currentCart.deliveryType === DeliveryType.NotSet) {
+        errorMessagePrivate.value = "Gå tilbake og velg leveringsmetode";
         isValidating.value = false;
         return resolve(false);
       }
 
-      const currentCart = _cart.getCurrentCart()
       if (currentCart.deliveryType === DeliveryType.InstantHomeDelivery && !_cart.deliveryAddressInCartIsValid()) {
         errorMessagePrivate.value = "Legg inn en gyldig leveringsadresse lengre opp";
         isValidating.value = false;
         return resolve(false);
       }
 
-      if (currentCart.deliveryType === DeliveryType.NotSet) {
-        errorMessagePrivate.value = "Gå tilbake og velg leveringsmetode";
+      if (!(selectedPaymentMethodId.value || getCardInfo().isValid)) {
+        errorMessagePrivate.value = $i("checkoutPage_paymentFailedCheckCardDetails");
         isValidating.value = false;
         return resolve(false);
       }
