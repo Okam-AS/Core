@@ -2,7 +2,7 @@
 import { defineStore } from "pinia";
 import { Cart, CartLineItem, Product, RecommendProductsRequest } from "../models";
 import { useServices, useStore, useUser } from "./"
-import { ref, computed } from "vue";
+import { ref, computed, toRaw } from "vue";
 import { priceLabel } from "../helpers/tools"
 import { debounce } from "../helpers/ts-debounce"
 
@@ -173,11 +173,14 @@ export const useCart = defineStore("cart", () => {
     if (unsavedLineItem.value.product.soldOut) unsavedLineItem.value.quantity = 0;
 
     const itemIndex = currentCart.items.findIndex(item => item.id === unsavedLineItem.value.id)
-    const copyUnsavedLineItem = JSON.parse(JSON.stringify(unsavedLineItem.value));
     if (itemIndex >= 0) {
-      currentCart.items[itemIndex] = copyUnsavedLineItem
-    } else {
-      currentCart.items.unshift(copyUnsavedLineItem);
+      if (unsavedLineItem.value.quantity === 0) {
+        currentCart.items.splice(itemIndex, 1);
+      } else {
+        currentCart.items[itemIndex] = toRaw(unsavedLineItem.value)
+      }
+    } else if (unsavedLineItem.value.quantity > 0) {
+      currentCart.items.unshift(toRaw(unsavedLineItem.value));
     }
 
     syncWithDbDebounced()
