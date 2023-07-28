@@ -86,41 +86,38 @@ export const useOrder = defineStore("order", () => {
 
   const progressFlow = (deliveryType: DeliveryType, currentStatus: OrderStatus) => {
 
-    const createSteps = (status, flow) => {
+    const createSteps = (flow) => {
       return flow.map(s => ({
-        completed: flow.indexOf(s) < flow.indexOf(currentStatus) || currentStatus === OrderStatus.Completed || s === OrderStatus.Accepted || s === OrderStatus.Served,
-        current: s === status,
+        completed: flow.indexOf(s) < flow.indexOf(currentStatus) || currentStatus === OrderStatus.Completed || s === OrderStatus.Accepted || (currentStatus === OrderStatus.Served && s !== OrderStatus.Completed),
+        current: s === currentStatus,
         label: orderStatusLabel(s),
         isLastStep: s === OrderStatus.Completed
       }))
     }
 
     if (deliveryType === DeliveryType.SelfPickup)
-      return createSteps(currentStatus,
-        [
-          OrderStatus.Accepted,
-          OrderStatus.Processing,
-          OrderStatus.ReadyForPickup,
-          OrderStatus.Completed
-        ])
+      return createSteps([
+        OrderStatus.Accepted,
+        OrderStatus.Processing,
+        OrderStatus.ReadyForPickup,
+        OrderStatus.Completed
+      ])
 
     if (deliveryType === DeliveryType.InstantHomeDelivery)
-      return createSteps(currentStatus,
-        [
-          OrderStatus.Accepted,
-          OrderStatus.Processing,
-          OrderStatus.ReadyForDriver,
-          OrderStatus.Completed
-        ])
+      return createSteps([
+        OrderStatus.Accepted,
+        OrderStatus.Processing,
+        OrderStatus.ReadyForDriver,
+        OrderStatus.Completed
+      ])
 
     if (deliveryType === DeliveryType.TableDelivery)
-      return createSteps(currentStatus,
-        [
-          OrderStatus.Accepted,
-          OrderStatus.Processing,
-          OrderStatus.Served,
-          OrderStatus.Completed
-        ])
+      return createSteps([
+        OrderStatus.Accepted,
+        OrderStatus.Processing,
+        OrderStatus.Served,
+        OrderStatus.Completed
+      ])
 
     return []
   }
