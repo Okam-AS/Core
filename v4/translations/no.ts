@@ -179,7 +179,7 @@ export default {
   menu_myOrders: 'Mine bestillinger',
   introModal_next: 'Neste',
   introModal_close: 'Lukk',
-  introModal_title1: 'Velkommen til Okam',
+  introModal_title1: 'Velkommen til',
   introModal_description1: 'Oppkalt etter "Ockhams barberkniv", et filosofisk prinsipp som fremhever enkelhet. Vi "barberer bort" unødvendige komplikasjoner, og prioriterer enkelhet og direkthet. Vår misjon er å lage en stor plattform for de små.',
   introModal_title2: 'Ingen ekstra provisjon',
   introModal_description2: 'Mens andre apper tar rundt 25% provisjon på det du betaler, tar Okam ingen andel. Det betyr at en større del av det du betaler går direkte til butikken. Rettferdig og transparent.',

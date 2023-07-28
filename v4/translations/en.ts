@@ -180,7 +180,7 @@ export default {
   menu_myOrders: 'My orders',
   introModal_next: 'Next',
   introModal_close: 'Close',
-  introModal_title1: 'Welcome to Okam',
+  introModal_title1: 'Welcome to',
   introModal_description1: 'Named after "Ockham\'s Razor", a philosophical principle emphasizing simplicity. We "shave off" unnecessary complications, prioritizing simplicity and directness. Our mission is to create a large platform for the small ones.',
   introModal_title2: 'No extra commission',
   introModal_description2: 'While other apps take around 25% commission on what you pay, Okam takes no share. This means a larger portion of what you pay goes directly to the store. Fair and transparent.',
