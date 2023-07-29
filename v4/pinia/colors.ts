@@ -7,7 +7,7 @@ export const useColors = defineStore("colors", () => {
   const colors = ref({
     white: "#FFFFFF",
     lightBlue: '#F2F4FB',
-    darkBlue: '#1E283D',
+    darkBlue: '#003058',
     red: '#CC0000',
     lightOkamGreen: '#D5F6E5',
     lightYellow: '#FFF8E5',
