@@ -125,9 +125,9 @@ export const useCart = defineStore("cart", () => {
 
 
   const syncWithDb = async () => {
-    if (!_user.isLoggedIn()) return;
+    if (!_user.isLoggedIn()) return Promise.reject();
     const currentCart = getCurrentCart();
-    if (!currentCart || !currentCart.storeId) return;
+    if (!currentCart || !currentCart.storeId) return Promise.reject();
     isLoading.value = true;
 
     // Set default delivery address
