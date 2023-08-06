@@ -281,7 +281,7 @@ export const useCheckout = defineStore("checkout", () => {
       )
         .then((result) => {
           if (!result || !result.paymentIntentId) {
-            errorMessagePrivate.value = "Din betaling kunne ikke behandles akkurat nå. Vennligst prøv igjen litt senere.";
+            errorMessagePrivate.value = $i("checkoutPage_couldNotProcessPayment");
             isProcessingPaymentPrivate.value = false;
             return reject()
           }
@@ -302,13 +302,13 @@ export const useCheckout = defineStore("checkout", () => {
             });
           } else {
             //NOT HANDLED
-            errorMessagePrivate.value = "Oops! Din betaling kunne ikke behandles akkurat nå. Vennligst prøv igjen litt senere.";
+            errorMessagePrivate.value = $i("checkoutPage_couldNotHandlePayment");
             isProcessingPaymentPrivate.value = false;
             reject()
           }
         })
         .catch(() => {
-          errorMessagePrivate.value = "Betalingen kunne ikke gjennomføres på grunn av manglende dekning eller ugyldig kortinformasjon";
+          errorMessagePrivate.value = $i("checkoutPage_paymentFailed");
           isProcessingPaymentPrivate.value = false;
           reject()
         });
@@ -334,7 +334,7 @@ export const useCheckout = defineStore("checkout", () => {
           });
         })
         .catch((err) => {
-          errorMessagePrivate.value = "Betaling med Vipps kunne ikke gjennomføres for øyeblikket.";
+          errorMessagePrivate.value = $i("checkoutPage_couldNotPayWithVipps");
           isProcessingPaymentPrivate.value = false;
           return reject()
         });
@@ -342,7 +342,6 @@ export const useCheckout = defineStore("checkout", () => {
   }
 
   const isValid = (): Promise<Boolean> => {
-    // TODO: Flytt til tekstene til no.ts og en.ts
     return new Promise((resolve) => {
 
       if (_cart.isLoading || isLoading.value) {
@@ -355,13 +354,13 @@ export const useCheckout = defineStore("checkout", () => {
       const currentCart = _cart.getCurrentCart()
 
       if (currentCart.deliveryType === DeliveryType.NotSet) {
-        errorMessagePrivate.value = "Gå tilbake og velg leveringsmetode";
+        errorMessagePrivate.value = $i("checkoutPage_deliveryTypeNotSetError");
         isValidating.value = false;
         return resolve(false);
       }
 
       if (currentCart.deliveryType === DeliveryType.InstantHomeDelivery && !_cart.deliveryAddressInCartIsValid()) {
-        errorMessagePrivate.value = "Legg inn en gyldig leveringsadresse lengre opp";
+        errorMessagePrivate.value = $i("checkoutPage_deliveryAddressNotSetError");
         isValidating.value = false;
         return resolve(false);
       }
@@ -376,25 +375,25 @@ export const useCheckout = defineStore("checkout", () => {
         .then((result: CartValidation) => {
 
           if (result.priceTooLowError)
-            errorMessagePrivate.value = 'Beløpet er for lite. Du må minst handle for ' + priceLabel(result.minimumPrice, true);
+            errorMessagePrivate.value = $i("checkoutPage_minimumAmountError") + priceLabel(result.minimumPrice, true);
 
           if (result.paymentTypeError)
-            errorMessagePrivate.value = 'Betalingsmetoden er midlertidig utilgjengelig';
+            errorMessagePrivate.value = $i("checkoutPage_paymentMethodUnavailable");
 
           if (result.priceDifferError)
-            errorMessagePrivate.value = "Prisene er endret siden sist. Gå tilbake for å oppdatere handlevogna.";
+            errorMessagePrivate.value = $i("checkoutPage_priceDifferError");
 
           if (result.deliveryAddressError)
-            errorMessagePrivate.value = "Leveringsadressen er ikke gyldig";
+            errorMessagePrivate.value = $i("checkoutPage_deliveryAddressError");
 
           if (result.deliveryMethodError)
-            errorMessagePrivate.value = "Butikken leverer ikke til din adresse for øyeblikket";
+            errorMessagePrivate.value = $i("checkoutPage_deliveryMethodError");
 
           if (result.storeIsClosed)
-            errorMessagePrivate.value = _store.currentStore.name + " er stengt for øyeblikket";
+            errorMessagePrivate.value = _store.currentStore.name + $i("checkoutPage_isClosedNow");
 
           if (result.cartIsEmpty)
-            errorMessagePrivate.value = "Handlevogna er tom";
+            errorMessagePrivate.value = $i("checkoutPage_cartIsEmptyError");
 
           if (result.itemsOutOfStock.length > 0) {
             let itemNames = "";
@@ -412,14 +411,14 @@ export const useCheckout = defineStore("checkout", () => {
           }
 
           if (result.hasErrors && !errorMessagePrivate.value) {
-            errorMessagePrivate.value = "Beklager, vi støter på et problem med handlevognen din";
+            errorMessagePrivate.value = $i("checkoutPage_cartHasUnknownError");
           }
 
           isValidating.value = false;
           return resolve(!result.hasErrors);
         })
         .catch(() => {
-          errorMessagePrivate.value = "Noe gikk galt. Prøv igjen senere";
+          errorMessagePrivate.value = $i("checkoutPage_somethingWentWrong");
           isValidating.value = false;
           return resolve(false);
         })
@@ -432,7 +431,7 @@ export const useCheckout = defineStore("checkout", () => {
     isValidating.value = true;
     return cartService().Complete(_store.currentStore.id)
       .catch(() => {
-        errorMessagePrivate.value = "Bestillingen kunne ikke gjennomføres";
+        errorMessagePrivate.value = $i("checkoutPage_completeCartFailedError");
       }).finally(() => {
         isValidating.value = false;
         isProcessingPaymentPrivate.value = false;
