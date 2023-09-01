@@ -29,7 +29,7 @@ export const useStore = defineStore("store", () => {
     if (cashedStore) {
       store.value = cashedStore
     }
-    return storeService().Get(id).then((s) => {
+    return storeService().GetForConsumer(id, null).then((s) => {
       store.value = s
     }).finally(() => {
       isLoading.value = false

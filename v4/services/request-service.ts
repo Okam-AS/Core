@@ -49,11 +49,11 @@ export class RequestService {
   public TryParseResponse(response) {
     if (typeof response === 'undefined' || !response) { return undefined }
     const statusCode = $config.isNativeScript ? response.statusCode : response.status
-    console.log('📲 HTTP ' + statusCode)
     if (statusCode === 200) {
       let parsedResponse
       try {
         parsedResponse = $config.isNativeScript && response.content ? response.content.toJSON() : response.data
+        console.log('📲 HTTP ' + statusCode + ' ' + JSON.stringify(parsedResponse))
       } catch (e) {
         return undefined
       }
