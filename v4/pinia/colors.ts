@@ -1,20 +1,33 @@
 import { defineStore } from "pinia";
 import { ref, computed } from "vue";
 import { useSettings } from "./";
-import { defaultTheme } from "../themes";
+import { jungelPizzaTheme, defaultTheme } from "../themes";
+import { light } from "~/src/assets/map_styles";
 
 export const useColors = defineStore("colors", () => {
+
+  const selectedTheme = defaultTheme// jungelPizzaTheme;
+  const selectedBorderRadius = 15;
+
   const colors = ref({
     white: "#FFFFFF",
     lightBlue: '#F2F4FB',
     darkBlue: '#003058',
     red: '#CC0000',
-    lightOkamGreen: '#D5F6E5',
-    lightYellow: '#FFF8E5',
     green: '#1BB776',
-    okamGreen: '#1BB776',
+    lightYellow: '#FFF8E5',
     transparent: 'transparent',
-    gray: 'gray'
+    gray: 'gray',
+    black: '#000000',
+
+    //Okam
+    okamGreen: '#1BB776',
+    lightOkamGreen: '#D5F6E5',
+
+    //Jungel Pizza
+    jungelPizzaGreen: '#3FA856',
+    lightJungelPizzaGreen: '#AFDBBD',
+    lightJungelPizzaBeige: '#E9CEB3',
   });
 
   const $color = (key: string, darkmodeKey?: string) => {
@@ -27,23 +40,26 @@ export const useColors = defineStore("colors", () => {
     if (keyToUse === 'text') return $textColor.value
 
     return colors.value[keyToUse]
-
   }
 
   const $primaryColor = computed(() => {
-    return $color(defaultTheme.light.primaryColor, defaultTheme.dark.primaryColor)
+    return $color(selectedTheme.light.primaryColor, selectedTheme.dark.primaryColor)
   })
 
   const $secondaryColor = computed(() => {
-    return $color(defaultTheme.light.secondaryColor, defaultTheme.dark.secondaryColor)
+    return $color(selectedTheme.light.secondaryColor, selectedTheme.dark.secondaryColor)
   })
 
   const $backgroundColor = computed(() => {
-    return $color(defaultTheme.light.backgroundColor, defaultTheme.dark.backgroundColor)
+    return $color(selectedTheme.light.backgroundColor, selectedTheme.dark.backgroundColor)
   })
 
   const $textColor = computed(() => {
-    return $color(defaultTheme.light.textColor, defaultTheme.dark.textColor)
+    return $color(selectedTheme.light.textColor, selectedTheme.dark.textColor)
+  })
+
+  const $borderRadius = computed(() => {
+    return selectedBorderRadius
   })
 
   return {
@@ -51,6 +67,7 @@ export const useColors = defineStore("colors", () => {
     $primaryColor,
     $secondaryColor,
     $backgroundColor,
-    $textColor
+    $textColor,
+    $borderRadius,
   }
 });

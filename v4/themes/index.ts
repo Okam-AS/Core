@@ -10,20 +10,20 @@ export const defaultTheme = {
 		secondaryColor: 'darkBlue',
 		backgroundColor: 'lightBlue',
 		textColor: 'darkBlue'
-	}	
+	}
 }
 
-export const ikigaiTheme = {
+export const jungelPizzaTheme = {
 	light: {
-		primaryColor: 'darkBlue',
-		secondaryColor: 'darkBlue',
-		backgroundColor: 'lightBlue',
-		textColor: 'darkBlue'
+		primaryColor: 'jungelPizzaGreen',
+		secondaryColor: 'lightJungelPizzaBeige',
+		backgroundColor: 'lightJungelPizzaGreen',
+		textColor: 'black'
 	},
 	dark: {
 		primaryColor: 'darkBlue',
 		secondaryColor: 'darkBlue',
 		backgroundColor: 'lightBlue',
 		textColor: 'darkBlue'
-	}	
+	}
 }
