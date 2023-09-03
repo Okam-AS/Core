@@ -191,7 +191,7 @@ export default {
   general_privacyTitle: 'Privacy policy',
   general_termsUrl: 'https://vilkar.okam.no',
   general_privacyUrl: 'https://personvern.okam.no/',
-  general_termsAcceptPrefix: 'By using Okam you accept our ',
+  general_termsAcceptPrefix: 'By using this service you accept our ',
   general_terms: 'terms and privacy policy',
   general_processingPayment: 'Processing payment',
   general_noWifi: 'Bad internet connection',

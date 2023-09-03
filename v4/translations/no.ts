@@ -190,7 +190,7 @@ export default {
   general_privacyTitle: 'Personvern',
   general_termsUrl: 'https://vilkar.okam.no',
   general_privacyUrl: 'https://personvern.okam.no/',
-  general_termsAcceptPrefix: 'Ved å benytte Okam aksepterer du våre ',
+  general_termsAcceptPrefix: 'Ved å benytte denne tjenesten aksepterer følgende ',
   general_terms: 'brukervilkår',
   general_processingPayment: 'Prosesserer betaling',
   general_noWifi: 'Dårlig internettforbindelse',
