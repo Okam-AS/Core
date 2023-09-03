@@ -1,13 +1,9 @@
 import { defineStore } from "pinia";
 import { ref, computed } from "vue";
 import { useSettings } from "./";
-import { jungelPizzaTheme, defaultTheme } from "../themes";
-import { light } from "~/src/assets/map_styles";
+import getEnv from "../../../env"
 
 export const useColors = defineStore("colors", () => {
-
-  const selectedTheme = defaultTheme// jungelPizzaTheme;
-  const selectedBorderRadius = 15;
 
   const colors = ref({
     white: "#FFFFFF",
@@ -42,24 +38,30 @@ export const useColors = defineStore("colors", () => {
     return colors.value[keyToUse]
   }
 
+  const selectedTheme = getEnv('SELECTED_THEME')
+
   const $primaryColor = computed(() => {
-    return $color(selectedTheme.light.primaryColor, selectedTheme.dark.primaryColor)
+    return $color(selectedTheme.primaryColor)
   })
 
   const $secondaryColor = computed(() => {
-    return $color(selectedTheme.light.secondaryColor, selectedTheme.dark.secondaryColor)
+    return $color(selectedTheme.secondaryColor)
   })
 
   const $backgroundColor = computed(() => {
-    return $color(selectedTheme.light.backgroundColor, selectedTheme.dark.backgroundColor)
+    return $color(selectedTheme.backgroundColor)
   })
 
   const $textColor = computed(() => {
-    return $color(selectedTheme.light.textColor, selectedTheme.dark.textColor)
+    return $color(selectedTheme.textColor)
   })
 
   const $borderRadius = computed(() => {
-    return selectedBorderRadius
+    return selectedTheme.borderRadius;
+  })
+
+  const $svgLogo = computed(() => {
+    return selectedTheme.svgLogo;
   })
 
   return {
@@ -69,5 +71,6 @@ export const useColors = defineStore("colors", () => {
     $backgroundColor,
     $textColor,
     $borderRadius,
+    $svgLogo
   }
 });
