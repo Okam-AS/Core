@@ -2,7 +2,7 @@
 import { defineStore } from "pinia";
 import { Order } from "../models";
 import { DeliveryType, OrderStatus, PaymentType } from "../enums";
-import { useServices, useStore, useTranslation, useUser } from "."
+import { useServices, useStore, useTranslation, useUser, useTheme } from "."
 import { ref, computed } from "vue";
 import { orderStatusLabel } from "../helpers/tools";
 
@@ -12,6 +12,7 @@ export const useOrder = defineStore("order", () => {
   const { currentStore } = useStore()
   const _user = useUser()
   const { orderService, persistenceService } = useServices()
+  const { $availableStoreIds } = useTheme()
   const isLoadingPrivate = ref(false);
   const isLoading = computed(() => { return isLoadingPrivate.value })
 
@@ -26,7 +27,9 @@ export const useOrder = defineStore("order", () => {
   const setViewingOrder = (orderId) => {
     isLoadingPrivate.value = true
     return orderService().GetByCode(orderId).then((order) => {
-      viewingOrderPrivate.value = order
+      if (!$availableStoreIds || $availableStoreIds.includes(order.storeId)) {
+        viewingOrderPrivate.value = order
+      }
     }).finally(() => {
       isLoadingPrivate.value = false
     })
@@ -35,7 +38,7 @@ export const useOrder = defineStore("order", () => {
   const loadAll = async () => {
     isLoadingPrivate.value = true
     return orderService().GetAll().then((s) => {
-      ordersRef.value = s
+      ordersRef.value = $availableStoreIds ? s.filter(order => $availableStoreIds.includes(order.storeId)) : s;
       if (currentStore?.id) {
         loadOngoing(currentStore.id)
       }
@@ -52,7 +55,7 @@ export const useOrder = defineStore("order", () => {
   }
 
   const loadOngoing = (storeId: number) => {
-    if (!_user.isLoggedIn()) return Promise.resolve()
+    if (!_user.isLoggedIn() || ($availableStoreIds && !$availableStoreIds.includes(storeId))) return Promise.resolve()
     isLoadingPrivate.value = true
     return orderService().GetOngoing(storeId)
       .then((s) => {

@@ -1,10 +1,7 @@
 
 import { defineStore } from "pinia";
 import { Store } from "../models";
-import { useServices } from "./services"
-import { useUser } from "./user"
-import { useCategory } from "./category";
-import { useTranslation } from "./translation";
+import { useServices, useUser, useCategory, useTranslation, useTheme } from "."
 import { ref, computed } from "vue";
 
 export const useStore = defineStore("store", () => {
@@ -12,6 +9,7 @@ export const useStore = defineStore("store", () => {
   const _category = useCategory()
   const _user = useUser()
   const { $i } = useTranslation()
+  const { $availableStoreIds } = useTheme()
   const stores = ref([] as Store[]);
   const isLoading = ref(false);
 
@@ -20,7 +18,13 @@ export const useStore = defineStore("store", () => {
 
   const currentStore = computed(() => { return store.value })
 
+  const clearCurrentStore = () => {
+    store.value = {} as Store
+  }
+
   const setCurrentStore = (id: number, reload: boolean = false) => {
+    if ($availableStoreIds && !$availableStoreIds.includes(id)) return Promise.resolve()
+
     if (!reload) {
       isLoading.value = true
       _category.clearCategories()
@@ -44,7 +48,11 @@ export const useStore = defineStore("store", () => {
   const loadStores = async (latitude?, longitude?) => {
     isLoading.value = true
     return storeService().GetAll({ latitude, longitude }).then((s) => {
-      stores.value = s
+      if ($availableStoreIds) {
+        stores.value = s.filter(x => $availableStoreIds.includes(x.id))
+      } else {
+        stores.value = s
+      }
     }).finally(() => {
       isLoading.value = false
     })
@@ -94,6 +102,7 @@ export const useStore = defineStore("store", () => {
     openingHoursList,
     reloadCurrentStore,
     setCurrentStore,
+    clearCurrentStore,
     loadStores
   }
 

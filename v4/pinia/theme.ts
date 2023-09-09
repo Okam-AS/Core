@@ -69,7 +69,7 @@ export const useTheme = defineStore("theme", () => {
   });
 
   const $isWhiteLabel = computed(() => {
-    return !selectedTheme.availableStoreIds;
+    return selectedTheme.availableStoreIds && selectedTheme.availableStoreIds.length > 0;
   });
 
   return {
