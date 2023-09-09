@@ -68,6 +68,11 @@ export const useTheme = defineStore("theme", () => {
     return selectedTheme.svgLogo;
   });
 
+  const $removeFromStoreName = computed(() => {
+    return selectedTheme.removeFromStoreName;
+  });
+
+
   const $isWhiteLabel = computed(() => {
     return selectedTheme.availableStoreIds && selectedTheme.availableStoreIds.length > 0;
   });
@@ -81,6 +86,7 @@ export const useTheme = defineStore("theme", () => {
     $borderRadius,
     $availableStoreIds,
     $svgLogo,
+    $removeFromStoreName,
     $isWhiteLabel,
   };
 });
