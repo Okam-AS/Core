@@ -197,7 +197,7 @@ export default {
   general_processingPayment: 'Processing payment',
   general_noWifi: 'Bad internet connection',
   general_vippsNotInstalled: 'Vipps is not installed on this device',
-  menu_findStore: 'Find store',
+  menu_findStore: 'Find location',
   menu_selectLocation: 'Select location',
   menu_myOrders: 'My orders',
   introModal_next: 'Next',

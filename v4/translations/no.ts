@@ -196,7 +196,7 @@ export default {
   general_processingPayment: 'Prosesserer betaling',
   general_noWifi: 'Dårlig internettforbindelse',
   general_vippsNotInstalled: 'Vipps er ikke installert på denne enheten',
-  menu_findStore: 'Finn butikk',
+  menu_findStore: 'Finn sted',
   menu_selectLocation: 'Velg sted',
   menu_myOrders: 'Mine bestillinger',
   introModal_next: 'Neste',
