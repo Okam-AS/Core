@@ -1,9 +1,10 @@
 import { defineStore } from "pinia";
 import { computed, ref } from "vue";
 import { useSettings } from "./";
+import getEnv from "../../../env";
 
 export const useTheme = defineStore("theme", () => {
-  const selectedTheme = 'jungelPizza'
+  const selectedTheme = getEnv("SELECTED_THEME") || "okam";
   const themes = {
     okam: {
       clientPlatformName: 'Okam Consumer',
