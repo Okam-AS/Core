@@ -1,10 +1,30 @@
 import { defineStore } from "pinia";
 import { computed, ref } from "vue";
 import { useSettings } from "./";
-import getEnv from "../../../env";
 
 export const useTheme = defineStore("theme", () => {
-  const selectedTheme = getEnv("SELECTED_THEME");
+  const selectedTheme = 'jungelPizza'
+  const themes = {
+    okam: {
+      clientPlatformName: 'Okam Consumer',
+      primaryColor: 'darkBlue',
+      secondaryColor: 'darkBlue',
+      backgroundColor: 'lightBlue',
+      textColor: 'darkBlue',
+      borderRadius: 15,
+    },
+    jungelPizza: {
+      clientPlatformName: 'Jungel Pizza',
+      primaryColor: 'jungelPizzaGreen',
+      secondaryColor: 'lightJungelPizzaBeige',
+      backgroundColor: 'lightJungelPizzaGreen',
+      textColor: 'black',
+      borderRadius: 0,
+      availableStoreIds: [52, 53, 54],
+      svgLogo: 'jungel_pizza',
+      removeFromStoreName: 'Jungel Pizza ',
+    }
+  }
 
   const colors = ref({
     white: "#FFFFFF",
@@ -33,51 +53,51 @@ export const useTheme = defineStore("theme", () => {
       useSettings().$isDarkmode &&
       colors.value.hasOwnProperty(darkmodeKey);
     const keyToUse = useDarkModeKey ? darkmodeKey : key;
-    if (keyToUse === "primary") return $color(selectedTheme.primaryColor);
-    if (keyToUse === "secondary") return $color(selectedTheme.secondaryColor);
-    if (keyToUse === "background") return $color(selectedTheme.backgroundColor);
-    if (keyToUse === "text") return $color(selectedTheme.textColor);
+    if (keyToUse === "primary") return $color(themes[selectedTheme].primaryColor);
+    if (keyToUse === "secondary") return $color(themes[selectedTheme].secondaryColor);
+    if (keyToUse === "background") return $color(themes[selectedTheme].backgroundColor);
+    if (keyToUse === "text") return $color(themes[selectedTheme].textColor);
     return colors.value[keyToUse];
   };
 
   const $primaryColor = computed(() => {
-    return $color(selectedTheme.primaryColor);
+    return $color(themes[selectedTheme].primaryColor);
   });
 
   const $secondaryColor = computed(() => {
-    return $color(selectedTheme.secondaryColor);
+    return $color(themes[selectedTheme].secondaryColor);
   });
 
   const $backgroundColor = computed(() => {
-    return $color(selectedTheme.backgroundColor);
+    return $color(themes[selectedTheme].backgroundColor);
   });
 
   const $textColor = computed(() => {
-    return $color(selectedTheme.textColor);
+    return $color(themes[selectedTheme].textColor);
   });
 
   const $borderRadius = computed(() => {
-    return selectedTheme.borderRadius;
+    return themes[selectedTheme].borderRadius;
   });
 
   const $availableStoreIds = computed(() => {
-    return selectedTheme.availableStoreIds;
+    return themes[selectedTheme].availableStoreIds;
   });
 
   const $svgLogo = computed(() => {
-    return selectedTheme.svgLogo;
+    return themes[selectedTheme].svgLogo;
   });
 
   const $removeFromStoreName = computed(() => {
-    return selectedTheme.removeFromStoreName;
+    return themes[selectedTheme].removeFromStoreName;
   });
 
   const $clientPlatformName = computed(() => {
-    return selectedTheme.clientPlatformName;
+    return themes[selectedTheme].clientPlatformName;
   });
 
   const $isWhiteLabel = computed(() => {
-    return selectedTheme.availableStoreIds && selectedTheme.availableStoreIds.length > 0;
+    return themes[selectedTheme].availableStoreIds && themes[selectedTheme].availableStoreIds.length > 0;
   });
 
   return {
