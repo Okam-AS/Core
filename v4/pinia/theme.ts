@@ -72,6 +72,9 @@ export const useTheme = defineStore("theme", () => {
     return selectedTheme.removeFromStoreName;
   });
 
+  const $clientPlatformName = computed(() => {
+    return selectedTheme.clientPlatformName;
+  });
 
   const $isWhiteLabel = computed(() => {
     return selectedTheme.availableStoreIds && selectedTheme.availableStoreIds.length > 0;
@@ -88,5 +91,6 @@ export const useTheme = defineStore("theme", () => {
     $svgLogo,
     $removeFromStoreName,
     $isWhiteLabel,
+    $clientPlatformName
   };
 });
