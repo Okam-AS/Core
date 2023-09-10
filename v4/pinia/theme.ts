@@ -43,7 +43,7 @@ export const useTheme = defineStore("theme", () => {
     lightOkamGreen: "#D5F6E5",
 
     //Jungel Pizza
-    jungelPizzaGreen: "#3FA856",
+    jungelPizzaGreen: "#0B8827",
     lightJungelPizzaGreen: "#AFDBBD",
     lightJungelPizzaBeige: "#E9CEB3",
   });
