@@ -24,6 +24,17 @@ export const useTheme = defineStore("theme", () => {
       availableStoreIds: [52, 53, 54],
       svgLogo: 'jungel_pizza',
       removeFromStoreName: 'Jungel Pizza ',
+    },
+    arvLokalmat: {
+      clientPlatformName: 'ARV Lokalmat',
+      primaryColor: 'arvLokalmatGreen',
+      secondaryColor: 'arvLokalmatGreen',
+      backgroundColor: 'white',
+      textColor: 'black',
+      borderRadius: 0,
+      availableStoreIds: [39],
+      svgLogo: 'arv_lokalmat',
+      removeFromStoreName: 'ARV Lokalmat',
     }
   }
 
@@ -46,6 +57,9 @@ export const useTheme = defineStore("theme", () => {
     jungelPizzaGreen: "#0B8827",
     lightJungelPizzaGreen: "#AFDBBD",
     lightJungelPizzaBeige: "#E9CEB3",
+
+    //Arv Lokalmat
+    arvLokalmatGreen: "#1E4233",
   });
 
   const $color = (key: string, darkmodeKey?: string) => {
