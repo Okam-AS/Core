@@ -76,6 +76,7 @@ export class RequestService {
     request.headers[HttpProperty.ClientPlatform] = this._coreInitializer.clientPlatformName || 'Unknown'
     request.headers[HttpProperty.Language] = this._coreInitializer.cultureCode || 'no'
     request.headers[HttpProperty.ClientAppVersion] = $config.version
+    request.headers[HttpProperty.SelectedTheme] = $config.selectedTheme || ''
 
     if (content) {
       if ($config.isNativeScript) {

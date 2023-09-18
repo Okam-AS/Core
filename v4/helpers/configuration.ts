@@ -12,8 +12,9 @@ class Configuration {
   vippsAndroidPath: string;
   platformFileSuffix: string;
   notificationHub: string;
+  selectedTheme: string;
 
-  constructor () {
+  constructor() {
     this.okamApiBaseUrl = getEnv('API_BASE_URL')
     this.version = getEnv('VERSION')
     this.isNativeScript = getEnv('IS_NATIVESCRIPT') === 'true'
@@ -23,6 +24,7 @@ class Configuration {
     this.vippsAndroidPath = getEnv('VIPPS_ANDROID_PATH')
     this.platformFileSuffix = getEnv('PLATFORM_FILE_SUFFIX')
     this.notificationHub = getEnv('NOTIFICATION_HUB')
+    this.selectedTheme = getEnv('SELECTED_THEME')
   }
 }
 
