@@ -147,8 +147,8 @@ export const useUser = defineStore("user", () => {
       userRef.value = {} as User;
       favoriteProductsPrivate.value = [];
       registeredCardsPrivate.value = [];
-      useStore().clearCurrentStore();
       _cart.clearCart();
+      useStore().clearCurrentStore();
       setBearerToken('')
       if (clearNotificationIdFunction) clearNotificationIdFunction()
     })
