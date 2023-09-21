@@ -169,10 +169,15 @@ export const useCheckout = defineStore("checkout", () => {
 
   // Payment
   const selectedPaymentType = ref(PaymentType.NotSet)
-  const paymentMethods = ref([] as any[])
-  const selectedPaymentMethodId = ref("")
-  const isLoadingPaymentMethods = ref(false)
-  const rememberCard = ref(true)
+  const paymentMethodsPrivate = ref([] as any[])
+  const selectedPaymentMethodIdPrivate = ref("")
+  const isLoadingPaymentMethodsPrivate = ref(false)
+  const rememberCardPrivate = ref(true)
+
+  const paymentMethods = computed(() => paymentMethodsPrivate.value)
+  const selectedPaymentMethodId = computed(() => selectedPaymentMethodIdPrivate.value)
+  const isLoadingPaymentMethods = computed(() => isLoadingPaymentMethodsPrivate.value)
+  const rememberCard = computed(() => rememberCardPrivate.value)
 
   const cardNumber = ref('')
   const expMonth = ref('')
@@ -195,7 +200,7 @@ export const useCheckout = defineStore("checkout", () => {
   }
 
   const setPaymentMethod = (item) => {
-    selectedPaymentMethodId.value = item === undefined ? "" : item.id;
+    selectedPaymentMethodIdPrivate.value = item === undefined ? "" : item.id;
     selectedPaymentType.value = item === undefined ? PaymentType.NotSet : item.paymentType;
 
     _cart.setCartRootProperties({ paymentType: selectedPaymentType.value })
@@ -204,12 +209,12 @@ export const useCheckout = defineStore("checkout", () => {
   const getAvailablePaymentMethods = () => {
     const currentCart = _cart.getCurrentCart()
     if (!currentCart.id || currentCart.deliveryType === DeliveryType.NotSet) return Promise.resolve()
-    isLoadingPaymentMethods.value = true;
+    isLoadingPaymentMethodsPrivate.value = true;
     return paymentService()
       .GetPaymentMethods(currentCart.id)
       .then((result) => {
 
-        paymentMethods.value = Array.isArray(result) ? result : [];
+        paymentMethodsPrivate.value = Array.isArray(result) ? result : [];
 
         if (selectedPaymentMethodId.value) {
           setPaymentMethod(
@@ -220,7 +225,7 @@ export const useCheckout = defineStore("checkout", () => {
         }
       })
       .finally(() => {
-        isLoadingPaymentMethods.value = false;
+        isLoadingPaymentMethodsPrivate.value = false;
       });
   }
 
@@ -238,7 +243,7 @@ export const useCheckout = defineStore("checkout", () => {
   }
 
   const toggleRememberCard = () => {
-    rememberCard.value = !rememberCard.value
+    rememberCardPrivate.value = !rememberCardPrivate.value
   }
 
   const setIsProcessingLabel = (value) => {
