@@ -53,7 +53,7 @@ export class RequestService {
       let parsedResponse
       try {
         parsedResponse = $config.isNativeScript && response.content ? response.content.toJSON() : response.data
-        console.log('📲 HTTP ' + statusCode + ' ' + JSON.stringify(parsedResponse))
+        // console.log('📲 HTTP ' + statusCode + ' ' + JSON.stringify(parsedResponse))
       } catch (e) {
         return undefined
       }
@@ -64,7 +64,7 @@ export class RequestService {
   }
 
   private DefaultRequest(path: string, payload: any, method: HttpMethod): any {
-    console.log('🚀 ' + method + " " + path)
+    // console.log('🚀 ' + method + " " + path)
     return this.BuildRequest(path, method, payload ? JSON.stringify(payload) : '', this._coreInitializer.bearerToken)
   };
 
