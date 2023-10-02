@@ -31,7 +31,7 @@ export const useTheme = defineStore("theme", () => {
       secondaryColor: 'arvLokalmatGreen',
       backgroundColor: 'white',
       textColor: 'black',
-      borderRadius: 0,
+      borderRadius: 3,
       availableStoreIds: [39],
       svgLogo: 'arv_lokalmat',
       removeFromStoreName: 'ARV Lokalmat',
@@ -96,7 +96,7 @@ export const useTheme = defineStore("theme", () => {
   });
 
   const $availableStoreIds = computed(() => {
-    return themes[selectedTheme].availableStoreIds;
+    return themes[selectedTheme].availableStoreIds || [];
   });
 
   const $svgLogo = computed(() => {
