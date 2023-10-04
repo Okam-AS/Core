@@ -169,6 +169,7 @@ export default {
   settings_logout: 'Log out',
   settings_user: 'User',
   general_soldOut: 'Sold out',
+  genetal_notAvailableFor: 'Not available for ',
   general_closed: 'Closed',
   general_openTo: 'Open to',
   general_asap: 'ASAP',

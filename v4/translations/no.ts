@@ -168,6 +168,7 @@ export default {
   settings_confirmDeleteAccount: 'Du er i ferd med å slette din bruker. Dette kan ikke angres. Er du sikker?',
   settings_logout: 'Logg ut',
   general_soldOut: 'Utsolgt',
+  genetal_notAvailableFor: 'Utilgjengelig for ',
   general_closed: 'Stengt',
   general_openTo: 'Åpent til',
   general_asap: 'Snarest',
