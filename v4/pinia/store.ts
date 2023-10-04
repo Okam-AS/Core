@@ -23,7 +23,7 @@ export const useStore = defineStore("store", () => {
   }
 
   const setCurrentStore = (id: number, reload: boolean = false) => {
-    if ($availableStoreIds && !$availableStoreIds.includes(id)) return Promise.resolve()
+    if ($availableStoreIds?.length && !$availableStoreIds.includes(id)) return Promise.resolve()
 
     if (!reload) {
       isLoading.value = true
@@ -48,7 +48,7 @@ export const useStore = defineStore("store", () => {
   const loadStores = async (latitude?, longitude?) => {
     isLoading.value = true
     return storeService().GetAll({ latitude, longitude }).then((s) => {
-      if ($availableStoreIds) {
+      if ($availableStoreIds?.length) {
         stores.value = s.filter(x => $availableStoreIds.includes(x.id))
       } else {
         stores.value = s

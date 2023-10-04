@@ -27,7 +27,7 @@ export const useOrder = defineStore("order", () => {
   const setViewingOrder = (orderId) => {
     isLoadingPrivate.value = true
     return orderService().GetByCode(orderId).then((order) => {
-      if (!$availableStoreIds || $availableStoreIds.includes(order.storeId)) {
+      if (!$availableStoreIds?.length || $availableStoreIds.includes(order.storeId)) {
         viewingOrderPrivate.value = order
       }
     }).finally(() => {
@@ -38,7 +38,7 @@ export const useOrder = defineStore("order", () => {
   const loadAll = async () => {
     isLoadingPrivate.value = true
     return orderService().GetAll().then((s) => {
-      ordersRef.value = $availableStoreIds ? s.filter(order => $availableStoreIds.includes(order.storeId)) : s;
+      ordersRef.value = $availableStoreIds?.length ? s.filter(order => $availableStoreIds.includes(order.storeId)) : s;
       if (currentStore?.id) {
         loadOngoing(currentStore.id)
       }
@@ -55,7 +55,7 @@ export const useOrder = defineStore("order", () => {
   }
 
   const loadOngoing = (storeId: number) => {
-    if (!_user.isLoggedIn() || ($availableStoreIds && !$availableStoreIds.includes(storeId))) return Promise.resolve()
+    if (!_user.isLoggedIn() || ($availableStoreIds?.length && !$availableStoreIds.includes(storeId))) return Promise.resolve()
     isLoadingPrivate.value = true
     return orderService().GetOngoing(storeId)
       .then((s) => {
