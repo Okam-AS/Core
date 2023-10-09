@@ -11,6 +11,8 @@ export const useTheme = defineStore("theme", () => {
       primaryColor: 'darkBlue',
       secondaryColor: 'darkBlue',
       backgroundColor: 'lightBlue',
+      secondaryBackgroundColor: 'white',
+      shadows: true,
       textColor: 'darkBlue',
       borderRadius: 15,
     },
@@ -19,6 +21,8 @@ export const useTheme = defineStore("theme", () => {
       primaryColor: 'jungelPizzaGreen',
       secondaryColor: 'lightJungelPizzaBeige',
       backgroundColor: 'lightJungelPizzaGreen',
+      secondaryBackgroundColor: 'white',
+      shadows: true,
       textColor: 'black',
       borderRadius: 0,
       availableStoreIds: [52, 53, 54],
@@ -30,12 +34,25 @@ export const useTheme = defineStore("theme", () => {
       primaryColor: 'arvLokalmatGreen',
       secondaryColor: 'arvLokalmatGreen',
       backgroundColor: 'white',
+      secondaryBackgroundColor: 'white',
+      shadows: true,
       textColor: 'black',
       borderRadius: 3,
       availableStoreIds: [39],
       svgLogo: 'arv_lokalmat',
       removeFromStoreName: 'ARV Lokalmat',
-    }
+    },
+    bkh: {
+      clientPlatformName: 'Bislett Kebab House',
+      primaryColor: 'bkhGray',
+      secondaryColor: 'white',
+      backgroundColor: 'bkhDarkerGray',
+      secondaryBackgroundColor: 'bkhGray',
+      shadows: false,
+      textColor: 'white',
+      borderRadius: 12,
+      availableStoreIds: [1]
+    },
   }
 
   const colors = ref({
@@ -60,6 +77,11 @@ export const useTheme = defineStore("theme", () => {
 
     //Arv Lokalmat
     arvLokalmatGreen: "#1E4233",
+
+    //BKH
+    bkhGray: "#302F36",
+    bkhDarkerGray: "#161E20",
+
   });
 
   const $color = (key: string, darkmodeKey?: string) => {
@@ -71,6 +93,7 @@ export const useTheme = defineStore("theme", () => {
     if (keyToUse === "primary") return $color(themes[selectedTheme].primaryColor);
     if (keyToUse === "secondary") return $color(themes[selectedTheme].secondaryColor);
     if (keyToUse === "background") return $color(themes[selectedTheme].backgroundColor);
+    if (keyToUse === "secondaryBackground") return $color(themes[selectedTheme].secondaryBackgroundColor);
     if (keyToUse === "text") return $color(themes[selectedTheme].textColor);
     return colors.value[keyToUse];
   };
@@ -85,6 +108,14 @@ export const useTheme = defineStore("theme", () => {
 
   const $backgroundColor = computed(() => {
     return $color(themes[selectedTheme].backgroundColor);
+  });
+
+  const $secondaryBackgroundColor = computed(() => {
+    return $color(themes[selectedTheme].secondaryBackgroundColor);
+  });
+
+  const $shadows = computed(() => {
+    return themes[selectedTheme].shadows;
   });
 
   const $textColor = computed(() => {
@@ -120,6 +151,8 @@ export const useTheme = defineStore("theme", () => {
     $primaryColor,
     $secondaryColor,
     $backgroundColor,
+    $secondaryBackgroundColor,
+    $shadows,
     $textColor,
     $borderRadius,
     $availableStoreIds,
