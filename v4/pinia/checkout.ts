@@ -101,6 +101,12 @@ export const useCheckout = defineStore("checkout", () => {
     ].value;
   })
 
+  const resetTimeAndDatePickers = () => {
+    srdRef.value = 0
+    srtRef.value = new Date()
+    requestedCompletionChange()
+  }
+
   const dateOptionIndexChange = (event) => {
     if (!event.value && event.value !== 0) {
       return
@@ -458,6 +464,7 @@ export const useCheckout = defineStore("checkout", () => {
     selectedRequestedCompletionTimeMinutes,
     dateOptionIndexChange,
     timeChange,
+    resetTimeAndDatePickers,
 
     // Payment
     rememberCard,
