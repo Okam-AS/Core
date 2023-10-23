@@ -7,7 +7,7 @@ export const useTheme = defineStore("theme", () => {
   const selectedTheme = getEnv("SELECTED_THEME") || "okam";
   const themes = {
     okam: {
-      clientPlatformName: 'Okam Consumer',
+      clientPlatformName: 'Okam',
       primaryColor: 'darkBlue',
       secondaryColor: 'darkBlue',
       backgroundColor: 'lightBlue',
@@ -15,6 +15,8 @@ export const useTheme = defineStore("theme", () => {
       shadows: true,
       textColor: 'darkBlue',
       borderRadius: 15,
+      itunesAppId: '1514296965',
+      androidPackageName: 'no.okam.consumer'
     },
     jungelPizza: {
       clientPlatformName: 'Jungel Pizza',
@@ -28,6 +30,8 @@ export const useTheme = defineStore("theme", () => {
       availableStoreIds: [52, 53, 54],
       svgLogo: 'jungel_pizza',
       removeFromStoreName: 'Jungel Pizza ',
+      itunesAppId: '6465692106',
+      androidPackageName: 'no.okam.jungelpizza'
     },
     arvLokalmat: {
       clientPlatformName: 'ARV Lokalmat',
@@ -41,6 +45,8 @@ export const useTheme = defineStore("theme", () => {
       availableStoreIds: [39],
       svgLogo: 'arv_lokalmat',
       removeFromStoreName: 'ARV Lokalmat',
+      itunesAppId: '6468146732',
+      androidPackageName: 'no.okam.matarv'
     },
     bkh: {
       clientPlatformName: 'Bislett Kebab House',
@@ -146,6 +152,14 @@ export const useTheme = defineStore("theme", () => {
     return themes[selectedTheme].availableStoreIds && themes[selectedTheme].availableStoreIds.length > 0;
   });
 
+  const $itunesAppId = computed(() => {
+    return themes[selectedTheme].itunesAppId || themes['okam'].itunesAppId;
+  });
+
+  const $androidPackageName = computed(() => {
+    return themes[selectedTheme].androidPackageName || themes['okam'].androidPackageName;
+  });
+
   return {
     $color,
     $primaryColor,
@@ -159,6 +173,8 @@ export const useTheme = defineStore("theme", () => {
     $svgLogo,
     $removeFromStoreName,
     $isWhiteLabel,
-    $clientPlatformName
+    $clientPlatformName,
+    $itunesAppId,
+    $androidPackageName
   };
 });
