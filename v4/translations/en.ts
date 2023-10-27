@@ -53,7 +53,7 @@ export default {
   checkoutPage_rememberCard: 'Remember card',
   checkoutPage_paymentFailedCheckCardDetails: 'Payment failed. Check card details and try again.',
   checkoutPage_isClosedForNow: 'is closed for now',
-  checkoutPage_canTakeLonger: 'Svartiden kan være noe lengere enn vanlig.',
+  checkoutPage_canTakeLonger: 'The response time may be longer than usual.',
   checkoutPage_loginDescription: 'You need to confirm your phone number to complete the order',
   checkoutPage_login: 'Confirm phone number',
   checkoutPage_cardAuthFailed: 'Card authentication failed',
