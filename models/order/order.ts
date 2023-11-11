@@ -4,14 +4,16 @@ export class Order {
     id: string;
     friendlyOrderId: string;
 
+    created: Date;
     requestedCompletion: Date;
+    processingStartTime: Date;
+    estimatedProcessingEndTime: Date;
+    processingEndTime: Date;
+    completed: Date;
 
     platform: string;
     userId: string;
     storeId: string;
-    pickup: Date;
-    created: Date;
-    completed: Date;
     status: OrderStatus;
     items: Array<OrderLineItem>;
     taxDetails: Array<TaxDetail>;
@@ -22,6 +24,7 @@ export class Order {
     tableName: string;
     dateTimeNow: Date;
     countdownEndTime: Date;
+    pickup: Date;
 
     itemsAmount: number;
     itemsAmountLineThrough: number;
