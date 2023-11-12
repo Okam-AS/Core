@@ -8,7 +8,8 @@ export class Category {
     image: ImageSource;
 
     hide: boolean;
-    published: boolean;
+    startPublish: boolean;
+    stopPublish: boolean;
 
     imageCarouselEnabled: boolean;
     imageCarouselItems: Array<ImageCarouselItem>;
