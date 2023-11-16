@@ -10,6 +10,7 @@ export class Order {
     estimatedProcessingEndTime: Date;
     processingEndTime: Date;
     completed: Date;
+    isInPreorderMode: boolean;
 
     platform: string;
     userId: string;
