@@ -27,7 +27,7 @@ export const useTheme = defineStore("theme", () => {
       shadows: true,
       textColor: 'black',
       borderRadius: 0,
-      availableStoreIds: [52, 53, 54],
+      availableStoreIds: [52, 53, 54, 57],
       svgLogo: 'jungel_pizza',
       removeFromStoreName: 'Jungel Pizza ',
       itunesAppId: '6465692106',
@@ -153,11 +153,11 @@ export const useTheme = defineStore("theme", () => {
   });
 
   const $itunesAppId = computed(() => {
-    return themes[selectedTheme].itunesAppId || themes['okam'].itunesAppId;
+    return themes[selectedTheme].itunesAppId || themes['okam'].itunesAppId;
   });
 
   const $androidPackageName = computed(() => {
-    return themes[selectedTheme].androidPackageName || themes['okam'].androidPackageName;
+    return themes[selectedTheme].androidPackageName || themes['okam'].androidPackageName;
   });
 
   return {
