@@ -6,6 +6,7 @@ export default {
   storeSearchPage_shareLocation: "Search nearby",
   storeSearchPage_sortByLocation: "Sort by nearest",
   storeSearchPage_noHits: "No results",
+  storePage_vat: "Organisation number: ",
   storePage_orderHere: 'Order here',
   storePage_ongoingOrders: 'Ongoing orders',
   storePage_findUsHere: 'Find us here',

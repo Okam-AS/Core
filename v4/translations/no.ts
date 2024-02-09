@@ -6,6 +6,7 @@ export default {
   storeSearchPage_shareLocation: "Søk i nærheten",
   storeSearchPage_sortByLocation: "Sorter etter nærmeste",
   storeSearchPage_noHits: "Søket ga ingen treff",
+  storePage_vat: "Org.nr.:",
   storePage_orderHere: 'Bestill her',
   storePage_ongoingOrders: 'Pågående bestillinger',
   storePage_findUsHere: 'Finn oss her',
