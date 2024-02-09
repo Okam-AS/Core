@@ -2,6 +2,7 @@ import { Address, Category, DeliveryMethod, OpeningHour, User, StorePayment, Sto
 export class Store {
     id: number;
     name: string;
+    legalName: string;
     phoneNumber: string;
     logoUrl: string;
     address: Address;
@@ -10,6 +11,7 @@ export class Store {
     allowOrdersAfterOpeningHours: boolean;
     openingHours: Array<OpeningHour>;
     isOpenNow: boolean;
+    vat: number;
     admins: Array<User>;
     editors: Array<User>;
     homeDeliveryMethods: Array<DeliveryMethod>;
