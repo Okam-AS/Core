@@ -201,6 +201,7 @@ export default {
   menu_findStore: 'Finn sted',
   menu_selectLocation: 'Velg sted',
   menu_myOrders: 'Mine bestillinger',
+  menu_rewards: 'Bonus saldo',
   introModal_next: 'Neste',
   introModal_close: 'Lukk',
   introModal_title1: 'Velkommen til',

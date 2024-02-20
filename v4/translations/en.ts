@@ -202,6 +202,7 @@ export default {
   menu_findStore: 'Find location',
   menu_selectLocation: 'Select location',
   menu_myOrders: 'My orders',
+  menu_rewards: 'Rewards',
   introModal_next: 'Next',
   introModal_close: 'Close',
   introModal_title1: 'Welcome to',
