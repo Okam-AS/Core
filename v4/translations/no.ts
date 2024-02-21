@@ -202,6 +202,7 @@ export default {
   menu_selectLocation: 'Velg sted',
   menu_myOrders: 'Mine bestillinger',
   menu_rewards: 'Bonussaldo',
+  rewards_purchase: 'Kjøp bonuspoeng',
   introModal_next: 'Neste',
   introModal_close: 'Lukk',
   introModal_title1: 'Velkommen til',
