@@ -65,7 +65,7 @@ export const useCart = defineStore("cart", () => {
     if (!unsavedLineItem?.value?.product?.productVariants?.length) return false;
     const firstProductVariant = unsavedLineItem.value.product.productVariants[0];
     const selectedOption = firstProductVariant.options.find(x => x.selected);
-    return selectedOption
+    return !!selectedOption
   })
 
 
