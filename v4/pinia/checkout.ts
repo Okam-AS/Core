@@ -235,6 +235,27 @@ export const useCheckout = defineStore("checkout", () => {
       });
   }
 
+  const getAvailablePaymentMethodsForReward = () => {
+    isLoadingPaymentMethodsPrivate.value = true;
+    return paymentService()
+      .GetPaymentMethodsForReward(_store.currentStore.id)
+      .then((result) => {
+
+        paymentMethodsPrivate.value = Array.isArray(result) ? result : [];
+
+        if (selectedPaymentMethodId.value) {
+          setPaymentMethod(
+            paymentMethods.value.find((x) => x.id === selectedPaymentMethodId.value)
+          );
+        } else if (paymentMethods.value.length >= 1) {
+          setPaymentMethod(paymentMethods.value[0]);
+        }
+      })
+      .finally(() => {
+        isLoadingPaymentMethodsPrivate.value = false;
+      });
+  }
+
   const setCardInput = (key, value) => {
     if (key === 'cardNumber')
       cardNumber.value = value
@@ -474,6 +495,7 @@ export const useCheckout = defineStore("checkout", () => {
     toggleRememberCard,
     setPaymentMethod,
     getAvailablePaymentMethods,
+    getAvailablePaymentMethodsForReward,
     setCardInput,
 
     isLoading,
