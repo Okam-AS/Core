@@ -209,6 +209,7 @@ export default {
   rewardsCheckoutPage_termsAcceptPrefix: 'By purchasing reward points you accept our',
   rewardsCheckoutPage_termsAcceptBold: ' terms and privacy policy',
   rewardsCheckoutPage_termsAcceptSuffix: ' ',
+  rewardsCheckoutPage_selectAmount: 'Select amount',
   introModal_next: 'Next',
   introModal_close: 'Close',
   introModal_title1: 'Welcome to',
