@@ -20,6 +20,10 @@ export { Discount } from './discount/discount'
 export { DiscountUsages } from './discount/discount-usages'
 export { DiscountProducts } from './discount/discount-products'
 
+// Reward
+export { RewardProgram } from './reward/reward-program'
+export { RewardMembership } from './reward/reward-membership'
+
 // User
 export { User } from './user/user'
 export { Login } from './user/login'
