@@ -2,6 +2,17 @@ import { DeliveryType, OrderStatus } from "../enums"
 import dayjs from "dayjs";
 import { useTranslation } from "../pinia"
 
+const currencyInfoTool = () => {
+  return {  
+    prefix: '',
+    suffix: ',–',
+    decimalSeparator: ',',
+    thousandSeparator: ' ',
+    fractionLength: 2,
+    symbol: 'kr'
+  }
+}
+
 const wholeAmountTool = (amount: Number): string => {
   if (!amount) { return '0' }
   const wholeAmount = amount.toString().slice(0, -2)
@@ -15,16 +26,15 @@ const fractionAmountTool = (amount: Number): string => {
 }
 
 const priceLabelTool = (totalPrice: Number, hideFractionIfZero: Boolean = false) => {
-  const prefix = ''
+  
+  const currencyInfo = currencyInfoTool();
   const wholeAmount = wholeAmountTool(totalPrice)
   let fraction = ''
   if (!hideFractionIfZero || parseInt(fractionAmountTool(totalPrice)) > 0) {
     fraction = ',' + fractionAmountTool(totalPrice)
   }
-  const suffix = ',–'
-  return prefix + wholeAmount + fraction + suffix
+  return currencyInfo.prefix + wholeAmount + fraction + currencyInfo.suffix
 }
-
 
 const orderStatusLabelTool = (type: OrderStatus) => {
   const map = {
@@ -78,6 +88,7 @@ const formatDateTimeTool = (dateTime, hideTime = false) => {
   return (!dateTime) ? "" : dayjs(dateTime).format(hideTime ? 'DD.MM.YY' : 'DD.MM.YY HH:mm');
 }
 
+export const currencyInfo = currencyInfoTool
 export const wholeAmount = wholeAmountTool
 export const fractionAmount = fractionAmountTool
 export const priceLabel = priceLabelTool
