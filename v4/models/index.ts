@@ -41,3 +41,8 @@ export { VippsInitiateResponse, VippsVerifyResponse, PaymentMethod } from '../..
 
 // Log
 export { EventLog } from '../../v4/models/log/event-log'
+
+// Reward
+export { RewardProgram } from '../../v4/models/reward/reward-program'
+export { RewardMembership } from '../../v4/models/reward/reward-membership'
+export { RewardTransaction } from '../../v4/models/reward/reward-transaction'

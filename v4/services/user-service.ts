@@ -1,4 +1,4 @@
-import { Login, SendVerificationToken, User } from '../models'
+import { Login, SendVerificationToken, User, RewardMembership } from '../models'
 import { ICoreInitializer } from '../interfaces'
 import { RequestService, NotificationService } from './index'
 
@@ -12,6 +12,14 @@ export class UserService {
     this._bearerToken = coreInitializer.bearerToken;
     this._requestService = new RequestService(coreInitializer)
     this._notificationService = new NotificationService(coreInitializer)
+  }
+
+  public async GetRewardMemberships(storeId?: number): Promise<RewardMembership[]> {
+    if (!this._bearerToken) return [];
+    const response = await this._requestService.GetRequest('/user/rewardmemberships/' + storeId);
+    const parsedResponse = this._requestService.TryParseResponse(response);
+    if (parsedResponse === undefined) return [];
+    return parsedResponse;
   }
 
   public async UpdateAddress(fullAddress: string, zipCode: string, city: string): Promise<boolean> {

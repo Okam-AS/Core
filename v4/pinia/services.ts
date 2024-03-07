@@ -4,6 +4,7 @@ import { ICoreInitializer } from "../interfaces";
 import {
   UserService,
   StoreService,
+  RewardService,
   CartService,
   CategoryService,
   PersistenceService,
@@ -58,6 +59,7 @@ export const useServices = defineStore("services", () => {
 
   const userService = () => new UserService(coreInitializer.value)
   const storeService = () => new StoreService(coreInitializer.value)
+  const rewardService = () => new RewardService(coreInitializer.value)
   const cartService = () => new CartService(coreInitializer.value)
   const categoryService = () => new CategoryService(coreInitializer.value)
   const paymentService = () => new PaymentService(coreInitializer.value)
@@ -77,6 +79,7 @@ export const useServices = defineStore("services", () => {
     setCultureCode,
     userService,
     storeService,
+    rewardService,
     cartService,
     categoryService,
     paymentService,
