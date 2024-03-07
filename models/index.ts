@@ -23,6 +23,7 @@ export { DiscountProducts } from './discount/discount-products'
 // Reward
 export { RewardProgram } from './reward/reward-program'
 export { RewardMembership } from './reward/reward-membership'
+export { RewardTransaction } from './reward/reward-transaction'
 
 // User
 export { User } from './user/user'

@@ -1,8 +1,10 @@
-import { RewardProgram, User } from '../../models';
+import { RewardProgram, User, RewardTransaction } from '../../models';
 
 export class RewardMembership {
-    rewardProgramId: string;
-    rewardProgram: RewardProgram;
+    rewardMembershipId: string;
+
+    rewardProgramId: string | null;
+    rewardProgram: RewardProgram | null;
 
     userId: string;
     user: User;
@@ -15,6 +17,8 @@ export class RewardMembership {
 
     acceptedRewardsTerms: Date | null;
     acceptedRewardsTermsValue: boolean | null;
+
+    rewardTransactions: RewardTransaction[] = [];
 
     collectRewards: boolean;
 }
