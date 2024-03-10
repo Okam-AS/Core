@@ -11,6 +11,12 @@ export const useSettings = defineStore("settings", () => {
   const introIsSeen = ref(persistenceService.load<boolean>('introIsSeen') || false);
   persistenceService.watchAndStore(introIsSeen, 'introIsSeen');
 
+  const currentPage = ref(persistenceService.load<string>('currentPage') || '');
+  persistenceService.watchAndStore(currentPage, 'currentPage');
+
+  const currentModal = ref(persistenceService.load<string>('currentModal') || '');
+  persistenceService.watchAndStore(currentModal, 'currentModal');
+
   const hasInternet = ref(true);
   const darkmode = ref(false);
   const launchIdPrivate = ref('')
@@ -71,6 +77,14 @@ export const useSettings = defineStore("settings", () => {
     introIsSeen.value = value
   }
 
+  const setCurrentPage = (value: string) => {
+    currentPage.value = value
+  }
+
+  const setCurrentModal = (value: string) => {
+    currentModal.value = value
+  }
+
   const setLocation = (lat: number, lng: number, isWatching: boolean = true) => {
     location.lat = lat;
     location.lng = lng;
@@ -101,6 +115,14 @@ export const useSettings = defineStore("settings", () => {
     return resumeIdPrivate.value;
   })
 
+  const $currentPage = computed(() => {
+    return currentPage.value
+  });
+
+  const $currentModal = computed(() => {
+    return currentModal.value
+  });
+
   return {
     $isDarkmode,
     $location,
@@ -110,11 +132,15 @@ export const useSettings = defineStore("settings", () => {
     $hasInternet,
     setHasInternet,
     $introIsSeen,
+    $currentPage,
+    $currentModal,
     setIntroIsSeen,
     setDisableActionBarToggleAnimation,
     setLocation,
     setFontSizeScale,
     setDarkmode,
+    setCurrentPage,
+    setCurrentModal,
     $fontSize,
     $fontSizeScale,
     createLaunchId,

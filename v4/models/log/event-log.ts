@@ -7,6 +7,8 @@ export class EventLog {
     resumeId: string;
     deviceMake: string;
     deviceModel: string;
+    pageName: string;
+    modalName: string;
     os: string;
     osVersion: string;
     appName: string;

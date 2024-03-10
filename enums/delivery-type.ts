@@ -5,3 +5,4 @@ export enum DeliveryType {
     GroupedHomeDelivery = 'GroupedHomeDelivery',
     TableDelivery = 'TableDelivery'
 }
+
