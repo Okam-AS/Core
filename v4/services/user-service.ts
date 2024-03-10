@@ -1,4 +1,4 @@
-import { Login, SendVerificationToken, User } from '../models'
+import { Login, SendVerificationToken, User, RewardCard } from '../models'
 import { ICoreInitializer } from '../interfaces'
 import { RequestService, NotificationService } from './index'
 
@@ -14,7 +14,7 @@ export class UserService {
     this._notificationService = new NotificationService(coreInitializer)
   }
 
-  public async GetRewardMemberships(storeId?: number): Promise<any[]> {
+  public async GetRewardMemberships(storeId?: number): Promise<RewardCard[]> {
     if (!this._bearerToken) return [];
     const response = await this._requestService.GetRequest('/user/rewardmemberships/' + storeId);
     const parsedResponse = this._requestService.TryParseResponse(response);
