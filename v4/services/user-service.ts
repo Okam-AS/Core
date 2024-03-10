@@ -14,11 +14,19 @@ export class UserService {
     this._notificationService = new NotificationService(coreInitializer)
   }
 
-  public async GetRewardMemberships(storeId?: number): Promise<RewardCard[]> {
-    if (!this._bearerToken) return [];
-    const response = await this._requestService.GetRequest('/user/rewardmemberships/' + storeId);
+  public async GetRewardCards(): Promise<RewardCard[]> {
+    if (!this._bearerToken) return null;
+    const response = await this._requestService.GetRequest('/user/rewardcards/');
     const parsedResponse = this._requestService.TryParseResponse(response);
-    if (parsedResponse === undefined) return [];
+    if (parsedResponse === undefined) return null;
+    return parsedResponse;
+  }
+
+  public async GetRewardCard(storeId?: number): Promise<RewardCard> {
+    if (!this._bearerToken) return null;
+    const response = await this._requestService.GetRequest('/user/rewardcard/' + storeId);
+    const parsedResponse = this._requestService.TryParseResponse(response);
+    if (parsedResponse === undefined) return null;
     return parsedResponse;
   }
 

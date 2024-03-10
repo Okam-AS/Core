@@ -1,6 +1,6 @@
 
 import { defineStore } from "pinia";
-import { User, Product, PaymentMethod, RewardMembership } from "../models";
+import { User, Product, PaymentMethod } from "../models";
 import { useServices } from "./services"
 import { useStore, useCart, useCheckout } from ".";
 import { ref, computed } from "vue";
@@ -168,19 +168,8 @@ export const useUser = defineStore("user", () => {
     })
   }
 
-  const rewardMembershipsPrivate = ref([] as RewardMembership[]);
-  const rewardMemberships = computed(() => { return rewardMembershipsPrivate.value });
-  const getRewardMemberships = async () => {
-    if (!isLoggedIn()) return Promise.reject();
-    return userService().GetRewardMemberships().then((response) => {
-      rewardMembershipsPrivate.value = response;
-      return response;
-    });
-  }
-  
   return {
     user,
-    rewardMemberships,
     secondsToWaitForVerificationToken,
     isLoggedIn,
     favoriteProducts,
@@ -196,8 +185,7 @@ export const useUser = defineStore("user", () => {
     toggleFavoriteProduct,
     loadFavoriteProducts,
     deleteAccount,
-    logoutIfTokenExpired,
-    getRewardMemberships
+    logoutIfTokenExpired
   }
 
 });
