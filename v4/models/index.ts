@@ -3,7 +3,8 @@ export { Cart } from '../../v4/models/cart/cart'
 export { CartValidation, CartCalculation, CartLineItem, RecommendProductsRequest } from '../../models/'
 
 // Store
-export { Store, OpeningHour, DeliveryMethod, BrregData, StoreRegistration, StoreUserSetting, StoreTip, StorePayment, StoreFees } from '../../models/'
+export { Store } from '../../v4/models/store/store'
+export { OpeningHour, DeliveryMethod, BrregData, StoreRegistration, StoreUserSetting, StoreTip, StorePayment, StoreFees } from '../../models/'
 
 // Discount
 export { Discount, DiscountUsages, DiscountProducts } from '../../models/'
