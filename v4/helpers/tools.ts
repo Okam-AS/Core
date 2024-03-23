@@ -3,7 +3,7 @@ import dayjs from "dayjs";
 import { useTranslation } from "../pinia"
 
 const currencyInfoTool = () => {
-  return {  
+  return {
     prefix: '',
     suffix: ',–',
     decimalSeparator: ',',
@@ -25,15 +25,15 @@ const fractionAmountTool = (amount: Number): string => {
   return fractionAmount.length < 2 ? '00' : fractionAmount
 }
 
-const priceLabelTool = (totalPrice: Number, hideFractionIfZero: Boolean = false) => {
-  
+const priceLabelTool = (totalPrice: Number, hideFractionIfZero: Boolean = false, hidePrefixAndSuffix: Boolean = false) => {
+
   const currencyInfo = currencyInfoTool();
   const wholeAmount = wholeAmountTool(totalPrice)
   let fraction = ''
   if (!hideFractionIfZero || parseInt(fractionAmountTool(totalPrice)) > 0) {
     fraction = ',' + fractionAmountTool(totalPrice)
   }
-  return currencyInfo.prefix + wholeAmount + fraction + currencyInfo.suffix
+  return (hidePrefixAndSuffix ? '' : currencyInfo.prefix) + wholeAmount + fraction + (hidePrefixAndSuffix ? '' : currencyInfo.suffix)
 }
 
 const orderStatusLabelTool = (type: OrderStatus) => {

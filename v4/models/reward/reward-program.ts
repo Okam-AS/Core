@@ -1,4 +1,4 @@
-import { Store, RewardMembership } from '..';
+import { Store, RewardMembership, AvailableRewardPurchaseAmount } from '..';
 
 export class RewardProgram {
     rewardProgramId: string;
@@ -7,4 +7,5 @@ export class RewardProgram {
     cashbackPercent: number;
     stores: Array<Store>;
     rewardMemberships: Array<RewardMembership>;
+    availableRewardPurchaseAmounts: Array<AvailableRewardPurchaseAmount>
 }
