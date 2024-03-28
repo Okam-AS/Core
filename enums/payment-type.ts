@@ -1,6 +1,7 @@
 export enum PaymentType {
-    NotSet = 'NotSet',
-    PayInStore = 'PayInStore',
-    Stripe = 'Stripe',
-    Vipps = 'Vipps'
+  NotSet = "NotSet",
+  Reward = "Reward",
+  PayInStore = "PayInStore",
+  Stripe = "Stripe",
+  Vipps = "Vipps",
 }

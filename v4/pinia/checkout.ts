@@ -3,25 +3,14 @@ import { useCart, useTranslation, useServices, useStore } from ".";
 import { ref, computed, watch } from "vue";
 import { debounce } from "../helpers/ts-debounce";
 import { priceLabel } from "../helpers/tools";
-import {
-  PaymentMethod,
-  CartValidation,
-  StripeCreatePaymentIntent,
-} from "../models";
+import { PaymentMethod, CartValidation, StripeCreatePaymentIntent } from "../models";
 import { DeliveryType, PaymentType } from "../enums";
 
 export const useCheckout = defineStore("checkout", () => {
   const { $i } = useTranslation();
   const _cart = useCart();
   const _store = useStore();
-  const {
-    paymentService,
-    persistenceService,
-    discountService,
-    cartService,
-    stripeService,
-    vippsService,
-  } = useServices();
+  const { paymentService, persistenceService, discountService, cartService, stripeService, vippsService } = useServices();
 
   const totalAmountText = () => {
     const currentCart = _cart.getCurrentCart();
@@ -30,18 +19,10 @@ export const useCheckout = defineStore("checkout", () => {
   };
 
   const paymentLabel = (paymentMethod: PaymentMethod) => {
-    if (paymentMethod?.paymentType === PaymentType.Stripe)
-      return (
-        "xxxx xxxx xxxx " +
-        paymentMethod.last4 +
-        "   " +
-        paymentMethod.expMonth +
-        "/" +
-        paymentMethod.expYear
-      );
+    if (paymentMethod?.paymentType === PaymentType.Stripe) return "xxxx xxxx xxxx " + paymentMethod.last4 + "   " + paymentMethod.expMonth + "/" + paymentMethod.expYear;
     if (paymentMethod?.paymentType === PaymentType.Vipps) return "Vipps";
-    if (paymentMethod?.paymentType === PaymentType.PayInStore)
-      return $i("checkoutPage_payInStore");
+    if (paymentMethod?.paymentType === PaymentType.PayInStore) return $i("checkoutPage_payInStore");
+    if (paymentMethod?.paymentType === PaymentType.Reward) return $i("checkoutPage_reward");
     return "";
   };
 
@@ -83,23 +64,8 @@ export const useCheckout = defineStore("checkout", () => {
       if (index === 0) return $i("general_asap");
       if (index === 1) return $i("general_today");
       if (index === 2) return $i("general_tomorrow");
-      const days = [
-        $i("general_threeLetterSunday"),
-        $i("general_threeLetterMonday"),
-        $i("general_threeLetterTuesday"),
-        $i("general_threeLetterWednesday"),
-        $i("general_threeLetterThursday"),
-        $i("general_threeLetterFriday"),
-        $i("general_threeLetterSaturday"),
-      ];
-      return (
-        days[date.getDay()] +
-        ". " +
-        date.getDate() +
-        "." +
-        (date.getMonth() + 1) +
-        "."
-      );
+      const days = [$i("general_threeLetterSunday"), $i("general_threeLetterMonday"), $i("general_threeLetterTuesday"), $i("general_threeLetterWednesday"), $i("general_threeLetterThursday"), $i("general_threeLetterFriday"), $i("general_threeLetterSaturday")];
+      return days[date.getDay()] + ". " + date.getDate() + "." + (date.getMonth() + 1) + ".";
     };
     const today = new Date();
     let options = [] as any[];
@@ -141,13 +107,7 @@ export const useCheckout = defineStore("checkout", () => {
   };
 
   const selectedDateTime = (removeTimezoneOffset = false) => {
-    const selected = new Date(
-      selectedRequestedCompletionDate.value.getFullYear(),
-      selectedRequestedCompletionDate.value.getMonth(),
-      selectedRequestedCompletionDate.value.getDate(),
-      selectedRequestedCompletionTimeHours(),
-      selectedRequestedCompletionTimeMinutes()
-    );
+    const selected = new Date(selectedRequestedCompletionDate.value.getFullYear(), selectedRequestedCompletionDate.value.getMonth(), selectedRequestedCompletionDate.value.getDate(), selectedRequestedCompletionTimeHours(), selectedRequestedCompletionTimeMinutes());
     if (!removeTimezoneOffset) return selected;
     const tzoffset = selected.getTimezoneOffset() * 60000;
     const localDateTime = new Date(selected.getTime() - tzoffset);
@@ -161,22 +121,9 @@ export const useCheckout = defineStore("checkout", () => {
   };
 
   const singleLineSelectedDateTime = computed(() => {
-    if (
-      srdRef.value === 0 ||
-      !selectedRequestedCompletionDate.value ||
-      !srtRef.value ||
-      requestedCompletionDateOptions.value.length <= srdRef.value ||
-      dateTimeIsUnderTenMinutesFromNow()
-    )
-      return $i("general_asap")?.toLowerCase();
+    if (srdRef.value === 0 || !selectedRequestedCompletionDate.value || !srtRef.value || requestedCompletionDateOptions.value.length <= srdRef.value || dateTimeIsUnderTenMinutesFromNow()) return $i("general_asap")?.toLowerCase();
 
-    return (
-      requestedCompletionDateOptions.value[srdRef.value]?.label?.toLowerCase() +
-      ", " +
-      ("0" + selectedRequestedCompletionTimeHours()).slice(-2) +
-      ":" +
-      ("0" + selectedRequestedCompletionTimeMinutes()).slice(-2)
-    );
+    return requestedCompletionDateOptions.value[srdRef.value]?.label?.toLowerCase() + ", " + ("0" + selectedRequestedCompletionTimeHours()).slice(-2) + ":" + ("0" + selectedRequestedCompletionTimeMinutes()).slice(-2);
   });
 
   const selectedRequestedCompletionTimeHours = () => {
@@ -188,12 +135,7 @@ export const useCheckout = defineStore("checkout", () => {
   };
 
   const requestedCompletionChange = () => {
-    tempRequestedCompletion.value =
-      srdRef.value === 0 ||
-      !selectedRequestedCompletionDate.value ||
-      !srtRef.value
-        ? ""
-        : selectedDateTime(true).toISOString().slice(0, -1);
+    tempRequestedCompletion.value = srdRef.value === 0 || !selectedRequestedCompletionDate.value || !srtRef.value ? "" : selectedDateTime(true).toISOString().slice(0, -1);
   };
 
   watch(
@@ -213,12 +155,8 @@ export const useCheckout = defineStore("checkout", () => {
   const rememberCardPrivate = ref(true);
 
   const paymentMethods = computed(() => paymentMethodsPrivate.value);
-  const selectedPaymentMethodId = computed(
-    () => selectedPaymentMethodIdPrivate.value
-  );
-  const isLoadingPaymentMethods = computed(
-    () => isLoadingPaymentMethodsPrivate.value
-  );
+  const selectedPaymentMethodId = computed(() => selectedPaymentMethodIdPrivate.value);
+  const isLoadingPaymentMethods = computed(() => isLoadingPaymentMethodsPrivate.value);
   const rememberCard = computed(() => rememberCardPrivate.value);
 
   const cardNumber = ref("");
@@ -233,27 +171,20 @@ export const useCheckout = defineStore("checkout", () => {
       expMonth: parseInt(expMonth.value),
       expYear: parseInt(expYear.value),
       cvc: cvc.value,
-      isValid:
-        overrideIsValidCardInfo.value ||
-        ((cardNumber.value || "").replace(/\s+/g, "").length === 16 &&
-          !isNaN(parseInt(expMonth.value)) &&
-          !isNaN(parseInt(expYear.value)) &&
-          (cvc.value || "").toString().length === 3),
+      isValid: overrideIsValidCardInfo.value || ((cardNumber.value || "").replace(/\s+/g, "").length === 16 && !isNaN(parseInt(expMonth.value)) && !isNaN(parseInt(expYear.value)) && (cvc.value || "").toString().length === 3),
     };
   };
 
   const setPaymentMethod = (item) => {
     selectedPaymentMethodIdPrivate.value = item === undefined ? "" : item.id;
-    selectedPaymentType.value =
-      item === undefined ? PaymentType.NotSet : item.paymentType;
+    selectedPaymentType.value = item === undefined ? PaymentType.NotSet : item.paymentType;
 
     _cart.setCartRootProperties({ paymentType: selectedPaymentType.value });
   };
 
   const getAvailablePaymentMethods = () => {
     const currentCart = _cart.getCurrentCart();
-    if (!currentCart.id || currentCart.deliveryType === DeliveryType.NotSet)
-      return Promise.resolve();
+    if (!currentCart.id || currentCart.deliveryType === DeliveryType.NotSet) return Promise.resolve();
     isLoadingPaymentMethodsPrivate.value = true;
     return paymentService()
       .GetPaymentMethods(currentCart.id)
@@ -261,11 +192,7 @@ export const useCheckout = defineStore("checkout", () => {
         paymentMethodsPrivate.value = Array.isArray(result) ? result : [];
 
         if (selectedPaymentMethodId.value) {
-          setPaymentMethod(
-            paymentMethods.value.find(
-              (x) => x.id === selectedPaymentMethodId.value
-            )
-          );
+          setPaymentMethod(paymentMethods.value.find((x) => x.id === selectedPaymentMethodId.value));
         } else if (paymentMethods.value.length >= 1) {
           setPaymentMethod(paymentMethods.value[0]);
         }
@@ -280,8 +207,7 @@ export const useCheckout = defineStore("checkout", () => {
     if (key === "expMonth") expMonth.value = value;
     if (key === "expYear") expYear.value = value;
     if (key === "cvc") cvc.value = value;
-    if (key === "overrideIsValidCardInfo")
-      overrideIsValidCardInfo.value = value;
+    if (key === "overrideIsValidCardInfo") overrideIsValidCardInfo.value = value;
   };
 
   const toggleRememberCard = () => {
@@ -304,14 +230,10 @@ export const useCheckout = defineStore("checkout", () => {
   const isProcessingPaymentPrivate = ref(false);
   const isProcessingLabelPrivate = ref("");
   const isProcessingLabel = computed(() => isProcessingLabelPrivate.value);
-  const isLoading = computed(
-    () => isLoadingPaymentMethods.value || isValidating.value || _cart.isLoading
-  );
+  const isLoading = computed(() => isLoadingPaymentMethods.value || isValidating.value || _cart.isLoading);
   const isValidating = ref(false);
 
-  const errorMessagePrivate = ref(
-    persistenceService.load<String>("errorMessagePrivate") || ""
-  );
+  const errorMessagePrivate = ref(persistenceService.load<String>("errorMessagePrivate") || "");
   persistenceService.watchAndStore(errorMessagePrivate, "errorMessagePrivate");
 
   const errorMessage = computed(() => errorMessagePrivate.value);
@@ -322,18 +244,14 @@ export const useCheckout = defineStore("checkout", () => {
     returnUrl: string;
   };
 
-  const createStripePaymentIntent = async (
-    model: StripeCreatePaymentIntent
-  ): Promise<CreatePaymentResult> => {
+  const createStripePaymentIntent = async (model: StripeCreatePaymentIntent): Promise<CreatePaymentResult> => {
     isProcessingPaymentPrivate.value = true;
     return new Promise((resolve, reject) => {
       stripeService()
         .CreatePaymentIntent(model)
         .then((result) => {
           if (!result || !result.paymentIntentId) {
-            errorMessagePrivate.value = $i(
-              "checkoutPage_couldNotProcessPayment"
-            );
+            errorMessagePrivate.value = $i("checkoutPage_couldNotProcessPayment");
             isProcessingPaymentPrivate.value = false;
             return reject();
           }
@@ -354,9 +272,7 @@ export const useCheckout = defineStore("checkout", () => {
             });
           } else {
             //NOT HANDLED
-            errorMessagePrivate.value = $i(
-              "checkoutPage_couldNotHandlePayment"
-            );
+            errorMessagePrivate.value = $i("checkoutPage_couldNotHandlePayment");
             isProcessingPaymentPrivate.value = false;
             reject();
           }
@@ -370,12 +286,7 @@ export const useCheckout = defineStore("checkout", () => {
     });
   };
 
-  const initiateVippsPayment = async (
-    cartId: string,
-    rewardPurchaseId: string,
-    amount: number,
-    isApp: boolean
-  ): Promise<CreatePaymentResult> => {
+  const initiateVippsPayment = async (cartId: string, rewardPurchaseId: string, amount: number, isApp: boolean): Promise<CreatePaymentResult> => {
     isProcessingPaymentPrivate.value = true;
     return new Promise((resolve, reject) => {
       vippsService()
@@ -387,7 +298,7 @@ export const useCheckout = defineStore("checkout", () => {
             returnUrl: "",
           });
         })
-        .catch((err) => {
+        .catch(() => {
           errorMessagePrivate.value = $i("checkoutPage_couldNotPayWithVipps");
           isProcessingPaymentPrivate.value = false;
           return reject();
@@ -412,21 +323,14 @@ export const useCheckout = defineStore("checkout", () => {
         return resolve(false);
       }
 
-      if (
-        currentCart.deliveryType === DeliveryType.InstantHomeDelivery &&
-        !_cart.deliveryAddressInCartIsValid()
-      ) {
-        errorMessagePrivate.value = $i(
-          "checkoutPage_deliveryAddressNotSetError"
-        );
+      if (currentCart.deliveryType === DeliveryType.InstantHomeDelivery && !_cart.deliveryAddressInCartIsValid()) {
+        errorMessagePrivate.value = $i("checkoutPage_deliveryAddressNotSetError");
         isValidating.value = false;
         return resolve(false);
       }
 
       if (!(selectedPaymentMethodId.value || getCardInfo().isValid)) {
-        errorMessagePrivate.value = $i(
-          "checkoutPage_paymentFailedCheckCardDetails"
-        );
+        errorMessagePrivate.value = $i("checkoutPage_paymentFailedCheckCardDetails");
         isValidating.value = false;
         return resolve(false);
       }
@@ -434,31 +338,19 @@ export const useCheckout = defineStore("checkout", () => {
       cartService()
         .Validate(_store.currentStore.id)
         .then((result: CartValidation) => {
-          if (result.priceTooLowError)
-            errorMessagePrivate.value =
-              $i("checkoutPage_minimumAmountError") +
-              priceLabel(result.minimumPrice, true);
+          if (result.priceTooLowError) errorMessagePrivate.value = $i("checkoutPage_minimumAmountError") + priceLabel(result.minimumPrice, true);
 
-          if (result.paymentTypeError)
-            errorMessagePrivate.value = $i(
-              "checkoutPage_paymentMethodUnavailable"
-            );
+          if (result.paymentTypeError) errorMessagePrivate.value = $i("checkoutPage_paymentMethodUnavailable");
 
-          if (result.priceDifferError)
-            errorMessagePrivate.value = $i("checkoutPage_priceDifferError");
+          if (result.priceDifferError) errorMessagePrivate.value = $i("checkoutPage_priceDifferError");
 
-          if (result.deliveryAddressError)
-            errorMessagePrivate.value = $i("checkoutPage_deliveryAddressError");
+          if (result.deliveryAddressError) errorMessagePrivate.value = $i("checkoutPage_deliveryAddressError");
 
-          if (result.deliveryMethodError)
-            errorMessagePrivate.value = $i("checkoutPage_deliveryMethodError");
+          if (result.deliveryMethodError) errorMessagePrivate.value = $i("checkoutPage_deliveryMethodError");
 
-          if (result.storeIsClosed)
-            errorMessagePrivate.value =
-              _store.currentStore.name + $i("checkoutPage_isClosedNow");
+          if (result.storeIsClosed) errorMessagePrivate.value = _store.currentStore.name + $i("checkoutPage_isClosedNow");
 
-          if (result.cartIsEmpty)
-            errorMessagePrivate.value = $i("checkoutPage_cartIsEmptyError");
+          if (result.cartIsEmpty) errorMessagePrivate.value = $i("checkoutPage_cartIsEmptyError");
 
           if (result.itemsOutOfStock.length > 0) {
             let itemNames = "";
@@ -467,17 +359,9 @@ export const useCheckout = defineStore("checkout", () => {
             } else if (result.itemsOutOfStock.length === 2) {
               itemNames = `'${result.itemsOutOfStock[0].name}' og '${result.itemsOutOfStock[1].name}'`;
             } else {
-              itemNames = `'${result.itemsOutOfStock[0].name}', '${
-                result.itemsOutOfStock[1].name
-              }' og ${result.itemsOutOfStock.length - 2} ${
-                result.itemsOutOfStock.length - 2 === 1
-                  ? "annen vare"
-                  : "andre varer"
-              }`;
+              itemNames = `'${result.itemsOutOfStock[0].name}', '${result.itemsOutOfStock[1].name}' og ${result.itemsOutOfStock.length - 2} ${result.itemsOutOfStock.length - 2 === 1 ? "annen vare" : "andre varer"}`;
             }
-            errorMessagePrivate.value = `Det er ikke nok av ${itemNames} på lager. Gå tilbake for å fjerne ${
-              result.itemsOutOfStock.length === 1 ? "den" : "de"
-            } fra handlevogna.`;
+            errorMessagePrivate.value = `Det er ikke nok av ${itemNames} på lager. Gå tilbake for å fjerne ${result.itemsOutOfStock.length === 1 ? "den" : "de"} fra handlevogna.`;
           }
 
           if (result.hasErrors && !errorMessagePrivate.value) {
