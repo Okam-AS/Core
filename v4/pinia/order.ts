@@ -45,6 +45,11 @@ export const useOrder = defineStore("order", () => {
   };
 
   const loadAll = async () => {
+    if (!_user.isLoggedIn()) {
+      ordersRef.value = [] as Order[];
+      return Promise.resolve();
+    }
+
     isLoadingPrivate.value = true;
     return orderService()
       .GetAll()
@@ -66,7 +71,11 @@ export const useOrder = defineStore("order", () => {
   };
 
   const loadOngoing = (storeId: number) => {
-    if (!_user.isLoggedIn() || ($availableStoreIds?.length && !$availableStoreIds.includes(storeId))) return Promise.resolve();
+    if (!_user.isLoggedIn()) {
+      ongoingPrivate.value = [] as Order[];
+      return Promise.resolve();
+    }
+    if ($availableStoreIds?.length && !$availableStoreIds.includes(storeId)) return Promise.resolve();
     isLoadingPrivate.value = true;
     return orderService()
       .GetOngoing(storeId)
