@@ -220,6 +220,7 @@ export default {
   rewardsCheckoutPage_selectAmount: "Select amount",
   rewardsConfirmationPage_success: "Payment successful",
   rewards_heading: "Rewards",
+  rewards_noCards: "Du har ingen medlemskap enda",
   rewards_recharge: "Recharge",
   rewards_becomeMember: "Become a member to earn bonus points and access exclusive offers",
   introModal_next: "Next",

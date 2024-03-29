@@ -219,6 +219,7 @@ export default {
   rewardsCheckoutPage_selectAmount: "Velg beløp",
   rewardsConfirmationPage_success: "Betaling vellykket",
   rewards_heading: "Bonuspoeng",
+  rewards_noCards: "Du har ingen medlemskap enda",
   rewards_recharge: "Fyll på",
   rewards_becomeMember: "Bli medlem for å tjene poeng og få eksklusive tilbud",
   introModal_next: "Neste",
