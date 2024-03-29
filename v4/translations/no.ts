@@ -217,6 +217,7 @@ export default {
   rewardsCheckoutPage_termsAcceptBold: "vilkårene",
   rewardsCheckoutPage_termsAcceptSuffix: " for bruk.",
   rewardsCheckoutPage_selectAmount: "Velg beløp",
+  rewardsConfirmationPage_success: "Betaling vellykket",
   rewards_heading: "Bonuspoeng",
   rewards_recharge: "Fyll på",
   rewards_becomeMember: "Bli medlem for å tjene poeng og få eksklusive tilbud",

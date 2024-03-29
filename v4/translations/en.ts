@@ -218,6 +218,7 @@ export default {
   rewardsCheckoutPage_termsAcceptBold: " terms and privacy policy",
   rewardsCheckoutPage_termsAcceptSuffix: " ",
   rewardsCheckoutPage_selectAmount: "Select amount",
+  rewardsConfirmationPage_success: "Payment successful",
   rewards_heading: "Rewards",
   rewards_recharge: "Recharge",
   rewards_becomeMember: "Become a member to earn bonus points and access exclusive offers",
