@@ -33,6 +33,9 @@ export class RequestService {
 
     return this._httpModule.httpClient(request).then((response) => {
       console.log("📲 " + response.statusCode + " " + path + "");
+      if (response.statusCode != 200) {
+        console.log("❌ " + response.content);
+      }
       return response;
     });
   }
@@ -41,6 +44,9 @@ export class RequestService {
     const request = this.DefaultRequest(path, payload, HttpMethod.PUT);
     return this._httpModule.httpClient(request).then((response) => {
       console.log("📲 " + response.statusCode + " " + path + "");
+      if (response.statusCode != 200) {
+        console.log("❌ " + response.content);
+      }
       return response;
     });
   }
