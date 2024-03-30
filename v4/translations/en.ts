@@ -224,6 +224,7 @@ export default {
   rewards_noCards: "Du har ingen medlemskap enda",
   rewards_recharge: "Recharge",
   rewards_becomeMember: "Become a member to earn bonus points and access exclusive offers",
+  rewardPurchasePage_heading: "Kvittering",
   introModal_next: "Next",
   introModal_close: "Close",
   introModal_title1: "Welcome to",

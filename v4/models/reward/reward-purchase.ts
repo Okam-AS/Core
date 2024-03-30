@@ -1,42 +1,43 @@
-import { RewardPurchaseStatus, PaymentType } from '../../enums';
-import { RewardTransaction, RewardProgram } from '../';
+import { RewardPurchaseStatus, PaymentType } from "../../enums";
+import { RewardTransaction, RewardProgram } from "../";
 
 export class RewardPurchase {
-    rewardPurchaseId?: string;
+  rewardPurchaseId?: string;
 
-    platform: string;
-    created: Date;
-    completed?: Date;
+  platform: string;
+  created: Date;
+  completed?: Date;
 
-    status: RewardPurchaseStatus;
-    paymentType: PaymentType;
+  status: RewardPurchaseStatus;
+  paymentType: PaymentType;
 
-    buyerUserId: string;
-    buyerPhoneNumber: string;
-    buyerMessageToReceiver: string;
+  buyerUserId: string;
+  buyerPhoneNumber: string;
+  buyerMessageToReceiver: string;
 
-    receiverUserId: string;
-    receiverPhoneNumber: string;
+  sendToAFriend: boolean;
+  receiverUserId: string;
+  receiverPhoneNumber: string;
 
-    storeId: number;
-    storeLegalName: string;
-    storeVAT: number;
-    storeFullAddress: string;
-    storeZipCode: string;
-    storeCity: string;
+  storeId: number;
+  storeLegalName: string;
+  storeVAT: number;
+  storeFullAddress: string;
+  storeZipCode: string;
+  storeCity: string;
 
-    smsCount: number;
-    smsFee: number;
-    applicationFeeAmount: number;
-    applicationFeePercent: number;
-    totalFeeAmount: number;
-    paymentIntentId: string;
-    vippsOrderId: string;
-    finalAmount: number;
+  smsCount: number;
+  smsFee: number;
+  applicationFeeAmount: number;
+  applicationFeePercent: number;
+  totalFeeAmount: number;
+  paymentIntentId: string;
+  vippsOrderId: string;
+  finalAmount: number;
 
-    rewardTransactionId?: string;
-    rewardTransaction?: RewardTransaction;
+  rewardTransactionId?: string;
+  rewardTransaction?: RewardTransaction;
 
-    rewardProgramId?: string;
-    rewardProgram?: RewardProgram;
+  rewardProgramId?: string;
+  rewardProgram?: RewardProgram;
 }
