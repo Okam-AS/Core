@@ -1,6 +1,6 @@
 export enum RewardPurchaseStatus {
-    Initiated = 0,
-    AwaitingReciver = 10,
-    Completed = 100,
-    Canceled = 110
+  Initiated = 0,
+  AwaitingReceiver = 10,
+  Completed = 100,
+  Canceled = 110,
 }

@@ -23,6 +23,7 @@ export default {
   checkoutPage_submit: "Fullfør bestilling",
   checkoutPage_orderDiscount: "Ordre rabatt",
   checkoutPage_delivery: "Levering",
+  checkoutPage_usedReward: "Brukt bonuspoeng",
   checkoutPage_tip: "Tips",
   checkoutPage_total: "Totalt",
   checkoutPage_pcs: " stk.",

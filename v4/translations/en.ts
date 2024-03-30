@@ -23,6 +23,7 @@ export default {
   checkoutPage_submit: "Complete order",
   checkoutPage_orderDiscount: "Order discount",
   checkoutPage_delivery: "Delivery",
+  checkoutPage_usedReward: "Brukt bonuspoeng",
   checkoutPage_tip: "Tips",
   checkoutPage_total: "Total",
   checkoutPage_pcs: " pcs.",
