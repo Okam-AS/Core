@@ -214,7 +214,7 @@ export default {
   menu_rewards: "Rewards",
   rewardsCheckoutPage_allowedStores: "The reward points can be used in the following stores:",
   rewardsCheckoutPage_purchase: "Purchase reward points",
-  rewardsCheckoutPage_continue: "Buy reward points",
+  rewardsCheckoutPage_pay: "Pay",
   rewardsCheckoutPage_termsAcceptPrefix: "By purchasing reward points you accept our",
   rewardsCheckoutPage_termsAcceptBold: " terms and privacy policy",
   rewardsCheckoutPage_termsAcceptSuffix: " ",
