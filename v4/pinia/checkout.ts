@@ -350,6 +350,8 @@ export const useCheckout = defineStore("checkout", () => {
 
           if (result.storeIsClosed) errorMessagePrivate.value = _store.currentStore.name + $i("checkoutPage_isClosedNow");
 
+          if (result.rewardBalanceTooLow) errorMessagePrivate.value = $i("checkoutPage_rewardBalanceTooLowError");
+
           if (result.cartIsEmpty) errorMessagePrivate.value = $i("checkoutPage_cartIsEmptyError");
 
           if (result.itemsOutOfStock.length > 0) {

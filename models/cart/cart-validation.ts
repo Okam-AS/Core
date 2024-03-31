@@ -1,4 +1,4 @@
-import { Product } from '../../models'
+import { Product } from "../../models";
 export class CartValidation {
   itemsOutOfStock: Array<Product>;
   deliveryAddressError: boolean;
@@ -9,6 +9,7 @@ export class CartValidation {
   cartIsEmpty: boolean;
   itemsInStock: boolean;
   paymentTypeError: boolean;
+  rewardBalanceTooLow: boolean;
   hasErrors: boolean;
   minimumPrice: number;
 }
