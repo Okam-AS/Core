@@ -226,6 +226,7 @@ export default {
   rewards_noCards: "Du har ingen medlemskap enda",
   rewards_recharge: "Fyll på",
   rewards_becomeMember: "Bli medlem for å tjene poeng og få eksklusive tilbud",
+  rewards_receivedGiftMissingAcceptance: "Du har blitt tilsendt {amount}. Bli medlem for å motta gavekortet.",
   rewardPurchasePage_heading: "Kvittering",
   introModal_next: "Neste",
   introModal_close: "Lukk",

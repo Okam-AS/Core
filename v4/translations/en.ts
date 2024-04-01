@@ -227,6 +227,7 @@ export default {
   rewards_noCards: "Du har ingen medlemskap enda",
   rewards_recharge: "Recharge",
   rewards_becomeMember: "Become a member to earn bonus points and access exclusive offers",
+  rewards_receivedGiftMissingAcceptance: "You have been sent {amount}. Become a member to receive the gift card.",
   rewardPurchasePage_heading: "Kvittering",
   introModal_next: "Next",
   introModal_close: "Close",
