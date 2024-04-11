@@ -1,14 +1,14 @@
-import { RewardPurchaseStatus, PaymentType } from "../../enums";
-import { RewardTransaction, RewardProgram } from "../";
+import { GiftcardStatus, PaymentType } from "../../enums";
+import { GiftcardTransaction } from "../";
 
-export class RewardPurchase {
-  rewardPurchaseId?: string;
+export class Giftcard {
+  giftcardId?: string;
 
   platform: string;
   created: Date;
   completed?: Date;
 
-  status: RewardPurchaseStatus;
+  status: GiftcardStatus;
   paymentType: PaymentType;
 
   buyerUserId: string;
@@ -35,9 +35,6 @@ export class RewardPurchase {
   vippsOrderId: string;
   finalAmount: number;
 
-  rewardTransactionId?: string;
-  rewardTransaction?: RewardTransaction;
-
-  rewardProgramId?: string;
-  rewardProgram?: RewardProgram;
+  giftcardTransactionId?: string;
+  giftcardTransaction?: GiftcardTransaction;
 }

@@ -1,4 +1,4 @@
-export enum RewardPurchaseStatus {
+export enum GiftcardStatus {
   Initiated = "Initiated",
   AwaitingReceiver = "AwaitingReceiver",
   Completed = "Completed",

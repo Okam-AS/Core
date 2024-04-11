@@ -51,7 +51,9 @@ export { RewardTransaction } from "../../v4/models/reward/reward-transaction";
 export { RewardJoinProgram } from "../../v4/models/reward/reward-join-program";
 export { RewardCard } from "../../v4/models/reward/reward-card";
 export { RewardStore } from "../../v4/models/reward/reward-store";
-export { RewardPurchase } from "../../v4/models/reward/reward-purchase";
-export { AvailableRewardPurchaseAmount } from "../../v4/models/reward/available-reward-purchase-amount";
-export { InitiatePurchaseReward } from "../../v4/models/reward/initiate-purchase-reward";
-export { RewardPurchaseValidationResponse } from "../../v4/models/reward/reward-purchase-validation-response";
+
+// Giftcard
+export { InitiateGiftcardPurchase } from "../../v4/models/giftcard/initiate-giftcard-purchase";
+export { Giftcard } from "../../v4/models/giftcard/giftcard";
+export { GiftcardTransaction } from "../../v4/models/giftcard/giftcard-transaction";
+export { GiftcardPurchaseValidationResponse } from "../../v4/models/giftcard/giftcard-purchase-validation-response";

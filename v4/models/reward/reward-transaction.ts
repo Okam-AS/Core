@@ -1,17 +1,11 @@
-import { RewardMembership, Order, RewardPurchase } from "..";
+import { Order } from "..";
 import { RewardTransactionType } from "../../enums";
 
 export class RewardTransaction {
   rewardTransactionId: string;
   created: Date;
   amount: number;
-  rewardTransactionType: RewardTransactionType;
-
-  rewardMembershipId: string;
-  rewardMembership: RewardMembership;
-
-  rewardPurchaseId: string;
-  rewardPurchase: RewardPurchase;
+  type: RewardTransactionType;
 
   orderId: number | null;
   order: Order | null;
