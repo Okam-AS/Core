@@ -286,11 +286,11 @@ export const useCheckout = defineStore("checkout", () => {
     });
   };
 
-  const initiateVippsPayment = async (cartId: string, rewardPurchaseId: string, amount: number, isApp: boolean): Promise<CreatePaymentResult> => {
+  const initiateVippsPayment = async (cartId: string, giftcardId: string, amount: number, isApp: boolean): Promise<CreatePaymentResult> => {
     isProcessingPaymentPrivate.value = true;
     return new Promise((resolve, reject) => {
       vippsService()
-        .Initiate(cartId, rewardPurchaseId, amount, isApp)
+        .Initiate(cartId, giftcardId, amount, isApp)
         .then((result) => {
           return resolve({
             isPaid: false,
