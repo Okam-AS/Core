@@ -2,7 +2,7 @@ import { ICoreInitializer } from "../interfaces";
 import { RequestService } from ".";
 import { Giftcard, InitiateGiftcardPurchase, GiftcardPurchaseValidationResponse } from "../models";
 
-export class RewardService {
+export class GiftcardService {
   private _requestService: RequestService;
 
   constructor(coreInitializer: ICoreInitializer) {

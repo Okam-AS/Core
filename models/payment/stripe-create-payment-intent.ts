@@ -1,6 +1,6 @@
 export class StripeCreatePaymentIntent {
   public cartId?: string;
-  public rewardPurchaseId?: string;
+  public giftcardId?: string;
 
   public amount: number;
   public paymentMethodId: string;

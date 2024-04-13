@@ -15,7 +15,6 @@ export class Giftcard {
   buyerPhoneNumber: string;
   buyerMessageToReceiver: string;
 
-  sendToAFriend: boolean;
   receiverUserId: string;
   receiverPhoneNumber: string;
 
