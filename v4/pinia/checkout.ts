@@ -23,6 +23,7 @@ export const useCheckout = defineStore("checkout", () => {
     if (paymentMethod?.paymentType === PaymentType.Vipps) return "Vipps";
     if (paymentMethod?.paymentType === PaymentType.PayInStore) return $i("checkoutPage_payInStore");
     if (paymentMethod?.paymentType === PaymentType.Reward) return $i("checkoutPage_reward");
+    if (paymentMethod?.paymentType === PaymentType.Giftcard) return $i("checkoutPage_giftcard");
     return "";
   };
 

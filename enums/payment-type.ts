@@ -1,7 +1,7 @@
 export enum PaymentType {
   NotSet = "NotSet",
   Reward = "Reward",
-  GiftCard = "GiftCard",
+  Giftcard = "Giftcard",
   PayInStore = "PayInStore",
   Stripe = "Stripe",
   Vipps = "Vipps",
