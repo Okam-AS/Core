@@ -74,6 +74,7 @@ export default {
   checkoutPage_deliveryMethodError: "The store does not deliver to your address at the moment",
   checkoutPage_isClosedNow: " is currently closed",
   checkoutPage_cartIsEmptyError: "The shopping cart is empty",
+  checkoutPage_giftcardBalanceTooLowError: "You do not have enough gift card balance to pay for the order",
   checkoutPage_rewardBalanceTooLowError: "You do not have enough bonus points to pay for the order",
   checkoutPage_couldNotProcessPayment: "Your payment could not be processed right now. Please try again a little later.",
   checkoutPage_couldNotHandlePayment: "Oops! Your payment could not be processed right now. Please try again a little later.",

@@ -353,6 +353,8 @@ export const useCheckout = defineStore("checkout", () => {
 
           if (result.rewardBalanceTooLow) errorMessagePrivate.value = $i("checkoutPage_rewardBalanceTooLowError");
 
+          if (result.giftcardBalanceTooLow) errorMessagePrivate.value = $i("checkoutPage_giftcardBalanceTooLowError");
+
           if (result.cartIsEmpty) errorMessagePrivate.value = $i("checkoutPage_cartIsEmptyError");
 
           if (result.itemsOutOfStock.length > 0) {

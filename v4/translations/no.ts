@@ -74,6 +74,7 @@ export default {
   checkoutPage_deliveryMethodError: "Butikken leverer ikke til din adresse for øyeblikket",
   checkoutPage_isClosedNow: " er stengt for øyeblikket",
   checkoutPage_cartIsEmptyError: "Handlevogna er tom",
+  checkoutPage_giftcardBalanceTooLowError: "Fyll på gavekortet for å betale med gavekort",
   checkoutPage_rewardBalanceTooLowError: "Du har for lite bonuspoeng til å betale med bonus",
   checkoutPage_couldNotProcessPayment: "Din betaling kunne ikke behandles akkurat nå. Vennligst prøv igjen litt senere.",
   checkoutPage_couldNotHandlePayment: "Oops! Din betaling kunne ikke behandles akkurat nå. Vennligst prøv igjen litt senere.",
