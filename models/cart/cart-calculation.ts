@@ -6,6 +6,7 @@ export class CartCalculation {
   tableAdditionalAmount: number;
   tipAmount: number;
   usedRewardAmount: number;
+  usedGiftcardAmount: number;
   rewardBalanceBeforeOrder: number;
   finalAmount: number;
 }
