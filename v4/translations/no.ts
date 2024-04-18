@@ -217,6 +217,7 @@ export default {
   menu_myOrders: "Bestillinger",
   menu_rewards: "Bonus",
   menu_giftcard: "Gavekort",
+  giftcardPage_heading: "Gavekortsaldo",
   giftcardCheckoutPage_purchase: "Kjøp gavekort",
   giftcardCheckoutPage_giftDescription: "Inviter en venn til appen ved å kjøpe dem et gavekort!",
   giftcardCheckoutPage_allowedStores: "Bonusen kan brukes på bestillinger gjennom appen på følgende steder:",

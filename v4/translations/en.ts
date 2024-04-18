@@ -218,6 +218,7 @@ export default {
   menu_myOrders: "Orders",
   menu_rewards: "Rewards",
   menu_giftcard: "Gift card",
+  giftcardPage_heading: "Gift card balance",
   giftcardCheckoutPage_purchase: "Purchase gift card",
   giftcardCheckoutPage_giftDescription: "Invite a friend to the app by purchasing a bonus card as a gift!",
   giftcardCheckoutPage_allowedStores: "The reward points can be used in the following stores:",
