@@ -44,6 +44,7 @@ export default {
   checkoutPage_paymentDiscountCodeToggle: "Do you have a discount code?",
   checkoutPage_paymentYourDiscountCode: "Discount code",
   checkoutPage_use: "Use",
+  checkoutPage_validDiscountCode: "Discount code applied",
   checkoutPage_invalidDiscountCode: "Invalid discount code",
   checkoutPage_tipHeading: "Tip",
   checkoutPage_tipCustomAmountToggle: "Give a custom amount",
