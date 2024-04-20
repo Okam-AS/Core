@@ -366,7 +366,7 @@ export const useCheckout = defineStore("checkout", () => {
             } else {
               itemNames = `'${result.itemsOutOfStock[0].name}', '${result.itemsOutOfStock[1].name}' og ${result.itemsOutOfStock.length - 2} ${result.itemsOutOfStock.length - 2 === 1 ? "annen vare" : "andre varer"}`;
             }
-            errorMessagePrivate.value = `Det er ikke nok av ${itemNames} på lager. Gå tilbake for å fjerne ${result.itemsOutOfStock.length === 1 ? "den" : "de"} fra handlevogna.`;
+            errorMessagePrivate.value = `Det er ikke nok av ${itemNames} på lager. Gå tilbake for å fjerne ${result.itemsOutOfStock.length === 1 ? "den" : "de"} fra handlekurven.`;
           }
 
           if (result.hasErrors && !errorMessagePrivate.value) {
