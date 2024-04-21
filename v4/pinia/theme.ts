@@ -78,7 +78,7 @@ export const useTheme = defineStore("theme", () => {
 
     //Jungel Pizza
     jungelPizzaGreen: "#0B8827",
-    lightJungelPizzaGreen: "#AFDBBD",
+    lightJungelPizzaGreen: "#CEEAD6",
     lightJungelPizzaBeige: "#E9CEB3",
 
     //Arv Lokalmat
