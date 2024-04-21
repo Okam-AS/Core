@@ -94,6 +94,8 @@ export default {
   loginModal_sendCode: "Send engangskode",
   loginModal_codeSentTo: "Engangskode sendt til",
   loginModal_confirmCode: "Bekreft kode",
+  rewardsPage_transactionsHeading: "Historikk",
+  rewardsPage_noTransactions: "Du har ingen opptjente bonuspoeng enda",
   rewardCardPage_deleteCard: "Slett kort og medlemskap",
   rewardCardPage_deleteCardConfirm: "Du er i ferd med å slette bonuspoengene dine og medlemskapet ditt. Handlingen kan ikke angres. Er du sikker på at du vil fortsette?",
   rewardCard_earned: "Opptjent",

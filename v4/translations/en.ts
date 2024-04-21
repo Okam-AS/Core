@@ -94,6 +94,8 @@ export default {
   loginModal_sendCode: "Send One-Time Code",
   loginModal_codeSentTo: "One-Time Code Sent To",
   loginModal_confirmCode: "Confirm Code",
+  rewardsPage_transactionsHeading: "Transactions",
+  rewardsPage_noTransactions: "You have no earned bonus points yet",
   rewardCardPage_deleteCard: "Delete card and membership",
   rewardCardPage_deleteCardConfirm: "You are about to delete your bonus points and membership. This action cannot be undone. Are you sure you want to continue?",
   rewardCard_earned: "Earned",
