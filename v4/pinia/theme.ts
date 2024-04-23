@@ -64,7 +64,8 @@ export const useTheme = defineStore("theme", () => {
   const colors = ref({
     white: "#FFFFFF",
     lightBlue: "#F2F4FB",
-    darkBlue: "#1E283D",
+    darkBlue: "#003058", // darkBlue: "#1E283D",
+
     red: "#CC0000",
     green: "#1BB776",
     lightYellow: "#FFF8E5",
