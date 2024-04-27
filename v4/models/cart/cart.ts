@@ -1,7 +1,7 @@
-import { DeliveryType, PaymentType } from '../../enums'
-import { DeliveryMethod, CartLineItem, CartCalculation } from '../../models'
+import { DeliveryType, PaymentType } from "../../enums";
+import { DeliveryMethod, CartLineItem, CartCalculation } from "../../models";
 export class Cart {
-  id: string = '';
+  id: string = "";
   items: Array<CartLineItem> = [];
   storeId: number = 0;
 
@@ -27,6 +27,8 @@ export class Cart {
   tipPercent: number = 0;
   tipAmount: number = 0;
   tableName?: string = undefined;
+
+  useReward: boolean = false;
 
   itemsCountInCategory;
 
