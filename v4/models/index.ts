@@ -57,3 +57,5 @@ export { InitiateGiftcardPurchase } from "../../v4/models/giftcard/initiate-gift
 export { Giftcard } from "../../v4/models/giftcard/giftcard";
 export { GiftcardTransaction } from "../../v4/models/giftcard/giftcard-transaction";
 export { GiftcardPurchaseValidationResponse } from "../../v4/models/giftcard/giftcard-purchase-validation-response";
+export { UsersGiftcardBalance } from "../../v4/models/giftcard/users-giftcard-balance";
+export { UsersGiftcardBalanceTransaction } from "../../v4/models/giftcard/users-giftcard-balance-transaction";

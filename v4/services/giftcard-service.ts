@@ -1,6 +1,6 @@
 import { ICoreInitializer } from "../interfaces";
 import { RequestService } from ".";
-import { Giftcard, InitiateGiftcardPurchase, GiftcardPurchaseValidationResponse } from "../models";
+import { Giftcard, UsersGiftcardBalance, InitiateGiftcardPurchase, GiftcardPurchaseValidationResponse } from "../models";
 
 export class GiftcardService {
   private _requestService: RequestService;
@@ -16,6 +16,15 @@ export class GiftcardService {
       throw new Error("Failed to validate gift card");
     }
 
+    return parsedResponse;
+  }
+
+  public async MyBalance(): Promise<UsersGiftcardBalance> {
+    const response = await this._requestService.GetRequest("/giftcard/mybalance");
+    const parsedResponse = this._requestService.TryParseResponse(response);
+    if (parsedResponse === undefined) {
+      throw new Error("Failed to get gift card balance");
+    }
     return parsedResponse;
   }
 
