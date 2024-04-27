@@ -22,7 +22,6 @@ export const useCheckout = defineStore("checkout", () => {
     if (paymentMethod?.paymentType === PaymentType.Stripe) return "xxxx xxxx xxxx " + paymentMethod.last4 + "   " + paymentMethod.expMonth + "/" + paymentMethod.expYear;
     if (paymentMethod?.paymentType === PaymentType.Vipps) return "Vipps";
     if (paymentMethod?.paymentType === PaymentType.PayInStore) return $i("checkoutPage_payInStore");
-    if (paymentMethod?.paymentType === PaymentType.Reward) return $i("checkoutPage_reward");
     if (paymentMethod?.paymentType === PaymentType.Giftcard) return $i("checkoutPage_giftcard");
     return "";
   };
@@ -350,8 +349,6 @@ export const useCheckout = defineStore("checkout", () => {
           if (result.deliveryMethodError) errorMessagePrivate.value = $i("checkoutPage_deliveryMethodError");
 
           if (result.storeIsClosed) errorMessagePrivate.value = _store.currentStore.name + $i("checkoutPage_isClosedNow");
-
-          if (result.rewardBalanceTooLow) errorMessagePrivate.value = $i("checkoutPage_rewardBalanceTooLowError");
 
           if (result.giftcardBalanceTooLow) errorMessagePrivate.value = $i("checkoutPage_giftcardBalanceTooLowError");
 

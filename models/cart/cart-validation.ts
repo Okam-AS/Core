@@ -9,7 +9,6 @@ export class CartValidation {
   cartIsEmpty: boolean;
   itemsInStock: boolean;
   paymentTypeError: boolean;
-  rewardBalanceTooLow: boolean;
   giftcardBalanceTooLow: boolean;
   hasErrors: boolean;
   minimumPrice: number;

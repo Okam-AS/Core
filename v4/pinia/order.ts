@@ -103,7 +103,6 @@ export const useOrder = defineStore("order", () => {
     if (paymentType === PaymentType.Stripe) return $i("paymentType_stripe");
     if (paymentType === PaymentType.Vipps) return $i("paymentType_vipps");
     if (paymentType === PaymentType.PayInStore) return $i("paymentType_payInStore");
-    if (paymentType === PaymentType.Reward) return $i("paymentType_reward");
     if (paymentType === PaymentType.Giftcard) return $i("paymentType_giftcard");
     return $i("paymentType_unknown");
   };
