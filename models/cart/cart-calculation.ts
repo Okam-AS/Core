@@ -8,5 +8,6 @@ export class CartCalculation {
   usedRewardAmount: number;
   usedGiftcardAmount: number;
   rewardBalanceBeforeOrder: number;
+  giftcardBalanceBeforeOrder: number;
   finalAmount: number;
 }
