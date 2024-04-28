@@ -253,6 +253,7 @@ export default {
   giftcardCheckoutPage_invalidRecipientPhone: "Invalid recipient phone number",
   giftcardCheckoutPage_invalidForm: "Could not complete purchase. Review the information and try again.",
   giftcardCheckoutPage_somethingWentWrong: "Could not complete purchase. Try again later.",
+  checkoutPage_rewardHeading: "Reward points",
   giftcardConfirmationPage_success: "Payment successful",
   rewardMembershipPreview_heading: "Collect Reward Points",
   rewards_heading: "Rewards",

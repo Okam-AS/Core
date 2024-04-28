@@ -252,6 +252,7 @@ export default {
   giftcardCheckoutPage_invalidRecipientPhone: "Telefonnummeret er ikke gyldig",
   giftcardCheckoutPage_invalidForm: "Kunne ikke gjennomføre kjøpet. Se gjennom informasjonen og prøv igjen.",
   giftcardCheckoutPage_somethingWentWrong: "Kunne ikke fullføre kjøpet. Prøv igjen senere.",
+  checkoutPage_rewardHeading: "Bonuspoeng",
   giftcardConfirmationPage_success: "Betaling vellykket",
   rewardMembershipPreview_heading: "Samle bonuspoeng",
   rewards_heading: "Bonus",
