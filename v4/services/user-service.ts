@@ -21,6 +21,14 @@ export class UserService {
     return parsedResponse;
   }
 
+  public async GetRewardCards(): Promise<RewardCard> {
+    if (!this._bearerToken) return null;
+    const response = await this._requestService.GetRequest("/user/rewardcards/");
+    const parsedResponse = this._requestService.TryParseResponse(response);
+    if (parsedResponse === undefined) return null;
+    return parsedResponse;
+  }
+
   public async UpdateAddress(fullAddress: string, zipCode: string, city: string): Promise<boolean> {
     if (!this._bearerToken) return false;
     await this._requestService.PostRequest("/user/address/", { fullAddress, zipCode, city });
