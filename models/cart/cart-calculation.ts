@@ -5,9 +5,13 @@ export class CartCalculation {
   orderDiscountAmount: number;
   tableAdditionalAmount: number;
   tipAmount: number;
+
   usedRewardAmount: number;
-  usedGiftcardAmount: number;
+  earnableRewardAmount: number;
   rewardBalanceBeforeOrder: number;
+
+  usedGiftcardAmount: number;
   giftcardBalanceBeforeOrder: number;
+
   finalAmount: number;
 }
