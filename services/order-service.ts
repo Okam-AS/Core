@@ -13,6 +13,14 @@ export class OrderService {
     this._vuexModule = vuexModule
   }
 
+  public async CompleteAll(storeId: number): Promise<Array<Order>> {
+    const response = await this._requestService.PostRequest('/orders/complete-all/' + storeId)
+    const parsedResponse = this._requestService.TryParseResponse(response)
+    if (parsedResponse === undefined) { throw new Error('Failed to complete all orders') }
+
+    return parsedResponse
+  }
+
   public async GetAll(): Promise<Array<Order>> {
     const response = await this._requestService.GetRequest('/orders')
     const parsedResponse = this._requestService.TryParseResponse(response)
