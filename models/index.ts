@@ -24,6 +24,7 @@ export { DiscountProducts } from './discount/discount-products'
 export { RewardProgram } from './reward/reward-program'
 export { RewardMembership } from './reward/reward-membership'
 export { RewardTransaction } from './reward/reward-transaction'
+export { RewardCachbackRange } from './reward/reward-cachback-range'
 
 // User
 export { User } from './user/user'

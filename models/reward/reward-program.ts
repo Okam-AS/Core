@@ -1,10 +1,10 @@
-import { Store, RewardMembership } from '..';
+import { Store, RewardMembership, RewardCachbackRange } from '..';
 
 export class RewardProgram {
     rewardProgramId: string;
     name: string;
     cashbackEnabled: boolean;
-    cashbackPercent: number;
+    cashbackRanges: Array<RewardCachbackRange>;
     stores: Array<Store>;
-    rewardMemberships: Array<RewardMembership>;
+    memberships: Array<RewardMembership>;
 }
