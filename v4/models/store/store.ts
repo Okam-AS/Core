@@ -1,37 +1,38 @@
-import { Address, Category, DeliveryMethod, OpeningHour, User, StorePayment, StoreTip, RewardProgram } from '../../models'
+import { Address, Category, DeliveryMethod, OpeningHour, User, StorePayment, StoreTip, RewardProgram } from "../../models";
 export class Store {
-    id: number;
-    name: string;
-    legalName: string;
-    phoneNumber: string;
-    logoUrl: string;
-    address: Address;
-    homeDeliveryFromAddress: Address;
-    categories: Array<Category>;
-    allowOrdersAfterOpeningHours: boolean;
-    openingHours: Array<OpeningHour>;
-    isOpenNow: boolean;
-    vat: number;
-    admins: Array<User>;
-    editors: Array<User>;
-    homeDeliveryMethods: Array<DeliveryMethod>;
-    approved: boolean;
-    selfCheckout: boolean;
-    registered: Date;
-    bankAccountId: string;
-    vippsMsn: string;
-    minimumOrderPriceForHomeDelivery: number;
+  id: number;
+  name: string;
+  legalName: string;
+  phoneNumber: string;
+  logoUrl: string;
+  address: Address;
+  homeDeliveryFromAddress: Address;
+  categories: Array<Category>;
+  allowOrdersAfterOpeningHours: boolean;
+  openingHours: Array<OpeningHour>;
+  isOpenNow: boolean;
+  vat: number;
+  admins: Array<User>;
+  editors: Array<User>;
+  homeDeliveryMethods: Array<DeliveryMethod>;
+  approved: boolean;
+  selfCheckout: boolean;
+  registered: Date;
+  bankAccountId: string;
+  vippsMsn: string;
+  minimumOrderPriceForHomeDelivery: number;
 
-    rewardProgram: RewardProgram;
+  rewardProgramId: string;
+  rewardProgram: RewardProgram;
 
-    warningMessage: string;
-    statusMessage: string;
+  warningMessage: string;
+  statusMessage: string;
 
-    selfPickUp: boolean;
-    tableDeliveryEnabled: boolean;
-    homeDeliveryEnabled: boolean;
+  selfPickUp: boolean;
+  tableDeliveryEnabled: boolean;
+  homeDeliveryEnabled: boolean;
 
-    payment: StorePayment;
+  payment: StorePayment;
 
-    tip: StoreTip
+  tip: StoreTip;
 }

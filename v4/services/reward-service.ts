@@ -1,6 +1,6 @@
 import { ICoreInitializer } from "../interfaces";
 import { RequestService } from ".";
-import { RewardJoinProgram } from "../models";
+import { RewardJoinProgram, RewardProgram } from "../models";
 
 export class RewardService {
   private _requestService: RequestService;
@@ -14,6 +14,16 @@ export class RewardService {
     const parsedResponse = this._requestService.TryParseResponse(response);
     if (parsedResponse === undefined) {
       throw new Error("Failed to get programs");
+    }
+
+    return parsedResponse;
+  }
+
+  public async GetDetailed(rewardProgramId: string): Promise<RewardProgram> {
+    const response = await this._requestService.GetRequest("/rewards/" + rewardProgramId + "/details");
+    const parsedResponse = this._requestService.TryParseResponse(response);
+    if (parsedResponse === undefined) {
+      throw new Error("Failed to get program");
     }
 
     return parsedResponse;
