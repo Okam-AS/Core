@@ -51,6 +51,7 @@ export { RewardTransaction } from "../../v4/models/reward/reward-transaction";
 export { RewardJoinProgram } from "../../v4/models/reward/reward-join-program";
 export { RewardCard } from "../../v4/models/reward/reward-card";
 export { RewardStore } from "../../v4/models/reward/reward-store";
+export { RewardCachbackRange } from "../../v4/models/reward/reward-cachback-range";
 
 // Giftcard
 export { InitiateGiftcardPurchase } from "../../v4/models/giftcard/initiate-giftcard-purchase";
