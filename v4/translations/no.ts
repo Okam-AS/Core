@@ -165,6 +165,7 @@ export default {
   orderPage_login: "Bekreft telefonnummer",
   orderPage_goBackToSelectOrder: "Gå tilbake for å velge bestilling",
   orderListPage_heading: "Dine bestillinger",
+  orderListPage_giftcardPurchase: "Kjøp av gavekort",
   orderListPage_noOrders: "Du har ikke lagt inn noen bestillinger enda",
   orderListPage_turnOnNotifcationMessage: "Få beskjed når bestillingen din er klar",
   confirmationPage_thankYou: "Takk for at du støtter lokal handel",

@@ -166,6 +166,7 @@ export default {
   orderPage_login: "Confirm phone number",
   orderPage_goBackToSelectOrder: "Go back to select order",
   orderListPage_heading: "Your orders",
+  orderListPage_giftcardPurchase: "Gift card purchase",
   orderListPage_noOrders: "You haven't placed any orders yet",
   orderListPage_turnOnNotifcationMessage: "Get updates on your orders",
   confirmationPage_thankYou: "Thank you for your order!",
