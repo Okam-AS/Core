@@ -37,6 +37,15 @@ export class GiftcardService {
     return parsedResponse;
   }
 
+  public async GetPurchases(): Promise<Array<Giftcard>> {
+    const response = await this._requestService.GetRequest("/giftcard/purchases");
+    const parsedResponse = this._requestService.TryParseResponse(response);
+    if (parsedResponse === undefined) {
+      throw new Error("Failed to get gift cards");
+    }
+    return parsedResponse;
+  }
+
   public async InitiatePurchase(model: InitiateGiftcardPurchase): Promise<GiftcardPurchaseValidationResponse> {
     const response = await this._requestService.PostRequest("/giftcard/initiate-purchase", model);
     const parsedResponse = this._requestService.TryParseResponse(response);
