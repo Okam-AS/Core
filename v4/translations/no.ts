@@ -116,7 +116,7 @@ export default {
   rewardMembershipModal_bonusDescription: "Når du handler for {purchaseAmount} kroner, får du altså {cashbackAmount} kroner i bonuspoeng.",
   rewardMembershipModal_bonusDescription2: "Beløpet du har handlet for de siste {days} dagene bestemmer hvor mye du får tilbake.",
   rewardMembershipModal_acceptNotificationsError: "Du må akseptere vilkårene for å bli medlem",
-  paymentType_giftcard: "Betalt med gacekort",
+  paymentType_giftcard: "Betalt med gavekort",
   paymentType_payInStore: "Betal på stedet",
   paymentType_stripe: "Betalt med kort",
   paymentType_vipps: "Betalt med Vipps",
