@@ -5,4 +5,5 @@ export class RewardCard {
   cashbackPercent: number;
   rewardMembership: RewardMembership;
   balance: number;
+  spentAmount: number;
 }
