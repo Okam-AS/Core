@@ -1,5 +1,6 @@
 export enum OrderPaymentTypeFilter {
     PayInStore = 'PayInStore',
     Stripe = 'Stripe',
-    Vipps = 'Vipps'
+    Vipps = 'Vipps',
+    Giftcard = 'Giftcard',
 }
