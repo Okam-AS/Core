@@ -78,3 +78,6 @@ export { Culture } from './culture/culture'
 export { VippsInitiateResponse } from './payment/vipps-initiate-response'
 export { VippsVerifyResponse } from './payment/vipps-verify-response'
 export { PaymentMethod } from './payment/payment-method'
+
+//Payout
+export { Payout } from './payout/payout'
