@@ -1,14 +1,15 @@
 export class Payout {
-    OkamPayoutId: number;
-    Requested: Date | null;
-    Payed: Date | null;
-    PayoutAmount: number;
-    NumberOfOrders: number;
-    InvoiceFee: number;
-    Commission: number;
-    PreviousPayout: Date | null;
-    StoreId: number;
-    Store: any;
-    InvoiceId: number | null;
-    Invoice: any;
+    okamPayoutId: number;
+    requested: Date | null;
+    payed: Date | null;
+    payoutAmount: number;
+    numberOfOrders: number;
+    invoiceFee: number;
+    commission: number;
+    previousPayout: Date | null;
+    storeId: number;
+    store: any;
+    invoiceId: number | null;
+    invoice: any;
+    storeBankAccountNumber: string;
 }
