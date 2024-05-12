@@ -38,4 +38,14 @@ export class RewardService {
 
     return parsedResponse;
   }
+
+  public async CancelMembership(rewardProgramId: string): Promise<Boolean> {
+    const response = await this._requestService.DeleteRequest("/rewards/" + rewardProgramId);
+    const parsedResponse = this._requestService.TryParseResponse(response);
+    if (parsedResponse === undefined) {
+      throw new Error("Failed to cancel membership");
+    }
+
+    return parsedResponse;
+  }
 }
