@@ -31,6 +31,11 @@ export class PayoutService {
     return this._requestService.TryParseResponse(response)
   }
 
+  public async CancelRequestPayout(storeId: number) {
+    const response = await this._requestService.DeleteRequest('/payouts/request/' + storeId)
+    return this._requestService.TryParseResponse(response)
+  }
+
   public async CompletePayout(storeId: number) {
     const response = await this._requestService.PostRequest('/payouts/complete/' + storeId)
     return this._requestService.TryParseResponse(response)
