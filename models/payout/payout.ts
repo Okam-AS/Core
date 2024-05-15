@@ -9,6 +9,7 @@ export class Payout {
     previousPayout: Date | null;
     storeId: number;
     store: any;
+    invoiceSent: boolean;
     invoiceId: number | null;
     invoice: any;
     storeBankAccountNumber: string;
