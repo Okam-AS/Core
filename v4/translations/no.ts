@@ -260,6 +260,7 @@ export default {
   giftcardReceiptPage_heading: "Kvittering",
   giftcardReceiptPage_from: "Fra: ",
   giftcardReceiptPage_to: "Til: ",
+  giftcardReceiptPage_greeting: "Hilsen",
   checkoutPage_rewardHeading: "Bonuspoeng",
   giftcardConfirmationPage_success: "Betaling vellykket",
   rewardMembershipPreview_heading: "Samle bonuspoeng",
