@@ -116,8 +116,6 @@ export default {
   rewardMembershipModal_desciption: "Activate to earn bonus points every time you order and access exclusive offers. It's completely free!",
   rewardMembershipModal_iAcceptNotificationsFromProgram: "I accept to receive special offers and news from {name}",
   rewardMembershipModal_bonusTitle: "Bonus: {cashbackPercent}",
-  rewardMembershipModal_bonusDescription: "When you shop for {purchaseAmount} kroner, you will receive {cashbackAmount} kroner in bonus points.",
-  rewardMembershipModal_bonusDescription2: "The amount you have ordered for the last {days} days determines how much you get back.",
   rewardMembershipModal_acceptNotificationsError: "You must accept the terms to become a member",
   paymentType_giftcard: "Payed with giftcard",
   paymentType_payInStore: "Pay in store",
