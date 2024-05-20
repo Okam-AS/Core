@@ -9,16 +9,8 @@ export class VippsService {
     this._requestService = new RequestService(coreInitializer);
   }
 
-  public async Initiate(
-    cartId: string,
-    rewardPurchaseId: string,
-    amount: number,
-    isApp: boolean
-  ): Promise<VippsInitiateResponse> {
-    const response = await this._requestService.PostRequest(
-      "/vipps/initiate/",
-      { cartId, rewardPurchaseId, amount, isApp }
-    );
+  public async Initiate(cartId: string, giftcardId: string, amount: number, isApp: boolean): Promise<VippsInitiateResponse> {
+    const response = await this._requestService.PostRequest("/vipps/initiate/", { cartId, giftcardId, amount, isApp });
     const parsedResponse = this._requestService.TryParseResponse(response);
     if (parsedResponse === undefined) {
       throw new Error("Kunne ikke betale med Vipps");
@@ -27,9 +19,7 @@ export class VippsService {
   }
 
   public async Verify(orderId: string): Promise<VippsVerifyResponse> {
-    const response = await this._requestService.GetRequest(
-      "/vipps/verify/" + orderId
-    );
+    const response = await this._requestService.GetRequest("/vipps/verify/" + orderId);
     const parsedResponse = this._requestService.TryParseResponse(response);
     if (parsedResponse === undefined) {
       throw new Error("Kunne ikke verifisere Vipps-betaling");
