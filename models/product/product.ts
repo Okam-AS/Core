@@ -24,6 +24,9 @@ export class Product {
     tax: number;
     otherInformation: string;
 
+    manualRewardAmountEnabled: boolean;
+    manualRewardAmount: number;
+
     hasDiscount: boolean;
     discountLabel: string;
     discountAmount: number;
