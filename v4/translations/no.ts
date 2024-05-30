@@ -112,6 +112,7 @@ export default {
   rewardBar_description2: "Bonuspoengene du tjener kan du når som helst bruke på bestillinger gjennom appen",
   rewardBar_description3: "På neste bestilling får du {currentDiscount}% tilbake. Handler du for {amount} til, får du {nextDiscount}% tilbake på neste bestilling.",
   rewardBar_lastDaysYouHaveUsed: "De siste {days} dagene har du brukt ",
+  rewardBar_discount: "Du får {discount}% tilbake på neste bestilling",
   rewardMembershipModal_heading: "{name} medlemskap",
   rewardMembershipModal_desciption: "Aktivér for å tjene bonuspoeng hver gang du handler hos oss og få tilgang til eksklusive tilbud. Det er helt gratis!",
   rewardMembershipModal_iAcceptNotificationsFromProgram: "Jeg aksepterer å motta spesielle tilbud og nyheter fra {name}",
@@ -261,7 +262,6 @@ export default {
   giftcardReceiptPage_greeting: "Hilsen",
   checkoutPage_rewardHeading: "Bonuspoeng",
   giftcardConfirmationPage_success: "Betaling vellykket",
-  rewardMembershipPreview_heading: "Samle bonuspoeng",
   rewards_heading: "Bonus",
   rewards_noCards: "Du har ingen medlemskap enda",
   rewards_becomeMember: "Bli medlem",
@@ -270,6 +270,7 @@ export default {
   rewards_youWillEarn: "Du vil tjene {amount} på denne bestillingen",
   rewards_useReward: "Bruk bonuspoeng",
   rewards_used: "Brukt bonuspoeng",
+
   giftcardPurchasePage_heading: "Kvittering",
   introModal_next: "Neste",
   introModal_close: "Lukk",
