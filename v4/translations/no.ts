@@ -95,7 +95,7 @@ export default {
   giftcardItemRow_from: "Fra",
   giftcardPage_heading: "Gavekortsaldo",
   giftcardPage_buyGiftcard: "Send et gavekort til en venn",
-  giftcardPage_buyGiftcardDescription: "Vil du glede noen du er glad i? Med gavekort fra Okam kan de bestille enkelt fra alle resturanter og butikker i appen. Vi sender en sms til mottakeren dersom de ikke har appen fra før.",
+  giftcardPage_buyGiftcardDescription: "Vil du glede noen du er glad i? Med gavekort fra Okam kan de enkelt bestille fra resturanter og butikker i appen. Vi sender en sms til mottakeren dersom de ikke har appen fra før.",
   giftcardPage_transactionHeading: "Historikk",
   giftcardPage_recivedGiftcard: "Mottatt gavekort",
   giftcardPage_giveGiftcard: "Gi et gavekort",

@@ -95,7 +95,7 @@ export default {
   giftcardItemRow_from: "From",
   giftcardPage_heading: "Gift card balance",
   giftcardPage_buyGiftcard: "Send a gift card to a friend",
-  giftcardPage_buyGiftcardDescription: "Want to make someone you care about happy? With gift cards from Okam, they can easily order from all restaurants and stores in the app. We send an SMS to the recipient if they do not have the app already.",
+  giftcardPage_buyGiftcardDescription: "Want to make someone you care about happy? With gift cards from Okam, they can easily order from restaurants and stores in the app. We send an SMS to the recipient if they do not have the app already.",
   giftcardPage_transactionHeading: "Transactions",
   giftcardPage_recivedGiftcard: "Received gift card",
   giftcardPage_giveGiftcard: "Give a gift card",
