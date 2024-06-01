@@ -44,6 +44,8 @@ export { VippsInitiateResponse, VippsVerifyResponse, PaymentMethod, StripeCreate
 // Log
 export { EventLog } from "../../v4/models/log/event-log";
 
+export { Config } from "../../v4/models/config/config";
+
 // Reward
 export { RewardProgram } from "../../v4/models/reward/reward-program";
 export { RewardMembership } from "../../v4/models/reward/reward-membership";

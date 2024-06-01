@@ -1,6 +1,6 @@
 import { defineStore } from "pinia";
 import { ICoreInitializer } from "../interfaces";
-import { UserService, StoreService, RewardService, GiftcardService, CartService, CategoryService, PersistenceService, PaymentService, DiscountService, OrderService, StripeService, VippsService, NotificationService, LogService, ProductService } from "../services";
+import { ConfigService, UserService, StoreService, RewardService, GiftcardService, CartService, CategoryService, PersistenceService, PaymentService, DiscountService, OrderService, StripeService, VippsService, NotificationService, LogService, ProductService } from "../services";
 import { ref, computed } from "vue";
 
 export const useServices = defineStore("services", () => {
@@ -39,6 +39,7 @@ export const useServices = defineStore("services", () => {
     return coreInitializer.value;
   };
 
+  const configService = () => new ConfigService(coreInitializer.value);
   const userService = () => new UserService(coreInitializer.value);
   const storeService = () => new StoreService(coreInitializer.value);
   const rewardService = () => new RewardService(coreInitializer.value);
@@ -64,6 +65,7 @@ export const useServices = defineStore("services", () => {
     storeService,
     rewardService,
     giftcardService,
+    configService,
     cartService,
     categoryService,
     paymentService,
