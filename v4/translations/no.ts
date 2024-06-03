@@ -233,6 +233,7 @@ export default {
   general_processingPayment: "Prosesserer betaling",
   general_noWifi: "Dårlig internettforbindelse",
   general_vippsNotInstalled: "Vipps er ikke installert på denne enheten",
+  general_addedToRewardCard: "lagt til i bonuskortet",
   menu_findStore: "Finn sted",
   menu_selectLocation: "Velg sted",
   menu_myOrders: "Bestillinger",
