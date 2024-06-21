@@ -1,6 +1,6 @@
 import { defineStore } from "pinia";
 import { Cart, CartLineItem, Product, RecommendProductsRequest } from "../models";
-import { useServices, useStore, useUser } from "./";
+import { useServices, useStore, useUser, useTranslation } from "./";
 import { ref, computed, toRaw } from "vue";
 import { priceLabel } from "../helpers/tools";
 import { debounce } from "../helpers/ts-debounce";
@@ -9,6 +9,7 @@ export const useCart = defineStore("cart", () => {
   const { cartService, persistenceService } = useServices();
   const _store = useStore();
   const _user = useUser();
+  const { $i } = useTranslation();
 
   const isLoading = ref(false);
   const isLoadingRecommendations = ref(false);
@@ -256,7 +257,7 @@ export const useCart = defineStore("cart", () => {
         let optionSelected = variant.options.some((option) => option.selected);
         if (!optionSelected) {
           variant.hasError = true;
-          unsavedLineItem.value.product.errorMessage = "Velg '" + variant.name + "' for å legge vare i handlekurv";
+          unsavedLineItem.value.product.errorMessage = $i("general_selectVariation").replace("{name}", variant.name);
           hasErrors = true;
         }
       }
