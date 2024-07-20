@@ -169,6 +169,7 @@ export default {
   orderPage_loginDescription: "You need to confirm your phone number view orders",
   orderPage_login: "Confirm phone number",
   orderPage_goBackToSelectOrder: "Go back to select order",
+  orderPage_downloadReceipt: "Download receipt",
   orderListPage_heading: "Your orders",
   orderListPage_giftcardPurchase: "Gift card purchase",
   orderListPage_noOrders: "You haven't placed any orders yet",

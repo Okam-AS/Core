@@ -168,6 +168,7 @@ export default {
   orderPage_loginDescription: "Du må bekrefte telefonnummer for å kunne se dine bestillinger",
   orderPage_login: "Bekreft telefonnummer",
   orderPage_goBackToSelectOrder: "Gå tilbake for å velge bestilling",
+  orderPage_downloadReceipt: "Last ned kvittering",
   orderListPage_heading: "Dine bestillinger",
   orderListPage_giftcardPurchase: "Kjøp av gavekort",
   orderListPage_noOrders: "Du har ikke lagt inn noen bestillinger enda",
