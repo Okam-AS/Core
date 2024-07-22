@@ -126,6 +126,10 @@ export const useOrder = defineStore("order", () => {
     return [];
   };
 
+  const sendReceiptByMail = (orderCode: string) => {
+    return orderService().SendReceiptByMail(orderCode);
+  };
+
   return {
     isLoading,
     orders,
@@ -137,5 +141,6 @@ export const useOrder = defineStore("order", () => {
     progressFlow,
     loadAll,
     loadOngoing,
+    sendReceiptByMail,
   };
 });
