@@ -13,6 +13,22 @@ export class UserService {
     this._notificationService = new NotificationService(coreInitializer);
   }
 
+  public async ConfirmEmail(code: string): Promise<boolean> {
+    if (!this._bearerToken) return false;
+    const response = await this._requestService.PostRequest("/user/confirm-email/", { code });
+    const parsedResponse = this._requestService.TryParseResponse(response);
+    if (parsedResponse === undefined) return false;
+    return parsedResponse;
+  }
+
+  public async SendEmailConfirmationCode(email: string): Promise<boolean> {
+    if (!this._bearerToken) return false;
+    const response = await this._requestService.PostRequest("/user/send-email-confirmation-code/", { email });
+    const parsedResponse = this._requestService.TryParseResponse(response);
+    if (parsedResponse === undefined) return false;
+    return parsedResponse;
+  }
+
   public async GetRewardCard(storeId?: number): Promise<RewardCard> {
     if (!this._bearerToken) return null;
     const response = await this._requestService.GetRequest("/user/rewardcard/" + storeId);
@@ -63,6 +79,16 @@ export class UserService {
 
   public async Login(phoneNumber: string, token: string): Promise<User> {
     const response = await this._requestService.PostRequest("/user/login", new Login(phoneNumber, token));
+    const parsedResponse = this._requestService.TryParseResponse(response);
+    if (parsedResponse === undefined) return Promise.reject();
+    return parsedResponse;
+  }
+
+  public async Get(): Promise<User> {
+    if (!this._bearerToken) {
+      return Promise.reject();
+    }
+    const response = await this._requestService.GetRequest("/user");
     const parsedResponse = this._requestService.TryParseResponse(response);
     if (parsedResponse === undefined) return Promise.reject();
     return parsedResponse;
