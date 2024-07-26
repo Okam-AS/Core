@@ -292,7 +292,6 @@ export default {
   rewards_youWillEarn: "Du vil tjene {amount} på denne bestillingen",
   rewards_useReward: "Bruk bonuspoeng",
   rewards_used: "Brukt bonuspoeng",
-
   giftcardPurchasePage_heading: "Kvittering",
   introModal_next: "Neste",
   introModal_close: "Lukk",
