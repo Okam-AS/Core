@@ -181,7 +181,7 @@ export default {
   confirmationPage_orderIsSent: "Your order is now sent",
   confirmationPage_turnOnNotifcationButton: "Turn on notifications",
   confirmationPage_turnOnNotifcationMessage: "Get updates on your order",
-  confirmationPage_notifcationIsOn: "Du får en varsel når ordre er bekreftet",
+  confirmationPage_notifcationIsOn: "You will receive a notification when the order is confirmed",
   confirmationPage_viewOrder: "View order",
   categoriesPage_yourFavorites: "Your favorites",
   categoriesPage_noFavorites: "Tap ♡ on a product to collect them here",
