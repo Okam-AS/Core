@@ -35,4 +35,5 @@ export class Product {
     regularDiscountId: string;
 
     tableAdditionalAmount: number;
+    deliveryAdditionalAmount: number;
 }

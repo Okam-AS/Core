@@ -1,9 +1,10 @@
-import { OrderStatus, DeliveryType, PaymentType } from '../../enums'
+import { OrderStatus, DeliveryType, PaymentType, DineHomeStatus } from '../../enums'
 import { OrderLineItem, TaxDetail } from '../../models'
 export class Order {
     id: string;
     friendlyOrderId: string;
-
+    dineHomeOrderId: string;
+    
     created: Date;
     requestedCompletion: Date;
     processingStartTime: Date;
@@ -16,6 +17,7 @@ export class Order {
     userId: string;
     storeId: string;
     status: OrderStatus;
+    dineHomeStatus: DineHomeStatus;
     items: Array<OrderLineItem>;
     taxDetails: Array<TaxDetail>;
 

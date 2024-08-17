@@ -4,6 +4,7 @@ export class CartCalculation {
   deliveryAmount: number;
   orderDiscountAmount: number;
   tableAdditionalAmount: number;
+  deliveryAdditionalAmount: number;
   tipAmount: number;
   finalAmount: number;
 }

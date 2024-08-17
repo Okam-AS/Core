@@ -113,6 +113,12 @@ export class StoreService {
       const parsedResponse = this._requestService.TryParseResponse(response)
       return parsedResponse !== undefined
     }
+  
+    public async UpdateDineHomeDelivery (storeId: number, newValue: boolean): Promise<boolean> {
+      const response = await this._requestService.PutRequest('/stores/' + storeId + '/dinehomedelivery/' + newValue)
+      const parsedResponse = this._requestService.TryParseResponse(response)
+      return parsedResponse !== undefined
+    }
 
     public async UpdateTableDelivery (storeId: number, newValue: boolean): Promise<boolean> {
       const response = await this._requestService.PutRequest('/stores/' + storeId + '/tabledelivery/' + newValue)

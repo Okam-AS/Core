@@ -19,10 +19,12 @@ export class Store {
     bankAccountId: string;
     vippsMsn: string;
     minimumOrderPriceForHomeDelivery: number;
+    dineHomeOutletId: string;
 
     selfPickUp: boolean;
     tableDeliveryEnabled: boolean;
     homeDeliveryEnabled: boolean;
+    dineHomeDeliveryEnabled: boolean;
 
     payment: StorePayment;
 
