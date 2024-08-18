@@ -127,7 +127,7 @@ export default {
   paymentType_unknown: "Ukjent betalingsmetode",
   deliveryType_selfPickup: "Hent selv",
   deliveryType_instantHomeDelivery: "Hjemlevering",
-  deliveryType_groupedHomeDelivery: "Hjemlevering",
+  deliveryType_dineHomeDelivery: "Hjemlevering",
   deliveryType_tableDelivery: "Spis inne",
   deliveryType_notSet: "Ikke valgt",
   orderStatus_acceptedHeading: "Bestillingen er forespurt",

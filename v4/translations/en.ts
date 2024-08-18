@@ -127,7 +127,7 @@ export default {
   paymentType_unknown: "Unknown payment method",
   deliveryType_selfPickup: "Self pickup",
   deliveryType_instantHomeDelivery: "Home delivery",
-  deliveryType_groupedHomeDelivery: "Home delivery",
+  deliveryType_dineHomeDelivery: "Home delivery",
   deliveryType_tableDelivery: "Eat in",
   deliveryType_notSet: "Not set",
   orderStatus_acceptedHeading: "Order requested, but not yet approved",

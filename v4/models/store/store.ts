@@ -31,6 +31,9 @@ export class Store {
   selfPickUp: boolean;
   tableDeliveryEnabled: boolean;
   homeDeliveryEnabled: boolean;
+  dineHomeDeliveryEnabled: boolean;
+
+  dineHomeOutletId: string;
 
   payment: StorePayment;
 
