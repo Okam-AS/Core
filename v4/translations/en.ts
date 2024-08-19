@@ -219,6 +219,7 @@ export default {
   settings_cancelDelete: "Cancel delete",
   settings_confirmDeleteAccount: "You are about to delete your account. This cannot be undone. Are you sure?",
   settings_logout: "Log out",
+  settings_login: "Log in",
   settings_user: "User",
   general_selectVariation: "Select '{name}' to add item to cart",
   general_soldOut: "Sold out",

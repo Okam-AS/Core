@@ -220,6 +220,7 @@ export default {
   settings_cancelDelete: "Avbryt sletting",
   settings_confirmDeleteAccount: "Du er i ferd med å slette din bruker. Dette kan ikke angres. Er du sikker?",
   settings_logout: "Logg ut",
+  settings_login: "Logg inn",
   general_selectVariation: "Velg '{name}' for å legge vare i handlekurv",
   general_soldOut: "Utsolgt",
   general_notAvailableFor: "Utilgjengelig for ",
