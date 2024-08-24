@@ -173,6 +173,7 @@ export default {
   orderPage_addEmailToSendReceiptPrefix: "Add email to send receipt",
   orderPage_addEmailToSendReceiptPage: " Settings ",
   orderPage_addEmailToSendReceiptSuffix: "to send receipt by email.",
+  orderPage_refundDescription: "The order is canceled and the money is refunded. The amount is usually available in your account immediately, but in some cases it may take 1-2 business days.",
   orderListPage_heading: "Your orders",
   orderListPage_giftcardPurchase: "Gift card purchase",
   orderListPage_noOrders: "You haven't placed any orders yet",

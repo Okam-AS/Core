@@ -173,6 +173,7 @@ export default {
   orderPage_addEmailToSendReceiptPrefix: "Legg til e-post under",
   orderPage_addEmailToSendReceiptPage: " Innstillinger ",
   orderPage_addEmailToSendReceiptSuffix: "for å sende kvittering på e-post.",
+  orderPage_refundDescription: "Bestillingen er kansellert og pengene er refundert. Beløpet er vanligvis tilgjengelig på kontoen din umiddelbart, men kan i enkelte tilfeller ta 1-2 virkedager.",
   orderListPage_heading: "Dine bestillinger",
   orderListPage_giftcardPurchase: "Kjøp av gavekort",
   orderListPage_noOrders: "Du har ikke lagt inn noen bestillinger enda",
