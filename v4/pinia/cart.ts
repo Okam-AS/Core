@@ -137,11 +137,9 @@ export const useCart = defineStore("cart", () => {
     isLoading.value = true;
 
     // Set default delivery address
-    if (!currentCart.fullAddress && !currentCart.city && !currentCart.zipCode) {
-      currentCart.fullAddress = _user.user.fullAddress;
-      currentCart.city = _user.user.city;
-      currentCart.zipCode = _user.user.zipCode;
-    }
+    currentCart.fullAddress = currentCart.fullAddress || _user.user.fullAddress;
+    currentCart.city = currentCart.city || _user.user.city;
+    currentCart.zipCode = currentCart.zipCode || _user.user.zipCode;
 
     return cartService()
       .Update(currentCart)

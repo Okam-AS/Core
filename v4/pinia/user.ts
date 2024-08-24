@@ -190,7 +190,6 @@ export const useUser = defineStore("user", () => {
       .Get()
       .then((response) => {
         if (!response?.id) return;
-        console.log("Reloading user", response);
         userRef.value.email = response.email;
         userRef.value.emailConfirmed = response.emailConfirmed;
         userRef.value.fullAddress = response.fullAddress;
