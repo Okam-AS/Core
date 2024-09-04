@@ -254,6 +254,8 @@ export default {
   general_noWifi: "No internet connection",
   general_vippsNotInstalled: "Vipps is not installed on this device",
   general_addedToRewardCard: "added to reward card",
+  general_oneOngoingOrder: "You have {count} active order",
+  general_multipleOngoingOrder: "You have {count} active orders",
   menu_findStore: "Find location",
   menu_selectLocation: "Select location",
   menu_myOrders: "Orders",

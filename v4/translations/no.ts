@@ -254,6 +254,8 @@ export default {
   general_noWifi: "Ingen internettforbindelse",
   general_vippsNotInstalled: "Vipps er ikke installert på denne enheten",
   general_addedToRewardCard: "lagt til i bonuskortet",
+  general_oneOngoingOrder: "Du har {count} aktiv bestilling",
+  general_multipleOngoingOrder: "Du har {count} aktive bestillinger",
   menu_findStore: "Finn sted",
   menu_selectLocation: "Velg sted",
   menu_myOrders: "Bestillinger",
