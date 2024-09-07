@@ -110,7 +110,7 @@ export const useOrder = defineStore("order", () => {
   const progressFlow = (deliveryType: DeliveryType, currentStatus: OrderStatus) => {
     const createSteps = (flow) => {
       return flow.map((s) => ({
-        completed: flow.indexOf(s) < flow.indexOf(currentStatus) || currentStatus === OrderStatus.Completed || s === OrderStatus.Accepted || (currentStatus === OrderStatus.Served && s !== OrderStatus.Completed),
+        completed: flow.indexOf(s) < flow.indexOf(currentStatus) || (s !== OrderStatus.Completed && currentStatus === OrderStatus.ReadyForPickup) || currentStatus === OrderStatus.Completed || s === OrderStatus.Accepted || (currentStatus === OrderStatus.Served && s !== OrderStatus.Completed),
         current: s === currentStatus,
         label: orderStatusLabel(s),
         isLastStep: s === OrderStatus.Completed,
