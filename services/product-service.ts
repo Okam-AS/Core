@@ -13,6 +13,11 @@ export class ProductService {
       this._vuexModule = vuexModule
       this._userService = new UserService(vuexModule)
     }
+  
+    public async Duplicate (productId: string): Promise<Product> {
+      const response = await this._requestService.PostRequest('/products/' + productId + '/duplicate', {})  
+      return this.ParsedResponse(response, 'Kunne ikke kopiere produkt')
+    }
 
     public async GetByBarcode (storeId: number, barcode: string): Promise<Product> {
       const response = await this._requestService.GetRequest('/products/consumer/search/' + storeId + '/' + (barcode || false))
