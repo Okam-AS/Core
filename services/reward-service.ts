@@ -12,8 +12,8 @@ export class RewardService {
     this._vuexModule = vuexModule
   }
 
-  public async GetMembers(storeId: number) {
-    const response = await this._requestService.GetRequest('/rewards/members/' + storeId)
+  public async GetMembers(storeId: number, query: string) {
+    const response = await this._requestService.GetRequest('/rewards/members/' + storeId + '/' + query)
     const parsedResponse = this._requestService.TryParseResponse(response)
     if (parsedResponse === undefined) { throw new Error('Failed to get members') }
 
