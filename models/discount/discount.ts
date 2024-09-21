@@ -1,27 +1,29 @@
-import { DiscountType, DiscountApplicability } from '../../enums'
-import { DiscountProducts, DiscountUsages } from '../../models'
+import { DiscountType, DiscountApplicability } from "../../enums";
+import { DiscountProducts, DiscountUsages } from "../../models";
 export class Discount {
-    id: string;
-    storeId: number;
-    label: string;
-    code: string;
-    amount: number;
+  id: string;
+  storeId: number;
+  label: string;
+  code: string;
+  amount: number;
 
-    type: DiscountType;
-    applicability: DiscountApplicability;
+  type: DiscountType;
+  applicability: DiscountApplicability;
 
-    minimumOrderAmountEnabled: boolean;
-    minimumOrderAmount: number;
+  minimumOrderAmountEnabled: boolean;
+  minimumOrderAmount: number;
 
-    maximumTotalUsageCountEnabled: boolean;
-    maximumTotalUsageCount: number;
+  maximumTotalUsageCountEnabled: boolean;
+  maximumTotalUsageCount: number;
 
-    maximumUsagePerCustomerCountEnabled: boolean;
-    maximumUsagePerCustomerCount: number;
+  maximumUsagePerCustomerCountEnabled: boolean;
+  maximumUsagePerCustomerCount: number;
 
-    validFrom?: Date;
-    validTo?: Date;
+  expired: boolean;
+  timedEnabled: boolean;
+  validFrom?: Date;
+  validTo?: Date;
 
-    discountUsages: Array<DiscountUsages>;
-    discountProducts: Array<DiscountProducts>;
+  discountUsages: Array<DiscountUsages>;
+  discountProducts: Array<DiscountProducts>;
 }
