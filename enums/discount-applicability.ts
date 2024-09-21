@@ -1,5 +1,8 @@
 export enum DiscountApplicability {
-    Order = 'Order',
-    ProductsInclusive = 'ProductsInclusive',
-    ProductsExclusive = 'ProductsExclusive'
+  Order = "Order",
+  HomeDeliveryOrder = "HomeDeliveryOrder",
+  SelfPickupOrder = "SelfPickupOrder",
+  TableDeliveryOrder = "TableDeliveryOrder",
+  ProductsInclusive = "ProductsInclusive",
+  ProductsExclusive = "ProductsExclusive",
 }
