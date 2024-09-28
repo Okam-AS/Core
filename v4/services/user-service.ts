@@ -51,6 +51,12 @@ export class UserService {
     return true;
   }
 
+  public async UpdateName(firstName: string, lastName: string): Promise<boolean> {
+    if (!this._bearerToken) return false;
+    await this._requestService.PostRequest("/user/name/", { firstName, lastName });
+    return true;
+  }
+
   public async AddFavoriteProduct(productId: string): Promise<boolean> {
     if (!productId || !this._bearerToken) return false;
     await this._requestService.PostRequest("/user/favorite/add/" + productId);

@@ -195,6 +195,8 @@ export const useUser = defineStore("user", () => {
         userRef.value.fullAddress = response.fullAddress;
         userRef.value.zipCode = response.zipCode;
         userRef.value.city = response.city;
+        userRef.value.firstName = response.firstName;
+        userRef.value.lastName = response.lastName;
       });
   };
 

@@ -7,6 +7,9 @@ export class User {
 
   favoriteProductIds: string[];
 
+  firstName: string;
+  lastName: string;
+
   fullAddress: string;
   zipCode: string;
   city: string;

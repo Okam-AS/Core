@@ -114,14 +114,14 @@ export const useCheckout = defineStore("checkout", () => {
     return localDateTime;
   };
 
-  const dateTimeIsUnderTenMinutesFromNow = () => {
+  const dateTimeIsUnderLimitMinutesFromNow = () => {
     const diff = selectedDateTime().getTime() - new Date().getTime();
     const minutesDiff = Math.floor(diff / 1000 / 60);
-    return minutesDiff < 10;
+    return minutesDiff < 30;
   };
 
   const singleLineSelectedDateTime = computed(() => {
-    if (srdRef.value === 0 || !selectedRequestedCompletionDate.value || !srtRef.value || requestedCompletionDateOptions.value.length <= srdRef.value || dateTimeIsUnderTenMinutesFromNow()) return $i("general_asap")?.toLowerCase();
+    if (srdRef.value === 0 || !selectedRequestedCompletionDate.value || !srtRef.value || requestedCompletionDateOptions.value.length <= srdRef.value || dateTimeIsUnderLimitMinutesFromNow()) return $i("general_asap")?.toLowerCase();
 
     return requestedCompletionDateOptions.value[srdRef.value]?.label?.toLowerCase() + ", " + ("0" + selectedRequestedCompletionTimeHours()).slice(-2) + ":" + ("0" + selectedRequestedCompletionTimeMinutes()).slice(-2);
   });
