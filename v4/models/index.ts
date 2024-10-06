@@ -43,7 +43,7 @@ export { VippsInitiateResponse, VippsVerifyResponse, PaymentMethod, StripeCreate
 
 // Log
 export { EventLog } from "../../v4/models/log/event-log";
-
+export { Feedback } from "../../v4/models/feedback/feedback";
 export { Config } from "../../v4/models/config/config";
 
 // Reward

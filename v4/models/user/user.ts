@@ -10,6 +10,8 @@ export class User {
   firstName: string;
   lastName: string;
 
+  showFeedback: boolean;
+
   fullAddress: string;
   zipCode: string;
   city: string;

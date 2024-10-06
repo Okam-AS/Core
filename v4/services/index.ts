@@ -22,3 +22,4 @@ export { VippsService } from "./vipps-service";
 export { PersistenceService } from "./persistence-service";
 export { LogService } from "./log-service";
 export { ConfigService } from "./config-service";
+export { FeedbackService } from "./feedback-service";

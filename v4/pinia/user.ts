@@ -1,12 +1,12 @@
 import { defineStore } from "pinia";
-import { User, Product, PaymentMethod } from "../models";
+import { User, Product, PaymentMethod, Feedback } from "../models";
 import { useServices } from "./services";
 import { useStore, useCart, useCheckout } from ".";
 import { ref, computed } from "vue";
 import { debounce } from "../helpers/ts-debounce";
 
 export const useUser = defineStore("user", () => {
-  const { userService, persistenceService, productService, setBearerToken, paymentService, stripeService } = useServices();
+  const { userService, persistenceService, productService, feedbackService, setBearerToken, paymentService, stripeService } = useServices();
   const _cart = useCart();
   const _checkout = useCheckout();
   const userRef = ref(persistenceService.load<User>("userRef") || ({} as User));
@@ -186,7 +186,7 @@ export const useUser = defineStore("user", () => {
 
   const reloadUser = () => {
     if (!isLoggedIn()) return;
-    userService()
+    return userService()
       .Get()
       .then((response) => {
         if (!response?.id) return;
@@ -197,7 +197,18 @@ export const useUser = defineStore("user", () => {
         userRef.value.city = response.city;
         userRef.value.firstName = response.firstName;
         userRef.value.lastName = response.lastName;
+        userRef.value.showFeedback = response.showFeedback;
       });
+  };
+
+  const feedbackShown = () => {
+    if (!isLoggedIn()) return;
+    return feedbackService().FeedbackShown();
+  };
+
+  const createFeedback = (feedback: Feedback) => {
+    if (!isLoggedIn()) return;
+    return feedbackService().CreateFeedback(feedback);
   };
 
   return {
@@ -218,6 +229,8 @@ export const useUser = defineStore("user", () => {
     loadFavoriteProducts,
     deleteAccount,
     logoutIfTokenExpired,
+    createFeedback,
+    feedbackShown,
     reloadUser,
   };
 });

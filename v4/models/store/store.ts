@@ -5,6 +5,8 @@ export class Store {
   legalName: string;
   phoneNumber: string;
   logoUrl: string;
+  feedbackUrl: string;
+  feedbackMessage: string;
   address: Address;
   homeDeliveryFromAddress: Address;
   categories: Array<Category>;
