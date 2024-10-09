@@ -1,54 +1,57 @@
-import { OrderStatus, DeliveryType, PaymentType, DineHomeStatus } from '../../enums'
-import { OrderLineItem, TaxDetail } from '../../models'
+import { OrderStatus, DeliveryType, PaymentType, DineHomeStatus } from "../../enums";
+import { OrderLineItem, TaxDetail } from "../../models";
 export class Order {
-    id: string;
-    friendlyOrderId: string;
-    dineHomeOrderId: string;
-    
-    created: Date;
-    requestedCompletion: Date;
-    processingStartTime: Date;
-    estimatedProcessingEndTime: Date;
-    processingEndTime: Date;
-    completed: Date;
-    isInPreorderMode: boolean;
+  id: string;
+  friendlyOrderId: string;
+  dineHomeOrderId: string;
 
-    platform: string;
-    userId: string;
-    storeId: string;
-    status: OrderStatus;
-    dineHomeStatus: DineHomeStatus;
-    items: Array<OrderLineItem>;
-    taxDetails: Array<TaxDetail>;
+  created: Date;
+  requestedCompletion: Date;
+  processingStartTime: Date;
+  estimatedProcessingEndTime: Date;
+  processingEndTime: Date;
+  completed: Date;
+  isInPreorderMode: boolean;
 
-    paymentIntentId: string;
-    vippsOrderId: string;
+  platform: string;
+  userId: string;
+  storeId: number;
+  status: OrderStatus;
+  dineHomeStatus: DineHomeStatus;
+  items: Array<OrderLineItem>;
+  taxDetails: Array<TaxDetail>;
 
-    tableName: string;
-    dateTimeNow: Date;
-    countdownEndTime: Date;
-    pickup: Date;
+  paymentIntentId: string;
+  vippsOrderId: string;
 
-    itemsAmount: number;
-    itemsAmountLineThrough: number;
-    orderDiscountAmount: number;
-    deliveryAmount: number;
-    finalAmount: number;
+  tableName: string;
+  dateTimeNow: Date;
+  countdownEndTime: Date;
+  pickup: Date;
 
-    paymentType: PaymentType;
-    deliveryType: DeliveryType;
+  itemsAmount: number;
+  itemsAmountLineThrough: number;
+  orderDiscountAmount: number;
+  deliveryAmount: number;
+  finalAmount: number;
 
-    fullAddress: string;
-    zipCode: string;
-    city: string;
+  paymentType: PaymentType;
+  deliveryType: DeliveryType;
 
-    storeLegalName: string;
-    storeVAT: string;
-    storeFullAddress: string;
-    storeZipCode: string;
-    storeCity: string;
+  fullAddress: string;
+  zipCode: string;
+  city: string;
 
-    tipAmount: number;
+  storeLegalName: string;
+  storeVAT: string;
+  storeFullAddress: string;
+  storeZipCode: string;
+  storeCity: string;
 
-    comment: string;
+  userIsMember: boolean;
+  userFullName: string;
+
+  tipAmount: number;
+
+  comment: string;
 }

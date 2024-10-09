@@ -1,4 +1,4 @@
-import { Login, SendVerificationToken, Address } from '../models'
+import { Login, SendVerificationToken, Address, ApplicationUser} from '../models'
 import { ActionName } from '../enums'
 import { IVuexModule } from '../interfaces'
 import $config from '../helpers/configuration'
@@ -28,6 +28,16 @@ export class UserService {
         this.Logout()
       }
       return parsedResponse !== undefined
+    }
+  
+    public async GetForStore (storeId: number, userId: string): Promise<ApplicationUser> {
+      if (!this._vuexModule.state.currentUser?.token) { return undefined }
+      const response = await this._requestService.GetRequest(`/user/${storeId}/${userId}`)
+      const parsedResponse = this._requestService.TryParseResponse(response)
+      if (response.statusCode === 401 && this._vuexModule.state.currentUser.token) {
+        this.Logout()
+      }
+      return parsedResponse
     }
 
     public async Login (phoneNumber: string, token: string): Promise<boolean> {

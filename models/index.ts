@@ -31,6 +31,7 @@ export { User } from './user/user'
 export { Login } from './user/login'
 export { SendVerificationToken } from './user/send-verification-token'
 export { Address } from './address/address'
+export { ApplicationUser } from './user/application-user'
 
 // Order
 export { Order } from './order/order'

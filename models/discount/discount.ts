@@ -19,6 +19,8 @@ export class Discount {
   maximumUsagePerCustomerCountEnabled: boolean;
   maximumUsagePerCustomerCount: number;
 
+  giveRewardInsteadOfDiscountEnabled: boolean;
+
   expired: boolean;
   timedEnabled: boolean;
   validFrom?: Date;
