@@ -106,7 +106,6 @@ export class OrderService {
       return;
     }
     const comp = this;
-    comp._vuexModule.commit(MutationName.StopNewOrderNotificationsInterval);
     comp
       .GetStoresOrders(storeId, partially)
       .then((orders) => {
@@ -116,13 +115,11 @@ export class OrderService {
         if (thenHandler) {
           thenHandler(orders);
         }
-        comp._vuexModule.commit(MutationName.StartNewOrderNotificationsInterval);
       })
       .catch(() => {
         if (catchHandler) {
           catchHandler();
         }
-        comp._vuexModule.commit(MutationName.StartNewOrderNotificationsInterval);
       });
   };
 }
