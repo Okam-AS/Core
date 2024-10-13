@@ -12,6 +12,15 @@ export class RewardService {
     this._vuexModule = vuexModule;
   }
 
+  public async SendReward(storeId: number, userId: number, amount: number) {
+    const response = await this._requestService.PostRequest("/rewards/send", { storeId, userId, amount });
+    const parsedResponse = this._requestService.TryParseResponse(response);
+    if (parsedResponse === undefined) {
+      throw new Error("Failed to send reward");
+    }
+    return parsedResponse;
+  }
+
   public async GetRewardCards(storeId: number, userId: number) {
     const response = await this._requestService.GetRequest("/rewards/members/" + storeId + "/" + userId);
     const parsedResponse = this._requestService.TryParseResponse(response);
