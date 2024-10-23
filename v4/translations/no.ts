@@ -34,6 +34,8 @@ export default {
   checkoutPage_to: "til",
   checkoutPage_from: "fra",
   checkoutPage_deliveryAddressToggle: "Endre leveringsadresse",
+  checkoutPage_userFirstname: "Fornavn",
+  checkoutPage_userLastname: "Etternavn",
   checkoutPage_deliveryAddress: "Leveringsadresse",
   checkoutPage_deliveryZip: "Postnr.",
   checkoutPage_deliveryPostalplace: "Poststed",

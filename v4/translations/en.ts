@@ -34,6 +34,8 @@ export default {
   checkoutPage_to: "to",
   checkoutPage_from: "from",
   checkoutPage_deliveryAddressToggle: "Change delivery address",
+  checkoutPage_userFirstname: "First name",
+  checkoutPage_userLastname: "Last name",
   checkoutPage_deliveryAddress: "Delivery address",
   checkoutPage_deliveryZip: "Zip",
   checkoutPage_deliveryPostalplace: "Place",
