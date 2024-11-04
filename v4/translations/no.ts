@@ -310,7 +310,7 @@ export default {
   rewards_toCollectXPoints: " og tjen {amount} på denne bestillingen",
   rewards_youWillEarn: "Du vil tjene {amount} på denne bestillingen",
   rewards_useReward: "Bruk bonuspoeng",
-  rewards_used: "Brukt bonuspoeng",
+  rewards_points: "Bonuspoeng",
   giftcardPurchasePage_heading: "Kvittering",
   introModal_next: "Neste",
   introModal_close: "Lukk",
