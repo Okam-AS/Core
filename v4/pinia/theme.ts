@@ -33,6 +33,21 @@ export const useTheme = defineStore("theme", () => {
       itunesAppId: "6465692106",
       androidPackageName: "no.okam.jungelpizza",
     },
+    lora: {
+      clientPlatformName: "Lora Restaurant",
+      primaryColor: "loraDarkGray",
+      secondaryColor: "loraYellow",
+      backgroundColor: "loraBlack",
+      secondaryBackgroundColor: "loraDarkGray",
+      shadows: true,
+      textColor: "white",
+      borderRadius: 15,
+      availableStoreIds: [1, 61],
+      svgLogo: "",
+      removeFromStoreName: "",
+      itunesAppId: "",
+      androidPackageName: "no.okam.lora",
+    },
     arvLokalmat: {
       clientPlatformName: "ARV Lokalmat",
       primaryColor: "arvLokalmatGreen",
@@ -88,6 +103,11 @@ export const useTheme = defineStore("theme", () => {
     //BKH
     bkhGray: "#302F36",
     bkhDarkerGray: "#161E20",
+
+    //Lora
+    loraBlack: "#121212",
+    loraYellow: "#f9e547",
+    loraDarkGray: "#1a1a1a",
   });
 
   const $color = (key: string, darkmodeKey?: string) => {

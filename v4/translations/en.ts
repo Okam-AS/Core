@@ -107,6 +107,7 @@ export default {
   giftcardPage_buyGiftcardDescription: "Want to make someone you care about happy? With gift cards from Okam, they can easily order from restaurants and stores in the app. We send an SMS to the recipient if they do not have the app already.",
   giftcardPage_buyGiftcard_jungelPizza: "Send a pizza to a friend",
   giftcardPage_buyGiftcardDescription_jungelPizza: "Want to make someone you love happy? Send them a gift card they can use to buy delicious pizza through the app. We'll send them an SMS if they don't have the app already.",
+  giftcardPage_buyGiftcardDescription_lora: "Want to make someone you care about happy? With gift cards from Lora Restaurant, they can easily order from restaurants and stores in the app. We send an SMS to the recipient if they do not have the app already.",
   giftcardPage_transactionHeading: "Transactions",
   giftcardPage_recivedGiftcard: "Received gift card",
   giftcardPage_giveGiftcard: "Give a gift card",

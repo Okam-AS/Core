@@ -107,6 +107,7 @@ export default {
   giftcardPage_buyGiftcardDescription: "Vil du glede noen du er glad i? Med gavekort fra Okam kan de enkelt bestille fra resturanter og butikker i appen. Vi sender en sms til mottakeren dersom de ikke har appen fra før.",
   giftcardPage_buyGiftcard_jungelPizza: "Send pizza til en venn",
   giftcardPage_buyGiftcardDescription_jungelPizza: "Vil du glede noen du er glad i? Send dem et gavekort som de kan bruke for å kjøpe deilig pizza gjennom appen. Vi sender dem en sms om de ikke har appen fra før.",
+  giftcardPage_buyGiftcardDescription_lora: "Vil du glede noen du er glad i? Med gavekort fra Lora Restaurant kan de enkelt bestille fra resturanter og butikker i appen. Vi sender en sms til mottakeren dersom de ikke har appen fra før.",
   giftcardPage_transactionHeading: "Historikk",
   giftcardPage_recivedGiftcard: "Mottatt gavekort",
   giftcardPage_giveGiftcard: "Gi et gavekort",
