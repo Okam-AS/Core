@@ -84,6 +84,7 @@ export default {
   cartPage_heading: "Your cart",
   cartPage_confirmDelete: "Fjerne vare?",
   cartPage_submit: "To checkout",
+  cartPage_continue: "Show cart",
   cartPage_recommendations: "Recommendations",
   feedback_heading: "What do you think of the {name} app?",
   feedback_likedText: "That's great to hear! Thanks for the feedback.",

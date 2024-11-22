@@ -84,6 +84,7 @@ export default {
   cartPage_heading: "Din handlekurv",
   cartPage_confirmDelete: "Fjerne vare?",
   cartPage_submit: "Til kasse",
+  cartPage_continue: "Vis handlekurv",
   cartPage_recommendations: "Anbefalinger",
   feedback_heading: "Hva synes du om {name}-appen?",
   feedback_likedText: "Det er flott å høre! Takk for tilbakemeldingen.",
