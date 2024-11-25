@@ -42,7 +42,7 @@ export const useTheme = defineStore("theme", () => {
       shadows: true,
       textColor: "white",
       borderRadius: 15,
-      availableStoreIds: [1, 61],
+      availableStoreIds: [61],
       svgLogo: "",
       removeFromStoreName: "",
       itunesAppId: "",
