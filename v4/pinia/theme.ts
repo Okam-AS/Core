@@ -45,7 +45,7 @@ export const useTheme = defineStore("theme", () => {
       availableStoreIds: [61],
       svgLogo: "",
       removeFromStoreName: "",
-      itunesAppId: "",
+      itunesAppId: "6738664135",
       androidPackageName: "no.okam.lora",
     },
     arvLokalmat: {
