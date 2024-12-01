@@ -84,3 +84,7 @@ export { PaymentMethod } from './payment/payment-method'
 
 //Payout
 export { Payout } from './payout/payout'
+
+// DineHome
+export { DineHomeDeliveryTimesRequest } from './dinehome/dinehome-delivery-times-request';
+export { DineHomeDeliveryTimesResponse } from './dinehome/dinehome-delivery-times-response';
