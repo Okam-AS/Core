@@ -3,5 +3,6 @@ export enum DeliveryType {
     SelfPickup = 'SelfPickup',
     InstantHomeDelivery = 'InstantHomeDelivery',
     DineHomeDelivery = 'DineHomeDelivery',
-    TableDelivery = 'TableDelivery'
+    TableDelivery = 'TableDelivery',
+    WoltDelivery = 'WoltDelivery'
 }

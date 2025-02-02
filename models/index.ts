@@ -39,6 +39,7 @@ export { Order } from './order/order'
 export { OrderLineItem } from './order/order-line-item'
 export { OrderLineItemOption } from './order/order-line-item-option'
 export { TaxDetail } from './order/tax-detail'
+export { WoltDeliveryInfo } from './order/wolt-delivery-info'
 
 // Notification
 export { NotificationRegistration } from './notification/notification-registration'

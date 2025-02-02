@@ -1,5 +1,6 @@
 import { OrderStatus, DeliveryType, PaymentType, DineHomeStatus } from "../../enums";
-import { OrderLineItem, TaxDetail } from "../../models";
+import { OrderLineItem, TaxDetail, WoltDeliveryInfo } from "../../models";
+
 export class Order {
   id: string;
   friendlyOrderId: string;
@@ -54,4 +55,5 @@ export class Order {
   tipAmount: number;
 
   comment: string;
+  woltDeliveryInfo: WoltDeliveryInfo;
 }
