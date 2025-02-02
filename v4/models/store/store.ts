@@ -34,8 +34,10 @@ export class Store {
   tableDeliveryEnabled: boolean;
   homeDeliveryEnabled: boolean;
   dineHomeDeliveryEnabled: boolean;
+  woltDriveEnabled: boolean;
 
   dineHomeOutletId: string;
+  woltDriveIsConfigured: boolean;
 
   payment: StorePayment;
 

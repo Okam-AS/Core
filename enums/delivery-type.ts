@@ -4,4 +4,5 @@ export enum DeliveryType {
   InstantHomeDelivery = "InstantHomeDelivery",
   DineHomeDelivery = "DineHomeDelivery",
   TableDelivery = "TableDelivery",
+  WoltDelivery = "WoltDelivery",
 }

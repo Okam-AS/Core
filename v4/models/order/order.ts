@@ -1,5 +1,6 @@
 import { OrderStatus, DeliveryType, PaymentType } from "../../enums";
-import { OrderLineItem, TaxDetail, RewardTransaction } from "../../models";
+import { OrderLineItem, TaxDetail, RewardTransaction, WoltDeliveryInfo } from "../../models";
+
 export class Order {
   id: string;
   friendlyOrderId: string;
@@ -48,4 +49,5 @@ export class Order {
 
   rewardTransactionId: string;
   rewardTransaction: RewardTransaction;
+  woltDeliveryInfo: WoltDeliveryInfo;
 }
