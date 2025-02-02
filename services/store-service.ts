@@ -126,6 +126,12 @@ export class StoreService {
     return parsedResponse !== undefined
   }
 
+  public async UpdateWoltDelivery(storeId: number, newValue: boolean): Promise<boolean> {
+    const response = await this._requestService.PutRequest('/stores/' + storeId + '/woltdelivery/' + newValue)
+    const parsedResponse = this._requestService.TryParseResponse(response)
+    return parsedResponse !== undefined
+  }
+
   public async UpdateRushMode(storeId: number, newValue: boolean): Promise<boolean> {
     const response = await this._requestService.PutRequest('/stores/' + storeId + '/rush-mode/' + newValue)
     const parsedResponse = this._requestService.TryParseResponse(response)
