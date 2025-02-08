@@ -1,6 +1,7 @@
 import { defineStore } from "pinia";
 import { Store } from "../models";
-import { useServices, useUser, useCategory, useTranslation, useTheme } from ".";
+import { DeliveryType } from "../enums";
+import { useServices, useUser, useCategory, useTranslation, useTheme, useCart } from ".";
 import { ref, computed } from "vue";
 
 export const useStore = defineStore("store", () => {
@@ -9,8 +10,11 @@ export const useStore = defineStore("store", () => {
   const _user = useUser();
   const { $i } = useTranslation();
   const { $availableStoreIds } = useTheme();
+  const _cart = useCart();
   const stores = ref([] as Store[]);
   const isLoading = ref(false);
+  const isLoadingDeliveryAvailability = ref(false);
+  const deliveryAvailability = ref<{ canDeliver: boolean; price: { amount: number; currency: string }; error: string } | null>(null);
 
   const store = ref(persistenceService.load<Store>("store") || ({} as Store));
   persistenceService.watchAndStore(store, "store");
@@ -41,7 +45,7 @@ export const useStore = defineStore("store", () => {
       })
       .finally(() => {
         isLoading.value = false;
-        _user.loadFavoriteProducts();
+        _user.loadFavoriteProducts({ deliveryType: _cart.getCurrentCart()?.deliveryType || DeliveryType.NotSet });
       });
   };
 
@@ -100,9 +104,30 @@ export const useStore = defineStore("store", () => {
     return result;
   });
 
+  const checkDeliveryAvailability = async () => {
+    if (!store.value?.id || !_user.user?.fullAddress) {
+      deliveryAvailability.value = null;
+      return;
+    }
+
+    isLoadingDeliveryAvailability.value = true;
+    return storeService()
+      .CheckDeliveryAvailability(store.value.id, _user.user.fullAddress, _user.user.zipCode, _user.user.city)
+      .then((result) => {
+        deliveryAvailability.value = result;
+      })
+      .catch((e) => {
+        deliveryAvailability.value = null;
+      })
+      .finally(() => {
+        isLoadingDeliveryAvailability.value = false;
+      });
+  };
+
   return {
     stores,
     isLoading,
+    isLoadingDeliveryAvailability,
     singleLineStoreAddress,
     openingHourLabel,
     currentStore,
@@ -111,5 +136,7 @@ export const useStore = defineStore("store", () => {
     setCurrentStore,
     clearCurrentStore,
     loadStores,
+    deliveryAvailability,
+    checkDeliveryAvailability,
   };
 });

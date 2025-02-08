@@ -119,7 +119,7 @@ export const useOrder = defineStore("order", () => {
 
     if (deliveryType === DeliveryType.SelfPickup) return createSteps([OrderStatus.Accepted, OrderStatus.Processing, OrderStatus.ReadyForPickup, OrderStatus.Completed]);
 
-    if (deliveryType === DeliveryType.InstantHomeDelivery || deliveryType === DeliveryType.DineHomeDelivery) return createSteps([OrderStatus.Accepted, OrderStatus.Processing, OrderStatus.ReadyForDriver, OrderStatus.Completed]);
+    if (deliveryType === DeliveryType.InstantHomeDelivery || deliveryType === DeliveryType.DineHomeDelivery || deliveryType === DeliveryType.WoltDelivery) return createSteps([OrderStatus.Accepted, OrderStatus.Processing, OrderStatus.ReadyForDriver, OrderStatus.Completed]);
 
     if (deliveryType === DeliveryType.TableDelivery) return createSteps([OrderStatus.Accepted, OrderStatus.Processing, OrderStatus.Served, OrderStatus.Completed]);
 

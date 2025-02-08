@@ -323,7 +323,7 @@ export const useCheckout = defineStore("checkout", () => {
         return resolve(false);
       }
 
-      if (!_cart.deliveryAddressInCartIsValid() && (currentCart.deliveryType === DeliveryType.InstantHomeDelivery || currentCart.deliveryType === DeliveryType.DineHomeDelivery)) {
+      if (!_cart.deliveryAddressInCartIsValid() && (currentCart.deliveryType === DeliveryType.InstantHomeDelivery || currentCart.deliveryType === DeliveryType.DineHomeDelivery || currentCart.deliveryType === DeliveryType.WoltDelivery)) {
         errorMessagePrivate.value = $i("checkoutPage_deliveryAddressNotSetError");
         isValidating.value = false;
         return resolve(false);

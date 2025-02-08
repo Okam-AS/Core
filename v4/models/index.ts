@@ -16,7 +16,7 @@ export { Login, SendVerificationToken, Address } from "../../models/";
 // Order
 export { OrderLineItem, OrderLineItemOption, TaxDetail } from "../../models/";
 export { Order } from "../../v4/models/order/order";
-export { WoltDeliveryInfo } from "../../v4/models/order/wolt";
+export { WoltDeliveryInfo } from "../../v4/models/order/wolt-delivery-info";
 
 // Notification
 export { NotificationRegistration } from "../../models/";

@@ -1,5 +1,5 @@
 import { defineStore } from "pinia";
-import { User, Product, PaymentMethod, Feedback } from "../models";
+import { User, Product, PaymentMethod, Feedback, CategorySearchOptions } from "../models";
 import { useServices } from "./services";
 import { useStore, useCart, useCheckout } from ".";
 import { ref, computed } from "vue";
@@ -84,9 +84,12 @@ export const useUser = defineStore("user", () => {
 
   const updateAddress = debounce((address) => {
     if (!isLoggedIn() || !address) return;
-    const fullAddress = address.fullAddress || userRef.value.fullAddress;
-    const zipCode = address.zipCode || userRef.value.zipCode;
-    const city = address.city || userRef.value.city;
+
+    // If the key exists in the address object, use that value (even if empty string)
+    // otherwise fallback to existing value
+    const fullAddress = "fullAddress" in address ? address.fullAddress : userRef.value.fullAddress;
+    const zipCode = "zipCode" in address ? address.zipCode : userRef.value.zipCode;
+    const city = "city" in address ? address.city : userRef.value.city;
 
     // No need to update if nothing has changed
     if (fullAddress === userRef.value.fullAddress && zipCode === userRef.value.zipCode && city === userRef.value.city) return;
@@ -102,12 +105,12 @@ export const useUser = defineStore("user", () => {
       });
   }, 800);
 
-  const loadFavoriteProducts = () => {
+  const loadFavoriteProducts = (searchOptions: CategorySearchOptions) => {
     if (!isLoggedIn() || !useStore().currentStore) {
       favoriteProductsPrivate.value = [];
     } else {
       productService()
-        .GetFavorites(useStore().currentStore.id)
+        .GetFavoritesWithSearchOptions(useStore().currentStore.id, searchOptions)
         .then((products) => {
           favoriteProductsPrivate.value = products;
           userRef.value.favoriteProductIds = products.map((p) => p.id);
