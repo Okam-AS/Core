@@ -104,15 +104,22 @@ export const useStore = defineStore("store", () => {
     return result;
   });
 
-  const checkDeliveryAvailability = async () => {
-    if (!store.value?.id || !_user.user?.fullAddress) {
+  const checkDeliveryAvailability = async (address) => {
+    // Use provided address or fall back to user's address
+    const addressToCheck = address || {
+      fullAddress: _user.user?.fullAddress,
+      zipCode: _user.user?.zipCode,
+      city: _user.user?.city,
+    };
+
+    if (!store.value?.id || !addressToCheck.fullAddress) {
       deliveryAvailability.value = null;
       return;
     }
 
     isLoadingDeliveryAvailability.value = true;
     return storeService()
-      .CheckDeliveryAvailability(store.value.id, _user.user.fullAddress, _user.user.zipCode, _user.user.city)
+      .CheckDeliveryAvailability(store.value.id, addressToCheck.fullAddress, addressToCheck.zipCode, addressToCheck.city)
       .then((result) => {
         deliveryAvailability.value = result;
       })
