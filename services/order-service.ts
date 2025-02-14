@@ -74,12 +74,13 @@ export class OrderService {
 
   public async Processing(orderId: string, remainingMinutes: number, remainingMinutesToStartProcessing: number = 0): Promise<Order> {
     const response = await this._requestService.PutRequest("/orders/processing/", { id: orderId, remainingMinutes, remainingMinutesToStartProcessing });
-    const parsedResponse = this._requestService.TryParseResponse(response);
-    if (parsedResponse === undefined) {
-      throw new Error("Failed to update orderstatus");
+    const { data, error } = this._requestService.TryParseResponseWithError(response);
+    if (error) {
+      console.log("error:", error)
+      throw new Error(error);
     }
 
-    return parsedResponse;
+    return data;
   }
 
   public GetOrdersAndSetState = (thenHandler?, catchHandler?) => {
