@@ -29,7 +29,6 @@ export const useTheme = defineStore("theme", () => {
       borderRadius: 0,
       availableStoreIds: [52, 53, 54, 57],
       svgLogo: "jungel_pizza",
-      removeFromStoreName: "Jungel Pizza ",
       itunesAppId: "6465692106",
       androidPackageName: "no.okam.jungelpizza",
     },
@@ -44,7 +43,6 @@ export const useTheme = defineStore("theme", () => {
       borderRadius: 15,
       availableStoreIds: [61],
       svgLogo: "",
-      removeFromStoreName: "",
       itunesAppId: "6738664135",
       androidPackageName: "no.okam.lora",
     },
@@ -59,7 +57,6 @@ export const useTheme = defineStore("theme", () => {
       borderRadius: 3,
       availableStoreIds: [39],
       svgLogo: "arv_lokalmat",
-      removeFromStoreName: "ARV Lokalmat",
       itunesAppId: "6468146732",
       androidPackageName: "no.okam.matarv",
     },
@@ -157,10 +154,6 @@ export const useTheme = defineStore("theme", () => {
     return themes[selectedTheme].svgLogo;
   });
 
-  const $removeFromStoreName = computed(() => {
-    return themes[selectedTheme].removeFromStoreName;
-  });
-
   const $clientPlatformName = computed(() => {
     return themes[selectedTheme].clientPlatformName;
   });
@@ -188,7 +181,6 @@ export const useTheme = defineStore("theme", () => {
     $borderRadius,
     $availableStoreIds,
     $svgLogo,
-    $removeFromStoreName,
     $isWhiteLabel,
     $clientPlatformName,
     $itunesAppId,
