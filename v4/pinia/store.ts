@@ -112,7 +112,7 @@ export const useStore = defineStore("store", () => {
       city: _user.user?.city,
     };
 
-    if (!store.value?.id || !addressToCheck.fullAddress) {
+    if (!store.value?.id || !addressToCheck.fullAddress || _cart.getCurrentCart()?.deliveryType !== DeliveryType.WoltDelivery) {
       deliveryAvailability.value = null;
       return;
     }
