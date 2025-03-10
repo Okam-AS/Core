@@ -101,9 +101,10 @@ export const useOrder = defineStore("order", () => {
 
   const payedLabel = (paymentType: PaymentType) => {
     if (paymentType === PaymentType.Stripe) return $i("paymentType_stripe");
-    if (paymentType === PaymentType.Vipps) return $i("paymentType_vipps");
+    if (paymentType === PaymentType.Vipps || paymentType === PaymentType.DinteroVipps) return $i("paymentType_vipps");
     if (paymentType === PaymentType.PayInStore) return $i("paymentType_payInStore");
     if (paymentType === PaymentType.Giftcard) return $i("paymentType_giftcard");
+    if (paymentType === PaymentType.Dintero) return $i("paymentType_dintero");
     return $i("paymentType_unknown");
   };
 

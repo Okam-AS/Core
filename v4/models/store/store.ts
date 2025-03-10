@@ -1,4 +1,5 @@
-import { Address, Category, DeliveryMethod, OpeningHour, User, StorePayment, StoreTip, RewardProgram } from "../../models";
+import { Address, Category, DeliveryMethod, OpeningHour, User, StorePayment, StoreTip, RewardProgram, DinteroStoreConfiguration } from "../../models";
+
 export class Store {
   id: number;
   name: string;
@@ -43,4 +44,6 @@ export class Store {
   payment: StorePayment;
 
   tip: StoreTip;
+
+  dinteroStoreConfiguration: DinteroStoreConfiguration;
 }

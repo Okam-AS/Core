@@ -10,7 +10,7 @@ export const useCheckout = defineStore("checkout", () => {
   const { $i } = useTranslation();
   const _cart = useCart();
   const _store = useStore();
-  const { paymentService, persistenceService, discountService, cartService, stripeService, vippsService } = useServices();
+  const { paymentService, persistenceService, discountService, cartService, stripeService, vippsService, dinteroService } = useServices();
 
   const totalAmountText = () => {
     const currentCart = _cart.getCurrentCart();
@@ -23,6 +23,8 @@ export const useCheckout = defineStore("checkout", () => {
     if (paymentMethod?.paymentType === PaymentType.Vipps) return "Vipps";
     if (paymentMethod?.paymentType === PaymentType.PayInStore) return $i("checkoutPage_payInStore");
     if (paymentMethod?.paymentType === PaymentType.Giftcard) return $i("checkoutPage_giftcard");
+    if (paymentMethod?.paymentType === PaymentType.Dintero) return $i("checkoutPage_payNow");
+    if (paymentMethod?.paymentType === PaymentType.DinteroVipps) return $i("checkoutPage_payWithVipps");
     return "";
   };
 
@@ -187,7 +189,7 @@ export const useCheckout = defineStore("checkout", () => {
     if (!currentCart.id || currentCart.deliveryType === DeliveryType.NotSet) return Promise.resolve();
     isLoadingPaymentMethodsPrivate.value = true;
     return paymentService()
-      .GetPaymentMethods(currentCart.id)
+      .GetPaymentMethods(currentCart.id, true)
       .then((result) => {
         paymentMethodsPrivate.value = Array.isArray(result) ? result : [];
 
@@ -300,6 +302,26 @@ export const useCheckout = defineStore("checkout", () => {
         })
         .catch(() => {
           errorMessagePrivate.value = $i("checkoutPage_couldNotPayWithVipps");
+          isProcessingPaymentPrivate.value = false;
+          return reject();
+        });
+    });
+  };
+
+  const initiateDinteroPayment = async (isApp: boolean): Promise<CreatePaymentResult> => {
+    isProcessingPaymentPrivate.value = true;
+    return new Promise((resolve, reject) => {
+      dinteroService()
+        .Initiate(_store.currentStore.id, isApp)
+        .then((result) => {
+          return resolve({
+            isPaid: false,
+            redirectUrl: result.url,
+            returnUrl: "",
+          });
+        })
+        .catch(() => {
+          errorMessagePrivate.value = $i("checkoutPage_couldNotPayWithDintero");
           isProcessingPaymentPrivate.value = false;
           return reject();
         });
@@ -435,6 +457,7 @@ export const useCheckout = defineStore("checkout", () => {
     isValid,
     createStripePaymentIntent,
     initiateVippsPayment,
+    initiateDinteroPayment,
     completeCart,
   };
 });

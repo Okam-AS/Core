@@ -4,7 +4,7 @@ export { CartValidation, CartCalculation, CartLineItem, RecommendProductsRequest
 
 // Store
 export { Store } from "../../v4/models/store/store";
-export { OpeningHour, DeliveryMethod, BrregData, StoreRegistration, StoreUserSetting, StoreTip, StorePayment, StoreFees } from "../../models/";
+export { OpeningHour, DeliveryMethod, BrregData, StoreRegistration, StoreUserSetting, StoreTip, StorePayment, StoreFees, DinteroStoreConfiguration } from "../../models/";
 
 // Discount
 export { Discount, DiscountUsages, DiscountProducts } from "../../models/";
