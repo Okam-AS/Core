@@ -32,6 +32,20 @@ export const useTheme = defineStore("theme", () => {
       itunesAppId: "6465692106",
       androidPackageName: "no.okam.jungelpizza",
     },
+    olivia: {
+      clientPlatformName: "Olivia",
+      primaryColor: "oliviaOrange",
+      secondaryColor: "oliviaOrange",
+      backgroundColor: "oliviaBrown",
+      secondaryBackgroundColor: "oliviaBrown",
+      shadows: true,
+      textColor: "white",
+      borderRadius: 0,
+      availableStoreIds: [84, 85],
+      svgLogo: "olivia",
+      itunesAppId: "6738664135",
+      androidPackageName: "no.okam.olivia",
+    },
     lora: {
       clientPlatformName: "Lora Restaurant",
       primaryColor: "loraDarkGray",
@@ -100,6 +114,11 @@ export const useTheme = defineStore("theme", () => {
     //BKH
     bkhGray: "#302F36",
     bkhDarkerGray: "#161E20",
+
+    //Olivia
+    oliviaBlack: "#000000",
+    oliviaBrown: "#242422",
+    oliviaOrange: "#a1624b",
 
     //Lora
     loraBlack: "#121212",
@@ -181,8 +200,8 @@ export const useTheme = defineStore("theme", () => {
     $borderRadius,
     $availableStoreIds,
     $svgLogo,
-    $isWhiteLabel,
     $clientPlatformName,
+    $isWhiteLabel,
     $itunesAppId,
     $androidPackageName,
   };
