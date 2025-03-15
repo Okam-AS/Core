@@ -12,7 +12,7 @@ export class PaymentService {
     this._vuexModule = vuexModule;
   }
 
-  public async GetPaymentMethods(cartId?: string, clientSupportsDintero: boolean): Promise<PaymentMethod> {
+  public async GetPaymentMethods(cartId?: string, clientSupportsDintero: boolean = false): Promise<PaymentMethod> {
     const response = await this._requestService.PostRequest("/payment/paymentMethods/", { cartId: cartId || "", clientSupportsDintero });
     const parsedResponse = this._requestService.TryParseResponse(response);
     if (parsedResponse === undefined) {

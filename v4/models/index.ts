@@ -4,7 +4,8 @@ export { CartValidation, CartCalculation, CartLineItem, RecommendProductsRequest
 
 // Store
 export { Store } from "../../v4/models/store/store";
-export { OpeningHour, DeliveryMethod, BrregData, StoreRegistration, StoreUserSetting, StoreTip, StorePayment, StoreFees, DinteroStoreConfiguration } from "../../models/";
+export { DinteroStoreConfiguration } from "../../v4/models/store/dintero-store-configuration";
+export { OpeningHour, DeliveryMethod, BrregData, StoreRegistration, StoreUserSetting, StoreTip, StorePayment, StoreFees } from "../../models/";
 
 // Discount
 export { Discount, DiscountUsages, DiscountProducts } from "../../models/";
@@ -56,6 +57,9 @@ export { RewardCard } from "../../v4/models/reward/reward-card";
 export { RewardStore } from "../../v4/models/reward/reward-store";
 export { RewardCachbackRange } from "../../v4/models/reward/reward-cachback-range";
 export { RewardBarData } from "../../v4/models/reward/reward-bar-data";
+
+// Dintero
+export { DinteroInitResponse } from "../../v4/models/dintero/dintero-init-response";
 
 // Giftcard
 export { InitiateGiftcardPurchase } from "../../v4/models/giftcard/initiate-giftcard-purchase";

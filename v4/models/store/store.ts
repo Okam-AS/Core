@@ -1,5 +1,4 @@
 import { Address, Category, DeliveryMethod, OpeningHour, User, StorePayment, StoreTip, RewardProgram, DinteroStoreConfiguration } from "../../models";
-
 export class Store {
   id: number;
   name: string;
