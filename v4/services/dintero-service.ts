@@ -1,6 +1,6 @@
 import { RequestService } from "./request-service";
 import { ICoreInitializer } from "../interfaces";
-import { DinteroInitResponse } from "../models";
+import { DinteroInitResponse, DinteroInitiatePaymentModel } from "../models";
 
 export class DinteroService {
   private _requestService: RequestService;
@@ -9,11 +9,8 @@ export class DinteroService {
     this._requestService = new RequestService(coreInitializer);
   }
 
-  public async Initiate(storeId: number, isApp: boolean): Promise<DinteroInitResponse> {
-    const response = await this._requestService.PostRequest("/dintero/initiate", {
-      storeId,
-      isApp,
-    });
+  public async Initiate(model: DinteroInitiatePaymentModel): Promise<DinteroInitResponse> {
+    const response = await this._requestService.PostRequest("/dintero/initiate", model);
 
     const parsedResponse = this._requestService.TryParseResponse(response);
 

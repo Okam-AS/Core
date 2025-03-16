@@ -60,6 +60,7 @@ export { RewardBarData } from "../../v4/models/reward/reward-bar-data";
 
 // Dintero
 export { DinteroInitResponse } from "../../v4/models/dintero/dintero-init-response";
+export { DinteroInitiatePaymentModel } from "../../v4/models/dintero/dintero-initiate-payment-model";
 
 // Giftcard
 export { InitiateGiftcardPurchase } from "../../v4/models/giftcard/initiate-giftcard-purchase";

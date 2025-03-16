@@ -3,7 +3,7 @@ import { useCart, useTranslation, useServices, useStore } from ".";
 import { ref, computed, watch } from "vue";
 import { debounce } from "../helpers/ts-debounce";
 import { priceLabel } from "../helpers/tools";
-import { PaymentMethod, CartValidation, StripeCreatePaymentIntent, DinteroInitResponse } from "../models";
+import { PaymentMethod, CartValidation, StripeCreatePaymentIntent, DinteroInitResponse, DinteroInitiatePaymentModel } from "../models";
 import { DeliveryType, PaymentType } from "../enums";
 
 export const useCheckout = defineStore("checkout", () => {
@@ -308,11 +308,11 @@ export const useCheckout = defineStore("checkout", () => {
     });
   };
 
-  const initiateDinteroPayment = async (isApp: boolean): Promise<DinteroInitResponse> => {
+  const initiateDinteroPayment = async (model: DinteroInitiatePaymentModel): Promise<DinteroInitResponse> => {
     isProcessingPaymentPrivate.value = true;
     return new Promise((resolve, reject) => {
       dinteroService()
-        .Initiate(_store.currentStore.id, isApp)
+        .Initiate(model)
         .then((result) => {
           return resolve(result);
         })
