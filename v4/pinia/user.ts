@@ -67,9 +67,9 @@ export const useUser = defineStore("user", () => {
     const previouslyFavorite = userRef.value.favoriteProductIds?.includes(productId);
     const serverFunction = previouslyFavorite ? userService().RemoveFavoriteProduct(productId) : userService().AddFavoriteProduct(productId);
 
-    serverFunction
+    return serverFunction
       .then((success) => {
-        if (!success) return;
+        if (!success) return Promise.resolve();
 
         if (previouslyFavorite) {
           userRef.value.favoriteProductIds = userRef.value.favoriteProductIds.filter((id) => id !== productId);
@@ -79,7 +79,7 @@ export const useUser = defineStore("user", () => {
 
         return Promise.resolve();
       })
-      .catch(Promise.reject);
+      .catch((error) => Promise.reject(error));
   };
 
   const updateAddress = debounce((address) => {
@@ -188,7 +188,7 @@ export const useUser = defineStore("user", () => {
   };
 
   const reloadUser = () => {
-    if (!isLoggedIn()) return;
+    if (!isLoggedIn()) return Promise.resolve();
     return userService()
       .Get()
       .then((response) => {
@@ -205,12 +205,12 @@ export const useUser = defineStore("user", () => {
   };
 
   const feedbackShown = () => {
-    if (!isLoggedIn()) return;
+    if (!isLoggedIn()) return Promise.resolve();
     return feedbackService().FeedbackShown();
   };
 
   const createFeedback = (feedback: Feedback) => {
-    if (!isLoggedIn()) return;
+    if (!isLoggedIn()) return Promise.resolve();
     return feedbackService().CreateFeedback(feedback);
   };
 

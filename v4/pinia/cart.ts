@@ -72,7 +72,7 @@ export const useCart = defineStore("cart", () => {
 
   const disabledProperties = ["storeId", "items", "homeDeliveryMethod", "calculations"];
   const availableProperties = Object.keys(new Cart()).filter((x) => !disabledProperties.includes(x));
-  const setCartRootProperties = (payload) => {
+  const setCartRootProperties = (payload: Partial<Cart>) => {
     const currentCart = getCurrentCart();
     if (!currentCart) return;
 
@@ -164,7 +164,7 @@ export const useCart = defineStore("cart", () => {
     const currentCart = getCurrentCart();
     if (!currentCart || unsavedLineItemHasErrors()) return false;
 
-    if (!unsavedLineItem.value.id && unsavedLineItem.value.quantity === 0) return;
+    if (!unsavedLineItem.value.id && unsavedLineItem.value.quantity === 0) return false;
 
     if (!unsavedLineItem.value.id) {
       const createGuid = () => {

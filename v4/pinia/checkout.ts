@@ -144,7 +144,7 @@ export const useCheckout = defineStore("checkout", () => {
     tempRequestedCompletion,
     debounce(function () {
       _cart.setCartRootProperties({
-        requestedCompletion: tempRequestedCompletion.value,
+        requestedCompletion: tempRequestedCompletion.value ? new Date(tempRequestedCompletion.value) : undefined,
       });
     }, 400)
   );
