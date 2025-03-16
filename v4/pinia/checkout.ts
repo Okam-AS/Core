@@ -3,7 +3,7 @@ import { useCart, useTranslation, useServices, useStore } from ".";
 import { ref, computed, watch } from "vue";
 import { debounce } from "../helpers/ts-debounce";
 import { priceLabel } from "../helpers/tools";
-import { PaymentMethod, CartValidation, StripeCreatePaymentIntent } from "../models";
+import { PaymentMethod, CartValidation, StripeCreatePaymentIntent, DinteroInitResponse } from "../models";
 import { DeliveryType, PaymentType } from "../enums";
 
 export const useCheckout = defineStore("checkout", () => {
@@ -308,17 +308,13 @@ export const useCheckout = defineStore("checkout", () => {
     });
   };
 
-  const initiateDinteroPayment = async (isApp: boolean): Promise<CreatePaymentResult> => {
+  const initiateDinteroPayment = async (isApp: boolean): Promise<DinteroInitResponse> => {
     isProcessingPaymentPrivate.value = true;
     return new Promise((resolve, reject) => {
       dinteroService()
         .Initiate(_store.currentStore.id, isApp)
         .then((result) => {
-          return resolve({
-            isPaid: false,
-            redirectUrl: result.url,
-            returnUrl: "",
-          });
+          return resolve(result);
         })
         .catch(() => {
           errorMessagePrivate.value = $i("checkoutPage_couldNotPayWithDintero");
