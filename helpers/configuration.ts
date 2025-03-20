@@ -1,3 +1,17 @@
+// Declare process.env to fix TypeScript errors
+declare const process: {
+  env: {
+    API_BASE_URL: string;
+    VERSION: string;
+    IS_NATIVESCRIPT: string;
+    IS_PRODUCTION: string;
+    STRIPE_PUBLISHABLE_KEY: string;
+    VIPPS_IOS_PATH: string;
+    VIPPS_ANDROID_PATH: string;
+    PLATFORM_FILE_SUFFIX: string;
+    NOTIFICATION_HUB: string;
+  }
+};
 
 class Configuration {
   okamApiBaseUrl: string;
