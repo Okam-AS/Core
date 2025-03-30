@@ -15,6 +15,7 @@ export { StoreTip } from './store/store-tip'
 export { StorePayment } from './store/store-payment'
 export { StoreFees } from './store/store-fees'
 export { StoreOverviewModel } from './store/store-overview'
+export { StoreOverviewResponseModel } from './store/store-overview-response'
 
 // Discount
 export { Discount } from './discount/discount'
@@ -93,4 +94,3 @@ export { DineHomeDeliveryTimesResponse } from './dinehome/dinehome-delivery-time
 
 // Config
 export { Config } from './config/config'
-

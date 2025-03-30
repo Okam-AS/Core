@@ -1,5 +1,5 @@
 import $config from '../helpers/configuration'
-import { Store, StoreTip, StoreRegistration, OpeningHour, Address, StoreUserSetting, BrregData, StorePayment, StoreFees, CategorySearchOptions, StoreOverviewModel } from '../models'
+import { Store, StoreTip, StoreRegistration, OpeningHour, Address, StoreUserSetting, BrregData, StorePayment, StoreFees, CategorySearchOptions, StoreOverviewResponseModel } from '../models'
 import { MutationName, HttpMethod, DeliveryType } from '../enums'
 import { IVuexModule } from '../interfaces'
 import { RequestService, UserService } from './'
@@ -259,7 +259,7 @@ export class StoreService {
     return parsedResponse;
   }
 
-  public async GetOverview(options: { from: string, to: string }): Promise<StoreOverviewModel[]> {
+  public async GetOverview(options: { from: string, to: string }): Promise<StoreOverviewResponseModel> {
     const response = await this._requestService.PostRequest('/stores/overview', options);
     const parsedResponse = this._requestService.TryParseResponse(response);
     if (parsedResponse === undefined) { throw new Error('Failed to get store overview'); }
@@ -268,6 +268,12 @@ export class StoreService {
 
   public async Publish(storeId: number, options: { publish: boolean }): Promise<boolean> {
     const response = await this._requestService.PostRequest('/stores/' + storeId + '/publish', options);
+    const parsedResponse = this._requestService.TryParseResponse(response);
+    return parsedResponse !== undefined;
+  }
+
+  public async KeyAccountManagerUpdate(storeId: number, options: { kamUserId: string, status: string, notes: string }): Promise<boolean> {
+    const response = await this._requestService.PostRequest('/stores/' + storeId + '/kam', options);
     const parsedResponse = this._requestService.TryParseResponse(response);
     return parsedResponse !== undefined;
   }
