@@ -90,3 +90,7 @@ export { Payout } from './payout/payout'
 // DineHome
 export { DineHomeDeliveryTimesRequest } from './dinehome/dinehome-delivery-times-request';
 export { DineHomeDeliveryTimesResponse } from './dinehome/dinehome-delivery-times-response';
+
+// Config
+export { Config } from './config/config'
+

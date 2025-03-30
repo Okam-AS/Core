@@ -21,3 +21,5 @@ export { VippsService } from './vipps-service'
 export { PayoutService } from './payout-service'
 export { DineHomeService } from './dinehome-service'
 export { AIService } from './ai-service'
+export { ConfigService } from './config-service'
+
