@@ -14,6 +14,7 @@ export { StoreUserSetting } from './store/store-user-setting'
 export { StoreTip } from './store/store-tip'
 export { StorePayment } from './store/store-payment'
 export { StoreFees } from './store/store-fees'
+export { StoreOverviewModel } from './store/store-overview'
 
 // Discount
 export { Discount } from './discount/discount'
@@ -83,7 +84,7 @@ export { VippsInitiateResponse } from './payment/vipps-initiate-response'
 export { VippsVerifyResponse } from './payment/vipps-verify-response'
 export { PaymentMethod } from './payment/payment-method'
 
-//Payout
+// Payout
 export { Payout } from './payout/payout'
 
 // DineHome

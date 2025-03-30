@@ -30,6 +30,23 @@ export class UserService {
     return parsedResponse !== undefined
   }
 
+  public async Reload(): Promise<boolean> {
+    if (!this._vuexModule.state.currentUser?.token) { return false }
+    const response = await this._requestService.GetRequest('/user')
+    const parsedResponse = this._requestService.TryParseResponse(response)
+    if (response.statusCode === 401 && this._vuexModule.state.currentUser.token) {
+      this.Logout()
+      return false
+    }
+    if (parsedResponse !== undefined) {
+      // Preserve the token from current user state
+      parsedResponse.token = this._vuexModule.state.currentUser.token;
+      this._vuexModule.dispatch(ActionName.SetCurrentUser, parsedResponse)
+      return true
+    }
+    return false
+  }
+
   public async GetForStore(storeId: number, userId: string): Promise<UserForStore> {
     if (!this._vuexModule.state.currentUser?.token) { return undefined }
     const response = await this._requestService.GetRequest(`/user/${storeId}/${userId}`)

@@ -1,5 +1,5 @@
 import $config from '../helpers/configuration'
-import { Store, StoreTip, StoreRegistration, OpeningHour, Address, StoreUserSetting, BrregData, StorePayment, StoreFees, CategorySearchOptions } from '../models'
+import { Store, StoreTip, StoreRegistration, OpeningHour, Address, StoreUserSetting, BrregData, StorePayment, StoreFees, CategorySearchOptions, StoreOverviewModel } from '../models'
 import { MutationName, HttpMethod, DeliveryType } from '../enums'
 import { IVuexModule } from '../interfaces'
 import { RequestService, UserService } from './'
@@ -257,5 +257,18 @@ export class StoreService {
     const parsedResponse = this._requestService.TryParseResponse(response);
     if (parsedResponse === undefined) { throw new Error('Failed to get customer statistics'); }
     return parsedResponse;
+  }
+
+  public async GetOverview(options: { from: string, to: string }): Promise<StoreOverviewModel[]> {
+    const response = await this._requestService.PostRequest('/stores/overview', options);
+    const parsedResponse = this._requestService.TryParseResponse(response);
+    if (parsedResponse === undefined) { throw new Error('Failed to get store overview'); }
+    return parsedResponse;
+  }
+
+  public async Publish(storeId: number, options: { publish: boolean }): Promise<boolean> {
+    const response = await this._requestService.PostRequest('/stores/' + storeId + '/publish', options);
+    const parsedResponse = this._requestService.TryParseResponse(response);
+    return parsedResponse !== undefined;
   }
 }
