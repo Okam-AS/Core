@@ -59,6 +59,7 @@ export const useTheme = defineStore("theme", () => {
       svgLogo: "",
       itunesAppId: "6738664135",
       androidPackageName: "no.okam.lora",
+      homePath: "/store/lora",
     },
     arvLokalmat: {
       clientPlatformName: "ARV Lokalmat",
@@ -98,6 +99,7 @@ export const useTheme = defineStore("theme", () => {
       svgLogo: "",
       itunesAppId: "",
       androidPackageName: "no.okam.mathavna",
+      homePath: "/store/mathavna",
     },
   };
 
@@ -207,6 +209,10 @@ export const useTheme = defineStore("theme", () => {
     return themes[selectedTheme].androidPackageName || themes["okam"].androidPackageName;
   });
 
+  const $homePath = computed(() => {
+    return themes[selectedTheme].homePath || "";
+  });
+
   return {
     $color,
     $primaryColor,
@@ -222,5 +228,6 @@ export const useTheme = defineStore("theme", () => {
     $isWhiteLabel,
     $itunesAppId,
     $androidPackageName,
+    $homePath
   };
 });
