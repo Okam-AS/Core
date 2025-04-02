@@ -85,6 +85,20 @@ export const useTheme = defineStore("theme", () => {
       borderRadius: 12,
       availableStoreIds: [1],
     },
+    mathavna: {
+      clientPlatformName: "Mathavna",
+      primaryColor: "mathavnaGreen",
+      secondaryColor: "mathavnaGreen",
+      backgroundColor: "mathavnaYellow",
+      secondaryBackgroundColor: "white",
+      shadows: true,
+      textColor: "mathavnaGreen",
+      borderRadius: 0,
+      availableStoreIds: [106],
+      svgLogo: "mathavna",
+      itunesAppId: "",
+      androidPackageName: "no.okam.mathavna",
+    },
   };
 
   const colors = ref({
@@ -124,6 +138,10 @@ export const useTheme = defineStore("theme", () => {
     loraBlack: "#121212",
     loraYellow: "#f9e547",
     loraDarkGray: "#1a1a1a",
+
+    //Mathavna
+    mathavnaGreen: "#19474E", //"#1A464D",
+    mathavnaYellow: "#F8F3E0",
   });
 
   const $color = (key: string, darkmodeKey?: string) => {
