@@ -97,7 +97,7 @@ export const useTheme = defineStore("theme", () => {
       borderRadius: 0,
       availableStoreIds: [106],
       svgLogo: "",
-      itunesAppId: "",
+      itunesAppId: "6744123402",
       androidPackageName: "no.okam.mathavna",
       homePath: "/store/mathavna",
     },
@@ -228,6 +228,6 @@ export const useTheme = defineStore("theme", () => {
     $isWhiteLabel,
     $itunesAppId,
     $androidPackageName,
-    $homePath
+    $homePath,
   };
 });
