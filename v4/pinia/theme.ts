@@ -95,7 +95,7 @@ export const useTheme = defineStore("theme", () => {
       textColor: "mathavnaGreen",
       borderRadius: 0,
       availableStoreIds: [106],
-      svgLogo: "mathavna",
+      svgLogo: "",
       itunesAppId: "",
       androidPackageName: "no.okam.mathavna",
     },
