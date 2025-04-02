@@ -1,6 +1,6 @@
 export enum KeyAccountManagerStatus {
   MissingSetup = 'MissingSetup',
-  ReadyForDemo = 'Klar for demo',
+  ReadyForDemo = 'ReadyForDemo',
   WaitingForCustomerResponse = 'WaitingForCustomerResponse',
   RequiresFollowUp = 'RequiresFollowUp',
   InOperation = 'InOperation',
