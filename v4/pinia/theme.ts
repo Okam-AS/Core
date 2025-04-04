@@ -32,60 +32,6 @@ export const useTheme = defineStore("theme", () => {
       itunesAppId: "6465692106",
       androidPackageName: "no.okam.jungelpizza",
     },
-    olivia: {
-      clientPlatformName: "Olivia",
-      primaryColor: "oliviaOrange",
-      secondaryColor: "oliviaOrange",
-      backgroundColor: "oliviaBrown",
-      secondaryBackgroundColor: "oliviaBrown",
-      shadows: true,
-      textColor: "white",
-      borderRadius: 0,
-      availableStoreIds: [84, 85],
-      svgLogo: "olivia",
-      itunesAppId: "6738664135",
-      androidPackageName: "no.okam.olivia",
-    },
-    lora: {
-      clientPlatformName: "Lora Restaurant",
-      primaryColor: "loraDarkGray",
-      secondaryColor: "loraYellow",
-      backgroundColor: "loraBlack",
-      secondaryBackgroundColor: "loraDarkGray",
-      shadows: true,
-      textColor: "white",
-      borderRadius: 15,
-      availableStoreIds: [61],
-      svgLogo: "",
-      itunesAppId: "6738664135",
-      androidPackageName: "no.okam.lora",
-      homePath: "/store/lora",
-    },
-    arvLokalmat: {
-      clientPlatformName: "ARV Lokalmat",
-      primaryColor: "arvLokalmatGreen",
-      secondaryColor: "arvLokalmatGreen",
-      backgroundColor: "white",
-      secondaryBackgroundColor: "white",
-      shadows: true,
-      textColor: "black",
-      borderRadius: 3,
-      availableStoreIds: [39],
-      svgLogo: "arv_lokalmat",
-      itunesAppId: "6468146732",
-      androidPackageName: "no.okam.matarv",
-    },
-    bkh: {
-      clientPlatformName: "Bislett Kebab House",
-      primaryColor: "bkhGray",
-      secondaryColor: "white",
-      backgroundColor: "bkhDarkerGray",
-      secondaryBackgroundColor: "bkhGray",
-      shadows: false,
-      textColor: "white",
-      borderRadius: 12,
-      availableStoreIds: [1],
-    },
     mathavna: {
       clientPlatformName: "Mathavna",
       primaryColor: "mathavnaGreen",
@@ -123,23 +69,6 @@ export const useTheme = defineStore("theme", () => {
     jungelPizzaGreen: "#000000",
     lightJungelPizzaGreen: "#AFDBBD",
     lightJungelPizzaBeige: "#E9CEB3",
-
-    //Arv Lokalmat
-    arvLokalmatGreen: "#1E4233",
-
-    //BKH
-    bkhGray: "#302F36",
-    bkhDarkerGray: "#161E20",
-
-    //Olivia
-    oliviaBlack: "#000000",
-    oliviaBrown: "#242422",
-    oliviaOrange: "#a1624b",
-
-    //Lora
-    loraBlack: "#121212",
-    loraYellow: "#f9e547",
-    loraDarkGray: "#1a1a1a",
 
     //Mathavna
     mathavnaGreen: "#19474E", //"#1A464D",
