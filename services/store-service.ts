@@ -283,4 +283,28 @@ export class StoreService {
     const parsedResponse = this._requestService.TryParseResponse(response);
     return parsedResponse !== undefined;
   }
+
+  public async UpdateDinteroConfig(storeId: number, options: {
+    dinteroEnabled: boolean,
+    dinteroAccountId: string,
+    clientId: string,
+    clientSecret: string,
+    vippsEnabled: boolean,
+    applePayEnabled: boolean,
+    creditCardEnabled: boolean,
+    googlePayEnabled: boolean,
+    klarnaEnabled: boolean,
+    billieEnabled: boolean
+  }): Promise<boolean> {
+    const response = await this._requestService.PostRequest('/stores/' + storeId + '/dintero-configuration', options);
+    const parsedResponse = this._requestService.TryParseResponse(response);
+    return parsedResponse !== undefined;
+  }
+
+  public async GetDinteroConfig(storeId: number): Promise<any> {
+    const response = await this._requestService.GetRequest('/stores/' + storeId + '/dintero-configuration');
+    const parsedResponse = this._requestService.TryParseResponse(response);
+    if (parsedResponse === undefined) { throw new Error('Failed to get Dintero configuration'); }
+    return parsedResponse;
+  }
 }
