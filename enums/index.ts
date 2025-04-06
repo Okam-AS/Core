@@ -12,6 +12,7 @@ export { DiscountType } from "./discount-type";
 export { OrderStatusFilter } from "./order-status-filter";
 export { StatisticDateFilter } from "./statistic-date-filter";
 export { VippsVerifyStatus } from "./vipps-verify-status";
+export { DinteroVerifyStatus } from "./dintero-verify-status";
 export { OrderPaymentTypeFilter } from "./order-payment-type-filter";
 export { RewardTransactionType } from "./reward-transaction-type";
 export { GiftcardStatus } from "./giftcard-status";

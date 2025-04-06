@@ -72,5 +72,6 @@ export { Culture } from "./culture/culture";
 // Payment
 export { VippsInitiateResponse } from "./payment/vipps-initiate-response";
 export { VippsVerifyResponse } from "./payment/vipps-verify-response";
+export { DinteroVerifyResponse } from "./payment/dintero-verify-response";
 export { PaymentMethod } from "./payment/payment-method";
 export { StripeCreatePaymentIntent } from "./payment/stripe-create-payment-intent";
