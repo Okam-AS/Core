@@ -3,6 +3,7 @@ export class Store {
   id: number;
   name: string;
   slug: string;
+  termsUrl: string;
   legalName: string;
   phoneNumber: string;
   logoUrl: string;
