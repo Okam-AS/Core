@@ -99,6 +99,15 @@ export const useOrder = defineStore("order", () => {
       });
   };
 
+  const completeViewingOrder = () => {
+    if (!_user.isLoggedIn() || !viewingOrderPrivate.value) return Promise.resolve();
+    return orderService()
+      .UpdateStatus(viewingOrderPrivate.value.id, OrderStatus.Completed)
+      .finally(() => {
+        setViewingOrder(viewingOrderPrivate.value.id);
+      });
+  };
+
   const payedLabel = (paymentType: PaymentType) => {
     if (paymentType === PaymentType.Stripe) return $i("paymentType_stripe");
     if (paymentType === PaymentType.Vipps || paymentType === PaymentType.DinteroVipps) return $i("paymentType_vipps");
@@ -136,6 +145,7 @@ export const useOrder = defineStore("order", () => {
     orders,
     ongoing,
     viewingOrder,
+    completeViewingOrder,
     cancelViewingOrder,
     payedLabel,
     setViewingOrder,
