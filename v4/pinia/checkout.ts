@@ -97,6 +97,31 @@ export const useCheckout = defineStore("checkout", () => {
       return;
     }
     srdRef.value = event.value;
+
+    // If the date option changed, we need to ensure the time is properly set
+    // This ensures the time component is preserved when changing dates
+    if (srdRef.value > 0 && srtRef.value) {
+      // Make sure srtRef.value is a valid Date object
+      let currentHours = 0;
+      let currentMinutes = 0;
+
+      // Check if srtRef.value is a Date object or can be converted to one
+      if (srtRef.value instanceof Date && !isNaN(srtRef.value.getTime())) {
+        currentHours = srtRef.value.getHours();
+        currentMinutes = srtRef.value.getMinutes();
+      } else {
+        // If not a valid Date, create a new Date object
+        const now = new Date();
+        currentHours = now.getHours();
+        currentMinutes = now.getMinutes();
+      }
+
+      // Create a new Date object
+      srtRef.value = new Date(srtRef.value);
+      srtRef.value.setHours(currentHours);
+      srtRef.value.setMinutes(currentMinutes);
+    }
+
     requestedCompletionChange();
   };
 

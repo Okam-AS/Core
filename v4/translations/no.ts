@@ -321,6 +321,8 @@ export default {
   giftcardReceiptPage_greeting: "Hilsen",
   checkoutPage_rewardHeading: "Bonuspoeng",
   giftcardConfirmationPage_success: "Betaling vellykket",
+  orderPage_isOrderDelivered: "Er bestillingen allerede levert?",
+  orderPage_complete: "Fullfør",
   rewards_heading: "Bonus",
   rewards_noCards: "Du har ingen medlemskap enda",
   rewards_becomeMember: "Bli medlem",

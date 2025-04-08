@@ -319,6 +319,8 @@ export default {
   giftcardReceiptPage_greeting: "Greeting",
   checkoutPage_rewardHeading: "Reward points",
   giftcardConfirmationPage_success: "Payment successful",
+  orderPage_isOrderDelivered: "Has the order already been delivered?",
+  orderPage_complete: "Complete",
   rewards_heading: "Rewards",
   rewards_noCards: "You have no memberships yet",
   rewards_becomeMember: "Become a member",

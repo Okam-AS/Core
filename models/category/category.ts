@@ -1,24 +1,25 @@
-import { DeliveryType } from '../../enums'
-import { ImageSource, ImageCarouselItem, CategoryProductListItem } from '../index'
+import { DeliveryType } from "../../enums";
+import { ImageSource, ImageCarouselItem, CategoryProductListItem } from "../index";
 
 export class Category {
-    id: string;
-    orderIndex: number;
-    name: string;
-    image: ImageSource;
+  id: string;
+  orderIndex: number;
+  name: string;
+  image: ImageSource;
 
-    hide: boolean;
-    published: boolean;
+  hide: boolean;
+  soldOut: boolean;
+  published: boolean;
 
-    imageCarouselEnabled: boolean;
-    imageCarouselItems: Array<ImageCarouselItem>;
+  imageCarouselEnabled: boolean;
+  imageCarouselItems: Array<ImageCarouselItem>;
 
-    categoryProductListEnabled: boolean;
-    categoryProductListItems: Array<CategoryProductListItem>;
+  categoryProductListEnabled: boolean;
+  categoryProductListItems: Array<CategoryProductListItem>;
 
-    storeId: number;
+  storeId: number;
 
-    hideFromDeliveryTypes: Array<DeliveryType>;
+  hideFromDeliveryTypes: Array<DeliveryType>;
 
-    loaded: boolean;
+  loaded: boolean;
 }

@@ -18,6 +18,18 @@ export const useTheme = defineStore("theme", () => {
       itunesAppId: "1514296965",
       androidPackageName: "no.okam.consumer",
     },
+    okamDark: {
+      clientPlatformName: "Okam",
+      primaryColor: "almostBlack",
+      secondaryColor: "lightGray", // Different from primary for contrast
+      backgroundColor: "darkGray", // App background
+      secondaryBackgroundColor: "mediumGray", // Background on buttons
+      shadows: true,
+      textColor: "lightGray",
+      borderRadius: 15,
+      itunesAppId: "1514296965",
+      androidPackageName: "no.okam.consumer",
+    },
     jungelPizza: {
       clientPlatformName: "Jungel Pizza",
       primaryColor: "jungelPizzaGreen",
@@ -64,6 +76,12 @@ export const useTheme = defineStore("theme", () => {
     //Okam
     okamGreen: "#1BB776",
     lightOkamGreen: "#D5F6E5",
+
+    //Okam Dark Theme
+    darkGray: "#252525",
+    almostBlack: "#181818",
+    mediumGray: "#3A3A3A",
+    lightGray: "#E0E0E0",
 
     //Jungel Pizza
     jungelPizzaGreen: "#000000",
