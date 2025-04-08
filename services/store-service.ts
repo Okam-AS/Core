@@ -294,7 +294,9 @@ export class StoreService {
     creditCardEnabled: boolean,
     googlePayEnabled: boolean,
     klarnaEnabled: boolean,
-    billieEnabled: boolean
+    billieEnabled: boolean,
+    commissionPercentage: number,
+    splitSellerId: string
   }): Promise<boolean> {
     const response = await this._requestService.PostRequest('/stores/' + storeId + '/dintero-configuration', options);
     const parsedResponse = this._requestService.TryParseResponse(response);
