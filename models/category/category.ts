@@ -8,6 +8,7 @@ export class Category {
     image: ImageSource;
 
     hide: boolean;
+    soldOut: boolean;
     startPublish: Date;
     stopPublish: Date;
 
