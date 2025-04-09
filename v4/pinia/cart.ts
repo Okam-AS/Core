@@ -77,7 +77,7 @@ export const useCart = defineStore("cart", () => {
     if (!currentCart) return;
 
     availableProperties.forEach((propertyName) => {
-      if (payload[propertyName] != undefined) {
+      if (propertyName in payload) {
         currentCart[propertyName.toString()] = payload[propertyName];
       }
     });
@@ -140,7 +140,6 @@ export const useCart = defineStore("cart", () => {
     currentCart.fullAddress = currentCart.fullAddress || _user.user.fullAddress;
     currentCart.city = currentCart.city || _user.user.city;
     currentCart.zipCode = currentCart.zipCode || _user.user.zipCode;
-
     return cartService()
       .Update(currentCart)
       .then((cart) => {
