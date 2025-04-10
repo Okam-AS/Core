@@ -168,8 +168,29 @@ export const useCheckout = defineStore("checkout", () => {
   watch(
     tempRequestedCompletion,
     debounce(function () {
+      // Get the selected time components directly
+      const selectedHours = selectedRequestedCompletionTimeHours();
+      const selectedMinutes = selectedRequestedCompletionTimeMinutes();
+      let requestedCompletionValue = null;
+      
+      // Only proceed if we have valid selections
+      if (srdRef.value !== 0 && selectedRequestedCompletionDate.value && srtRef.value) {
+        const selectedDate = selectedRequestedCompletionDate.value;
+        
+        // Format the date as a string in the exact format we want to send to the backend
+        // YYYY-MM-DDTHH:MM:SS format with no timezone information
+        const year = selectedDate.getFullYear();
+        const month = String(selectedDate.getMonth() + 1).padStart(2, '0');
+        const day = String(selectedDate.getDate()).padStart(2, '0');
+        const hours = String(selectedHours).padStart(2, '0');
+        const minutes = String(selectedMinutes).padStart(2, '0');
+        
+        // Create the formatted string
+        requestedCompletionValue = `${year}-${month}-${day}T${hours}:${minutes}:00`;
+      }
+      
       _cart.setCartRootProperties({
-        requestedCompletion: tempRequestedCompletion.value ? new Date(tempRequestedCompletion.value) : null,
+        requestedCompletion: requestedCompletionValue,
       });
     }, 400)
   );
@@ -305,7 +326,6 @@ export const useCheckout = defineStore("checkout", () => {
           }
         })
         .catch((e) => {
-          console.log(e);
           errorMessagePrivate.value = $i("checkoutPage_paymentFailed");
           isProcessingPaymentPrivate.value = false;
           reject();
