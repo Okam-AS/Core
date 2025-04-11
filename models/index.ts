@@ -94,3 +94,12 @@ export { DineHomeDeliveryTimesResponse } from './dinehome/dinehome-delivery-time
 
 // Config
 export { Config } from './config/config'
+
+// Offer
+export { OfferItemModel } from './offer/offer-item-model'
+export { OfferProposalModel } from './offer/offer-proposal-model'
+export { OfferProposalLineItemModel } from './offer/offer-proposal-line-item-model'
+export { OfferItemSnapshotModel } from './offer/offer-item-snapshot-model';
+export { AcceptOfferProposalModel } from './offer/accept-offer-proposal-model';
+export { SendVerificationTokenModel } from './offer/send-verification-token-model';
+export { SendProposalModel } from './offer/send-proposal-model';

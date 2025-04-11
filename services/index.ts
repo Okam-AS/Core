@@ -22,4 +22,5 @@ export { PayoutService } from './payout-service'
 export { DineHomeService } from './dinehome-service'
 export { AIService } from './ai-service'
 export { ConfigService } from './config-service'
-
+export { OfferService } from './offer-service'
+export { OfferProposalService } from './offer-proposal-service'
