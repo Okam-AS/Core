@@ -22,6 +22,8 @@ export class OfferProposalModel {
   notes: string;
   sellerId?: string;
   sellerName?: string;
+  sellersManagerId?: string;
+  sellersManagerName?: string;
   isExpired: boolean;
   lineItems: OfferProposalLineItemModel[] = [];
 }

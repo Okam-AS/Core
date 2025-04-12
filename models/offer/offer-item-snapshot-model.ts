@@ -12,6 +12,8 @@ export class OfferItemSnapshotModel {
   maximumOnetimeFee: number;
   onetimeBonusToSeller: number;
   monthlyBonusToSeller: number;
+  oneTimeBonusToSellersManager: number;
+  monthlyBonusToSellersManager: number;
 
   snapshotCreatedAt: Date;
 }

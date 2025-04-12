@@ -10,6 +10,8 @@ export class OfferItemModel {
   maximumOnetimeFee: number;
   onetimeBonusToSeller: number;
   monthlyBonusToSeller: number;
+  oneTimeBonusToSellersManager: number;
+  monthlyBonusToSellersManager: number;
   createdAt: Date;
   createdBy: string;
   createdByName: string;
