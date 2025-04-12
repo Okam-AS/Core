@@ -123,4 +123,17 @@ export class OfferProposalService {
 
     return parsedResponse;
   }
+
+  /**
+   * Cancels an offer proposal
+   * @param id Offer proposal ID
+   * @returns Promise with the cancelled offer proposal
+   */
+  public async CancelProposal(id: number): Promise<OfferProposalModel> {
+    const response = await this._requestService.PostRequest(`/offerproposals/${id}/cancel`, {});
+    const parsedResponse = this._requestService.TryParseResponse(response);
+    if (parsedResponse === undefined) { throw new Error('Failed to cancel offer proposal') }
+
+    return parsedResponse;
+  }
 }

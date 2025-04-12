@@ -4,5 +4,6 @@ export enum OfferProposalStatus {
   Read = 2,
   Accepted = 3,
   StoreRegistered = 4,
-  Rejected = 5
+  Rejected = 5,
+  Cancelled = 6
 }
