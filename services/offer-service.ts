@@ -45,20 +45,13 @@ export class OfferService {
    * @returns Promise with created/updated offer
    */
   public async CreateOrUpdateOffer(model: OfferItemModel): Promise<OfferItemModel> {
-    console.log('OfferService.CreateOrUpdateOffer called with model:', model);
     try {
-      console.log('Sending request to /offers endpoint with payload:', JSON.stringify(model));
       const response = await this._requestService.PostRequest('/offers', model);
-      console.log('Raw response from API:', response);
-      
       const parsedResponse = this._requestService.TryParseResponse(response);
-      console.log('Parsed response:', parsedResponse);
-      
+
       if (parsedResponse === undefined) {
-        console.error('Failed to parse response, throwing error');
         throw new Error('Failed to create or update offer');
       }
-
       return parsedResponse;
     } catch (error) {
       console.error('Error in CreateOrUpdateOffer:', error);

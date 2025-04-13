@@ -102,3 +102,8 @@ export { OfferProposalLineItemModel } from './offer/offer-proposal-line-item-mod
 export { AcceptOfferProposalModel } from './offer/accept-offer-proposal-model';
 export { SendVerificationTokenModel } from './offer/send-verification-token-model';
 export { SendProposalModel } from './offer/send-proposal-model';
+
+// KAM
+export { KamUserModel } from './kam/kam-user-model';
+export { AssignManagerModel } from './kam/assign-manager-model';
+export { KamDirectorRelationshipModel } from './kam/kam-director-relationship-model';
