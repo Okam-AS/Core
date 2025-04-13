@@ -4,6 +4,9 @@ export class OfferItemModel {
   description: string;
   internalDescription: string;
 
+  enableMonthlyFee: boolean;
+  enableOnetimeFee: boolean;
+
   minMonthlyFee: number;
   minOnetimeFee: number;
   maxMonthlyFee: number;

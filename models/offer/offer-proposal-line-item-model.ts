@@ -8,6 +8,8 @@ export class OfferProposalLineItemModel {
   quantity: number;
   notes: string;
   internalNotes: string;
+  showMonthlyFee: boolean;
+  showOnetimeFee: boolean;
   monthlyFee: number;
   onetimeFee: number;
 }

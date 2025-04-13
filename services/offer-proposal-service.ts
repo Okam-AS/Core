@@ -99,6 +99,20 @@ export class OfferProposalService {
   }
 
   /**
+   * Sends an email with the offer proposal details to the client
+   * @param id Offer proposal ID
+   * @param model Optional model for additional parameters
+   * @returns Promise with boolean indicating success
+   */
+  public async SendProposalEmail(id: number, model: SendProposalModel = {}): Promise<boolean> {
+    const response = await this._requestService.PostRequest(`/offerproposals/${id}/send-proposal-email`, model);
+    const parsedResponse = this._requestService.TryParseResponse(response);
+    if (parsedResponse === undefined) { throw new Error('Failed to send proposal email') }
+
+    return parsedResponse.success;
+  }
+
+  /**
    * Marks an offer proposal as read
    * @param id Offer proposal ID
    * @returns Promise with the updated offer proposal
