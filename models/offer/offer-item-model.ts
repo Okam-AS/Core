@@ -2,16 +2,23 @@ export class OfferItemModel {
   offerItemId?: string;
   name: string;
   description: string;
-  offeredMonthlyFee: number;
-  offeredOnetimeFee: number;
-  costMonthlyFee: number;
-  costOnetimeFee: number;
-  maximumMonthlyFee: number;
-  maximumOnetimeFee: number;
+  internalDescription: string;
+
+  minMonthlyFee: number;
+  minOnetimeFee: number;
+  maxMonthlyFee: number;
+  maxOnetimeFee: number;
+
   onetimeBonusToSeller: number;
   monthlyBonusToSeller: number;
   oneTimeBonusToSellersManager: number;
   monthlyBonusToSellersManager: number;
+
+  onetimePercentBonusToSeller: number;
+  monthlyPercentBonusToSeller: number;
+  onetimePercentBonusToSellersManager: number;
+  monthlyPercentBonusToSellersManager: number;
+
   createdAt: Date;
   createdBy: string;
   createdByName: string;

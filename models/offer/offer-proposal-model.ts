@@ -20,6 +20,7 @@ export class OfferProposalModel {
   expiration?: Date;
   status: OfferProposalStatus;
   notes: string;
+  internalNotes: string;
   sellerId?: string;
   sellerName?: string;
   sellersManagerId?: string;

@@ -1,10 +1,13 @@
-import { OfferItemSnapshotModel } from './offer-item-snapshot-model';
-
 export class OfferProposalLineItemModel {
   id: number;
   offerProposalId: number;
   originalOfferItemId: string;
-  snapshotId: string;
+  name: string;
+  description: string;
+  internalDescription: string;
   quantity: number;
-  itemSnapshot?: OfferItemSnapshotModel;
+  notes: string;
+  internalNotes: string;
+  monthlyFee: number;
+  onetimeFee: number;
 }
