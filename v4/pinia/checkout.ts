@@ -71,7 +71,7 @@ export const useCheckout = defineStore("checkout", () => {
     };
     const today = new Date();
     let options = [] as any[];
-    for (let index = 0; index < 7; index++) {
+    for (let index = 0; index < 8; index++) {
       const tempDate = new Date(today);
       if (index > 1) tempDate.setDate(tempDate.getDate() + index - 1);
       options.push({
