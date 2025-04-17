@@ -84,7 +84,7 @@ export default {
   checkoutPage_couldNotHandlePayment: "Oops! Din betaling kunne ikke behandles akkurat nå. Vennligst prøv igjen litt senere.",
   checkoutPage_paymentFailed: "Betalingen kunne ikke gjennomføres på grunn av manglende dekning eller ugyldig kortinformasjon",
   checkoutPage_payNow: "Betal nå",
-  checkoutPage_payWithVipps: "Betal med Vipps",
+  checkoutPage_payWithVipps: "Vipps",
   checkoutPage_continueToPayment: "Fortsett til betaling",
   dinteroPayment_errorGeneral: "Betalingen mislyktes. Vennligst prøv igjen eller velg en annen betalingsmetode.",
   dinteroPayment_errorTransaction: "Vi kunne ikke fullføre transaksjonen din. Vennligst prøv igjen.",

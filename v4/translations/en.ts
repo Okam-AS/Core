@@ -84,7 +84,7 @@ export default {
   checkoutPage_paymentFailed: "The payment could not be processed due to insufficient funds or invalid card information",
   checkoutPage_noRewardForInStorePayment: "Reward points will not be collected if you pay in store",
   checkoutPage_payNow: "Pay now",
-  checkoutPage_payWithVipps: "Pay with Vipps",
+  checkoutPage_payWithVipps: "Vipps",
   checkoutPage_continueToPayment: "Continue to payment",
   dinteroPayment_errorGeneral: "Payment failed. Please try again or choose another payment method.",
   dinteroPayment_errorTransaction: "We couldn't complete your transaction. Please try again.",
