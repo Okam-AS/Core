@@ -25,3 +25,4 @@ export { ConfigService } from './config-service'
 export { OfferService } from './offer-service'
 export { OfferProposalService } from './offer-proposal-service'
 export { KamService } from './kam-service'
+export { DinteroService } from './dintero-service';
