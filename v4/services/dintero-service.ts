@@ -21,8 +21,8 @@ export class DinteroService {
     return parsedResponse;
   }
 
-  public async Verify(transactionId: string): Promise<DinteroVerifyResponse> {
-    const response = await this._requestService.GetRequest("/dintero/verify/" + transactionId);
+  public async Verify(sessionId: string): Promise<DinteroVerifyResponse> {
+    const response = await this._requestService.GetRequest("/dintero/verify/" + sessionId);
     const parsedResponse = this._requestService.TryParseResponse(response);
     if (parsedResponse === undefined) {
       throw new Error("Kunne ikke verifisere Dintero-betaling");
@@ -30,35 +30,41 @@ export class DinteroService {
     return parsedResponse;
   }
 
-  public PullVerifyResult = (transactionId: string, successHandler, failHandler) => {
-    if (!transactionId && failHandler) {
-      failHandler();
-    }
-    if (!transactionId) {
-      return;
-    }
-    setTimeout(() => {
-      const intervalId = setInterval(() => {
-        this.Verify(transactionId)
-          .then((result) => {
-            // result.status: 'Waiting', 'Success', or 'Fail'
-            if (result.status === "Success") {
-              clearInterval(intervalId);
-              if (successHandler) {
-                successHandler(result);
-              }
-            } else if (result.status === "Fail") {
-              clearInterval(intervalId);
-              if (failHandler) {
-                failHandler(result);
-              }
-            }
-          })
-          .catch(() => {
+  public PullVerifyResult(sessionId, successHandler, failHandler) {
+    let intervalId;
+    const poll = () => {
+      this.Verify(sessionId)
+        .then((result) => {
+          if (result.status === "Success") {
             clearInterval(intervalId);
-            failHandler();
-          });
-      }, 2000);
-    }, 2200);
-  };
+            if (successHandler) successHandler(result);
+          } else if (result.status === "Fail") {
+            clearInterval(intervalId);
+            if (failHandler) failHandler(result);
+          }
+        })
+        .catch((e) => {
+          clearInterval(intervalId);
+          failHandler();
+        });
+    };
+
+    setTimeout(() => {
+      this.Verify(sessionId)
+        .then((result) => {
+          if (result.status === "Success") {
+            if (successHandler) successHandler(result);
+          } else if (result.status === "Fail") {
+            if (failHandler) failHandler(result);
+          } else {
+            // Only start polling if still waiting
+            intervalId = setInterval(poll, 1800);
+          }
+        })
+        .catch((e) => {
+          failHandler();
+        });
+    }, 800);
+
+  }
 }
