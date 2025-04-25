@@ -66,7 +66,7 @@ export default {
   checkoutPage_login: "Bekreft telefonnummer",
   checkoutPage_cardAuthFailed: "Kortautentisering feilet",
   checkoutPage_couldNotPayWithVipps: "Betaling med Vipps kunne ikke gjennomføres for øyeblikket.",
-  checkoutPage_couldNotPayWithDintero: "Kunne ikke betale med Dintero",
+  checkoutPage_couldNotPayWithDintero: "Noe gikk galt, prøv igjen eller velg en annen betalingsmetode",
   checkoutPage_deliveryTypeNotSetError: "Gå tilbake og velg leveringsmetode",
   checkoutPage_deliveryAddressNotSetError: "Legg inn en gyldig leveringsadresse lengre opp",
   checkoutPage_somethingWentWrong: "Noe gikk galt. Prøv igjen senere",

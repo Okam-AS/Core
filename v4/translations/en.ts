@@ -65,7 +65,7 @@ export default {
   checkoutPage_login: "Confirm phone number",
   checkoutPage_cardAuthFailed: "Card authentication failed",
   checkoutPage_couldNotPayWithVipps: "Payment with Vipps could not be processed at the moment.",
-  checkoutPage_couldNotPayWithDintero: "Could not pay with Dintero",
+  checkoutPage_couldNotPayWithDintero: "Something went wrong, try again or select another payment method",
   checkoutPage_deliveryTypeNotSetError: "Go back and select a delivery method",
   checkoutPage_deliveryAddressNotSetError: "Enter a valid delivery address further up",
   checkoutPage_somethingWentWrong: "Something went wrong. Please try again later",
