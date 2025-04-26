@@ -130,31 +130,49 @@ export const useCart = defineStore("cart", () => {
       });
   };
 
+  let cartSyncVersion = 0;
+  let isCartSyncing = false;
+  let lastGoodCartState = null;
+  let pendingCartSync = false;
+
   const syncWithDb = async () => {
     if (!_user.isLoggedIn()) return Promise.reject();
     const currentCart = getCurrentCart();
     if (!currentCart || !currentCart.storeId) return Promise.reject();
-    isLoading.value = true;
 
-    // Set default delivery address
-    currentCart.fullAddress = currentCart.fullAddress || _user.user.fullAddress;
-    currentCart.city = currentCart.city || _user.user.city;
-    currentCart.zipCode = currentCart.zipCode || _user.user.zipCode;
-    return cartService()
-      .Update(currentCart)
-      .then((cart) => {
-        const cartIndex = cartsRef.value.findIndex((c) => c.storeId === _store.currentStore.id);
-        if (cartIndex >= 0) {
-          cartsRef.value[cartIndex] = cart;
-        }
-      })
-      .catch((err) => {
-        console.log("Failed to sync cart with db");
-        console.log(err);
-      })
-      .finally(() => {
-        isLoading.value = false;
-      });
+    if (isCartSyncing) {
+      pendingCartSync = true;
+      return Promise.resolve();
+    }
+    isCartSyncing = true;
+    const syncVersion = ++cartSyncVersion;
+    const cartToSync = JSON.parse(JSON.stringify(getCurrentCart()));
+
+    // Save last good cart state for rollback
+    lastGoodCartState = JSON.parse(JSON.stringify(getCurrentCart()));
+
+    try {
+      // Set default delivery address
+      cartToSync.fullAddress = cartToSync.fullAddress || _user.user.fullAddress;
+      cartToSync.city = cartToSync.city || _user.user.city;
+      cartToSync.zipCode = cartToSync.zipCode || _user.user.zipCode;
+      const backendCart = await cartService().Update(cartToSync);
+      if (syncVersion === cartSyncVersion) {
+        setCart(backendCart); // safe to update
+        lastGoodCartState = JSON.parse(JSON.stringify(backendCart));
+      }
+    } catch (e) {
+      // Rollback to last good state
+      if (lastGoodCartState) {
+        setCart(lastGoodCartState);
+      }
+    } finally {
+      isCartSyncing = false;
+      if (pendingCartSync) {
+        pendingCartSync = false;
+        syncWithDb();
+      }
+    }
   };
 
   const syncWithDbDebounced = debounce(syncWithDb, 700);
