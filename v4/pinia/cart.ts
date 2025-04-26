@@ -175,7 +175,7 @@ export const useCart = defineStore("cart", () => {
     }
   };
 
-  const syncWithDbDebounced = debounce(syncWithDb, 700);
+  const syncWithDbDebounced = debounce(syncWithDb, 300);
 
   const unsavedLineItemSave = async () => {
     const currentCart = getCurrentCart();
