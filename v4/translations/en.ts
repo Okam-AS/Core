@@ -336,6 +336,7 @@ export default {
   rewards_toCollectPoints: " to earn bonus points and access exclusive offers",
   rewards_toCollectXPoints: " and earn {amount} on this order",
   rewards_youWillEarn: "You will earn {amount} on this order",
+  rewards_youWillSpend: "You will spend {amount} on this order",
   rewards_useReward: "Bruk bonuspoeng",
   rewards_points: "Reward points",
   giftcardPurchasePage_heading: "Kvittering",

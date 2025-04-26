@@ -2,12 +2,12 @@ export class CartCalculation {
   itemsAmount: number;
   itemsAmountLineThrough: number;
   deliveryAmount: number;
-  orderDiscountAmount: number;
   tableAdditionalAmount: number;
   deliveryAdditionalAmount: number;
   tipAmount: number;
 
-  usedRewardAmount: number;
+  rewardAmountSpent: number;
+
   earnableRewardAmount: number;
   rewardBalanceBeforeOrder: number;
 

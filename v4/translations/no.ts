@@ -338,6 +338,7 @@ export default {
   rewards_toCollectPoints: " for å samle poeng og få eksklusive tilbud",
   rewards_toCollectXPoints: " og tjen {amount} på denne bestillingen",
   rewards_youWillEarn: "Du vil tjene {amount} på denne bestillingen",
+  rewards_youWillSpend: "Du vil bruke {amount} på denne bestillingen",
   rewards_useReward: "Bruk bonuspoeng",
   rewards_points: "Bonuspoeng",
   giftcardPurchasePage_heading: "Kvittering",

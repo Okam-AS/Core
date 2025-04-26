@@ -29,6 +29,7 @@ export class Cart {
   tableName?: string = undefined;
 
   useReward: boolean = false;
+  isHomeDelivery: boolean = false;
 
   itemsCountInCategory;
 
