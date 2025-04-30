@@ -1,5 +1,5 @@
 import $config from '../helpers/configuration'
-import { Store, StoreTip, StoreRegistration, OpeningHour, Address, StoreUserSetting, BrregData, StorePayment, StoreFees, CategorySearchOptions, StoreOverviewResponseModel } from '../models'
+import { Store, StoreTip, StoreRegistration, OpeningHour, Address, StoreUserSetting, BrregData, StorePayment, StoreFees, CategorySearchOptions, StoreOverviewResponseModel, StorePaymentConfig } from '../models'
 import { MutationName, HttpMethod, DeliveryType } from '../enums'
 import { IVuexModule } from '../interfaces'
 import { RequestService, UserService } from './'
@@ -176,13 +176,6 @@ export class StoreService {
     return parsedResponse
   }
 
-  public async GetFees(id: number): Promise<StoreFees> {
-    const response = await this._requestService.GetRequest('/stores/' + id + '/fees')
-    const parsedResponse = this._requestService.TryParseResponse(response)
-    if (parsedResponse === undefined) { throw new Error('Failed to get store fees') }
-    return parsedResponse
-  }
-
   public async Feedback(feedback: string) {
     const response = await this._requestService.PostRequest('/stores/feedback', { feedback })
     const parsedResponse = this._requestService.TryParseResponse(response)
@@ -307,6 +300,13 @@ export class StoreService {
     const response = await this._requestService.GetRequest('/stores/' + storeId + '/dintero-configuration');
     const parsedResponse = this._requestService.TryParseResponse(response);
     if (parsedResponse === undefined) { throw new Error('Failed to get Dintero configuration'); }
+    return parsedResponse;
+  }
+
+  public async GetPaymentConfig(storeId: number): Promise<StorePaymentConfig> {
+    const response = await this._requestService.GetRequest('/stores/' + storeId + '/payment-config');
+    const parsedResponse = this._requestService.TryParseResponse(response);
+    if (parsedResponse === undefined) { throw new Error('Failed to get store payment config'); }
     return parsedResponse;
   }
 }

@@ -16,6 +16,7 @@ export { StorePayment } from './store/store-payment'
 export { StoreFees } from './store/store-fees'
 export { StoreOverviewModel } from './store/store-overview'
 export { StoreOverviewResponseModel } from './store/store-overview-response'
+export { StorePaymentConfig } from './store/store-payment-config'
 
 // Discount
 export { Discount } from './discount/discount'
