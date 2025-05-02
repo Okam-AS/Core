@@ -172,11 +172,11 @@ export const useCheckout = defineStore("checkout", () => {
       const selectedHours = selectedRequestedCompletionTimeHours();
       const selectedMinutes = selectedRequestedCompletionTimeMinutes();
       let requestedCompletionValue = null;
-      
+
       // Only proceed if we have valid selections
       if (srdRef.value !== 0 && selectedRequestedCompletionDate.value && srtRef.value) {
         const selectedDate = selectedRequestedCompletionDate.value;
-        
+
         // Format the date as a string in the exact format we want to send to the backend
         // YYYY-MM-DDTHH:MM:SS format with no timezone information
         const year = selectedDate.getFullYear();
@@ -184,11 +184,11 @@ export const useCheckout = defineStore("checkout", () => {
         const day = String(selectedDate.getDate()).padStart(2, '0');
         const hours = String(selectedHours).padStart(2, '0');
         const minutes = String(selectedMinutes).padStart(2, '0');
-        
+
         // Create the formatted string
         requestedCompletionValue = `${year}-${month}-${day}T${hours}:${minutes}:00`;
       }
-      
+
       _cart.setCartRootProperties({
         requestedCompletion: requestedCompletionValue,
       });
@@ -211,7 +211,7 @@ export const useCheckout = defineStore("checkout", () => {
   const expMonth = ref("");
   const expYear = ref("");
   const cvc = ref("");
-  const overrideIsValidCardInfo = ref(false);
+  const overridePaymentMethodId = ref("");
 
   const getCardInfo = () => {
     return {
@@ -219,7 +219,7 @@ export const useCheckout = defineStore("checkout", () => {
       expMonth: parseInt(expMonth.value),
       expYear: parseInt(expYear.value),
       cvc: cvc.value,
-      isValid: overrideIsValidCardInfo.value || ((cardNumber.value || "").replace(/\s+/g, "").length === 16 && !isNaN(parseInt(expMonth.value)) && !isNaN(parseInt(expYear.value)) && (cvc.value || "").toString().length === 3),
+      isValid: overridePaymentMethodId.value || ((cardNumber.value || "").replace(/\s+/g, "").length === 16 && !isNaN(parseInt(expMonth.value)) && !isNaN(parseInt(expYear.value)) && (cvc.value || "").toString().length === 3),
     };
   };
 
@@ -255,7 +255,7 @@ export const useCheckout = defineStore("checkout", () => {
     if (key === "expMonth") expMonth.value = value;
     if (key === "expYear") expYear.value = value;
     if (key === "cvc") cvc.value = value;
-    if (key === "overrideIsValidCardInfo") overrideIsValidCardInfo.value = value;
+    if (key === "overridePaymentMethodId") overridePaymentMethodId.value = value;
   };
 
   const toggleRememberCard = () => {
