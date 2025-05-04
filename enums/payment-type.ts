@@ -4,4 +4,6 @@ export enum PaymentType {
     Stripe = 'Stripe',
     Vipps = 'Vipps',
     Giftcard = "Giftcard",
+    Dintero = "Dintero",
+    DinteroVipps = "DinteroVipps",
 }
