@@ -44,6 +44,7 @@ export class Order {
   storeCity: string;
 
   tipAmount: number;
+  usedRewardAmount: number;
 
   comment: string;
 

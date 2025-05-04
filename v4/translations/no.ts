@@ -292,6 +292,7 @@ export default {
   general_noWifi: "Ingen internettforbindelse",
   general_vippsNotInstalled: "Vipps er ikke installert på denne enheten",
   general_addedToRewardCard: "lagt til i bonuskortet",
+  general_subtractedFromRewardCard: "bonus benyttet",
   general_oneOngoingOrder: "Du har {count} aktiv bestilling",
   general_multipleOngoingOrder: "Du har {count} aktive bestillinger",
   general_share: "Del med venner",
