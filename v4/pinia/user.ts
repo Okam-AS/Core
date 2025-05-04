@@ -1,7 +1,7 @@
 import { defineStore } from "pinia";
 import { User, Product, PaymentMethod, Feedback, CategorySearchOptions } from "../models";
 import { useServices } from "./services";
-import { useStore, useCart, useCheckout } from ".";
+import { useStore, useCart, useCheckout, useOrder } from ".";
 import { ref, computed } from "vue";
 import { debounce } from "../helpers/ts-debounce";
 
@@ -9,6 +9,7 @@ export const useUser = defineStore("user", () => {
   const { userService, persistenceService, productService, feedbackService, setBearerToken, paymentService, stripeService } = useServices();
   const _cart = useCart();
   const _checkout = useCheckout();
+  const _order = useOrder();
   const userRef = ref(persistenceService.load<User>("userRef") || ({} as User));
   persistenceService.watchAndStore(userRef, "userRef");
 
@@ -167,6 +168,7 @@ export const useUser = defineStore("user", () => {
       registeredCardsPrivate.value = [];
       _cart.clearCart();
       _checkout.resetTimeAndDatePickers();
+      _order.loadOngoing(useStore().currentStore.id);
       useStore().clearCurrentStore();
       setBearerToken("");
       if (clearNotificationIdFunction) clearNotificationIdFunction();
