@@ -53,6 +53,7 @@ export class Order {
   userFullName: string;
 
   tipAmount: number;
+  usedRewardAmount: number;
 
   comment: string;
   woltDeliveryInfo: WoltDeliveryInfo;
