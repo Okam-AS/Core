@@ -1,5 +1,6 @@
 import { defineStore } from "pinia";
 import { Cart, CartLineItem, Product, RecommendProductsRequest } from "../models";
+import { DeliveryType } from "../enums";
 import { useServices, useStore, useUser, useTranslation } from "./";
 import { ref, computed, toRaw } from "vue";
 import { priceLabel } from "../helpers/tools";
@@ -335,6 +336,15 @@ export const useCart = defineStore("cart", () => {
     return true;
   };
 
+  const isHomeDelivery = computed(() => {
+    const currentCart = getCurrentCart();
+    if (!currentCart) return false;
+    if (_user.isLoggedIn()) {
+      return currentCart.isHomeDelivery;
+    }
+    return currentCart.deliveryType === DeliveryType.InstantHomeDelivery || currentCart.deliveryType === DeliveryType.WoltDelivery || currentCart.deliveryType === DeliveryType.DineHomeDelivery;
+  });
+
   return {
     totalItemCount,
     unsavedLineItem,
@@ -344,6 +354,7 @@ export const useCart = defineStore("cart", () => {
     singleLineDeliveryAddressInCart,
     isLoading,
     isLoadingRecommendations,
+    isHomeDelivery,
     deliveryAddressInCartIsValid,
     syncWithDb,
     getCurrentCart,
