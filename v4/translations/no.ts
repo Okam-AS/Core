@@ -23,6 +23,8 @@ export default {
   checkoutPage_submit: "Fullfør bestilling",
   checkoutPage_orderDiscount: "Ordre rabatt",
   checkoutPage_delivery: "Levering",
+  checkoutPage_serviceFee: "Servicegebyr",
+  checkoutPage_woltServiceFee: "Wolt servicegebyr",
   checkoutPage_usedReward: "Bonuspoeng",
   checkoutPage_usedGiftcard: "Gavekort",
   checkoutPage_tip: "Tips",

@@ -23,6 +23,8 @@ export default {
   checkoutPage_submit: "Complete order",
   checkoutPage_orderDiscount: "Order discount",
   checkoutPage_delivery: "Delivery",
+  checkoutPage_serviceFee: "Service fee",
+  checkoutPage_woltServiceFee: "Wolt service fee",
   checkoutPage_usedReward: "Reward",
   checkoutPage_usedGiftcard: "Giftcard",
   checkoutPage_tip: "Tips",
