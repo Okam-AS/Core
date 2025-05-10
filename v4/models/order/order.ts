@@ -28,6 +28,8 @@ export class Order {
   itemsAmountLineThrough: number;
   orderDiscountAmount: number;
   deliveryAmount: number;
+  serviceFeeAmount: number;
+  woltServiceFeeAmount: number;
   finalAmount: number;
 
   paymentType: PaymentType;

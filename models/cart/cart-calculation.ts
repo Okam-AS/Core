@@ -5,6 +5,8 @@ export class CartCalculation {
   tableAdditionalAmount: number;
   deliveryAdditionalAmount: number;
   tipAmount: number;
+  serviceFeeAmount: number;
+  woltServiceFeeAmount: number;
 
   rewardAmountSpent: number;
 
