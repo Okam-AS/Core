@@ -54,7 +54,7 @@ export default {
   checkoutPage_tipCustomAmountToggle: "Gi et kronebeløp",
   checkoutPage_tipCustomAmount: "Hvor mye vil du gi i tips?",
   checkoutPage_commentHeading: "Kommentarer",
-  checkoutPage_commentHint: "Har du en beskjed til den som behandler din bestilling kan du skrive den inn her",
+  checkoutPage_commentHint: "Har du en beskjed eller instrukser kan du skrive den her",
   checkoutPage_tableName: "Bordnummer",
   checkoutPage_giftcard: "Gavekort",
   checkoutPage_payInStore: "Betal på stedet",

@@ -54,7 +54,7 @@ export default {
   checkoutPage_tipCustomAmountToggle: "Give a custom amount",
   checkoutPage_tipCustomAmount: "How much do you want to tip?",
   checkoutPage_commentHeading: "Comments",
-  checkoutPage_commentHint: "Here you can write any comments you have to your order",
+  checkoutPage_commentHint: "Here you can write any comments or instructions you have to your order",
   checkoutPage_tableName: "Table number",
   checkoutPage_giftcard: "Gift card",
   checkoutPage_payInStore: "Pay in store",

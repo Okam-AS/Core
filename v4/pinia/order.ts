@@ -16,7 +16,8 @@ export const useOrder = defineStore("order", () => {
     return isLoadingPrivate.value;
   });
 
-  const ongoingPrivate = ref([] as Order[]);
+  const ongoingPrivate = ref(persistenceService.load<Order[]>("ongoingOrders") || ([] as Order[]));
+  persistenceService.watchAndStore(ongoingPrivate, "ongoingOrders");
   const ongoing = computed(() => {
     return ongoingPrivate.value;
   });
@@ -71,11 +72,10 @@ export const useOrder = defineStore("order", () => {
   };
 
   const loadOngoing = (storeId: number) => {
-    if (!_user.isLoggedIn()) {
+    if (!_user.isLoggedIn() || ($availableStoreIds?.length && !$availableStoreIds.includes(storeId))) {
       ongoingPrivate.value = [] as Order[];
       return Promise.resolve();
     }
-    if ($availableStoreIds?.length && !$availableStoreIds.includes(storeId)) return Promise.resolve();
     isLoadingPrivate.value = true;
     return orderService()
       .GetOngoing(storeId)
