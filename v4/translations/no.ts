@@ -63,7 +63,7 @@ export default {
   checkoutPage_rememberCard: "Husk dette kortet",
   checkoutPage_paymentFailedCheckCardDetails: "Betalingen kunne ikke gjennomføres. Kontroller kortinformasjon og prøv igjen.",
   checkoutPage_isClosedForNow: "er stengt for øyeblikket",
-  checkoutPage_canTakeLonger: "Svartiden kan være noe lengre enn vanlig.",
+  checkoutPage_canTakeLonger: "Vi svarer så fort vi åpner.",
   checkoutPage_loginDescription: "Du må bekrefte telefonnummer for å kunne gjennomføre bestillingen",
   checkoutPage_login: "Bekreft telefonnummer",
   checkoutPage_cardAuthFailed: "Kortautentisering feilet",
