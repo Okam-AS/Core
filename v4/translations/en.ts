@@ -78,7 +78,7 @@ export default {
   checkoutPage_priceDifferError: "Prices have changed since last time. Go back to update your cart.",
   checkoutPage_deliveryAddressError: "The delivery address is not valid",
   checkoutPage_deliveryMethodError: "The store does not deliver to your address at the moment",
-  checkoutPage_isClosedNow: " is currently closed",
+  checkoutPage_isClosedNow: " is closed at the selected time",
   checkoutPage_cartIsEmptyError: "The shopping cart is empty",
   checkoutPage_giftcardBalanceTooLowError: "You do not have enough gift card balance to pay for the order",
   checkoutPage_couldNotProcessPayment: "Your payment could not be processed right now. Please try again a little later.",

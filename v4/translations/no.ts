@@ -79,7 +79,7 @@ export default {
   checkoutPage_priceDifferError: "Prisene er endret siden sist. Gå tilbake for å oppdatere handlekurven.",
   checkoutPage_deliveryAddressError: "Leveringsadressen er ikke gyldig",
   checkoutPage_deliveryMethodError: "Butikken leverer ikke til din adresse for øyeblikket",
-  checkoutPage_isClosedNow: " er stengt for øyeblikket",
+  checkoutPage_isClosedNow: " er stengt på valgt tidspunkt",
   checkoutPage_cartIsEmptyError: "handlekurven er tom",
   checkoutPage_giftcardBalanceTooLowError: "Fyll på gavekortet for å betale med gavekort",
   checkoutPage_couldNotProcessPayment: "Din betaling kunne ikke behandles akkurat nå. Vennligst prøv igjen litt senere.",
