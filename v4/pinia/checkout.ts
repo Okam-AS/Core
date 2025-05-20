@@ -18,13 +18,14 @@ export const useCheckout = defineStore("checkout", () => {
     return priceAmount > 0 ? " " + priceLabel(priceAmount, true) : "";
   };
 
-  const paymentLabel = (paymentMethod: PaymentMethod) => {
+  const paymentLabel = (paymentMethod: PaymentMethod, companyName?: string) => {
     if (paymentMethod?.paymentType === PaymentType.Stripe) return "xxxx xxxx xxxx " + paymentMethod.last4 + "   " + paymentMethod.expMonth + "/" + paymentMethod.expYear;
     if (paymentMethod?.paymentType === PaymentType.Vipps) return "Vipps";
     if (paymentMethod?.paymentType === PaymentType.PayInStore) return $i("checkoutPage_payInStore");
     if (paymentMethod?.paymentType === PaymentType.Giftcard) return $i("checkoutPage_giftcard");
     if (paymentMethod?.paymentType === PaymentType.Dintero) return $i("checkoutPage_payNow");
     if (paymentMethod?.paymentType === PaymentType.DinteroVipps) return $i("checkoutPage_payWithVipps");
+    if (paymentMethod?.paymentType === PaymentType.DinteroBillie) return $i("checkoutPage_payWithBillie") + (companyName ? " " + $i("checkoutPage_payWithBillieTo") + " " + companyName : "");
     return "";
   };
 
