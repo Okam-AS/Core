@@ -83,6 +83,17 @@ export class OrderService {
     return data;
   }
 
+  public async TransferOrder(orderCode: string, targetStoreId: number): Promise<boolean> {
+    const response = await this._requestService.PostRequest("/orders/transfer", { orderCode, targetStoreId });
+    const { data, error } = this._requestService.TryParseResponseWithError(response);
+    if (error) {
+      console.log("error:", error);
+      throw new Error(error);
+    }
+
+    return data;
+  }
+
   public GetOrdersAndSetState = (thenHandler?, catchHandler?) => {
     const comp = this;
     comp
