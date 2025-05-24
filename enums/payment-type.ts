@@ -6,5 +6,6 @@ export enum PaymentType {
   Vipps = "Vipps",
   Dintero = "Dintero",
   DinteroVipps = "DinteroVipps",
-  DinteroBillie = "DinteroBillie"
+  DinteroBillie = "DinteroBillie",
+  DinteroKlarna = "DinteroKlarna"
 }

@@ -26,6 +26,7 @@ export const useCheckout = defineStore("checkout", () => {
     if (paymentMethod?.paymentType === PaymentType.Dintero) return $i("checkoutPage_payNow");
     if (paymentMethod?.paymentType === PaymentType.DinteroVipps) return $i("checkoutPage_payWithVipps");
     if (paymentMethod?.paymentType === PaymentType.DinteroBillie) return $i("checkoutPage_payWithBillie") + (companyName ? " " + $i("checkoutPage_payWithBillieTo") + " " + companyName : "");
+    if (paymentMethod?.paymentType === PaymentType.DinteroKlarna) return $i("checkoutPage_payWithKlarna");
     return "";
   };
 
