@@ -1,7 +1,7 @@
 import { defineStore } from "pinia";
 import { Order } from "../models";
 import { DeliveryType, OrderStatus, PaymentType } from "../enums";
-import { useServices, useStore, useTranslation, useUser, useTheme } from ".";
+import { useServices, useStore, useTranslation, useUser, useTheme, useSettings } from ".";
 import { ref, computed } from "vue";
 import { orderStatusLabel } from "../helpers/tools";
 
@@ -11,6 +11,7 @@ export const useOrder = defineStore("order", () => {
   const _user = useUser();
   const { orderService, persistenceService } = useServices();
   const { $availableStoreIds } = useTheme();
+  const { addViewedOrderId } = useSettings();
   const isLoadingPrivate = ref(false);
   const isLoading = computed(() => {
     return isLoadingPrivate.value;
@@ -33,6 +34,7 @@ export const useOrder = defineStore("order", () => {
   });
   const setViewingOrder = (orderId) => {
     isLoadingPrivate.value = true;
+    addViewedOrderId(orderId);
     return orderService()
       .GetByCode(orderId)
       .then((order) => {
