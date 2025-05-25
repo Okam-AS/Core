@@ -5,4 +5,6 @@ export enum OrderPaymentTypeFilter {
     Giftcard = 'Giftcard',
     Dintero = 'Dintero',
     DinteroVipps = 'DinteroVipps',
+    DinteroBillie = 'DinteroBillie',
+    DinteroKlarna = 'DinteroKlarna',
 }
