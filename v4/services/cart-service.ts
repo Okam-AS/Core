@@ -1,4 +1,4 @@
-import { Cart, CartValidation, Order, CartLineItem, Product, RecommendProductsRequest } from "../models";
+import { Cart, CartValidation, Order, CartLineItem, Product, RecommendProductsRequest, UpdateCompanyInfoModel } from "../models";
 import { ICoreInitializer } from "../interfaces";
 import { RequestService } from "./request-service";
 
@@ -63,5 +63,15 @@ export class CartService {
     const response = await this._requestService.DeleteRequest("/carts/" + storeId);
     const parsedResponse = this._requestService.TryParseResponse(response);
     return parsedResponse !== undefined;
+  }
+
+  public async UpdateCompanyInfo(storeId: number, model: UpdateCompanyInfoModel): Promise<UpdateCompanyInfoModel> {
+    const response = await this._requestService.PostRequest("/carts/updateCompanyInfo/" + storeId, model);
+    const parsedResponse = this._requestService.TryParseResponse(response);
+    if (parsedResponse === undefined) {
+      throw new Error("Kunne ikke oppdatere firmainfo");
+    }
+
+    return parsedResponse;
   }
 }

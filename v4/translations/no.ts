@@ -52,6 +52,7 @@ export default {
   checkoutPage_organizationNumber: "Bedrifter kan betale med faktura",
   checkoutPage_organizationNumberHint: "Organisasjonsnummer",
   checkoutPage_addOrganizationNumber: "Legg til",
+  checkoutPage_invoicePaymentInfo: "Ved å legge inn en organisasjonsnummer kan du velge faktura som betalingsmåte. Vår betalingspartner gjør en umiddelbar kredittsjekk. Dersom autorisering mislykkes må du velge en annen betalingsmåte for å fullføre bestillingen.",
   checkoutPage_validDiscountCode: "Rabattkode lagt til",
   checkoutPage_invalidDiscountCode: "Ugyldig rabattkode",
   checkoutPage_tipHeading: "Tips",

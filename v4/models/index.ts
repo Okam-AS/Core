@@ -1,5 +1,6 @@
 // Cart
 export { Cart } from "../../v4/models/cart/cart";
+export { UpdateCompanyInfoModel } from "../../v4/models/cart/update-company-info-model";
 export { CartValidation, CartCalculation, CartLineItem, RecommendProductsRequest } from "../../models/";
 
 // Store

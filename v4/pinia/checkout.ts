@@ -18,14 +18,16 @@ export const useCheckout = defineStore("checkout", () => {
     return priceAmount > 0 ? " " + priceLabel(priceAmount, true) : "";
   };
 
-  const paymentLabel = (paymentMethod: PaymentMethod, companyName?: string) => {
+  const paymentLabel = (paymentMethod: PaymentMethod) => {
+    const currentCart = _cart.getCurrentCart();
+
     if (paymentMethod?.paymentType === PaymentType.Stripe) return "xxxx xxxx xxxx " + paymentMethod.last4 + "   " + paymentMethod.expMonth + "/" + paymentMethod.expYear;
     if (paymentMethod?.paymentType === PaymentType.Vipps) return "Vipps";
     if (paymentMethod?.paymentType === PaymentType.PayInStore) return $i("checkoutPage_payInStore");
     if (paymentMethod?.paymentType === PaymentType.Giftcard) return $i("checkoutPage_giftcard");
     if (paymentMethod?.paymentType === PaymentType.Dintero) return $i("checkoutPage_payNow");
     if (paymentMethod?.paymentType === PaymentType.DinteroVipps) return $i("checkoutPage_payWithVipps");
-    if (paymentMethod?.paymentType === PaymentType.DinteroBillie) return $i("checkoutPage_payWithBillie") + (companyName ? " " + $i("checkoutPage_payWithBillieTo") + " " + companyName : "");
+    if (paymentMethod?.paymentType === PaymentType.DinteroBillie) return $i("checkoutPage_payWithBillie") + (currentCart.companyName ? " " + $i("checkoutPage_payWithBillieTo") + " " + currentCart.companyName : "");
     if (paymentMethod?.paymentType === PaymentType.DinteroKlarna) return $i("checkoutPage_payWithKlarna");
     return "";
   };
@@ -240,6 +242,14 @@ export const useCheckout = defineStore("checkout", () => {
       .GetPaymentMethods(currentCart.id, true)
       .then((result) => {
         paymentMethodsPrivate.value = Array.isArray(result) ? result : [];
+
+        if (currentCart.paymentType) {
+          const existingPaymentMethod = paymentMethods.value.find((x) => x.id === currentCart.paymentType);
+          if (existingPaymentMethod) {
+            setPaymentMethod(existingPaymentMethod);
+            return;
+          }
+        }
 
         if (selectedPaymentMethodId.value) {
           setPaymentMethod(paymentMethods.value.find((x) => x.id === selectedPaymentMethodId.value));

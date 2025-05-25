@@ -33,5 +33,12 @@ export class Cart {
 
   itemsCountInCategory;
 
+  companyEmail: string;
+  companyName: string;
+  companyVat: string;
+  companyAddress: string;
+  companyZipCode: string;
+  companyCity: string;
+
   calculations: CartCalculation = {} as CartCalculation;
 }

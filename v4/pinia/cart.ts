@@ -1,7 +1,7 @@
 import { defineStore } from "pinia";
-import { Cart, CartLineItem, Product, RecommendProductsRequest } from "../models";
+import { Cart, CartLineItem, Product, RecommendProductsRequest, UpdateCompanyInfoModel } from "../models";
 import { DeliveryType } from "../enums";
-import { useServices, useStore, useUser, useTranslation } from "./";
+import { useServices, useStore, useUser, useTranslation, useCheckout } from "./";
 import { ref, computed, toRaw } from "vue";
 import { priceLabel } from "../helpers/tools";
 import { debounce } from "../helpers/ts-debounce";
@@ -10,6 +10,7 @@ export const useCart = defineStore("cart", () => {
   const { cartService, persistenceService } = useServices();
   const _store = useStore();
   const _user = useUser();
+  const _checkout = useCheckout();
   const { $i } = useTranslation();
 
   const isLoading = ref(false);
@@ -336,6 +337,26 @@ export const useCart = defineStore("cart", () => {
     return true;
   };
 
+  const updateCompanyInfo = async (organizationNumber: string): Promise<UpdateCompanyInfoModel> => {
+    const currentCart = getCurrentCart();
+    if (!currentCart || !currentCart.storeId) return Promise.reject("No current cart or store ID");
+    console.log(organizationNumber);
+    const model = new UpdateCompanyInfoModel();
+    model.companyVat = organizationNumber;
+
+    return cartService().UpdateCompanyInfo(currentCart.storeId, model)
+      .then((result) => {
+        console.log(result);
+        if (result.success) {
+          _checkout.getAvailablePaymentMethods();
+        }
+        return result;
+      }).catch((error) => {
+        console.error(error);
+        return Promise.reject(error);
+      });
+  };
+
   const isHomeDelivery = computed(() => {
     const currentCart = getCurrentCart();
     if (!currentCart) return false;
@@ -372,5 +393,6 @@ export const useCart = defineStore("cart", () => {
     loadUnsavedLineItem,
     loadNewUnsavedLineItem,
     loadRecommendations,
+    updateCompanyInfo,
   };
 });

@@ -15,4 +15,11 @@ export class User {
   fullAddress: string;
   zipCode: string;
   city: string;
+
+  companyEmail: string;
+  companyName: string;
+  companyVat: string;
+  companyAddress: string;
+  companyZipCode: string;
+  companyCity: string;
 }

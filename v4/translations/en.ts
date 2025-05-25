@@ -52,6 +52,7 @@ export default {
   checkoutPage_organizationNumber: "Companies can pay with invoice",
   checkoutPage_organizationNumberHint: "Organization number",
   checkoutPage_addOrganizationNumber: "Add",
+  checkoutPage_invoicePaymentInfo: "By entering an organization number, you can choose invoice as payment method. Our payment partner performs an immediate credit check. If authorization fails, you must choose another payment method to complete the order.",
   checkoutPage_validDiscountCode: "Discount code applied",
   checkoutPage_invalidDiscountCode: "Invalid discount code",
   checkoutPage_tipHeading: "Tip",
