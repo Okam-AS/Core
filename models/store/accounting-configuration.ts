@@ -4,4 +4,5 @@ export class AccountingConfiguration {
   public accountNumber25Percent: string
   public accountNumberReceivables: string
   public enabled: boolean
+  public callbackUrl: string
 }
