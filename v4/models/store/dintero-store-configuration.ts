@@ -7,4 +7,5 @@ export class DinteroStoreConfiguration {
   googlePayEnabled: boolean;
   klarnaEnabled: boolean;
   billieEnabled: boolean;
+  billieMessage: string;
 }

@@ -39,7 +39,7 @@ export const useTheme = defineStore("theme", () => {
       shadows: true,
       textColor: "black",
       borderRadius: 0,
-      availableStoreIds: [52, 53, 54, 57],
+      availableStoreIds: [52, 53, 54, 57, 140],
       svgLogo: "jungel_pizza",
       itunesAppId: "6465692106",
       androidPackageName: "no.okam.jungelpizza",
