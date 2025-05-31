@@ -48,7 +48,7 @@ export default {
   checkoutPage_paymentDiscountCodeToggle: "Har du en rabattkode?",
   checkoutPage_paymentYourDiscountCode: "Din rabattkode",
   checkoutPage_use: "Bruk",
-  checkoutPage_paymentInvoiceToggle: "Betal med faktura?",
+  checkoutPage_paymentInvoiceToggle: "Betale med faktura?",
   checkoutPage_organizationNumber: "Bedrifter kan betale med faktura",
   checkoutPage_organizationNumberHint: "Organisasjonsnummer",
   checkoutPage_addOrganizationNumber: "Legg til",
