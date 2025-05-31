@@ -20,8 +20,8 @@ export class AccountingService {
   public async GetAccountingConfiguration(storeId: number): Promise<AccountingConfiguration> {
     const response = await this._requestService.GetRequest(`/accounting/store/${storeId}/configuration`)
     const parsedResponse = this._requestService.TryParseResponse(response)
-    if (parsedResponse === undefined) { 
-      throw new Error('Failed to get accounting configuration') 
+    if (parsedResponse === undefined) {
+      throw new Error('Failed to get accounting configuration')
     }
     return parsedResponse
   }
@@ -41,6 +41,6 @@ export class AccountingService {
       enabled: configuration.enabled
     })
     const parsedResponse = this._requestService.TryParseResponse(response)
-    return parsedResponse !== undefined
+    return parsedResponse
   }
 }
