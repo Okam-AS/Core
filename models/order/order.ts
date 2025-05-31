@@ -17,6 +17,7 @@ export class Order {
   platform: string;
   userId: string;
   storeId: number;
+  originalStoreId: number;
   status: OrderStatus;
   dineHomeStatus: DineHomeStatus;
   items: Array<OrderLineItem>;
