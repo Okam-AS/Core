@@ -4,14 +4,15 @@ import { useSettings } from "./";
 import getEnv from "../../../env";
 
 export const useTheme = defineStore("theme", () => {
-  const selectedTheme = getEnv("SELECTED_THEME") || "okam";
+  const selectedTheme = getEnv("SELECTED_THEME") || "okamDark";
+
   const themes = {
     okam: {
       clientPlatformName: "Okam",
       primaryColor: "darkBlue",
-      secondaryColor: "darkBlue",
-      backgroundColor: "lightBlue",
-      secondaryBackgroundColor: "white",
+      secondaryColor: "darkBlue", // Different from primary for contrast
+      backgroundColor: "lightBlue", // App background
+      secondaryBackgroundColor: "white", // Background on buttons
       shadows: true,
       textColor: "darkBlue",
       borderRadius: 15,
@@ -21,10 +22,10 @@ export const useTheme = defineStore("theme", () => {
     okamDark: {
       clientPlatformName: "Okam",
       primaryColor: "almostBlack",
-      secondaryColor: "lightGray", // Different from primary for contrast
-      backgroundColor: "darkGray", // App background
-      secondaryBackgroundColor: "mediumGray", // Background on buttons
-      shadows: true,
+      secondaryColor: "lightGray",
+      backgroundColor: "darkGray",
+      secondaryBackgroundColor: "mediumGray",
+      shadows: false,
       textColor: "lightGray",
       borderRadius: 15,
       itunesAppId: "1514296965",
@@ -96,68 +97,100 @@ export const useTheme = defineStore("theme", () => {
   const $color = (key: string, darkmodeKey?: string) => {
     const useDarkModeKey = darkmodeKey && useSettings().$isDarkmode && colors.value.hasOwnProperty(darkmodeKey);
     const keyToUse = useDarkModeKey ? darkmodeKey : key;
-    if (keyToUse === "primary") return $color(themes[selectedTheme].primaryColor);
-    if (keyToUse === "secondary") return $color(themes[selectedTheme].secondaryColor);
-    if (keyToUse === "background") return $color(themes[selectedTheme].backgroundColor);
-    if (keyToUse === "secondaryBackground") return $color(themes[selectedTheme].secondaryBackgroundColor);
-    if (keyToUse === "text") return $color(themes[selectedTheme].textColor);
+    const currentTheme = getCurrentTheme();
+    if (keyToUse === "primary") return $color(themes[currentTheme].primaryColor);
+    if (keyToUse === "secondary") return $color(themes[currentTheme].secondaryColor);
+    if (keyToUse === "background") return $color(themes[currentTheme].backgroundColor);
+    if (keyToUse === "secondaryBackground") return $color(themes[currentTheme].secondaryBackgroundColor);
+    if (keyToUse === "text") return $color(themes[currentTheme].textColor);
     return colors.value[keyToUse];
   };
 
+  const getCurrentTheme = () => {
+    const settings = useSettings();
+    const isDarkMode = settings.$isDarkmode;
+
+    // If the base theme is okam, switch between okam and okamDark based on dark mode setting
+    if (selectedTheme === "okam" || selectedTheme === "okamDark") {
+      return isDarkMode ? "okamDark" : "okam";
+    }
+
+    // For other themes, return the selected theme as-is
+    return selectedTheme;
+  };
+
   const $primaryColor = computed(() => {
-    return $color(themes[selectedTheme].primaryColor);
+    const currentTheme = getCurrentTheme();
+    return $color(themes[currentTheme].primaryColor);
   });
 
   const $secondaryColor = computed(() => {
-    return $color(themes[selectedTheme].secondaryColor);
+    const currentTheme = getCurrentTheme();
+    return $color(themes[currentTheme].secondaryColor);
   });
 
   const $backgroundColor = computed(() => {
-    return $color(themes[selectedTheme].backgroundColor);
+    const currentTheme = getCurrentTheme();
+    return $color(themes[currentTheme].backgroundColor);
   });
 
   const $secondaryBackgroundColor = computed(() => {
-    return $color(themes[selectedTheme].secondaryBackgroundColor);
+    const currentTheme = getCurrentTheme();
+    return $color(themes[currentTheme].secondaryBackgroundColor);
   });
 
   const $shadows = computed(() => {
-    return themes[selectedTheme].shadows;
+    const currentTheme = getCurrentTheme();
+    return themes[currentTheme].shadows;
   });
 
   const $textColor = computed(() => {
-    return $color(themes[selectedTheme].textColor);
+    const currentTheme = getCurrentTheme();
+    return $color(themes[currentTheme].textColor);
   });
 
   const $borderRadius = computed(() => {
-    return themes[selectedTheme].borderRadius;
+    const currentTheme = getCurrentTheme();
+    return themes[currentTheme].borderRadius;
   });
 
   const $availableStoreIds = computed(() => {
-    return themes[selectedTheme].availableStoreIds || [];
+    const currentTheme = getCurrentTheme();
+    return themes[currentTheme].availableStoreIds || [];
   });
 
   const $svgLogo = computed(() => {
-    return themes[selectedTheme].svgLogo;
+    const currentTheme = getCurrentTheme();
+    return themes[currentTheme].svgLogo;
   });
 
   const $clientPlatformName = computed(() => {
-    return themes[selectedTheme].clientPlatformName;
+    const currentTheme = getCurrentTheme();
+    return themes[currentTheme].clientPlatformName;
   });
 
   const $isWhiteLabel = computed(() => {
-    return themes[selectedTheme].availableStoreIds && themes[selectedTheme].availableStoreIds.length > 0;
+    const currentTheme = getCurrentTheme();
+    return themes[currentTheme].availableStoreIds && themes[currentTheme].availableStoreIds.length > 0;
   });
 
   const $itunesAppId = computed(() => {
-    return themes[selectedTheme].itunesAppId || themes["okam"].itunesAppId;
+    const currentTheme = getCurrentTheme();
+    return themes[currentTheme].itunesAppId || themes["okam"].itunesAppId;
   });
 
   const $androidPackageName = computed(() => {
-    return themes[selectedTheme].androidPackageName || themes["okam"].androidPackageName;
+    const currentTheme = getCurrentTheme();
+    return themes[currentTheme].androidPackageName || themes["okam"].androidPackageName;
   });
 
   const $homePath = computed(() => {
-    return themes[selectedTheme].homePath || "";
+    const currentTheme = getCurrentTheme();
+    return themes[currentTheme].homePath || "";
+  });
+
+  const $isThemeSwitchingAvailable = computed(() => {
+    return selectedTheme === "okam" || selectedTheme === "okamDark";
   });
 
   return {
@@ -176,5 +209,6 @@ export const useTheme = defineStore("theme", () => {
     $itunesAppId,
     $androidPackageName,
     $homePath,
+    $isThemeSwitchingAvailable,
   };
 });
