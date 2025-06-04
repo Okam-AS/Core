@@ -4,7 +4,7 @@ import { useSettings } from "./";
 import getEnv from "../../../env";
 
 export const useTheme = defineStore("theme", () => {
-  const selectedTheme = getEnv("SELECTED_THEME") || "okamDark";
+  const selectedTheme = getEnv("SELECTED_THEME") || "okam";
 
   const themes = {
     okam: {
