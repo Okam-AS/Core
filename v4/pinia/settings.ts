@@ -21,8 +21,8 @@ export const useSettings = defineStore("settings", () => {
   persistenceService.watchAndStore(viewedOrderIds, "viewedOrderIds");
 
   const hasInternet = ref(true);
-  const darkmode = ref(persistenceService.load<boolean>("darkmode") ?? true); // Default to true (dark mode) and persist
-  persistenceService.watchAndStore(darkmode, "darkmode");
+  const darkmode = ref(persistenceService.load<boolean>("isDarkmode") ?? false); // Default to false (light mode) and persist
+  persistenceService.watchAndStore(darkmode, "isDarkmode");
   const launchIdPrivate = ref("");
   const resumeIdPrivate = ref("");
   const disableActionBarToggleAnimation = ref(false);
