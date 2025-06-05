@@ -5,4 +5,8 @@ export class StorePaymentConfig {
   giftcardAvailable: boolean;
   dinteroAvailable: boolean;
   dinteroPrice: number;
+  dinteroBillieAvailable: boolean;
+  dinteroKlarnaAvailable: boolean;
+  dinteroBilliePrice: string;
+  dinteroKlarnaPrice: string;
 }

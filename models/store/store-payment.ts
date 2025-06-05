@@ -8,4 +8,6 @@ export class StorePayment {
     vippsMsn: string;
 
     dinteroEnabled?: boolean;
+    dinteroBillieEnabled?: boolean;
+    dinteroKlarnaEnabled?: boolean;
 }
