@@ -404,6 +404,12 @@ export const useCheckout = defineStore("checkout", () => {
         return resolve(false);
       }
 
+      if (currentCart.deliveryType === DeliveryType.TableDelivery && (!currentCart.tableName || currentCart.tableName.trim() === "")) {
+        errorMessagePrivate.value = $i("checkoutPage_tableNameNotSetError");
+        isValidating.value = false;
+        return resolve(false);
+      }
+
       if (!(selectedPaymentMethodId.value || getCardInfo().isValid)) {
         errorMessagePrivate.value = $i("checkoutPage_paymentFailedCheckCardDetails");
         isValidating.value = false;

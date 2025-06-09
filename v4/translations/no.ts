@@ -76,6 +76,7 @@ export default {
   checkoutPage_couldNotPayWithDintero: "Noe gikk galt, prøv igjen eller velg en annen betalingsmetode",
   checkoutPage_deliveryTypeNotSetError: "Gå tilbake og velg leveringsmetode",
   checkoutPage_deliveryAddressNotSetError: "Legg inn en gyldig leveringsadresse lengre opp",
+  checkoutPage_tableNameNotSetError: "Legg inn bordnummer lengre opp",
   checkoutPage_somethingWentWrong: "Noe gikk galt. Prøv igjen senere",
   checkoutPage_cartHasUnknownError: "Beklager, vi støter på et problem med handlekurven din",
   checkoutPage_completeCartFailedError: "Bestillingen kunne ikke gjennomføres",

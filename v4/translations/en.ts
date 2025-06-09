@@ -75,6 +75,7 @@ export default {
   checkoutPage_couldNotPayWithDintero: "Something went wrong, try again or select another payment method",
   checkoutPage_deliveryTypeNotSetError: "Go back and select a delivery method",
   checkoutPage_deliveryAddressNotSetError: "Enter a valid delivery address further up",
+  checkoutPage_tableNameNotSetError: "Enter a table number further up",
   checkoutPage_somethingWentWrong: "Something went wrong. Please try again later",
   checkoutPage_cartHasUnknownError: "Sorry, we are encountering a problem with your shopping cart",
   checkoutPage_completeCartFailedError: "The order could not be completed",
