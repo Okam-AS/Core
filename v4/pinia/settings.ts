@@ -1,6 +1,7 @@
 import { defineStore } from "pinia";
 import { ref, computed, reactive } from "vue";
 import { useServices } from "./services";
+import configuration from "../helpers/configuration";
 
 export const useSettings = defineStore("settings", () => {
   const { persistenceService } = useServices();
@@ -21,7 +22,7 @@ export const useSettings = defineStore("settings", () => {
   persistenceService.watchAndStore(viewedOrderIds, "viewedOrderIds");
 
   const hasInternet = ref(true);
-  const darkmode = ref(persistenceService.load<boolean>("isDarkmode") ?? false); // Default to false (light mode) and persist
+  const darkmode = ref(persistenceService.load<boolean>("isDarkmode") ?? configuration.isNativeScript); // Default to true in app, false on web
   persistenceService.watchAndStore(darkmode, "isDarkmode");
   const launchIdPrivate = ref("");
   const resumeIdPrivate = ref("");
