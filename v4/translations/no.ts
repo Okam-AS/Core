@@ -173,7 +173,7 @@ export default {
   deliveryType_selfPickup: "Hent selv",
   deliveryType_instantHomeDelivery: "Levering",
   deliveryType_dineHomeDelivery: "Levering",
-  deliveryType_tableDelivery: "Spis inne",
+  deliveryType_tableDelivery: "Spis her",
   deliveryType_woltDelivery: "Wolt levering",
   deliveryType_notSet: "Ikke valgt",
   orderStatus_acceptedHeading: "Bestillingen er forespurt",

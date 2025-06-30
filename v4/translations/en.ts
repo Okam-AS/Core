@@ -174,7 +174,7 @@ export default {
   deliveryType_instantHomeDelivery: "Delivery",
   deliveryType_dineHomeDelivery: "Delivery",
   deliveryType_woltDelivery: "Wolt delivery",
-  deliveryType_tableDelivery: "Eat in",
+  deliveryType_tableDelivery: "Eat here",
   deliveryType_notSet: "Not set",
   orderStatus_acceptedHeading: "Order requested, but not yet approved",
   orderStatus_processingHeading: "Order approved and being prepared",
