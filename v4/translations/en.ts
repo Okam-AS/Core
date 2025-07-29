@@ -315,6 +315,7 @@ export default {
   menu_myOrders: "Orders",
   menu_rewards: "Rewards",
   menu_giftcard: "Gift card",
+  menu_exploreArea: "Explore Area",
   giftcardQuickBuyPreview_heading: "Send gift card",
   giftcardQuickBuyPreview_continue: "Continue",
   giftcardQuickBuyPreview_receiverPhoneNumber: "Receiver phone number",

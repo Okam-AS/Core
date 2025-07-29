@@ -317,6 +317,7 @@ export default {
   menu_myOrders: "Bestillinger",
   menu_rewards: "Bonus",
   menu_giftcard: "Gavekort",
+  menu_exploreArea: "Utforsk området",
   giftcardQuickBuyPreview_heading: "Send gavekort",
   giftcardQuickBuyPreview_continue: "Fortsett",
   giftcardQuickBuyPreview_receiverPhoneNumber: "Mottakers tlf.",
