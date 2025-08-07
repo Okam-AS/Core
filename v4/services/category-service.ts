@@ -74,6 +74,14 @@ export class CategoryService {
       return this.ParsedResponse(response, 'Kunne ikke lagre kategori')
     }
 
+    public async SearchProducts (storeId: number, searchTerm: string, searchOptions: CategorySearchOptions): Promise<Array<CategoryProductListItem>> {
+      const response = await this._requestService.PostRequest('/categories/search/store/' + storeId + '/consumer', { 
+        searchTerm, 
+        searchOptions 
+      })
+      return this.ParsedResponse(response, 'Kunne ikke søke i produkter')
+    }
+
     private ParsedResponse (response, errorMessage) {
       const parsedResponse = this._requestService.TryParseResponse(response)
       if (parsedResponse === undefined) { throw new Error(errorMessage) }
