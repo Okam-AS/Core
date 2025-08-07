@@ -1,16 +1,12 @@
 import { IVuexModule } from '../interfaces'
 import $config from '../helpers/configuration'
-import { RequestService, UserService } from '../services'
+import { RequestService } from '../services'
 
 export class AIService {
   private _requestService: RequestService;
-  private _userService: UserService;
-  private _vuexModule: IVuexModule;
 
   constructor(vuexModule: IVuexModule) {
     this._requestService = new RequestService(vuexModule, $config.okamApiBaseUrl)
-    this._vuexModule = vuexModule
-    this._userService = new UserService(vuexModule)
   }
 
   public async MenuToJson(storeId: number, pageContent: string, extraInstructions: string): Promise<any> {
@@ -21,12 +17,24 @@ export class AIService {
     }
 
     const response = await this._requestService.PostRequest('/ai/menu-to-json', payload)
-    return this.ParsedResponse(response, 'Kunne ikke konvertere meny til JSON')
+    const parsedResponse = this._requestService.TryParseResponse(response)
+    if (parsedResponse === undefined) {
+      throw new Error()
+    }
+    return parsedResponse
   }
 
-  private ParsedResponse(response: any, errorMessage: string): any {
+  public async AskQuestion(question: string, selectedStoreIds?: number[]): Promise<any> {
+    const payload = {
+      Question: question,
+      SelectedStoreIds: selectedStoreIds && selectedStoreIds.length > 0 ? selectedStoreIds : null,
+    }
+
+    const response = await this._requestService.PostRequest('/chat/ask', payload)
     const parsedResponse = this._requestService.TryParseResponse(response)
-    if (parsedResponse === undefined) { throw new Error(errorMessage) }
+    if (parsedResponse === undefined) {
+      throw new Error()
+    }
     return parsedResponse
   }
 }
