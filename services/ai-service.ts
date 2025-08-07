@@ -24,10 +24,11 @@ export class AIService {
     return parsedResponse
   }
 
-  public async AskQuestion(question: string, selectedStoreIds?: number[]): Promise<any> {
+  public async AskQuestion(question: string, selectedStoreIds?: number[], languageCode?: string): Promise<any> {
     const payload = {
       Question: question,
       SelectedStoreIds: selectedStoreIds && selectedStoreIds.length > 0 ? selectedStoreIds : null,
+      LanguageCode: languageCode
     }
 
     const response = await this._requestService.PostRequest('/chat/ask', payload)
