@@ -377,7 +377,6 @@ export default {
   restaurantSwipingPage_shareLocation: "Share location and search",
   restaurantSwipingPage_findingRestaurants: "Finding restaurants in the area...",
   restaurantSwipingPage_noResults: "No results!",
-  restaurantSwipingPage_likesCount: "Liked restaurants",
   restaurantSwipingPage_completedLiked: "{count} liked",
   restaurantSwipingPage_noLikesMessage: "Looks like nothing caught your fancy. Try again later.",
   restaurantSwipingPage_priceBudget: "Budget",

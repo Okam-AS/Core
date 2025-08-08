@@ -377,7 +377,6 @@ export default {
   restaurantSwipingPage_shareLocation: "Del posisjon og søk",
   restaurantSwipingPage_findingRestaurants: "Finner restauranter i området...",
   restaurantSwipingPage_noResults: "Ingen resultater!",
-  restaurantSwipingPage_likesCount: "Likte restauranter",
   restaurantSwipingPage_completedLiked: "{count} likt",
   restaurantSwipingPage_noLikesMessage: "Ser ut som ingenting falt i smak. Prøv igjen senere.",
   restaurantSwipingPage_priceBudget: "Rimelig",
