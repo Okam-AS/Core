@@ -345,6 +345,8 @@ export default {
   giftcardConfirmationPage_success: "Payment successful",
   orderPage_isOrderDelivered: "Has the order already been delivered?",
   orderPage_complete: "Complete",
+  orderPage_reorder: "Reorder",
+  orderPage_reorderFailed: "This order can not be reordered",
   rewards_heading: "Rewards",
   rewards_noCards: "You have no memberships yet",
   rewards_becomeMember: "Become a member",

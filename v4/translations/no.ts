@@ -347,6 +347,8 @@ export default {
   giftcardConfirmationPage_success: "Betaling vellykket",
   orderPage_isOrderDelivered: "Er bestillingen allerede levert?",
   orderPage_complete: "Fullfør",
+  orderPage_reorder: "Bestill på nytt",
+  orderPage_reorderFailed: "Varene er ikke lenger tilgjengelig for å bestilles på nytt",
   rewards_heading: "Bonus",
   rewards_noCards: "Du har ingen medlemskap enda",
   rewards_becomeMember: "Bli medlem",

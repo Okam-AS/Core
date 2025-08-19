@@ -53,4 +53,5 @@ export class Order {
   rewardTransactionId: string;
   rewardTransaction: RewardTransaction;
   woltDeliveryInfo: WoltDeliveryInfo;
+  canReorder: boolean;
 }

@@ -29,6 +29,16 @@ export class CartService {
     return parsedResponse;
   }
 
+  public async GetByStoreId(storeId: number): Promise<Cart> {
+    const response = await this._requestService.GetRequest("/carts/" + storeId);
+    const parsedResponse = this._requestService.TryParseResponse(response);
+    if (parsedResponse === undefined) {
+      throw new Error("Kunne ikke hente handlekurv");
+    }
+
+    return parsedResponse;
+  }
+
   public async Update(model: Cart): Promise<Cart> {
     const response = await this._requestService.PutRequest("/carts", model);
     const parsedResponse = this._requestService.TryParseResponse(response);
@@ -70,6 +80,16 @@ export class CartService {
     const parsedResponse = this._requestService.TryParseResponse(response);
     if (parsedResponse === undefined) {
       throw new Error("Kunne ikke oppdatere firmainfo");
+    }
+
+    return parsedResponse;
+  }
+
+  public async ReorderFromOrder(orderId: string | number): Promise<Cart> {
+    const response = await this._requestService.PostRequest("/carts/reorder/" + orderId);
+    const parsedResponse = this._requestService.TryParseResponse(response);
+    if (parsedResponse === undefined) {
+      throw new Error("Kunne ikke bestille på nytt");
     }
 
     return parsedResponse;

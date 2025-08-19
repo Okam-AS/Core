@@ -179,6 +179,25 @@ export const useCart = defineStore("cart", () => {
 
   const syncWithDbDebounced = debounce(syncWithDb, 300);
 
+  const loadCartFromServer = async (storeId?: number) => {
+    if (!_user.isLoggedIn()) return Promise.reject();
+    const targetStoreId = storeId || _store.currentStore.id;
+    if (!targetStoreId) return Promise.reject();
+
+    try {
+      const serverCart = await cartService().GetByStoreId(targetStoreId);
+      console.log("Cart received from server:", JSON.stringify(serverCart, null, 2));
+      if (serverCart && serverCart.storeId === targetStoreId) {
+        setCart(serverCart);
+        return serverCart;
+      }
+    } catch (e) {
+      // If cart doesn't exist on server, keep local cart
+      console.log("No cart found on server, using local cart");
+    }
+    return getCurrentCart();
+  };
+
   const unsavedLineItemSave = async () => {
     const currentCart = getCurrentCart();
     if (!currentCart || unsavedLineItemHasErrors()) return false;
@@ -344,14 +363,16 @@ export const useCart = defineStore("cart", () => {
     const model = new UpdateCompanyInfoModel();
     model.companyVat = organizationNumber;
 
-    return cartService().UpdateCompanyInfo(currentCart.storeId, model)
+    return cartService()
+      .UpdateCompanyInfo(currentCart.storeId, model)
       .then((result) => {
         console.log(result);
         if (result.success) {
           _checkout.getAvailablePaymentMethods();
         }
         return result;
-      }).catch((error) => {
+      })
+      .catch((error) => {
         console.error(error);
         return Promise.reject(error);
       });
@@ -378,6 +399,7 @@ export const useCart = defineStore("cart", () => {
     isHomeDelivery,
     deliveryAddressInCartIsValid,
     syncWithDb,
+    loadCartFromServer,
     getCurrentCart,
     getQuanityOfProductInCart,
     setCart,
