@@ -94,6 +94,28 @@ export class OrderService {
     return data;
   }
 
+  public async ChangeDeliveryType(orderCode: string, deliveryType: string): Promise<boolean> {
+    const response = await this._requestService.PutRequest("/orders/change-delivery-type", { orderCode, deliveryType });
+    const { data, error } = this._requestService.TryParseResponseWithError(response);
+    if (error) {
+      console.log("error:", error);
+      throw new Error(error);
+    }
+
+    return data;
+  }
+
+  public async SendSmsToDriver(orderCode: string, phoneNumber: string): Promise<boolean> {
+    const response = await this._requestService.PostRequest("/orders/send-sms-to-driver", { orderCode, phoneNumber });
+    const { data, error } = this._requestService.TryParseResponseWithError(response);
+    if (error) {
+      console.log("error:", error);
+      throw new Error(error);
+    }
+
+    return data;
+  }
+
   public GetOrdersAndSetState = (thenHandler?, catchHandler?) => {
     const comp = this;
     comp
