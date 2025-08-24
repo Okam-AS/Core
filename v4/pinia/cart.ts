@@ -158,6 +158,7 @@ export const useCart = defineStore("cart", () => {
       cartToSync.fullAddress = cartToSync.fullAddress || _user.user.fullAddress;
       cartToSync.city = cartToSync.city || _user.user.city;
       cartToSync.zipCode = cartToSync.zipCode || _user.user.zipCode;
+      cartToSync.deliveryInstructions = cartToSync.deliveryInstructions || _user.user.deliveryInstructions;
       const backendCart = await cartService().Update(cartToSync);
       if (syncVersion === cartSyncVersion) {
         setCart(backendCart); // safe to update
