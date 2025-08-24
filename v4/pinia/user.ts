@@ -91,17 +91,19 @@ export const useUser = defineStore("user", () => {
     const fullAddress = "fullAddress" in address ? address.fullAddress : userRef.value.fullAddress;
     const zipCode = "zipCode" in address ? address.zipCode : userRef.value.zipCode;
     const city = "city" in address ? address.city : userRef.value.city;
+    const deliveryInstructions = "deliveryInstructions" in address ? address.deliveryInstructions : userRef.value.deliveryInstructions;
 
     // No need to update if nothing has changed
-    if (fullAddress === userRef.value.fullAddress && zipCode === userRef.value.zipCode && city === userRef.value.city) return;
+    if (fullAddress === userRef.value.fullAddress && zipCode === userRef.value.zipCode && city === userRef.value.city && deliveryInstructions === userRef.value.deliveryInstructions) return;
 
     userService()
-      .UpdateAddress(fullAddress, zipCode, city)
+      .UpdateAddress(fullAddress, zipCode, city, deliveryInstructions)
       .then((success) => {
         if (success) {
           userRef.value.fullAddress = fullAddress;
           userRef.value.zipCode = zipCode;
           userRef.value.city = city;
+          userRef.value.deliveryInstructions = deliveryInstructions;
         }
       });
   }, 800);
@@ -200,6 +202,7 @@ export const useUser = defineStore("user", () => {
         userRef.value.fullAddress = response.fullAddress;
         userRef.value.zipCode = response.zipCode;
         userRef.value.city = response.city;
+        userRef.value.deliveryInstructions = response.deliveryInstructions;
         userRef.value.firstName = response.firstName;
         userRef.value.lastName = response.lastName;
         userRef.value.showFeedback = response.showFeedback;

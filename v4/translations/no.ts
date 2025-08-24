@@ -41,6 +41,8 @@ export default {
   checkoutPage_deliveryAddress: "Leveringsadresse",
   checkoutPage_deliveryZip: "Postnr.",
   checkoutPage_deliveryPostalplace: "Poststed",
+  checkoutPage_deliveryInstructions: "Leveringsinstrukser",
+  checkoutPage_deliveryInstructionsHint: "F.eks. ring på dørklokke 'navn navnesen'",
   checkoutPage_deliveryTimeToggle: "Endre leveringstidspunkt",
   checkoutPage_pickupTimeToggle: "Endre hentetidspunkt",
   checkoutPage_timeToggle: "Endre tidspunkt",

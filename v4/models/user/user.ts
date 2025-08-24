@@ -15,6 +15,7 @@ export class User {
   fullAddress: string;
   zipCode: string;
   city: string;
+  deliveryInstructions: string;
 
   companyEmail: string;
   companyName: string;

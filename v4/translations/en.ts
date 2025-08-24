@@ -41,6 +41,8 @@ export default {
   checkoutPage_deliveryAddress: "Delivery address",
   checkoutPage_deliveryZip: "Zip",
   checkoutPage_deliveryPostalplace: "Place",
+  checkoutPage_deliveryInstructions: "Delivery instructions",
+  checkoutPage_deliveryInstructionsHint: "E.g. ring doorbell with 'surname'",
   checkoutPage_deliveryTimeToggle: "Change delivery time",
   checkoutPage_pickupTimeToggle: "Change pickup time",
   checkoutPage_timeToggle: "Change time",

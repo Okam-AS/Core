@@ -20,6 +20,7 @@ export class Cart {
   fullAddress?: string = undefined;
   zipCode?: string = undefined;
   city?: string = undefined;
+  deliveryInstructions?: string = undefined;
   paymentIntentId?: string = undefined;
   vippsOrderId?: string = undefined;
   comment?: string = undefined;

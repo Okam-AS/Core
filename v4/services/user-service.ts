@@ -45,9 +45,9 @@ export class UserService {
     return parsedResponse;
   }
 
-  public async UpdateAddress(fullAddress: string, zipCode: string, city: string): Promise<boolean> {
+  public async UpdateAddress(fullAddress: string, zipCode: string, city: string, deliveryInstructions?: string): Promise<boolean> {
     if (!this._bearerToken) return false;
-    await this._requestService.PostRequest("/user/address/", { fullAddress, zipCode, city });
+    await this._requestService.PostRequest("/user/address/", { fullAddress, zipCode, city, deliveryInstructions });
     return true;
   }
 
