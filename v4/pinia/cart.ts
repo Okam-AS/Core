@@ -210,16 +210,9 @@ export const useCart = defineStore("cart", () => {
 
   const unsavedLineItemSave = async () => {
     const currentCart = getCurrentCart();
-    if (!currentCart || unsavedLineItemHasErrors()) return false;
+    if (!currentCart || unsavedLineItemHasErrors() || unsavedLineItemHasCrossStoreError()) return false;
 
     if (!unsavedLineItem.value.id && unsavedLineItem.value.quantity === 0) return false;
-
-    // Validate that the product belongs to the same store as the current cart
-    if (unsavedLineItem.value.product?.storeId &&
-        unsavedLineItem.value.product.storeId !== _store.currentStore.id) {
-      console.warn(`Cross-store product rejected: Product ${unsavedLineItem.value.product.id} from store ${unsavedLineItem.value.product.storeId} cannot be added to cart for store ${_store.currentStore.id}`);
-      return false;
-    }
 
     if (!unsavedLineItem.value.id) {
       const createGuid = () => {
@@ -334,6 +327,18 @@ export const useCart = defineStore("cart", () => {
       }
     }
     return hasErrors;
+  };
+
+  const unsavedLineItemHasCrossStoreError = () => {
+    if (unsavedLineItem.value.quantity === 0 || unsavedLineItem.value.product.soldOut) return false;
+
+    // Check if the product belongs to a different store than the current cart
+    if (unsavedLineItem.value.product?.storeId &&
+        unsavedLineItem.value.product.storeId !== _store.currentStore.id) {
+      unsavedLineItem.value.product.errorMessage = $i("general_itemNoLongerAvailable");
+      return true;
+    }
+    return false;
   };
 
   const unsavedLineItemToggleProductVariantOption = (productVariantOptionId: string) => {

@@ -275,6 +275,7 @@ export default {
   settings_user: "User",
   general_selectVariation: "Select '{name}' to add item to cart",
   general_soldOut: "Sold out",
+  general_itemNoLongerAvailable: "The item is no longer available",
   general_notAvailableFor: "Not available for ",
   general_closed: "Closed",
   general_openTo: "Open to",
