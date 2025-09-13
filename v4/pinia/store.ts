@@ -42,6 +42,8 @@ export const useStore = defineStore("store", () => {
       .GetForConsumer(id, null)
       .then((s) => {
         store.value = s;
+        // Clean up any cross-store items when store changes
+        _cart.cleanupCrossStoreItems();
       })
       .finally(() => {
         isLoading.value = false;

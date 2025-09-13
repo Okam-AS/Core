@@ -154,6 +154,15 @@ export const useCart = defineStore("cart", () => {
     lastGoodCartState = JSON.parse(JSON.stringify(getCurrentCart()));
 
     try {
+      // Filter out any products that don't belong to the current store
+      cartToSync.items = cartToSync.items?.filter((item: any) => {
+        if (item.product?.storeId && item.product.storeId !== cartToSync.storeId) {
+          console.warn(`Cross-store item filtered out during sync: Product ${item.product.id} from store ${item.product.storeId} removed from cart for store ${cartToSync.storeId}`);
+          return false;
+        }
+        return true;
+      }) || [];
+
       // Set default delivery address
       cartToSync.fullAddress = cartToSync.fullAddress || _user.user.fullAddress;
       cartToSync.city = cartToSync.city || _user.user.city;
@@ -205,6 +214,13 @@ export const useCart = defineStore("cart", () => {
 
     if (!unsavedLineItem.value.id && unsavedLineItem.value.quantity === 0) return false;
 
+    // Validate that the product belongs to the same store as the current cart
+    if (unsavedLineItem.value.product?.storeId &&
+        unsavedLineItem.value.product.storeId !== _store.currentStore.id) {
+      console.warn(`Cross-store product rejected: Product ${unsavedLineItem.value.product.id} from store ${unsavedLineItem.value.product.storeId} cannot be added to cart for store ${_store.currentStore.id}`);
+      return false;
+    }
+
     if (!unsavedLineItem.value.id) {
       const createGuid = () => {
         return "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g, (c) => {
@@ -250,6 +266,24 @@ export const useCart = defineStore("cart", () => {
     if (!currentCart) return;
     currentCart.items = [];
     syncWithDbDebounced();
+  };
+
+  const cleanupCrossStoreItems = () => {
+    const currentCart = getCurrentCart();
+    if (!currentCart || !currentCart.items) return;
+
+    const initialCount = currentCart.items.length;
+    currentCart.items = currentCart.items.filter((item: any) => {
+      if (item.product?.storeId && item.product.storeId !== _store.currentStore.id) {
+        console.warn(`Cross-store item removed: Product ${item.product.id} from store ${item.product.storeId} removed from cart for store ${_store.currentStore.id}`);
+        return false;
+      }
+      return true;
+    });
+
+    if (currentCart.items.length !== initialCount) {
+      syncWithDbDebounced();
+    }
   };
 
   const removeLineItem = (lineItemId: string) => {
@@ -407,6 +441,7 @@ export const useCart = defineStore("cart", () => {
     setCartRootProperties,
     clearCart,
     clearLineItems,
+    cleanupCrossStoreItems,
     removeLineItem,
     cartLineItemAddQuantity,
     unsavedLineItemAddQuantity,
