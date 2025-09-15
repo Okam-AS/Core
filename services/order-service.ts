@@ -116,6 +116,46 @@ export class OrderService {
     return data;
   }
 
+  public async GetAllOrdersWithPagination(
+    page: number = 1,
+    pageSize: number = 20,
+    search?: string,
+    dateFrom?: string,
+    dateTo?: string
+  ): Promise<any> {
+    let url = `/orders/all?page=${page}&pageSize=${pageSize}`;
+
+    if (search?.trim()) {
+      url += `&search=${encodeURIComponent(search.trim())}`;
+    }
+
+    if (dateFrom) {
+      url += `&dateFrom=${encodeURIComponent(dateFrom)}`;
+    }
+
+    if (dateTo) {
+      url += `&dateTo=${encodeURIComponent(dateTo)}`;
+    }
+
+    const response = await this._requestService.GetRequest(url);
+    const parsedResponse = this._requestService.TryParseResponse(response);
+    if (parsedResponse === undefined) {
+      throw new Error("Failed to get orders with pagination");
+    }
+
+    return parsedResponse;
+  }
+
+  public async GetOrder(orderCode: string): Promise<Order> {
+    const response = await this._requestService.GetRequest(`/orders/${orderCode}`);
+    const parsedResponse = this._requestService.TryParseResponse(response);
+    if (parsedResponse === undefined) {
+      throw new Error("Failed to get order");
+    }
+
+    return parsedResponse;
+  }
+
   public GetOrdersAndSetState = (thenHandler?, catchHandler?) => {
     const comp = this;
     comp
