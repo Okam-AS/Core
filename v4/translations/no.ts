@@ -315,6 +315,7 @@ export default {
   general_share: "Del med venner",
   general_copyLink: "Kopier lenke",
   general_linkCopied: "Lenke kopiert",
+  general_delivery: "Levering",
   menu_findStore: "Finn sted",
   menu_selectLocation: "Velg sted",
   menu_myOrders: "Bestillinger",

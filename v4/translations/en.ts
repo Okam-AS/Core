@@ -313,6 +313,7 @@ export default {
   general_share: "Share with friends",
   general_copyLink: "Copy link",
   general_linkCopied: "Link copied",
+  general_delivery: "Delivery",
   menu_findStore: "Find location",
   menu_selectLocation: "Select location",
   menu_myOrders: "Orders",
