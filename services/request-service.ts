@@ -77,11 +77,20 @@ export class RequestService {
     const request = this.DefaultRequest(path, payload, HttpMethod.POST)
     return this._httpModule.httpClient(request).then((response) => {
       return response
-    })
+    }).catch((error) => {
+      return error;
+    });
   }
 
   public PutRequest(path: string, payload?: any): Promise<any> {
     const request = this.DefaultRequest(path, payload, HttpMethod.PUT)
+    return this._httpModule.httpClient(request).then((response) => {
+      return response
+    })
+  }
+
+  public PatchRequest(path: string, payload?: any): Promise<any> {
+    const request = this.DefaultRequest(path, payload, HttpMethod.PATCH)
     return this._httpModule.httpClient(request).then((response) => {
       return response
     })

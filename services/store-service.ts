@@ -309,4 +309,23 @@ export class StoreService {
     if (parsedResponse === undefined) { throw new Error('Failed to get store payment config'); }
     return parsedResponse;
   }
+
+  public async ConfigureWolt(storeId: number, options: {
+    venueId: string,
+    clientId: string,
+    clientSecret: string,
+    accessToken: string,
+    refreshToken: string
+  }): Promise<boolean> {
+    const payload = {
+      VenueId: options.venueId,
+      ClientId: options.clientId,
+      ClientSecret: options.clientSecret,
+      AccessToken: options.accessToken,
+      RefreshToken: options.refreshToken
+    };
+    const response = await this._requestService.PostRequest('/stores/' + storeId + '/wolt-configuration', payload);
+    const parsedResponse = this._requestService.TryParseResponse(response);
+    return parsedResponse !== undefined;
+  }
 }
