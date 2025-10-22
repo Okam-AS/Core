@@ -10,35 +10,54 @@ export class WoltMenuService {
   }
 
   public async createMenu (storeId: number, request: any): Promise<boolean> {
-    const response = await this._requestService.PostRequest(`/wolt/marketplace/stores/${storeId}/menu`, request)
+    const response = await this._requestService.PostRequest(`/wolt/menu/stores/${storeId}`, request)
     const parsedResponse = this._requestService.TryParseResponse(response)
     return parsedResponse !== undefined
   }
 
   public async getMenu (storeId: number): Promise<any> {
-    const response = await this._requestService.GetRequest(`/wolt/marketplace/stores/${storeId}/menu`)
-    const parsedResponse = this._requestService.TryParseResponse(response)
-    if (parsedResponse === undefined) {
-      throw new Error('Failed to get Wolt menu')
+    const response = await this._requestService.GetRequest(`/wolt/menu/stores/${storeId}`)
+    const result = this._requestService.TryParseResponseWithError(response)
+
+    if (result.error) {
+      throw new Error(result.error)
     }
 
-    return parsedResponse
+    return result.data
   }
 
   public async updateMenuItems (storeId: number, request: any): Promise<boolean> {
-    const response = await this._requestService.PatchRequest(`/wolt/marketplace/stores/${storeId}/menu/items`, request)
+    const response = await this._requestService.PatchRequest(`/wolt/menu/stores/${storeId}/items`, request)
     const parsedResponse = this._requestService.TryParseResponse(response)
     return parsedResponse !== undefined
   }
 
   public async updateMenuItemInventory (storeId: number, request: any): Promise<boolean> {
-    const response = await this._requestService.PatchRequest(`/wolt/marketplace/stores/${storeId}/menu/items/inventory`, request)
+    const response = await this._requestService.PatchRequest(`/wolt/menu/stores/${storeId}/items/inventory`, request)
     const parsedResponse = this._requestService.TryParseResponse(response)
     return parsedResponse !== undefined
   }
 
   public async updateMenuOptions (storeId: number, request: any): Promise<boolean> {
-    const response = await this._requestService.PatchRequest(`/wolt/marketplace/stores/${storeId}/menu/options`, request)
+    const response = await this._requestService.PatchRequest(`/wolt/menu/stores/${storeId}/options`, request)
+    const parsedResponse = this._requestService.TryParseResponse(response)
+    return parsedResponse !== undefined
+  }
+
+  public async importMenu (storeId: number): Promise<boolean> {
+    const response = await this._requestService.PostRequest(`/wolt/menu/stores/${storeId}/import`, {})
+    const parsedResponse = this._requestService.TryParseResponse(response)
+    return parsedResponse !== undefined
+  }
+
+  public async syncMenu (storeId: number): Promise<boolean> {
+    const response = await this._requestService.PostRequest(`/wolt/menu/stores/${storeId}/sync`, {})
+    const parsedResponse = this._requestService.TryParseResponse(response)
+    return parsedResponse !== undefined
+  }
+
+  public async deleteMenu (storeId: number): Promise<boolean> {
+    const response = await this._requestService.DeleteRequest(`/wolt/menu/stores/${storeId}`)
     const parsedResponse = this._requestService.TryParseResponse(response)
     return parsedResponse !== undefined
   }
