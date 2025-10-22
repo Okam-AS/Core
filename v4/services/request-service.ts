@@ -82,7 +82,6 @@ export class RequestService {
     const request = { headers: {}, data: null };
     request[HttpProperty.Url] = $config.okamApiBaseUrl + path;
     request[HttpProperty.Method] = method;
-    request.headers[HttpProperty.ContentType] = "application/json; charset=utf-8";
     request.headers[HttpProperty.ClientPlatform] = this._coreInitializer.clientPlatformName || "Unknown";
     request.headers[HttpProperty.Language] = this._coreInitializer.cultureCode || "no";
     request.headers[HttpProperty.ClientAppVersion] = $config.version;
@@ -90,6 +89,7 @@ export class RequestService {
 
     console.log("🚀 " + method + " " + request[HttpProperty.Url]);
     if (content) {
+      request.headers[HttpProperty.ContentType] = "application/json; charset=utf-8";
       if ($config.isNativeScript) {
         request[HttpProperty.Content] = content;
       } else {
