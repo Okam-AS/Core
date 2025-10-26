@@ -76,6 +76,7 @@ const deliveryTypeLabelTool = (type: DeliveryType) => {
     [DeliveryType.DineHomeDelivery]: useTranslation().$i("deliveryType_dineHomeDelivery"),
     [DeliveryType.TableDelivery]: useTranslation().$i("deliveryType_tableDelivery"),
     [DeliveryType.WoltDelivery]: useTranslation().$i("deliveryType_woltDelivery"),
+    [DeliveryType.WoltMarketplaceDelivery]: useTranslation().$i("deliveryType_woltMarketplaceDelivery"),
     default: useTranslation().$i("deliveryType_notSet"),
   };
   return map[type] || map.default;

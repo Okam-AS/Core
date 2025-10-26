@@ -23,4 +23,6 @@ export class User {
   companyAddress: string;
   companyZipCode: string;
   companyCity: string;
+
+  isPowerUser: boolean;
 }
