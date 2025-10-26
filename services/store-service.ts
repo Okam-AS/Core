@@ -328,4 +328,10 @@ export class StoreService {
     const parsedResponse = this._requestService.TryParseResponse(response);
     return parsedResponse !== undefined;
   }
+
+  public async UpdateWoltMarketplaceConfiguration(storeId: number, configuration: { Enabled: boolean }): Promise<any> {
+    const response = await this._requestService.PutRequest('/stores/' + storeId + '/wolt-marketplace-config', configuration);
+    const parsedResponse = this._requestService.TryParseResponse(response);
+    return parsedResponse;
+  }
 }
