@@ -7,4 +7,5 @@ export enum OrderPaymentTypeFilter {
     DinteroVipps = 'DinteroVipps',
     DinteroBillie = 'DinteroBillie',
     DinteroKlarna = 'DinteroKlarna',
+    WoltMarketplace = 'WoltMarketplace',
 }
