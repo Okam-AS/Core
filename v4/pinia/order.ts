@@ -118,6 +118,7 @@ export const useOrder = defineStore("order", () => {
     if (paymentType === PaymentType.Dintero) return $i("paymentType_dintero");
     if (paymentType === PaymentType.DinteroBillie) return $i("paymentType_dinteroBillie");
     if (paymentType === PaymentType.DinteroKlarna) return $i("paymentType_dinteroKlarna");
+    if (paymentType === PaymentType.WoltMarketplace) return $i("paymentType_woltMarketplace");
     return $i("paymentType_unknown");
   };
 

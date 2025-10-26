@@ -168,6 +168,7 @@ export default {
   paymentType_dintero: "Paid",
   paymentType_dinteroKlarna: "Klarna",
   paymentType_dinteroBillie: "Invoice",
+  paymentType_woltMarketplace: "Paid via Wolt",
   paymentType_unknown: "Unknown payment method",
   payment_processing1: "Waiting for payment provider...",
   payment_processing2: "Please wait...",

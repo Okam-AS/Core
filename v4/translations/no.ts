@@ -172,6 +172,7 @@ export default {
   paymentType_dintero: "Betalt",
   paymentType_dinteroKlarna: "Klarna",
   paymentType_dinteroBillie: "Faktura",
+  paymentType_woltMarketplace: "Betalt via Wolt",
   paymentType_unknown: "Ukjent betalingsmetode",
   deliveryType_selfPickup: "Hent selv",
   deliveryType_instantHomeDelivery: "Levering",
