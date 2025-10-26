@@ -177,6 +177,7 @@ export default {
   deliveryType_instantHomeDelivery: "Delivery",
   deliveryType_dineHomeDelivery: "Delivery",
   deliveryType_woltDelivery: "Wolt delivery",
+  deliveryType_woltMarketplaceDelivery: "Wolt Marketplace delivery",
   deliveryType_tableDelivery: "Eat here",
   deliveryType_notSet: "Not set",
   orderStatus_acceptedHeading: "Order requested, but not yet approved",

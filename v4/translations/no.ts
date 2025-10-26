@@ -178,6 +178,7 @@ export default {
   deliveryType_dineHomeDelivery: "Levering",
   deliveryType_tableDelivery: "Spis her",
   deliveryType_woltDelivery: "Wolt levering",
+  deliveryType_woltMarketplaceDelivery: "Wolt Marketplace levering",
   deliveryType_notSet: "Ikke valgt",
   orderStatus_acceptedHeading: "Bestillingen er forespurt",
   orderStatus_processingHeading: "Bestillingen er godkjent og gjøres klar",
