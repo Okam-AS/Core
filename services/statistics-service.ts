@@ -25,4 +25,11 @@ export class StatisticsService {
       if (parsedResponse === undefined) { throw new Error('Failed to get pending settlements') }
       return parsedResponse
     }
+
+    public async GetHeatmapData (model: StatisticQueryOrders): Promise<any> {
+      const response = await this._requestService.PostRequest('/statistics/heatmap', model)
+      const parsedResponse = this._requestService.TryParseResponse(response)
+      if (parsedResponse === undefined) { throw new Error('Failed to get heatmap data') }
+      return parsedResponse
+    }
 }
