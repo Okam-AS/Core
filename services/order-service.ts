@@ -121,7 +121,11 @@ export class OrderService {
     pageSize: number = 20,
     search?: string,
     dateFrom?: string,
-    dateTo?: string
+    dateTo?: string,
+    storeIds?: number[],
+    statuses?: string[],
+    deliveryTypes?: string[],
+    paymentTypes?: string[]
   ): Promise<any> {
     let url = `/orders/all?page=${page}&pageSize=${pageSize}`;
 
@@ -135,6 +139,30 @@ export class OrderService {
 
     if (dateTo) {
       url += `&dateTo=${encodeURIComponent(dateTo)}`;
+    }
+
+    if (storeIds && storeIds.length > 0) {
+      storeIds.forEach(id => {
+        url += `&storeIds=${id}`;
+      });
+    }
+
+    if (statuses && statuses.length > 0) {
+      statuses.forEach(status => {
+        url += `&statuses=${encodeURIComponent(status)}`;
+      });
+    }
+
+    if (deliveryTypes && deliveryTypes.length > 0) {
+      deliveryTypes.forEach(type => {
+        url += `&deliveryTypes=${encodeURIComponent(type)}`;
+      });
+    }
+
+    if (paymentTypes && paymentTypes.length > 0) {
+      paymentTypes.forEach(type => {
+        url += `&paymentTypes=${encodeURIComponent(type)}`;
+      });
     }
 
     const response = await this._requestService.GetRequest(url);
