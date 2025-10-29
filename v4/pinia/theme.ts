@@ -18,6 +18,7 @@ export const useTheme = defineStore("theme", () => {
       borderRadius: 15,
       itunesAppId: "1514296965",
       androidPackageName: "no.okam.consumer",
+      tracking: {},
     },
     okamDark: {
       clientPlatformName: "Okam",
@@ -30,6 +31,7 @@ export const useTheme = defineStore("theme", () => {
       borderRadius: 15,
       itunesAppId: "1514296965",
       androidPackageName: "no.okam.consumer",
+      tracking: {},
     },
     jungelPizza: {
       clientPlatformName: "Jungel Pizza",
@@ -44,6 +46,11 @@ export const useTheme = defineStore("theme", () => {
       svgLogo: "jungel_pizza",
       itunesAppId: "6465692106",
       androidPackageName: "no.okam.jungelpizza",
+      tracking: {
+        metaPixelId: "681512548335349",
+        ga4MeasurementId: "G-WC5K8P462E",
+        gtmId: "GTM-MKJ2M2K3",
+      },
     },
     mathavna: {
       clientPlatformName: "Mathavna",
@@ -59,6 +66,7 @@ export const useTheme = defineStore("theme", () => {
       itunesAppId: "6744123402",
       androidPackageName: "no.okam.mathavna",
       homePath: "/store/mathavna",
+      tracking: {},
     },
   };
 
@@ -193,6 +201,11 @@ export const useTheme = defineStore("theme", () => {
     return selectedTheme === "okam" || selectedTheme === "okamDark";
   });
 
+  const $tracking = computed(() => {
+    const currentTheme = getCurrentTheme();
+    return themes[currentTheme].tracking || {};
+  });
+
   return {
     $color,
     $primaryColor,
@@ -210,5 +223,6 @@ export const useTheme = defineStore("theme", () => {
     $androidPackageName,
     $homePath,
     $isThemeSwitchingAvailable,
+    $tracking,
   };
 });
