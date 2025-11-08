@@ -148,7 +148,7 @@ export const useCheckout = defineStore("checkout", () => {
   const dateTimeIsUnderLimitMinutesFromNow = () => {
     const diff = selectedDateTime().getTime() - new Date().getTime();
     const minutesDiff = Math.floor(diff / 1000 / 60);
-    return minutesDiff < 30;
+    return minutesDiff < 60;
   };
 
   const singleLineSelectedDateTime = computed(() => {
@@ -177,8 +177,8 @@ export const useCheckout = defineStore("checkout", () => {
       const selectedMinutes = selectedRequestedCompletionTimeMinutes();
       let requestedCompletionValue = null;
 
-      // Only proceed if we have valid selections
-      if (srdRef.value !== 0 && selectedRequestedCompletionDate.value && srtRef.value) {
+      // Only proceed if we have valid selections and time is at least 1 hour in future
+      if (srdRef.value !== 0 && selectedRequestedCompletionDate.value && srtRef.value && !dateTimeIsUnderLimitMinutesFromNow()) {
         const selectedDate = selectedRequestedCompletionDate.value;
 
         // Format the date as a string in the exact format we want to send to the backend
