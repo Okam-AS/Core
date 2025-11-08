@@ -154,15 +154,6 @@ export const useCart = defineStore("cart", () => {
     lastGoodCartState = JSON.parse(JSON.stringify(getCurrentCart()));
 
     try {
-      // Filter out any products that don't belong to the current store
-      cartToSync.items = cartToSync.items?.filter((item: any) => {
-        if (item.product?.storeId && item.product.storeId !== cartToSync.storeId) {
-          console.warn(`Cross-store item filtered out during sync: Product ${item.product.id} from store ${item.product.storeId} removed from cart for store ${cartToSync.storeId}`);
-          return false;
-        }
-        return true;
-      }) || [];
-
       // Set default delivery address
       cartToSync.fullAddress = cartToSync.fullAddress || _user.user.fullAddress;
       cartToSync.city = cartToSync.city || _user.user.city;
@@ -210,7 +201,7 @@ export const useCart = defineStore("cart", () => {
 
   const unsavedLineItemSave = async () => {
     const currentCart = getCurrentCart();
-    if (!currentCart || unsavedLineItemHasErrors() || unsavedLineItemHasCrossStoreError()) return false;
+    if (!currentCart || unsavedLineItemHasErrors()) return false;
 
     if (!unsavedLineItem.value.id && unsavedLineItem.value.quantity === 0) return false;
 
@@ -261,23 +252,6 @@ export const useCart = defineStore("cart", () => {
     syncWithDbDebounced();
   };
 
-  const cleanupCrossStoreItems = () => {
-    const currentCart = getCurrentCart();
-    if (!currentCart || !currentCart.items) return;
-
-    const initialCount = currentCart.items.length;
-    currentCart.items = currentCart.items.filter((item: any) => {
-      if (item.product?.storeId && item.product.storeId !== _store.currentStore.id) {
-        console.warn(`Cross-store item removed: Product ${item.product.id} from store ${item.product.storeId} removed from cart for store ${_store.currentStore.id}`);
-        return false;
-      }
-      return true;
-    });
-
-    if (currentCart.items.length !== initialCount) {
-      syncWithDbDebounced();
-    }
-  };
 
   const removeLineItem = (lineItemId: string) => {
     const currentCart = getCurrentCart();
@@ -327,18 +301,6 @@ export const useCart = defineStore("cart", () => {
       }
     }
     return hasErrors;
-  };
-
-  const unsavedLineItemHasCrossStoreError = () => {
-    if (unsavedLineItem.value.quantity === 0 || unsavedLineItem.value.product.soldOut) return false;
-
-    // Check if the product belongs to a different store than the current cart
-    if (unsavedLineItem.value.product?.storeId &&
-        unsavedLineItem.value.product.storeId !== _store.currentStore.id) {
-      unsavedLineItem.value.product.errorMessage = $i("general_itemNoLongerAvailable");
-      return true;
-    }
-    return false;
   };
 
   const unsavedLineItemToggleProductVariantOption = (productVariantOptionId: string) => {
@@ -446,7 +408,6 @@ export const useCart = defineStore("cart", () => {
     setCartRootProperties,
     clearCart,
     clearLineItems,
-    cleanupCrossStoreItems,
     removeLineItem,
     cartLineItemAddQuantity,
     unsavedLineItemAddQuantity,
