@@ -32,6 +32,7 @@ export class Product {
     discountAmount: number;
 
     storeId: number;
+    storeName: string;
     regularDiscountId: string;
 
     tableAdditionalAmount: number;

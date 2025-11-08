@@ -40,6 +40,15 @@ export class ProductService {
       return this.ParsedResponse(response, 'Kunne ikke hente produkter')
     }
 
+    public async SearchAcrossStores (query: string, storeIds: number[]): Promise<Array<Product>> {
+      const response = await this._requestService.PostRequest('/products/search/cross-store', {
+        query: query,
+        storeIds: storeIds
+      })
+      if (response.statusCode === 401 && this._vuexModule.state.currentUser.token) { this._userService.Logout() }
+      return this.ParsedResponse(response, 'Kunne ikke søke i produkter')
+    }
+
     public async Delete (productId: string): Promise<void> {
       const response = await this._requestService.DeleteRequest('/products/' + productId)
       if (response.statusCode >= 300 || response.statusCode < 200) { throw new Error('Kunne ikke slette produkt') }
