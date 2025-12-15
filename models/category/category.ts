@@ -1,5 +1,5 @@
 import { DeliveryType } from '../../enums'
-import { ImageSource, ImageCarouselItem, CategoryProductListItem } from '../index'
+import { ImageSource, ImageCarouselItem, CategoryProductListItem, CategoryPublishRule, ProductVariant } from '../index'
 
 export class Category {
     id: string;
@@ -21,4 +21,8 @@ export class Category {
     storeId: number;
 
     hideFromDeliveryTypes: Array<DeliveryType>;
+
+    publishRules: Array<CategoryPublishRule>;
+    productVariants: Array<ProductVariant>;
+    handlePublishRules: boolean;
 }
