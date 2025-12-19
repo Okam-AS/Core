@@ -109,7 +109,7 @@ export const useUser = defineStore("user", () => {
   }, 800);
 
   const loadFavoriteProducts = (searchOptions: CategorySearchOptions) => {
-    if (!isLoggedIn() || !useStore().currentStore) {
+    if (!isLoggedIn() || !useStore().currentStore?.id) {
       favoriteProductsPrivate.value = [];
     } else {
       productService()
