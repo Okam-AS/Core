@@ -58,4 +58,5 @@ export class Order {
 
   comment: string;
   woltDeliveryInfo: WoltDeliveryInfo;
+  canceledByStore: boolean;
 }
