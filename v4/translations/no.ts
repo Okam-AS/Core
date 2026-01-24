@@ -279,6 +279,8 @@ export default {
   settings_logout: "Logg ut",
   settings_login: "Logg inn",
   general_selectVariation: "Velg '{name}' for å legge vare i handlekurv",
+  general_yes: "Ja",
+  general_no: "Nei",
   general_soldOut: "Utsolgt",
   general_itemNoLongerAvailable: "Varen er ikke lenger tilgjengelig",
   general_notAvailableFor: "Utilgjengelig for ",

@@ -280,6 +280,8 @@ export default {
   general_soldOut: "Sold out",
   general_itemNoLongerAvailable: "The item is no longer available",
   general_notAvailableFor: "Not available for ",
+  general_yes: "Yes",
+  general_no: "No",
   general_closed: "Closed",
   general_openTo: "Open to",
   general_asap: "ASAP",
