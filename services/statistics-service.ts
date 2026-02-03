@@ -26,6 +26,13 @@ export class StatisticsService {
       return parsedResponse
     }
 
+    public async GetWoltDriveInvoice (model: { StoreId: number, From: string, To: string, AvgMetersPerDelivery: number }): Promise<any> {
+      const response = await this._requestService.PostRequest('/statistics/wolt-drive-invoice', model)
+      const parsedResponse = this._requestService.TryParseResponse(response)
+      if (parsedResponse === undefined) { throw new Error('Failed to get wolt drive invoice') }
+      return parsedResponse
+    }
+
     public async GetHeatmapData (model: StatisticQueryOrders): Promise<any> {
       const response = await this._requestService.PostRequest('/statistics/heatmap', model)
       const parsedResponse = this._requestService.TryParseResponse(response)
