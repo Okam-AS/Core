@@ -28,7 +28,7 @@ export const useStore = defineStore("store", () => {
   };
 
   const setCurrentStore = (id: number, reload: boolean = false) => {
-    if ($availableStoreIds?.length && !$availableStoreIds.includes(id)) return Promise.resolve();
+    if (!id || ($availableStoreIds?.length && !$availableStoreIds.includes(id))) return Promise.resolve();
 
     if (!reload) {
       isLoading.value = true;
