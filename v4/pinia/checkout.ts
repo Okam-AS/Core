@@ -120,10 +120,11 @@ export const useCheckout = defineStore("checkout", () => {
         currentMinutes = now.getMinutes();
       }
 
-      // Create a new Date object
-      srtRef.value = new Date(srtRef.value);
-      srtRef.value.setHours(currentHours);
-      srtRef.value.setMinutes(currentMinutes);
+      // Create a new Date object with the correct hours and minutes
+      const newDate = new Date(srtRef.value);
+      newDate.setHours(currentHours);
+      newDate.setMinutes(currentMinutes);
+      srtRef.value = newDate;
     }
 
     requestedCompletionChange();
