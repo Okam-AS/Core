@@ -270,7 +270,6 @@ export default {
   settings_theme_dark: "Mørk",
   settings_delivery: "Levering",
   settings_savedCards: "Lagrede kort",
-  settings_noSavedCards: "Du har ingen lagrede kort",
   settings_user: "Bruker",
   settings_deleteAccount: "Slett bruker",
   settings_confirmDelete: "Bekreft sletting",

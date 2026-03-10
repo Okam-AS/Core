@@ -268,7 +268,6 @@ export default {
   settings_theme_dark: "Dark",
   settings_delivery: "Delivery",
   settings_savedCards: "Saved cards",
-  settings_noSavedCards: "You have no saved cards",
   settings_deleteAccount: "Delete account",
   settings_confirmDelete: "Confirm delete",
   settings_cancelDelete: "Cancel delete",
