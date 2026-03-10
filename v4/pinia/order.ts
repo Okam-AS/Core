@@ -123,10 +123,12 @@ export const useOrder = defineStore("order", () => {
   };
 
   const progressFlow = (deliveryType: DeliveryType, currentStatus: OrderStatus) => {
+    const status = currentStatus === OrderStatus.DriverPickedUp ? OrderStatus.ReadyForDriver : currentStatus;
+
     const createSteps = (flow) => {
       return flow.map((s) => ({
-        completed: flow.indexOf(s) < flow.indexOf(currentStatus) || (s !== OrderStatus.Completed && currentStatus === OrderStatus.ReadyForPickup) || currentStatus === OrderStatus.Completed || s === OrderStatus.Accepted || (currentStatus === OrderStatus.Served && s !== OrderStatus.Completed),
-        current: s === currentStatus,
+        completed: flow.indexOf(s) < flow.indexOf(status) || (s !== OrderStatus.Completed && status === OrderStatus.ReadyForPickup) || status === OrderStatus.Completed || s === OrderStatus.Accepted || (status === OrderStatus.Served && s !== OrderStatus.Completed),
+        current: s === status,
         label: orderStatusLabel(s),
         isLastStep: s === OrderStatus.Completed,
       }));
