@@ -14,6 +14,7 @@ export class Product {
     depositAmount: number;
 
     productVariants: Array<ProductVariant>;
+    productVariantEnabled: boolean;
     selectedOptionsAmount: number;
     selectedOptionNames: string;
     currency: string;
