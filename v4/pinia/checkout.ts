@@ -149,7 +149,7 @@ export const useCheckout = defineStore("checkout", () => {
   const dateTimeIsUnderLimitMinutesFromNow = () => {
     const diff = selectedDateTime().getTime() - new Date().getTime();
     const minutesDiff = Math.floor(diff / 1000 / 60);
-    return minutesDiff < 60;
+    return minutesDiff < 30;
   };
 
   const singleLineSelectedDateTime = computed(() => {
