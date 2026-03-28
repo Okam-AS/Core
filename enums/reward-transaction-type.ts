@@ -1,6 +1,7 @@
 export enum RewardTransactionType {
-  NotSet = "NotSet",
-  Received = "Received",
-  Spent = "Spent",
-  Transferred = "Transferred",
+  NotSet = 0,
+  Purchased = 5,
+  Received = 10,
+  Spent = 20,
+  Transferred = 30,
 }

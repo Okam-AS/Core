@@ -13,6 +13,11 @@ export class ProductService {
       this._vuexModule = vuexModule
       this._userService = new UserService(vuexModule)
     }
+  
+    public async Duplicate (productId: string): Promise<Product> {
+      const response = await this._requestService.PostRequest('/products/' + productId + '/duplicate', {})  
+      return this.ParsedResponse(response, 'Kunne ikke kopiere produkt')
+    }
 
     public async GetByBarcode (storeId: number, barcode: string): Promise<Product> {
       const response = await this._requestService.GetRequest('/products/consumer/search/' + storeId + '/' + (barcode || false))
@@ -33,6 +38,15 @@ export class ProductService {
       const response = await this._requestService.GetRequest('/products/search/' + storeId)
       if (response.statusCode === 401 && this._vuexModule.state.currentUser.token) { this._userService.Logout() }
       return this.ParsedResponse(response, 'Kunne ikke hente produkter')
+    }
+
+    public async SearchAcrossStores (query: string, storeIds: number[]): Promise<Array<Product>> {
+      const response = await this._requestService.PostRequest('/products/search/cross-store', {
+        query: query,
+        storeIds: storeIds
+      })
+      if (response.statusCode === 401 && this._vuexModule.state.currentUser.token) { this._userService.Logout() }
+      return this.ParsedResponse(response, 'Kunne ikke søke i produkter')
     }
 
     public async Delete (productId: string): Promise<void> {

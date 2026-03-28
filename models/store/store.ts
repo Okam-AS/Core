@@ -29,6 +29,9 @@ export class Store {
   selfPickUp: boolean;
   tableDeliveryEnabled: boolean;
   homeDeliveryEnabled: boolean;
+  dineHomeDeliveryEnabled: boolean;
+  woltDriveEnabled: boolean;
+  woltDriveIsConfigured: boolean;
 
   payment: StorePayment;
 

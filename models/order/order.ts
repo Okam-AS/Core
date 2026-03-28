@@ -1,50 +1,64 @@
-import { OrderStatus, DeliveryType, PaymentType } from '../../enums'
-import { OrderLineItem, TaxDetail } from '../../models'
+import { OrderStatus, DeliveryType, PaymentType, DineHomeStatus } from "../../enums";
+import { OrderLineItem, TaxDetail, WoltDeliveryInfo } from "../../models";
+
 export class Order {
-    id: string;
-    friendlyOrderId: string;
+  id: string;
+  friendlyOrderId: string;
+  dineHomeOrderId: string;
 
-    requestedCompletion: Date;
+  created: Date;
+  requestedCompletion: Date;
+  processingStartTime: Date;
+  estimatedProcessingEndTime: Date;
+  processingEndTime: Date;
+  completed: Date;
+  isInPreorderMode: boolean;
 
-    platform: string;
-    userId: string;
-    storeId: string;
-    pickup: Date;
-    created: Date;
-    completed: Date;
-    status: OrderStatus;
-    items: Array<OrderLineItem>;
-    taxDetails: Array<TaxDetail>;
+  platform: string;
+  userId: string;
+  storeId: number;
+  originalStoreId: number;
+  status: OrderStatus;
+  dineHomeStatus: DineHomeStatus;
+  items: Array<OrderLineItem>;
+  taxDetails: Array<TaxDetail>;
 
-    paymentIntentId: string;
-    vippsOrderId: string;
+  paymentIntentId: string;
+  vippsOrderId: string;
 
-    tableName: string;
-    dateTimeNow: Date;
-    countdownEndTime: Date;
+  tableName: string;
+  dateTimeNow: Date;
+  countdownEndTime: Date;
+  pickup: Date;
 
-    itemsAmount: number;
-    itemsAmountLineThrough: number;
-    orderDiscountAmount: number;
-    deliveryAmount: number;
-    serviceFeeAmount: number;
-    woltServiceFeeAmount: number;
-    finalAmount: number;
+  itemsAmount: number;
+  itemsAmountLineThrough: number;
+  orderDiscountAmount: number;
+  deliveryAmount: number;
+  serviceFeeAmount: number;
+  woltServiceFeeAmount: number;
+  finalAmount: number;
 
-    paymentType: PaymentType;
-    deliveryType: DeliveryType;
+  paymentType: PaymentType;
+  deliveryType: DeliveryType;
 
-    fullAddress: string;
-    zipCode: string;
-    city: string;
+  fullAddress: string;
+  zipCode: string;
+  city: string;
 
-    storeLegalName: string;
-    storeVAT: string;
-    storeFullAddress: string;
-    storeZipCode: string;
-    storeCity: string;
+  storeLegalName: string;
+  storeVAT: string;
+  storeFullAddress: string;
+  storeZipCode: string;
+  storeCity: string;
 
-    tipAmount: number;
+  userIsMember: boolean;
+  userFullName: string;
 
-    comment: string;
+  tipAmount: number;
+  usedRewardAmount: number;
+
+  comment: string;
+  woltDeliveryInfo: WoltDeliveryInfo;
+  canceledByStore: boolean;
 }
