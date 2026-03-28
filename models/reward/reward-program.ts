@@ -1,13 +1,15 @@
-import { RewardMembership, RewardCachbackRange } from '..';
+import { RewardBarData, RewardMembership, RewardCachbackRange, Store } from '..';
 
 export class RewardProgram {
     rewardProgramId: string;
     name: string;
     cashbackEnabled: boolean;
-    cashbackRanges: Array<RewardCachbackRange>;
-    memberships: Array<RewardMembership>;
-
     cutOffDaysForRewardCalculation: number;
+    cashbackRanges: Array<RewardCachbackRange>;
+    cashbackRangeToString: string;
+    stores: Array<Store>;
+    memberships: Array<RewardMembership>;
+    rewardBarData: Array<RewardBarData>;
 
     averageOrderCountForNonMembers: number;
     averageOrderCountForMembers: number;

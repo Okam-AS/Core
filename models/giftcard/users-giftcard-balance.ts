@@ -2,6 +2,6 @@ import { UsersGiftcardBalanceTransaction } from "..";
 
 export class UsersGiftcardBalance {
   balance: number;
-  thasGiftcardype: boolean;
+  hasGiftcard: boolean;
   transactions: Array<UsersGiftcardBalanceTransaction> = [];
 }
