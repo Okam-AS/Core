@@ -1,17 +1,17 @@
 import { DeliveryType, OrderStatus } from "../enums";
 import dayjs from "dayjs";
 
-let _useTranslation: any;
+let _translationProvider: (() => { $i: (key: string) => string }) | null = null;
+
+export function setTranslationProvider(provider: () => { $i: (key: string) => string }) {
+  _translationProvider = provider;
+}
+
 function getTranslation() {
-  if (!_useTranslation) {
-    try {
-      _useTranslation = require("../pinia").useTranslation;
-    } catch (e) {
-      // pinia not available (Vue 2 projects)
-      _useTranslation = () => ({ $i: (key: string) => key });
-    }
+  if (_translationProvider) {
+    return _translationProvider();
   }
-  return _useTranslation();
+  return { $i: (key: string) => key };
 }
 
 const currencyInfoTool = () => {
