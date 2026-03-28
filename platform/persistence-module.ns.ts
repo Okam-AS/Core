@@ -1,4 +1,4 @@
-import { IPersistenceModule } from '../../interfaces'
+import { IPersistenceModule } from '../interfaces'
 class IPersistenceModuleNS implements IPersistenceModule {
   exists: any;
   get: any;

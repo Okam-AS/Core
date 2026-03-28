@@ -24,4 +24,6 @@ export enum MutationName {
     SetProductsQuery = 'SetProductsQuery',
     SetNotificationStatus = 'SetNotificationStatus',
     SetLastViewedProductId = 'SetLastViewedProductId',
+    StartNewOrderNotificationsInterval = 'StartNewOrderNotificationsInterval',
+    StopNewOrderNotificationsInterval = 'StopNewOrderNotificationsInterval'
 }
