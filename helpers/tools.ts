@@ -1,6 +1,18 @@
 import { DeliveryType, OrderStatus } from "../enums";
 import dayjs from "dayjs";
-import { useTranslation } from "../pinia";
+
+let _useTranslation: any;
+function getTranslation() {
+  if (!_useTranslation) {
+    try {
+      _useTranslation = require("../pinia").useTranslation;
+    } catch (e) {
+      // pinia not available (Vue 2 projects)
+      _useTranslation = () => ({ $i: (key: string) => key });
+    }
+  }
+  return _useTranslation();
+}
 
 const currencyInfoTool = () => {
   return {
@@ -40,44 +52,47 @@ const priceLabelTool = (totalPrice: Number, hideFractionIfZero: Boolean = false,
 };
 
 const orderStatusLabelTool = (type: OrderStatus) => {
+  const t = getTranslation();
   const map = {
-    [OrderStatus.Accepted]: useTranslation().$i("orderStatus_accepted"),
-    [OrderStatus.Processing]: useTranslation().$i("orderStatus_processing"),
-    [OrderStatus.ReadyForPickup]: useTranslation().$i("orderStatus_readyForPickup"),
-    [OrderStatus.ReadyForDriver]: useTranslation().$i("orderStatus_readyForDriver"),
-    [OrderStatus.DriverPickedUp]: useTranslation().$i("orderStatus_driverPickedUp"),
-    [OrderStatus.Served]: useTranslation().$i("orderStatus_served"),
-    [OrderStatus.Completed]: useTranslation().$i("orderStatus_completed"),
-    [OrderStatus.Canceled]: useTranslation().$i("orderStatus_canceled"),
+    [OrderStatus.Accepted]: t.$i("orderStatus_accepted"),
+    [OrderStatus.Processing]: t.$i("orderStatus_processing"),
+    [OrderStatus.ReadyForPickup]: t.$i("orderStatus_readyForPickup"),
+    [OrderStatus.ReadyForDriver]: t.$i("orderStatus_readyForDriver"),
+    [OrderStatus.DriverPickedUp]: t.$i("orderStatus_driverPickedUp"),
+    [OrderStatus.Served]: t.$i("orderStatus_served"),
+    [OrderStatus.Completed]: t.$i("orderStatus_completed"),
+    [OrderStatus.Canceled]: t.$i("orderStatus_canceled"),
     default: "",
   };
   return map[type] || map.default;
 };
 
 const orderStatusHeadingTool = (type: OrderStatus) => {
+  const t = getTranslation();
   const map = {
-    [OrderStatus.Accepted]: useTranslation().$i("orderStatus_acceptedHeading"),
-    [OrderStatus.Processing]: useTranslation().$i("orderStatus_processingHeading"),
-    [OrderStatus.ReadyForPickup]: useTranslation().$i("orderStatus_readyForPickupHeading"),
-    [OrderStatus.ReadyForDriver]: useTranslation().$i("orderStatus_readyForDriverHeading"),
-    [OrderStatus.DriverPickedUp]: useTranslation().$i("orderStatus_driverPickedUpHeading"),
-    [OrderStatus.Served]: useTranslation().$i("orderStatus_servedHeading"),
-    [OrderStatus.Completed]: useTranslation().$i("orderStatus_completedHeading"),
-    [OrderStatus.Canceled]: useTranslation().$i("orderStatus_canceledHeading"),
+    [OrderStatus.Accepted]: t.$i("orderStatus_acceptedHeading"),
+    [OrderStatus.Processing]: t.$i("orderStatus_processingHeading"),
+    [OrderStatus.ReadyForPickup]: t.$i("orderStatus_readyForPickupHeading"),
+    [OrderStatus.ReadyForDriver]: t.$i("orderStatus_readyForDriverHeading"),
+    [OrderStatus.DriverPickedUp]: t.$i("orderStatus_driverPickedUpHeading"),
+    [OrderStatus.Served]: t.$i("orderStatus_servedHeading"),
+    [OrderStatus.Completed]: t.$i("orderStatus_completedHeading"),
+    [OrderStatus.Canceled]: t.$i("orderStatus_canceledHeading"),
     default: "",
   };
   return map[type] || map.default;
 };
 
 const deliveryTypeLabelTool = (type: DeliveryType) => {
+  const t = getTranslation();
   const map = {
-    [DeliveryType.SelfPickup]: useTranslation().$i("deliveryType_selfPickup"),
-    [DeliveryType.InstantHomeDelivery]: useTranslation().$i("deliveryType_instantHomeDelivery"),
-    [DeliveryType.DineHomeDelivery]: useTranslation().$i("deliveryType_dineHomeDelivery"),
-    [DeliveryType.TableDelivery]: useTranslation().$i("deliveryType_tableDelivery"),
-    [DeliveryType.WoltDelivery]: useTranslation().$i("deliveryType_woltDelivery"),
-    [DeliveryType.WoltMarketplaceDelivery]: useTranslation().$i("deliveryType_woltMarketplaceDelivery"),
-    default: useTranslation().$i("deliveryType_notSet"),
+    [DeliveryType.SelfPickup]: t.$i("deliveryType_selfPickup"),
+    [DeliveryType.InstantHomeDelivery]: t.$i("deliveryType_instantHomeDelivery"),
+    [DeliveryType.DineHomeDelivery]: t.$i("deliveryType_dineHomeDelivery"),
+    [DeliveryType.TableDelivery]: t.$i("deliveryType_tableDelivery"),
+    [DeliveryType.WoltDelivery]: t.$i("deliveryType_woltDelivery"),
+    [DeliveryType.WoltMarketplaceDelivery]: t.$i("deliveryType_woltMarketplaceDelivery"),
+    default: t.$i("deliveryType_notSet"),
   };
   return map[type] || map.default;
 };
