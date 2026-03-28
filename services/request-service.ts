@@ -73,6 +73,23 @@ export class RequestService {
     })
   }
 
+  public PostFormDataRequest(path: string, formData: any): Promise<any> {
+    const request = { headers: {}, data: null }
+    request[HttpProperty.Url] = this._baseUrl + path
+    request[HttpProperty.Method] = HttpMethod.POST
+    request.headers[HttpProperty.ContentType] = 'multipart/form-data'
+    request.headers[HttpProperty.ClientPlatform] = this._vuexModule.getters.clientPlatformName || 'Unknown'
+    request.headers[HttpProperty.ClientAppVersion] = $config.version
+    request[HttpProperty.Data] = formData
+
+    const token = this._vuexModule.state?.currentUser?.token
+    if (token) { request.headers[HttpProperty.Authorization] = 'Bearer ' + token }
+
+    return this._httpModule.httpClient(request).then((response) => {
+      return response
+    })
+  }
+
   public PostRequest(path: string, payload?: any): Promise<any> {
     const request = this.DefaultRequest(path, payload, HttpMethod.POST)
     return this._httpModule.httpClient(request).then((response) => {

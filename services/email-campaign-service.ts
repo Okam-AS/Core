@@ -1,7 +1,6 @@
 import { IVuexModule } from '../interfaces'
 import $config from '../helpers/configuration'
 import { RequestService } from '../services'
-import axios from 'axios'
 
 export class EmailCampaignService {
   private _requestService: RequestService
@@ -48,22 +47,11 @@ export class EmailCampaignService {
     const formData = new FormData()
     formData.append('file', file)
 
-    const token = this._vuexModule.state.currentUser?.token
-    const response = await axios.post(
-      `${$config.okamApiBaseUrl}/emailcampaign/${storeId}/campaigns/${campaignId}/images`,
-      formData,
-      {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-          Authorization: `Bearer ${token}`
-        }
-      }
+    const response = await this._requestService.PostFormDataRequest(
+      `/emailcampaign/${storeId}/campaigns/${campaignId}/images`,
+      formData
     )
-
-    if (response.status === 200) {
-      return response.data
-    }
-    throw new Error('Kunne ikke laste opp bilde')
+    return this.ParsedResponse(response, 'Kunne ikke laste opp bilde')
   }
 
   public async DeleteImage(storeId: number, campaignId: string, imageId: string): Promise<any> {
