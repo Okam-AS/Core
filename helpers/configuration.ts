@@ -15,7 +15,7 @@ declare const process: {
 
 let getEnvFn: ((key: string) => string) | undefined;
 try {
-  getEnvFn = require('../../../env').default;
+  getEnvFn = require('../../env').default;
 } catch (e) {
   // No env.ts file available — fall back to process.env
 }
