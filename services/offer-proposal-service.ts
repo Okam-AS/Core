@@ -1,5 +1,4 @@
-import $config from '../helpers/configuration'
-import { IVuexModule } from '../interfaces'
+import { ICoreInitializer } from '../interfaces'
 import {
   OfferProposalModel,
   AcceptOfferProposalModel,
@@ -10,11 +9,9 @@ import { RequestService } from './'
 
 export class OfferProposalService {
   private _requestService: RequestService;
-  private _vuexModule: IVuexModule;
 
-  constructor(vuexModule: IVuexModule) {
-    this._requestService = new RequestService(vuexModule, $config.okamApiBaseUrl)
-    this._vuexModule = vuexModule
+  constructor(coreInitializer: ICoreInitializer) {
+    this._requestService = new RequestService(coreInitializer)
   }
 
   /**
@@ -30,8 +27,8 @@ export class OfferProposalService {
   }
 
   /**
-   * Gets an offer proposal by ID
-   * @param id Offer proposal ID
+   * Gets an offer proposal by code
+   * @param code Offer proposal code
    * @returns Promise with offer proposal details
    */
   public async GetByCode(code: string): Promise<OfferProposalModel> {

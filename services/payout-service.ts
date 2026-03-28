@@ -1,15 +1,12 @@
-import $config from '../helpers/configuration'
 import { Payout } from '../models'
-import { IVuexModule } from '../interfaces'
+import { ICoreInitializer } from '../interfaces'
 import { RequestService } from '.'
 
 export class PayoutService {
   private _requestService: RequestService;
-  private _vuexModule: IVuexModule;
 
-  constructor(vuexModule: IVuexModule) {
-    this._requestService = new RequestService(vuexModule, $config.okamApiBaseUrl)
-    this._vuexModule = vuexModule
+  constructor(coreInitializer: ICoreInitializer) {
+    this._requestService = new RequestService(coreInitializer)
   }
 
   public async GetAwaiting(storeId: number): Promise<Payout> {
@@ -45,5 +42,4 @@ export class PayoutService {
     const response = await this._requestService.PostRequest('/payouts/send-mail/' + okamPayoutId)
     return this._requestService.TryParseResponse(response)
   }
-
 }

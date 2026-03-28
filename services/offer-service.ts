@@ -1,21 +1,16 @@
-import $config from '../helpers/configuration'
-import { IVuexModule } from '../interfaces'
+import { ICoreInitializer } from '../interfaces'
 import { OfferItemModel } from '../models'
 import { RequestService } from './'
 
 export class OfferService {
   private _requestService: RequestService;
-  private _vuexModule: IVuexModule;
 
-  constructor(vuexModule: IVuexModule) {
-    this._requestService = new RequestService(vuexModule, $config.okamApiBaseUrl)
-    this._vuexModule = vuexModule
+  constructor(coreInitializer: ICoreInitializer) {
+    this._requestService = new RequestService(coreInitializer)
   }
 
   /**
    * Gets all offers
-   * @param fromDate Optional start date filter
-   * @param toDate Optional end date filter
    * @returns Promise with array of offers
    */
   public async GetAll(): Promise<OfferItemModel[]> {

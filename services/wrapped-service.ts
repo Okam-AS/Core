@@ -1,5 +1,4 @@
-import $config from '../helpers/configuration'
-import { IVuexModule } from '../interfaces'
+import { ICoreInitializer } from '../interfaces'
 import { RequestService } from './request-service'
 
 export interface WrappedData {
@@ -59,8 +58,8 @@ export interface MonthlyDataPoint {
 export class WrappedService {
     private _requestService: RequestService
 
-    constructor(vuexModule: IVuexModule) {
-        this._requestService = new RequestService(vuexModule, $config.okamApiBaseUrl)
+    constructor(coreInitializer: ICoreInitializer) {
+        this._requestService = new RequestService(coreInitializer)
     }
 
     public async GetWrappedData(storeId: number): Promise<WrappedData> {

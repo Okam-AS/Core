@@ -1,13 +1,12 @@
-import $config from "../helpers/configuration";
+import { ICoreInitializer } from "../interfaces";
 import { RequestService } from "./request-service";
-import { IVuexModule } from "../interfaces";
 import { DineHomeDeliveryTimesRequest, DineHomeDeliveryTimesResponse } from "../models";
 
 export class DineHomeService {
 	private _requestService: RequestService;
 
-	constructor(vuexModule: IVuexModule) {
-		this._requestService = new RequestService(vuexModule, $config.okamApiBaseUrl);
+	constructor(coreInitializer: ICoreInitializer) {
+		this._requestService = new RequestService(coreInitializer);
 	}
 
 	public async getDeliveryTimes(request: DineHomeDeliveryTimesRequest): Promise<DineHomeDeliveryTimesResponse[]> {
@@ -19,4 +18,4 @@ export class DineHomeService {
 
 		return parsedResponse;
 	}
-} 
+}

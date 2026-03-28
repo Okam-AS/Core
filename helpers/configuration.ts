@@ -1,4 +1,3 @@
-// Declare process.env to fix TypeScript errors
 declare const process: {
   env: {
     API_BASE_URL: string;
@@ -10,8 +9,23 @@ declare const process: {
     VIPPS_ANDROID_PATH: string;
     PLATFORM_FILE_SUFFIX: string;
     NOTIFICATION_HUB: string;
+    SELECTED_THEME: string;
   }
 };
+
+let getEnvFn: ((key: string) => string) | undefined;
+try {
+  getEnvFn = require('../../../env').default;
+} catch (e) {
+  // No env.ts file available — fall back to process.env
+}
+
+function getEnvValue(key: string): string {
+  if (getEnvFn) {
+    return getEnvFn(key);
+  }
+  return (process.env as any)[key] || '';
+}
 
 class Configuration {
   okamApiBaseUrl: string;
@@ -25,18 +39,20 @@ class Configuration {
   vippsAndroidPath: string;
   platformFileSuffix: string;
   notificationHub: string;
+  selectedTheme: string;
 
-  constructor () {
-    this.okamApiBaseUrl = process.env.API_BASE_URL
-    this.version = process.env.VERSION
-    this.isNativeScript = process.env.IS_NATIVESCRIPT === 'true'
-    this.isProduction = process.env.IS_PRODUCTION === 'true'
-    this.stripePublishableKey = process.env.STRIPE_PUBLISHABLE_KEY
-    this.vippsiOSPath = process.env.VIPPS_IOS_PATH
-    this.vippsAndroidPath = process.env.VIPPS_ANDROID_PATH
-    this.platformFileSuffix = process.env.PLATFORM_FILE_SUFFIX
-    this.notificationHub = process.env.NOTIFICATION_HUB
+  constructor() {
+    this.okamApiBaseUrl = getEnvValue('API_BASE_URL');
+    this.version = getEnvValue('VERSION');
+    this.isNativeScript = getEnvValue('IS_NATIVESCRIPT') === 'true';
+    this.isProduction = getEnvValue('IS_PRODUCTION') === 'true';
+    this.stripePublishableKey = getEnvValue('STRIPE_PUBLISHABLE_KEY');
+    this.vippsiOSPath = getEnvValue('VIPPS_IOS_PATH');
+    this.vippsAndroidPath = getEnvValue('VIPPS_ANDROID_PATH');
+    this.platformFileSuffix = getEnvValue('PLATFORM_FILE_SUFFIX');
+    this.notificationHub = getEnvValue('NOTIFICATION_HUB');
+    this.selectedTheme = getEnvValue('SELECTED_THEME');
   }
 }
 
-export default new Configuration()
+export default new Configuration();

@@ -4,6 +4,7 @@ export { CartValidation } from "./cart/cart-validation";
 export { CartCalculation } from "./cart/cart-calculation";
 export { CartLineItem } from "./cart/cart-line-item";
 export { RecommendProductsRequest } from "./cart/recommend-products-request";
+export { UpdateCompanyInfoModel } from "./cart/update-company-info-model";
 
 // Store
 export { Store } from "./store/store";
@@ -19,6 +20,7 @@ export { StoreOverviewModel } from './store/store-overview';
 export { StoreOverviewResponseModel } from './store/store-overview-response';
 export { StorePaymentConfig } from './store/store-payment-config';
 export { AccountingConfiguration } from './store/accounting-configuration';
+export { DinteroStoreConfiguration } from "./store/dintero-store-configuration";
 
 // Discount
 export { Discount } from "./discount/discount";
@@ -30,6 +32,10 @@ export { RewardProgram } from './reward/reward-program';
 export { RewardMembership } from './reward/reward-membership';
 export { RewardTransaction } from './reward/reward-transaction';
 export { RewardCachbackRange } from './reward/reward-cachback-range';
+export { RewardJoinProgram } from './reward/reward-join-program';
+export { RewardCard } from './reward/reward-card';
+export { RewardStore } from './reward/reward-store';
+export { RewardBarData } from './reward/reward-bar-data';
 
 // User
 export { User } from "./user/user";
@@ -112,3 +118,21 @@ export { SendProposalModel } from './offer/send-proposal-model';
 export { KamUserModel } from './kam/kam-user-model';
 export { AssignManagerModel } from './kam/assign-manager-model';
 export { KamDirectorRelationshipModel } from './kam/kam-director-relationship-model';
+
+// Log
+export { EventLog } from "./log/event-log";
+
+// Feedback
+export { Feedback } from "./feedback/feedback";
+
+// Dintero
+export { DinteroInitResponse } from "./dintero/dintero-init-response";
+export { DinteroInitiatePaymentModel } from "./dintero/dintero-initiate-payment-model";
+
+// Giftcard
+export { InitiateGiftcardPurchase } from "./giftcard/initiate-giftcard-purchase";
+export { Giftcard } from "./giftcard/giftcard";
+export { GiftcardTransaction } from "./giftcard/giftcard-transaction";
+export { GiftcardPurchaseValidationResponse } from "./giftcard/giftcard-purchase-validation-response";
+export { UsersGiftcardBalance } from "./giftcard/users-giftcard-balance";
+export { UsersGiftcardBalanceTransaction } from "./giftcard/users-giftcard-balance-transaction";

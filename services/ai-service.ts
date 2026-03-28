@@ -1,12 +1,11 @@
-import { IVuexModule } from '../interfaces'
-import $config from '../helpers/configuration'
+import { ICoreInitializer } from '../interfaces'
 import { RequestService } from '../services'
 
 export class AIService {
   private _requestService: RequestService;
 
-  constructor(vuexModule: IVuexModule) {
-    this._requestService = new RequestService(vuexModule, $config.okamApiBaseUrl)
+  constructor(coreInitializer: ICoreInitializer) {
+    this._requestService = new RequestService(coreInitializer)
   }
 
   public async MenuToJson(storeId: number, pageContent: string, extraInstructions: string): Promise<any> {

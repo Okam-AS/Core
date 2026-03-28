@@ -1,12 +1,11 @@
-import $config from '../helpers/configuration'
-import { IVuexModule } from '../interfaces'
+import { ICoreInitializer } from '../interfaces'
 import { RequestService } from './request-service'
 
 export class WoltService {
    private _requestService: RequestService
 
-   constructor (vuexModule: IVuexModule) {
-     this._requestService = new RequestService(vuexModule, $config.okamApiBaseUrl)
+   constructor (coreInitializer: ICoreInitializer) {
+     this._requestService = new RequestService(coreInitializer)
    }
 
    public async getOrders (page: number = 1, pageSize: number = 20): Promise<{orders: any[], totalCount: number, page: number, pageSize: number, totalPages: number}> {

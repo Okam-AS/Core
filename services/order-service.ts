@@ -1,25 +1,30 @@
-import $config from "../helpers/configuration";
 import { Order } from "../models";
-import { OrderStatus, MutationName } from "../enums";
-import { IVuexModule } from "../interfaces";
+import { OrderStatus } from "../enums";
+import { ICoreInitializer } from "../interfaces";
 import { RequestService } from "./request-service";
 
 export class OrderService {
   private _requestService: RequestService;
-  private _vuexModule: IVuexModule;
 
-  constructor(vuexModule: IVuexModule) {
-    this._requestService = new RequestService(vuexModule, $config.okamApiBaseUrl);
-    this._vuexModule = vuexModule;
+  constructor(coreInitializer: ICoreInitializer) {
+    this._requestService = new RequestService(coreInitializer);
   }
 
-  public async CompleteAll(storeId: number): Promise<Array<Order>> {
-    const response = await this._requestService.PostRequest("/orders/complete-all/" + storeId);
+  public async SendReceiptByMail(orderCode: string): Promise<Order> {
+    const response = await this._requestService.GetRequest("/orders/receipt/" + orderCode + "/email");
     const parsedResponse = this._requestService.TryParseResponse(response);
     if (parsedResponse === undefined) {
-      throw new Error("Failed to complete all orders");
+      throw new Error("Failed to send receipt");
     }
+    return parsedResponse;
+  }
 
+  public async GetByCode(orderCode: string): Promise<Order> {
+    const response = await this._requestService.GetRequest("/orders/" + orderCode);
+    const parsedResponse = this._requestService.TryParseResponse(response);
+    if (parsedResponse === undefined) {
+      throw new Error("Failed to get order");
+    }
     return parsedResponse;
   }
 
@@ -29,7 +34,15 @@ export class OrderService {
     if (parsedResponse === undefined) {
       throw new Error("Failed to get orders");
     }
+    return parsedResponse;
+  }
 
+  public async GetOngoing(storeId: number): Promise<Array<Order>> {
+    const response = await this._requestService.GetRequest("/orders/ongoing/" + storeId);
+    const parsedResponse = this._requestService.TryParseResponse(response);
+    if (parsedResponse === undefined) {
+      throw new Error("Failed to get orders");
+    }
     return parsedResponse;
   }
 
@@ -39,7 +52,6 @@ export class OrderService {
     if (parsedResponse === undefined) {
       throw new Error("Failed to get orders");
     }
-
     return parsedResponse;
   }
 
@@ -49,17 +61,6 @@ export class OrderService {
     if (parsedResponse === undefined) {
       throw new Error("Failed to update orderstatus");
     }
-
-    return parsedResponse;
-  }
-
-  public async Refund(orderId: string): Promise<boolean> {
-    const response = await this._requestService.GetRequest("/orders/refund/" + orderId);
-    const parsedResponse = this._requestService.TryParseResponse(response);
-    if (parsedResponse === undefined) {
-      throw new Error("Failed to refund order");
-    }
-
     return parsedResponse;
   }
 
@@ -76,21 +77,35 @@ export class OrderService {
     const response = await this._requestService.PutRequest("/orders/processing/", { id: orderId, remainingMinutes, remainingMinutesToStartProcessing });
     const { data, error } = this._requestService.TryParseResponseWithError(response);
     if (error) {
-      console.log("error:", error)
       throw new Error(error);
     }
-
     return data;
+  }
+
+  public async CompleteAll(storeId: number): Promise<Array<Order>> {
+    const response = await this._requestService.PostRequest("/orders/complete-all/" + storeId);
+    const parsedResponse = this._requestService.TryParseResponse(response);
+    if (parsedResponse === undefined) {
+      throw new Error("Failed to complete all orders");
+    }
+    return parsedResponse;
+  }
+
+  public async Refund(orderId: string): Promise<boolean> {
+    const response = await this._requestService.GetRequest("/orders/refund/" + orderId);
+    const parsedResponse = this._requestService.TryParseResponse(response);
+    if (parsedResponse === undefined) {
+      throw new Error("Failed to refund order");
+    }
+    return parsedResponse;
   }
 
   public async TransferOrder(orderCode: string, targetStoreId: number): Promise<boolean> {
     const response = await this._requestService.PostRequest("/orders/transfer", { orderCode, targetStoreId });
     const { data, error } = this._requestService.TryParseResponseWithError(response);
     if (error) {
-      console.log("error:", error);
       throw new Error(error);
     }
-
     return data;
   }
 
@@ -98,10 +113,8 @@ export class OrderService {
     const response = await this._requestService.PutRequest("/orders/change-delivery-type", { orderCode, deliveryType });
     const { data, error } = this._requestService.TryParseResponseWithError(response);
     if (error) {
-      console.log("error:", error);
       throw new Error(error);
     }
-
     return data;
   }
 
@@ -109,10 +122,8 @@ export class OrderService {
     const response = await this._requestService.PostRequest("/orders/send-sms-to-driver", { orderCode, phoneNumber });
     const { data, error } = this._requestService.TryParseResponseWithError(response);
     if (error) {
-      console.log("error:", error);
       throw new Error(error);
     }
-
     return data;
   }
 
@@ -180,48 +191,6 @@ export class OrderService {
     if (parsedResponse === undefined) {
       throw new Error("Failed to get order");
     }
-
     return parsedResponse;
   }
-
-  public GetOrdersAndSetState = (thenHandler?, catchHandler?) => {
-    const comp = this;
-    comp
-      .GetAll()
-      .then((orders) => {
-        if (comp._vuexModule.commit && Array.isArray(orders)) {
-          comp._vuexModule.commit(MutationName.SetOrders, orders);
-        }
-        if (thenHandler) {
-          thenHandler(orders);
-        }
-      })
-      .catch(() => {
-        if (catchHandler) {
-          catchHandler();
-        }
-      });
-  };
-
-  public GetStoresOrdersAndSetState = (storeId, partially = false, thenHandler?, catchHandler?) => {
-    if (!storeId || storeId < 1) {
-      return;
-    }
-    const comp = this;
-    comp
-      .GetStoresOrders(storeId, partially)
-      .then((orders) => {
-        if (Array.isArray(orders)) {
-          comp._vuexModule.commit(MutationName.SetOrders, orders);
-        }
-        if (thenHandler) {
-          thenHandler(orders);
-        }
-      })
-      .catch(() => {
-        if (catchHandler) {
-          catchHandler();
-        }
-      });
-  };
 }

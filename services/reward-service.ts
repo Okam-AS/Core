@@ -1,15 +1,48 @@
-import $config from "../helpers/configuration";
-import { RewardProgram } from "../models";
-import { IVuexModule } from "../interfaces";
+import { ICoreInitializer } from "../interfaces";
 import { RequestService } from ".";
+import { RewardJoinProgram, RewardProgram } from "../models";
 
 export class RewardService {
   private _requestService: RequestService;
-  private _vuexModule: IVuexModule;
 
-  constructor(vuexModule: IVuexModule) {
-    this._requestService = new RequestService(vuexModule, $config.okamApiBaseUrl);
-    this._vuexModule = vuexModule;
+  constructor(coreInitializer: ICoreInitializer) {
+    this._requestService = new RequestService(coreInitializer);
+  }
+
+  public async Get(storeId: number) {
+    const response = await this._requestService.GetRequest("/rewards/" + storeId);
+    const parsedResponse = this._requestService.TryParseResponse(response);
+    if (parsedResponse === undefined) {
+      throw new Error("Failed to get programs");
+    }
+    return parsedResponse;
+  }
+
+  public async GetDetailed(rewardProgramId: string): Promise<RewardProgram> {
+    const response = await this._requestService.GetRequest("/rewards/" + rewardProgramId + "/details");
+    const parsedResponse = this._requestService.TryParseResponse(response);
+    if (parsedResponse === undefined) {
+      throw new Error("Failed to get program");
+    }
+    return parsedResponse;
+  }
+
+  public async Join(model: RewardJoinProgram): Promise<Boolean> {
+    const response = await this._requestService.PostRequest("/rewards/join", model);
+    const parsedResponse = this._requestService.TryParseResponse(response);
+    if (parsedResponse === undefined) {
+      throw new Error("Failed to join");
+    }
+    return parsedResponse;
+  }
+
+  public async CancelMembership(rewardProgramId: string): Promise<Boolean> {
+    const response = await this._requestService.DeleteRequest("/rewards/" + rewardProgramId);
+    const parsedResponse = this._requestService.TryParseResponse(response);
+    if (parsedResponse === undefined) {
+      throw new Error("Failed to cancel membership");
+    }
+    return parsedResponse;
   }
 
   public async SendReward(storeId: number, userId: number, amount: number) {
@@ -45,16 +78,6 @@ export class RewardService {
     if (parsedResponse === undefined) {
       throw new Error("Failed to get reward stats");
     }
-    return parsedResponse;
-  }
-
-  public async Get(storeId: number) {
-    const response = await this._requestService.GetRequest("/rewards/" + storeId);
-    const parsedResponse = this._requestService.TryParseResponse(response);
-    if (parsedResponse === undefined) {
-      throw new Error("Failed to get programs");
-    }
-
     return parsedResponse;
   }
 

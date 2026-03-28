@@ -1,14 +1,12 @@
-import $config from '../helpers/configuration'
 import { Discount } from '../models'
-import { IVuexModule } from '../interfaces'
+import { ICoreInitializer } from '../interfaces'
 import { RequestService } from './request-service'
 
 export class DiscountService {
     private _requestService: RequestService;
-    private _vuexModule: IVuexModule;
-    constructor (vuexModule: IVuexModule) {
-      this._requestService = new RequestService(vuexModule, $config.okamApiBaseUrl)
-      this._vuexModule = vuexModule
+
+    constructor (coreInitializer: ICoreInitializer) {
+      this._requestService = new RequestService(coreInitializer)
     }
 
     public async CreateOrUpdate (discount: Discount): Promise<Discount> {

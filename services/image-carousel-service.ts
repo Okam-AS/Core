@@ -1,20 +1,17 @@
 import { ImageCarouselItem, ImageCarouselItemMarker } from '../models'
 import { HttpMethod } from '../enums'
-import $config from '../helpers/configuration'
-import { IVuexModule } from '../interfaces'
+import { ICoreInitializer } from '../interfaces'
 import { RequestService } from './request-service'
 
 export class ImageCarouselService {
     private _requestService: RequestService;
-    private _vuexModule: IVuexModule;
 
-    constructor (vuexModule: IVuexModule) {
-      this._requestService = new RequestService(vuexModule, $config.okamApiBaseUrl)
-      this._vuexModule = vuexModule
+    constructor (coreInitializer: ICoreInitializer) {
+      this._requestService = new RequestService(coreInitializer)
     }
 
     public CreateItem (imagePath: string, categoryId: string) {
-      this._requestService.FormdataRequest('/imagecarousel/item', HttpMethod.POST, 'Image', imagePath, [{ name: 'GuidId', value: categoryId }])
+      return this._requestService.FormdataRequest('/imagecarousel/item', HttpMethod.POST, 'Image', imagePath, [{ name: 'GuidId', value: categoryId }])
     }
 
     public async Reorder (categoryId: string, imageCarouselItems: Array<ImageCarouselItem>): Promise<void> {

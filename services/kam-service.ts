@@ -1,15 +1,12 @@
-import $config from '../helpers/configuration'
-import { IVuexModule } from '../interfaces'
+import { ICoreInitializer } from '../interfaces'
 import { AssignManagerModel, KamDirectorRelationshipModel, KamUserModel } from '../models'
 import { RequestService } from './'
 
 export class KamService {
   private _requestService: RequestService;
-  private _vuexModule: IVuexModule;
 
-  constructor(vuexModule: IVuexModule) {
-    this._requestService = new RequestService(vuexModule, $config.okamApiBaseUrl)
-    this._vuexModule = vuexModule
+  constructor(coreInitializer: ICoreInitializer) {
+    this._requestService = new RequestService(coreInitializer)
   }
 
   /**
@@ -72,11 +69,11 @@ export class KamService {
     try {
       const response = await this._requestService.PostRequest(`/kam/unassign-manager/${kamId}`, {});
       const parsedResponse = this._requestService.TryParseResponse(response);
-      
+
       if (parsedResponse === undefined) {
         throw new Error('Failed to unassign manager');
       }
-      
+
       return parsedResponse.success === true;
     } catch (error) {
       console.error('Error in UnassignManager:', error);
