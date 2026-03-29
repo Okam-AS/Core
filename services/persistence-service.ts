@@ -1,5 +1,4 @@
 import { PersistenceModule } from '../platform'
-import { watch, toRaw } from 'vue'
 
 export class PersistenceService {
   private _persistenceModule: typeof PersistenceModule
@@ -28,10 +27,16 @@ export class PersistenceService {
     return null
   }
 
-  public watchAndStore(item, key) {
-    watch(item, (result) => {
-      this._persistenceModule.set(key, JSON.stringify(toRaw(result)));
-    }, { deep: true });
-
+  public watchAndStore(item: any, key: string) {
+    try {
+      const vue = require('vue');
+      if (vue.watch && vue.toRaw) {
+        vue.watch(item, (result: any) => {
+          this._persistenceModule.set(key, JSON.stringify(vue.toRaw(result)));
+        }, { deep: true });
+      }
+    } catch (e) {
+      // Vue 3 watch/toRaw not available in Vue 2 projects
+    }
   }
 }
