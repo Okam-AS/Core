@@ -176,6 +176,13 @@ export class StoreService {
     return parsedResponse
   }
 
+  public async CheckVatExists(vat: string): Promise<{ exists: boolean, storeName: string }> {
+    const response = await this._requestService.GetRequest('/stores/check-vat/' + vat)
+    const parsedResponse = this._requestService.TryParseResponse(response)
+    if (parsedResponse === undefined) { throw new Error('Failed to check VAT') }
+    return parsedResponse
+  }
+
   public async Feedback(feedback: string) {
     const response = await this._requestService.PostRequest('/stores/feedback', { feedback })
     const parsedResponse = this._requestService.TryParseResponse(response)
