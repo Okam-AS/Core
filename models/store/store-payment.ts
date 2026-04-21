@@ -10,4 +10,5 @@ export class StorePayment {
     dinteroEnabled?: boolean;
     dinteroBillieEnabled?: boolean;
     dinteroKlarnaEnabled?: boolean;
+    dinteroKraviaEnabled?: boolean;
 }

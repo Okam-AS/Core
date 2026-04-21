@@ -295,6 +295,7 @@ export class StoreService {
     googlePayEnabled: boolean,
     klarnaEnabled: boolean,
     billieEnabled: boolean,
+    kraviaEnabled: boolean,
     commissionPercentage: number,
     splitSellerId: string
   }): Promise<boolean> {
