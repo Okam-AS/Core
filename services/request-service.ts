@@ -80,6 +80,7 @@ export class RequestService {
     request.headers[HttpProperty.ContentType] = 'multipart/form-data'
     request.headers[HttpProperty.ClientPlatform] = this._vuexModule.getters.clientPlatformName || 'Unknown'
     request.headers[HttpProperty.ClientAppVersion] = $config.version
+    request.headers[HttpProperty.ClientFeatures] = 'kravia'
     request[HttpProperty.Data] = formData
 
     const token = this._vuexModule.state?.currentUser?.token
@@ -164,6 +165,7 @@ export class RequestService {
     request.headers[HttpProperty.ContentType] = 'application/json; charset=utf-8'
     request.headers[HttpProperty.ClientPlatform] = this._vuexModule.getters.clientPlatformName || 'Unknown'
     request.headers[HttpProperty.ClientAppVersion] = $config.version
+    request.headers[HttpProperty.ClientFeatures] = 'kravia'
 
     if (content) {
       if ($config.isNativeScript) {
