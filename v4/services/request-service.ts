@@ -85,6 +85,7 @@ export class RequestService {
     request.headers[HttpProperty.ClientPlatform] = this._coreInitializer.clientPlatformName || "Unknown";
     request.headers[HttpProperty.Language] = this._coreInitializer.cultureCode || "no";
     request.headers[HttpProperty.ClientAppVersion] = $config.version;
+    request.headers[HttpProperty.ClientFeatures] = "kravia";
     request.headers[HttpProperty.SelectedTheme] = $config.selectedTheme || "";
 
     console.log("🚀 " + method + " " + request[HttpProperty.Url]);
