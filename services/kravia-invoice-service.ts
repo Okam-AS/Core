@@ -17,6 +17,14 @@ export class KraviaInvoiceService {
     return parsedResponse.data
   }
 
+  public async GetCompanyHistory(storeId: number): Promise<any[]> {
+    const response = await this._requestService.GetRequest('/admin-kravia-invoices/stores/' + storeId + '/company-history')
+      .catch((error) => error?.response || error)
+    const parsedResponse = this._requestService.TryParseResponseWithError(response?.response || response)
+    if (parsedResponse.error) { throw new Error(parsedResponse.error || 'Kunne ikke hente tidligere bedriftskunder') }
+    return parsedResponse.data || []
+  }
+
   public async SendInvoice(payload: any): Promise<any> {
     const response = await this._requestService.PostRequest('/admin-kravia-invoices/send', payload)
       .catch((error) => error?.response || error)
