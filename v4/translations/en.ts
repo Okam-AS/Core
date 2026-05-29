@@ -89,6 +89,7 @@ export default {
   checkoutPage_deliveryAddressError: "The delivery address is not valid",
   checkoutPage_deliveryMethodError: "The store does not deliver to your address at the moment",
   checkoutPage_isClosedNow: " is closed at the selected time",
+  checkoutPage_sameDayAfterHoursOrderNotAllowed: "This store does not accept orders for today after closing. Choose a time tomorrow after opening.",
   checkoutPage_cartIsEmptyError: "The shopping cart is empty",
   checkoutPage_giftcardBalanceTooLowError: "You do not have enough gift card balance to pay for the order",
   checkoutPage_couldNotProcessPayment: "Your payment could not be processed right now. Please try again a little later.",

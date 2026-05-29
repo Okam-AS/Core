@@ -6,6 +6,7 @@ export class CartValidation {
   priceDifferError: boolean;
   priceTooLowError: boolean;
   storeIsClosed: boolean;
+  sameDayAfterHoursOrderNotAllowed: boolean;
   cartIsEmpty: boolean;
   itemsInStock: boolean;
   paymentTypeError: boolean;

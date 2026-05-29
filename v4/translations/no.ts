@@ -91,6 +91,7 @@ export default {
   checkoutPage_deliveryAddressError: "Leveringsadressen er ikke gyldig",
   checkoutPage_deliveryMethodError: "Butikken leverer ikke til din adresse for øyeblikket",
   checkoutPage_isClosedNow: " er stengt på valgt tidspunkt",
+  checkoutPage_sameDayAfterHoursOrderNotAllowed: "Butikken tar ikke imot bestillinger for i dag etter stengetid. Velg et tidspunkt i morgen etter åpningstid.",
   checkoutPage_cartIsEmptyError: "handlekurven er tom",
   checkoutPage_giftcardBalanceTooLowError: "Fyll på gavekortet for å betale med gavekort",
   checkoutPage_couldNotProcessPayment: "Din betaling kunne ikke behandles akkurat nå. Vennligst prøv igjen litt senere.",

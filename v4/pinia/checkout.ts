@@ -431,7 +431,9 @@ export const useCheckout = defineStore("checkout", () => {
 
           if (result.deliveryMethodError) errorMessagePrivate.value = $i("checkoutPage_deliveryMethodError");
 
-          if (result.storeIsClosed) errorMessagePrivate.value = _store.currentStore.name + $i("checkoutPage_isClosedNow");
+          if (result.sameDayAfterHoursOrderNotAllowed) errorMessagePrivate.value = $i("checkoutPage_sameDayAfterHoursOrderNotAllowed");
+
+          if (result.storeIsClosed && !errorMessagePrivate.value) errorMessagePrivate.value = _store.currentStore.name + $i("checkoutPage_isClosedNow");
 
           if (result.giftcardBalanceTooLow) errorMessagePrivate.value = $i("checkoutPage_giftcardBalanceTooLowError");
 
