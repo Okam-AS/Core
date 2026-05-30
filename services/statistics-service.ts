@@ -39,4 +39,11 @@ export class StatisticsService {
       if (parsedResponse === undefined) { throw new Error('Failed to get heatmap data') }
       return parsedResponse
     }
+
+    public async GetPlatformGrowth (): Promise<any> {
+      const response = await this._requestService.GetRequest('/statistics/platform-growth')
+      const parsedResponse = this._requestService.TryParseResponse(response)
+      if (parsedResponse === undefined) { throw new Error('Failed to get platform growth') }
+      return parsedResponse
+    }
 }
