@@ -11,6 +11,7 @@ export const useCheckout = defineStore("checkout", () => {
   const _cart = useCart();
   const _store = useStore();
   const { paymentService, persistenceService, discountService, cartService, stripeService, vippsService, dinteroService } = useServices();
+  const invoiceCustomerReference = ref("");
 
   const totalAmountText = () => {
     const currentCart = _cart.getCurrentCart();
@@ -383,6 +384,10 @@ export const useCheckout = defineStore("checkout", () => {
     });
   };
 
+  const setInvoiceCustomerReference = (value: string) => {
+    invoiceCustomerReference.value = value || "";
+  };
+
   const isValid = (): Promise<Boolean> => {
     return new Promise((resolve) => {
       if (_cart.isLoading || isLoading.value) {
@@ -511,10 +516,12 @@ export const useCheckout = defineStore("checkout", () => {
     isLoading,
     isProcessingPayment,
     isProcessingLabel,
+    invoiceCustomerReference,
     errorMessage,
     setErrorMessage,
     setIsProcessingLabel,
     setIsProcessingPayment,
+    setInvoiceCustomerReference,
 
     getCardInfo,
     isValid,

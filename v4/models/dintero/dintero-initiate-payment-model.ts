@@ -7,6 +7,7 @@ export class DinteroInitiatePaymentModel {
   paymentType: PaymentType;
   amount: number;
   merchantReference?: string;
+  customerReference?: string;
   cartId?: string;
   giftcardId?: string;
 }
