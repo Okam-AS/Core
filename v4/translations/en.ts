@@ -58,6 +58,7 @@ export default {
   checkoutPage_addOrganizationNumber: "Add",
   checkoutPage_customerReferenceHint: "Order reference (optional)",
   checkoutPage_customerReferenceHeading: "Invoice reference",
+  checkoutPage_customerReferencePlaceholder: "E.g. order number",
   checkoutPage_invoicePaymentInfo: "By entering an organization number, you can choose invoice as payment method. Our payment partner performs an immediate credit check. If authorization fails, you must choose another payment method to complete the order.",
   checkoutPage_validDiscountCode: "Discount code applied",
   checkoutPage_invalidDiscountCode: "Invalid discount code",
