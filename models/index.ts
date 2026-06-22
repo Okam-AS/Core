@@ -55,6 +55,7 @@ export { ProductVariant } from './product/product-variant'
 export { ProductVariantOption } from './product/product-variant-option'
 export { BulkImportRow } from './product/bulk-import-row'
 export { BulkImport } from './product/bulk-import'
+export { BulkImportCategoryVariants } from './product/bulk-import-category-variants'
 
 // Category
 export { Category } from './category/category'
