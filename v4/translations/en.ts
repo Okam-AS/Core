@@ -99,7 +99,7 @@ export default {
   checkoutPage_couldNotHandlePayment: "Oops! Your payment could not be processed right now. Please try again a little later.",
   checkoutPage_paymentFailed: "The payment could not be processed due to insufficient funds or invalid card information",
   checkoutPage_noRewardForInStorePayment: "Reward points will not be collected if you pay in store",
-  checkoutPage_payNow: "Pay now",
+  checkoutPage_payNow: "Pay with card",
   checkoutPage_payWithVipps: "Vipps",
   checkoutPage_payWithKlarna: "Klarna",
   checkoutPage_payWithBillie: "Invoice",

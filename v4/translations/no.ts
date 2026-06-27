@@ -100,7 +100,7 @@ export default {
   checkoutPage_couldNotProcessPayment: "Din betaling kunne ikke behandles akkurat nå. Vennligst prøv igjen litt senere.",
   checkoutPage_couldNotHandlePayment: "Oops! Din betaling kunne ikke behandles akkurat nå. Vennligst prøv igjen litt senere.",
   checkoutPage_paymentFailed: "Betalingen kunne ikke gjennomføres på grunn av manglende dekning eller ugyldig kortinformasjon",
-  checkoutPage_payNow: "Betal nå",
+  checkoutPage_payNow: "Betal med kort",
   checkoutPage_payWithVipps: "Vipps",
   checkoutPage_payWithKlarna: "Klarna",
   checkoutPage_payWithBillie: "Faktura",
