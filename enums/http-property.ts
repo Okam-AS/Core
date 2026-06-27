@@ -7,6 +7,7 @@ export enum HttpProperty {
     Authorization = 'Authorization',
     ClientAppVersion = 'ClientAppVersion',
     ClientPlatform = 'ClientPlatform',
+    ClientFeatures = 'ClientFeatures',
     SelectedTheme = 'SelectedTheme',
     Language = 'Language'
 }

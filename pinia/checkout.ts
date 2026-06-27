@@ -11,6 +11,7 @@ export const useCheckout = defineStore("checkout", () => {
   const _cart = useCart();
   const _store = useStore();
   const { paymentService, persistenceService, discountService, cartService, stripeService, vippsService, dinteroService } = useServices();
+  const invoiceCustomerReference = ref("");
 
   const totalAmountText = () => {
     const currentCart = _cart.getCurrentCart();
@@ -28,6 +29,7 @@ export const useCheckout = defineStore("checkout", () => {
     if (paymentMethod?.paymentType === PaymentType.Dintero) return $i("checkoutPage_payNow");
     if (paymentMethod?.paymentType === PaymentType.DinteroVipps) return $i("checkoutPage_payWithVipps");
     if (paymentMethod?.paymentType === PaymentType.DinteroBillie) return $i("checkoutPage_payWithBillie") + (currentCart.companyName ? " " + $i("checkoutPage_payWithBillieTo") + " " + currentCart.companyName : "");
+    if (paymentMethod?.paymentType === PaymentType.DinteroKravia) return $i("checkoutPage_payWithKravia") + (currentCart.companyName ? " " + $i("checkoutPage_payWithKraviaTo") + " " + currentCart.companyName : "");
     if (paymentMethod?.paymentType === PaymentType.DinteroKlarna) return $i("checkoutPage_payWithKlarna");
     return "";
   };
@@ -382,6 +384,10 @@ export const useCheckout = defineStore("checkout", () => {
     });
   };
 
+  const setInvoiceCustomerReference = (value: string) => {
+    invoiceCustomerReference.value = value || "";
+  };
+
   const isValid = (): Promise<Boolean> => {
     return new Promise((resolve) => {
       if (_cart.isLoading || isLoading.value) {
@@ -430,7 +436,9 @@ export const useCheckout = defineStore("checkout", () => {
 
           if (result.deliveryMethodError) errorMessagePrivate.value = $i("checkoutPage_deliveryMethodError");
 
-          if (result.storeIsClosed) errorMessagePrivate.value = _store.currentStore.name + $i("checkoutPage_isClosedNow");
+          if (result.sameDayAfterHoursOrderNotAllowed) errorMessagePrivate.value = $i("checkoutPage_sameDayAfterHoursOrderNotAllowed");
+
+          if (result.storeIsClosed && !errorMessagePrivate.value) errorMessagePrivate.value = _store.currentStore.name + $i("checkoutPage_isClosedNow");
 
           if (result.giftcardBalanceTooLow) errorMessagePrivate.value = $i("checkoutPage_giftcardBalanceTooLowError");
 
@@ -508,10 +516,12 @@ export const useCheckout = defineStore("checkout", () => {
     isLoading,
     isProcessingPayment,
     isProcessingLabel,
+    invoiceCustomerReference,
     errorMessage,
     setErrorMessage,
     setIsProcessingLabel,
     setIsProcessingPayment,
+    setInvoiceCustomerReference,
 
     getCardInfo,
     isValid,

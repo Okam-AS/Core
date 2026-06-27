@@ -8,4 +8,6 @@ export class DinteroStoreConfiguration {
   klarnaEnabled: boolean;
   billieEnabled: boolean;
   billieMessage: string;
+  kraviaEnabled: boolean;
+  kraviaMessage: string;
 }

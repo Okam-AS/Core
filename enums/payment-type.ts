@@ -8,5 +8,6 @@ export enum PaymentType {
   DinteroVipps = "DinteroVipps",
   DinteroBillie = "DinteroBillie",
   DinteroKlarna = "DinteroKlarna",
-  WoltMarketplace = "WoltMarketplace",
+  DinteroKravia = "DinteroKravia",
+  WoltMarketplace = "WoltMarketplace"
 }
