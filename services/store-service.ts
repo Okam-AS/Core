@@ -312,4 +312,11 @@ export class StoreService {
     const parsedResponse = this._requestService.TryParseResponse(response);
     return parsedResponse;
   }
+
+  public async CheckVatExists(vat: string): Promise<{ exists: boolean, storeName: string }> {
+    const response = await this._requestService.GetRequest('/stores/check-vat/' + vat);
+    const parsedResponse = this._requestService.TryParseResponse(response);
+    if (parsedResponse === undefined) { throw new Error('Failed to check VAT'); }
+    return parsedResponse;
+  }
 }
