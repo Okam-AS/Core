@@ -14,8 +14,16 @@ function getTranslation() {
   return { $i: (key: string) => key };
 }
 
+type CurrencyFormatOverride = Partial<{ prefix: string; suffix: string; decimalSeparator: string; thousandSeparator: string; fractionLength: number; symbol: string }>;
+let _currencyFormatOverride: CurrencyFormatOverride | null = null;
+
+// Apps may override the display format (e.g. admin keeps the "kr " prefix). Defaults to the consumer "100,–" format.
+export function setCurrencyFormat(override: CurrencyFormatOverride) {
+  _currencyFormatOverride = override;
+}
+
 const currencyInfoTool = () => {
-  return {
+  const base = {
     prefix: "",
     suffix: ",–",
     decimalSeparator: ",",
@@ -23,6 +31,7 @@ const currencyInfoTool = () => {
     fractionLength: 2,
     symbol: "kr",
   };
+  return _currencyFormatOverride ? { ...base, ..._currencyFormatOverride } : base;
 };
 
 const wholeAmountTool = (amount: Number): string => {
