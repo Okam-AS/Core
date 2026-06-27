@@ -252,6 +252,7 @@ export default {
   settings_language: "Language",
   settings_language_no: "Norwegian",
   settings_language_en: "English",
+  settings_language_de: "German",
   settings_textSize: "Text size",
   settings_textSize_small: "Small",
   settings_textSize_normal: "Normal",
