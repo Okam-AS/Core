@@ -1,4 +1,9 @@
 import { PersistenceModule } from '../platform'
+// Static namespace import so it works under Vite (Nuxt 3) — `require('vue')` is
+// undefined there and silently disabled persistence, losing all Pinia state on
+// every (full-reload) navigation. In Vue 2 builds without the Composition API,
+// `watch`/`toRaw` are simply absent on the namespace and watchAndStore no-ops.
+import * as vueApi from 'vue'
 
 export class PersistenceService {
   private _persistenceModule: typeof PersistenceModule
@@ -28,15 +33,12 @@ export class PersistenceService {
   }
 
   public watchAndStore(item: any, key: string) {
-    try {
-      const vue = require('vue');
-      if (vue.watch && vue.toRaw) {
-        vue.watch(item, (result: any) => {
-          this._persistenceModule.set(key, JSON.stringify(vue.toRaw(result)));
-        }, { deep: true });
-      }
-    } catch (e) {
-      // Vue 3 watch/toRaw not available in Vue 2 projects
+    const watch = (vueApi as any).watch;
+    const toRaw = (vueApi as any).toRaw;
+    if (typeof watch === 'function' && typeof toRaw === 'function') {
+      watch(item, (result: any) => {
+        this._persistenceModule.set(key, JSON.stringify(toRaw(result)));
+      }, { deep: true });
     }
   }
 }
