@@ -1,15 +1,14 @@
-// Platform registry — core is bundler-agnostic.
+// Platform registry — core is bundler-agnostic and holds NO platform-specific code.
 //
-// Core no longer selects the platform implementation (that caused cross-bundler
-// breakage: `require` is undefined in Vite, top-level `await` can't be parsed by
-// webpack 4, etc.). Instead each app — which already knows its own platform —
-// statically imports the right variant and registers it ONCE at startup via
-// setPlatform(). This mirrors the existing setTranslationProvider/setCurrencyFormat
-// provider pattern.
+// Core defines only the contract (interfaces/IHttpModule, interfaces/IPersistenceModule)
+// and this registry. Each consuming app OWNS its platform implementation (a thin
+// adapter over axios/localStorage for web, or @nativescript/core for native) and
+// registers it ONCE at startup via setPlatform(). Mirrors the existing
+// setTranslationProvider / setCurrencyFormat provider pattern.
 //
-//   web (ConsumerWeb/Web):   import HttpModule/PersistenceModule from './platform/*.nuxt'
-//   native (ConsumerApp/AdminApp): ...from './platform/*.ns'
-//   then: setPlatform(HttpModule, PersistenceModule)
+//   web (ConsumerWeb/Web):          import its own ./platform/{http,persistence}-module
+//   native (ConsumerApp/AdminApp):  import its own ./platform/{http,persistence}-module
+//   then at startup: setPlatform(HttpModule, PersistenceModule)
 //
 // Register as early as possible (before any core service or Pinia store is used).
 
