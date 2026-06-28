@@ -1,4 +1,4 @@
-import { PersistenceModule } from '../platform'
+import { getPersistenceModule } from '../platform'
 // Static namespace import so it works under Vite (Nuxt 3) — `require('vue')` is
 // undefined there and silently disabled persistence, losing all Pinia state on
 // every (full-reload) navigation. In Vue 2 builds without the Composition API,
@@ -6,9 +6,10 @@ import { PersistenceModule } from '../platform'
 import * as vueApi from 'vue'
 
 export class PersistenceService {
-  private _persistenceModule: typeof PersistenceModule
+  private _persistenceModule: any
 
   constructor() {
+    const PersistenceModule = getPersistenceModule()
     this._persistenceModule = new PersistenceModule()
   }
 

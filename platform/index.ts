@@ -1,26 +1,36 @@
-import $config from '../helpers/configuration'
+// Platform registry — core is bundler-agnostic.
+//
+// Core no longer selects the platform implementation (that caused cross-bundler
+// breakage: `require` is undefined in Vite, top-level `await` can't be parsed by
+// webpack 4, etc.). Instead each app — which already knows its own platform —
+// statically imports the right variant and registers it ONCE at startup via
+// setPlatform(). This mirrors the existing setTranslationProvider/setCurrencyFormat
+// provider pattern.
+//
+//   web (ConsumerWeb/Web):   import HttpModule/PersistenceModule from './platform/*.nuxt'
+//   native (ConsumerApp/AdminApp): ...from './platform/*.ns'
+//   then: setPlatform(HttpModule, PersistenceModule)
+//
+// Register as early as possible (before any core service or Pinia store is used).
 
-// Load the platform-specific module across THREE incompatible bundlers:
-//   - webpack (Nuxt 2): has CommonJS `require`, but NO top-level `await` (webpack 4
-//     babel can't even parse it).
-//   - NativeScript: has `require` (synchronous, needed for the .ns module).
-//   - Vite (Nuxt 3): NO `require` ("ReferenceError: require is not defined"),
-//     so it must use dynamic import().
-// Use `require` where available (sync, webpack + NativeScript); otherwise fall back
-// to import() with .then() (Vite). NO top-level await, so webpack can parse the file.
-// Services are constructed lazily (well after module load), so the Vite async
-// assignment has resolved by the time HttpModule is used.
-const fileSuffix = $config.platformFileSuffix
+let _HttpModule: any = null;
+let _PersistenceModule: any = null;
 
-let HttpModule: any
-let PersistenceModule: any
-
-if (typeof require === 'function') {
-  HttpModule = require(`./http-module${fileSuffix}`).HttpModule
-  PersistenceModule = require(`./persistence-module${fileSuffix}`).PersistenceModule
-} else {
-  import(`./http-module${fileSuffix}.ts`).then((m) => { HttpModule = m.HttpModule })
-  import(`./persistence-module${fileSuffix}.ts`).then((m) => { PersistenceModule = m.PersistenceModule })
+export function setPlatform(httpModule: any, persistenceModule: any) {
+  _HttpModule = httpModule;
+  _PersistenceModule = persistenceModule;
 }
 
-export { HttpModule, PersistenceModule }
+export function getHttpModule(): any {
+  if (!_HttpModule) {
+    throw new Error("core/platform: HttpModule not registered — call setPlatform(HttpModule, PersistenceModule) at app startup before using core services.");
+  }
+  return _HttpModule;
+}
+
+export function getPersistenceModule(): any {
+  if (!_PersistenceModule) {
+    throw new Error("core/platform: PersistenceModule not registered — call setPlatform(HttpModule, PersistenceModule) at app startup before using core stores.");
+  }
+  return _PersistenceModule;
+}
