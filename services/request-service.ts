@@ -1,11 +1,11 @@
 import { HttpMethod, HttpProperty } from "../enums";
 import { getHttpModule } from "../platform";
-import { ICoreInitializer } from "../interfaces";
+import { ICoreInitializer, IHttpModule } from "../interfaces";
 import $config from "../helpers/configuration";
 
 export class RequestService {
   private _coreInitializer: ICoreInitializer;
-  private _httpModule: any;
+  private _httpModule: IHttpModule;
 
   constructor(coreInitializer: ICoreInitializer) {
     this._coreInitializer = coreInitializer;
