@@ -4,6 +4,7 @@ export { CartValidation } from "./cart/cart-validation";
 export { CartCalculation } from "./cart/cart-calculation";
 export { CartLineItem } from "./cart/cart-line-item";
 export { RecommendProductsRequest } from "./cart/recommend-products-request";
+export { UpdateCompanyInfoModel } from "./cart/update-company-info-model";
 
 // Store
 export { Store } from "./store/store";
@@ -15,23 +16,41 @@ export { StoreUserSetting } from "./store/store-user-setting";
 export { StoreTip } from "./store/store-tip";
 export { StorePayment } from "./store/store-payment";
 export { StoreFees } from "./store/store-fees";
+export { StoreOverviewModel } from './store/store-overview';
+export { StoreOverviewResponseModel } from './store/store-overview-response';
+export { StorePaymentConfig } from './store/store-payment-config';
+export { AccountingConfiguration } from './store/accounting-configuration';
+export { DinteroStoreConfiguration } from "./store/dintero-store-configuration";
 
 // Discount
 export { Discount } from "./discount/discount";
 export { DiscountUsages } from "./discount/discount-usages";
 export { DiscountProducts } from "./discount/discount-products";
 
+// Reward
+export { RewardProgram } from './reward/reward-program';
+export { RewardMembership } from './reward/reward-membership';
+export { RewardTransaction } from './reward/reward-transaction';
+export { RewardCachbackRange } from './reward/reward-cachback-range';
+export { RewardJoinProgram } from './reward/reward-join-program';
+export { RewardCard } from './reward/reward-card';
+export { RewardStore } from './reward/reward-store';
+export { RewardBarData } from './reward/reward-bar-data';
+
 // User
 export { User } from "./user/user";
 export { Login } from "./user/login";
 export { SendVerificationToken } from "./user/send-verification-token";
 export { Address } from "./address/address";
+export { ApplicationUser } from './user/application-user';
+export { UserForStore } from './user/user-for-store';
 
 // Order
 export { Order } from "./order/order";
 export { OrderLineItem } from "./order/order-line-item";
 export { OrderLineItemOption } from "./order/order-line-item-option";
 export { TaxDetail } from "./order/tax-detail";
+export { WoltDeliveryInfo } from './order/wolt-delivery-info';
 
 // Notification
 export { NotificationRegistration } from "./notification/notification-registration";
@@ -51,6 +70,7 @@ export { ImageCarouselItemMarker } from "./category/image-carousel-item-marker";
 export { CategoryProductListItem } from "./category/category-product-list-item";
 export { CategoryImageSelection } from "./category/category-image-selection";
 export { CategorySearchOptions } from "./category/category-search-options";
+export { CategoryPublishRule } from './category/category-publish-rule';
 
 // Image
 export { ImageSource } from "./image/image-source";
@@ -75,3 +95,44 @@ export { VippsVerifyResponse } from "./payment/vipps-verify-response";
 export { DinteroVerifyResponse } from "./payment/dintero-verify-response";
 export { PaymentMethod } from "./payment/payment-method";
 export { StripeCreatePaymentIntent } from "./payment/stripe-create-payment-intent";
+
+// Payout
+export { Payout } from './payout/payout';
+
+// DineHome
+export { DineHomeDeliveryTimesRequest } from './dinehome/dinehome-delivery-times-request';
+export { DineHomeDeliveryTimesResponse } from './dinehome/dinehome-delivery-times-response';
+
+// Config
+export { Config } from './config/config';
+
+// Offer
+export { OfferItemModel } from './offer/offer-item-model';
+export { OfferProposalModel } from './offer/offer-proposal-model';
+export { OfferProposalLineItemModel } from './offer/offer-proposal-line-item-model';
+export { AcceptOfferProposalModel } from './offer/accept-offer-proposal-model';
+export { SendVerificationTokenModel } from './offer/send-verification-token-model';
+export { SendProposalModel } from './offer/send-proposal-model';
+
+// KAM
+export { KamUserModel } from './kam/kam-user-model';
+export { AssignManagerModel } from './kam/assign-manager-model';
+export { KamDirectorRelationshipModel } from './kam/kam-director-relationship-model';
+
+// Log
+export { EventLog } from "./log/event-log";
+
+// Feedback
+export { Feedback } from "./feedback/feedback";
+
+// Dintero
+export { DinteroInitResponse } from "./dintero/dintero-init-response";
+export { DinteroInitiatePaymentModel } from "./dintero/dintero-initiate-payment-model";
+
+// Giftcard
+export { InitiateGiftcardPurchase } from "./giftcard/initiate-giftcard-purchase";
+export { Giftcard } from "./giftcard/giftcard";
+export { GiftcardTransaction } from "./giftcard/giftcard-transaction";
+export { GiftcardPurchaseValidationResponse } from "./giftcard/giftcard-purchase-validation-response";
+export { UsersGiftcardBalance } from "./giftcard/users-giftcard-balance";
+export { UsersGiftcardBalanceTransaction } from "./giftcard/users-giftcard-balance-transaction";

@@ -1,32 +1,49 @@
-import $config from '../helpers/configuration'
-import { IVuexModule } from '../interfaces'
-import { RequestService } from './'
+import { ICoreInitializer } from "../interfaces";
+import { StripeCreatePaymentIntent } from "../models";
+import { RequestService } from "./";
 
 export class StripeService {
-    private _requestService: RequestService;
-    private _vuexModule: IVuexModule;
+  private _requestService: RequestService;
 
-    constructor (vuexModule: IVuexModule) {
-      this._requestService = new RequestService(vuexModule, $config.okamApiBaseUrl)
-      this._vuexModule = vuexModule
+  constructor(coreInitializer: ICoreInitializer) {
+    this._requestService = new RequestService(coreInitializer);
+  }
+
+  public async DeletePaymentMethod(paymentMethodId: string): Promise<boolean> {
+    const response = await this._requestService.DeleteRequest(
+      "/stripe/paymentMethod/" + paymentMethodId
+    );
+    return response && response.statusCode === 200;
+  }
+
+  public async CreatePaymentIntent(
+    model: StripeCreatePaymentIntent
+  ): Promise<any> {
+    model.currency = "NOK";
+    model.clientMajorVersion = 4;
+    const response = await this._requestService.PostRequest(
+      "/stripe/createPaymentIntent/",
+      model
+    );
+
+    const parsedResponse = this._requestService.TryParseResponse(response);
+    if (parsedResponse === undefined) {
+      throw new Error("Betalingen ikke ikke gjennomføres på dette tidspunktet");
     }
+    return parsedResponse;
+  }
 
-    public async DeletePaymentMethod (paymentMethodId: string): Promise<boolean> {
-      const response = await this._requestService.DeleteRequest('/stripe/paymentMethod/' + paymentMethodId)
-      return response && response.statusCode === 200
-    }
+  public async CreatePaymentIntentLegacy(amount: number, currency: string, paymentMethodId: string, cartId: string, setupFutureUsage: boolean): Promise<any> {
+    const response = await this._requestService.PostRequest('/stripe/createPaymentIntent/', {
+      amount,
+      currency,
+      paymentMethodId,
+      cartId,
+      setupFutureUsage
+    });
 
-    public async CreatePaymentIntent (amount: number, currency: string, paymentMethodId: string, cartId: string, setupFutureUsage: boolean): Promise<any> {
-      const response = await this._requestService.PostRequest('/stripe/createPaymentIntent/', {
-        amount,
-        currency,
-        paymentMethodId,
-        cartId,
-        setupFutureUsage
-      })
-
-      const parsedResponse = this._requestService.TryParseResponse(response)
-      if (parsedResponse === undefined) { throw new Error('Betalingen ikke ikke gjennomføres på dette tidspunktet') }
-      return parsedResponse
-    }
+    const parsedResponse = this._requestService.TryParseResponse(response);
+    if (parsedResponse === undefined) { throw new Error('Betalingen ikke ikke gjennomføres på dette tidspunktet'); }
+    return parsedResponse;
+  }
 }

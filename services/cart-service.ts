@@ -1,18 +1,21 @@
-import { Cart, CartValidation, Order, CartLineItem } from "../models";
-import { ICartRootProperties, IVuexModule } from "../interfaces";
-import $config from "../helpers/configuration";
-
-import { MutationName } from "../enums";
-import { debounce } from "../helpers/ts-debounce";
+import { Cart, CartValidation, Order, CartLineItem, Product, RecommendProductsRequest, UpdateCompanyInfoModel } from "../models";
+import { ICoreInitializer } from "../interfaces";
 import { RequestService } from "./request-service";
 
 export class CartService {
   private _requestService: RequestService;
-  private _vuexModule: IVuexModule;
 
-  constructor(vuexModule: IVuexModule) {
-    this._requestService = new RequestService(vuexModule, $config.okamApiBaseUrl);
-    this._vuexModule = vuexModule;
+  constructor(coreInitializer: ICoreInitializer) {
+    this._requestService = new RequestService(coreInitializer);
+  }
+
+  public async GetRecommendations(model: RecommendProductsRequest): Promise<Array<Product>> {
+    const response = await this._requestService.PostRequest("/carts/recommendations", model);
+    const parsedResponse = this._requestService.TryParseResponse(response);
+    if (parsedResponse === undefined) {
+      throw new Error("Kunne ikke hente produkter");
+    }
+    return parsedResponse;
   }
 
   public async GetCartLineItem(cartLineItem: CartLineItem): Promise<CartLineItem> {
@@ -21,7 +24,15 @@ export class CartService {
     if (parsedResponse === undefined) {
       throw new Error("Kunne ikke hente produkt");
     }
+    return parsedResponse;
+  }
 
+  public async GetByStoreId(storeId: number): Promise<Cart> {
+    const response = await this._requestService.GetRequest("/carts/" + storeId);
+    const parsedResponse = this._requestService.TryParseResponse(response);
+    if (parsedResponse === undefined) {
+      throw new Error("Kunne ikke hente handlekurv");
+    }
     return parsedResponse;
   }
 
@@ -31,7 +42,6 @@ export class CartService {
     if (parsedResponse === undefined) {
       throw new Error("Kunne ikke oppdatere handlekurv");
     }
-
     return parsedResponse;
   }
 
@@ -41,7 +51,6 @@ export class CartService {
     if (parsedResponse === undefined) {
       throw new Error("Kunne ikke validere handlekurv");
     }
-
     return parsedResponse;
   }
 
@@ -51,7 +60,6 @@ export class CartService {
     if (parsedResponse === undefined) {
       throw new Error("Kunne ikke fullføre ordre");
     }
-
     return parsedResponse;
   }
 
@@ -61,79 +69,21 @@ export class CartService {
     return parsedResponse !== undefined;
   }
 
-  public UpdateCartInDbAndSetState = debounce((storeId, thenFunction?: Function, catchFunction?: Function) => {
-    const _this = this;
-    if (!this._vuexModule.getters.userIsLoggedIn) {
-      if (typeof thenFunction === "function") {
-        thenFunction();
-      }
-      return;
+  public async UpdateCompanyInfo(storeId: number, model: UpdateCompanyInfoModel): Promise<UpdateCompanyInfoModel> {
+    const response = await this._requestService.PostRequest("/carts/updateCompanyInfo/" + storeId, model);
+    const parsedResponse = this._requestService.TryParseResponse(response);
+    if (parsedResponse === undefined) {
+      throw new Error("Kunne ikke oppdatere firmainfo");
     }
-    const updatedCart = this._vuexModule.getters.cartByStoreId(storeId);
-    if (!updatedCart || !updatedCart.storeId) {
-      if (typeof thenFunction === "function") {
-        thenFunction();
-      }
-      return;
-    }
-    updatedCart.ignoreLegecyIsSelfPickupBool = true;
-    updatedCart.ignoreLegecyIsWaiterOrderBool = true;
-    this._vuexModule.commit(MutationName.SetCartIsLoading, true);
-    _this
-      .Update(updatedCart)
-      .then((cart) => {
-        _this._vuexModule.commit(MutationName.SetCarts, [cart]);
-        _this._vuexModule.commit(MutationName.SetCartIsLoading, false);
-        if (typeof thenFunction === "function") {
-          thenFunction();
-        }
-      })
-      .catch(() => {
-        _this._vuexModule.commit(MutationName.SetCartIsLoading, false);
-        if (typeof catchFunction === "function") {
-          thenFunction();
-        }
-      });
-  }, 400);
+    return parsedResponse;
+  }
 
-  public SetCartRootProperties = (props: ICartRootProperties, thenFunction?: Function, catchFunction?: Function) => {
-    this._vuexModule.commit(MutationName.SetCartRootProperties, props);
-    this.UpdateCartInDbAndSetState(props.storeId, thenFunction, catchFunction);
-  };
-
-  public SetLineItem = ({ storeId, lineItem }) => {
-    this._vuexModule.commit(MutationName.SetLineItem, { storeId, lineItem });
-    this.UpdateCartInDbAndSetState(storeId);
-  };
-
-  public RemoveLineItem = ({ storeId, lineItem }) => {
-    this._vuexModule.commit(MutationName.RemoveLineItem, { storeId, lineItem });
-    this.UpdateCartInDbAndSetState(storeId);
-  };
-
-  public AddQuantityLineItem = ({ storeId, lineItemId, addQuantity }) => {
-    const cart = this._vuexModule.state.carts.find((x) => x.storeId === storeId);
-    if (!cart) {
-      return;
+  public async ReorderFromOrder(orderId: string | number): Promise<Cart> {
+    const response = await this._requestService.PostRequest("/carts/reorder/" + orderId);
+    const parsedResponse = this._requestService.TryParseResponse(response);
+    if (parsedResponse === undefined) {
+      throw new Error("Kunne ikke bestille på nytt");
     }
-    const templineItem = (cart.items || []).find((x) => x.id === lineItemId);
-    if (!templineItem) {
-      return;
-    }
-    const lineItem = JSON.parse(JSON.stringify(templineItem));
-    lineItem.quantity += addQuantity;
-    if (lineItem.quantity <= 0) {
-      this._vuexModule.commit(MutationName.RemoveLineItem, { storeId, lineItem });
-    } else {
-      this._vuexModule.commit(MutationName.SetLineItem, { storeId, lineItem });
-    }
-    this.UpdateCartInDbAndSetState(storeId);
-  };
-
-  public DeleteFromDbAndState = (storeId) => {
-    this._vuexModule.commit(MutationName.RemoveCart, storeId);
-    if (this._vuexModule.getters.userIsLoggedIn) {
-      this.Delete(storeId);
-    }
-  };
+    return parsedResponse;
+  }
 }

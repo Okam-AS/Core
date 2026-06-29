@@ -14,6 +14,7 @@ export class Product {
   depositAmount: number;
 
   productVariants: Array<ProductVariant>;
+  productVariantEnabled: boolean;
   errorMessage: string;
   selectedOptionsAmount: number;
   selectedOptionNames: string;
@@ -25,10 +26,15 @@ export class Product {
   tax: number;
   otherInformation: string;
 
+  manualRewardAmountEnabled: boolean;
+  manualRewardAmount: number;
+
   hasDiscount: boolean;
   discountLabel: string;
   discountAmount: number;
 
+  storeId: number;
+  storeName: string;
   regularDiscountId: string;
 
   tableAdditionalAmount: number;

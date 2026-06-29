@@ -1,0 +1,40 @@
+import { ICoreInitializer } from '../interfaces'
+import { RequestService } from '../services'
+
+export class AIService {
+  private _requestService: RequestService;
+
+  constructor(coreInitializer: ICoreInitializer) {
+    this._requestService = new RequestService(coreInitializer)
+  }
+
+  public async MenuToJson(storeId: number, pageContent: string, extraInstructions: string): Promise<any> {
+    const payload = {
+      PageContent: pageContent,
+      StoreId: storeId.toString(),
+      ExtraInstructions: extraInstructions
+    }
+
+    const response = await this._requestService.PostRequest('/ai/menu-to-json', payload)
+    const parsedResponse = this._requestService.TryParseResponse(response)
+    if (parsedResponse === undefined) {
+      throw new Error()
+    }
+    return parsedResponse
+  }
+
+  public async AskQuestion(question: string, selectedStoreIds?: number[], languageCode?: string): Promise<any> {
+    const payload = {
+      Question: question,
+      SelectedStoreIds: selectedStoreIds && selectedStoreIds.length > 0 ? selectedStoreIds : null,
+      LanguageCode: languageCode
+    }
+
+    const response = await this._requestService.PostRequest('/chat/ask', payload)
+    const parsedResponse = this._requestService.TryParseResponse(response)
+    if (parsedResponse === undefined) {
+      throw new Error()
+    }
+    return parsedResponse
+  }
+}

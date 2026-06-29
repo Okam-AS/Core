@@ -1,28 +1,22 @@
 import { Category, CategoryProductListItem, CategorySearchOptions } from '../models'
-import $config from '../helpers/configuration'
-import { IVuexModule } from '../interfaces'
 import { HttpMethod } from '../enums'
-import { RequestService, UserService } from '../services'
+import { ICoreInitializer } from '../interfaces'
+import { RequestService } from '../services'
+
 export class CategoryService {
     private _requestService: RequestService;
-    private _userService: UserService;
-    private _vuexModule: IVuexModule;
 
-    constructor (vuexModule: IVuexModule) {
-      this._requestService = new RequestService(vuexModule, $config.okamApiBaseUrl)
-      this._vuexModule = vuexModule
-      this._userService = new UserService(vuexModule)
+    constructor (coreInitializer: ICoreInitializer) {
+      this._requestService = new RequestService(coreInitializer)
     }
 
     public async Get (categoryId: string, forStore: boolean): Promise<Category> {
       const response = await this._requestService.GetRequest('/categories/' + categoryId + (forStore ? '?forStore=true' : ''))
-      if (response.statusCode === 401 && this._vuexModule.state.currentUser.token) { this._userService.Logout() }
       return this.ParsedResponse(response, 'Kunne ikke hente kategori')
     }
 
     public async GetForConsumer (categoryId: string, searchOptions: CategorySearchOptions): Promise<Category> {
       const response = await this._requestService.PostRequest('/categories/' + categoryId + '/consumer', searchOptions)
-      if (response.statusCode === 401 && this._vuexModule.state.currentUser.token) { this._userService.Logout() }
       return this.ParsedResponse(response, 'Kunne ikke hente kategori')
     }
 
@@ -31,13 +25,13 @@ export class CategoryService {
       return this.ParsedResponse(response, 'Kunne ikke hente kategorier')
     }
 
-    public async GetAllForConsumer (storeId: number, searchOptions: CategorySearchOptions): Promise<Category> {
+    public async GetAllForConsumer (storeId: number, searchOptions: CategorySearchOptions): Promise<Array<Category>> {
       const response = await this._requestService.PostRequest('/categories/store/' + storeId + '/consumer', searchOptions)
       return this.ParsedResponse(response, 'Kunne ikke hente kategorier')
     }
 
     public UploadImage (imagePath: string, categoryId: string) {
-      this._requestService.FormdataRequest('/categories/' + categoryId + '/image', HttpMethod.POST, 'Image', imagePath)
+      return this._requestService.FormdataRequest('/categories/' + categoryId + '/image', HttpMethod.POST, 'Image', imagePath)
     }
 
     public async DeleteImage (imageSourceId: string): Promise<void> {
@@ -52,7 +46,6 @@ export class CategoryService {
 
     public async HasAnyValid (storeId: number): Promise<Boolean> {
       const response = await this._requestService.GetRequest('/categories/store/' + storeId + '/hasanyvalid')
-      if (response.statusCode === 401 && this._vuexModule.state.currentUser.token) { this._userService.Logout() }
       return this.ParsedResponse(response, 'Kunne ikke hente kategori informasjon')
     }
 
@@ -84,6 +77,14 @@ export class CategoryService {
     public async Create (category: Category): Promise<Category> {
       const response = await this._requestService.PostRequest('/categories', category)
       return this.ParsedResponse(response, 'Kunne ikke lagre kategori')
+    }
+
+    public async SearchProducts (storeId: number, searchTerm: string, searchOptions: CategorySearchOptions): Promise<Array<CategoryProductListItem>> {
+      const response = await this._requestService.PostRequest('/categories/search/store/' + storeId + '/consumer', {
+        searchTerm,
+        searchOptions
+      })
+      return this.ParsedResponse(response, 'Kunne ikke søke i produkter')
     }
 
     private ParsedResponse (response, errorMessage) {

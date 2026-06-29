@@ -1,15 +1,12 @@
-import $config from '../helpers/configuration'
-import { IVuexModule } from '../interfaces'
+import { ICoreInitializer } from '../interfaces'
 import { Product, ProductVariant } from '../models'
 import { RequestService } from './request-service'
 
 export class ProductVariantService {
     private _requestService: RequestService;
-    private _vuexModule: IVuexModule;
 
-    constructor (vuexModule: IVuexModule) {
-      this._requestService = new RequestService(vuexModule, $config.okamApiBaseUrl)
-      this._vuexModule = vuexModule
+    constructor (coreInitializer: ICoreInitializer) {
+      this._requestService = new RequestService(coreInitializer)
     }
 
     public async Reorder (productId: string, productVariants: Array<ProductVariant>): Promise<Product> {
