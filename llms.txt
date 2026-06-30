@@ -1,0 +1,72 @@
+# Core
+
+> okam Core — the shared **client-side TypeScript library** for the okam restaurant ordering + payments platform. It is the single source of truth for domain models, API services, Pinia stores, helpers, translations, and the checkout layer used by every okam client. Core is **bundler-agnostic and holds NO platform-specific code**: it ships as TypeScript source (no `package.json`/build step of its own) and is vendored as a **git submodule into all 4 client apps**, which compile it as part of their own build. Stack: TypeScript, Vue 3 reactivity (`vue`), Pinia, dayjs. Repo: `git@github.com:Okam-AS/Core.git`.
+
+## Context
+okam was **built for Norway** and is now being **localized to go live in Switzerland** ("okam is the brain"). The committed Swiss go-live plan lives in the backend repo at `OkamAPI/docs/swiss/00-INDEX.md` (00-INDEX + 14 specs) and is tracked in Linear (team **Nordane**, issues **NOR-40..127**; this work is NOR-120 under the Knowledge Platform epic NOR-119).
+
+This repo's relationship to the rest of okam: **Core is the shared library, vendored ×5** as a git submodule into the four clients —
+- `ConsumerWeb/core`  (Nuxt 3 consumer web)
+- `ConsumerApp/core`  (NativeScript-Vue consumer app)
+- `AdminApp/app/core` (NativeScript-Vue merchant app)
+- `Web/core`          (Nuxt 2 merchant/registration + admin web)
+
+Because it is vendored, a change here must be **re-vendored / SHA-bumped in all 4 clients in lockstep**. Core is the natural home for cross-client Swiss logic: the **market/edition model** (currently `config/edition.js` in `Web`) is being **ported into Core** so all clients share one Norway-vs-Switzerland configuration. Backend (Stripe/Vipps/Dintero payments, orders, analytics, the MCP server) lives in `OkamAPI`; Core holds the corresponding client-side models, services, and stores.
+
+## Architecture & key paths
+- `models/` — plain TS domain models (cart, store, product, order, payment, discount, giftcard, reward, user, offer, dinehome, wolt, …). Barrel: `models/index.ts`.
+- `services/` — one class per API/domain area; each calls the backend through `RequestService`. Barrel: `services/index.ts`. Notables:
+  - `services/request-service.ts` — central HTTP layer; builds requests via the registered platform `IHttpModule` (`getHttpModule()`), attaches bearer token, base URL from `helpers/configuration`.
+  - `services/stripe-service.ts`, `services/vipps-service.ts`, `services/dintero-service.ts`, `services/payment-service.ts` — payment provider integrations (mirror `OkamAPI` payments).
+  - plus `order-`, `cart-`, `store-`, `product-`, `discount-`, `giftcard-`, `reward-`, `culture-`, `wolt-*`, `kravia-invoice-`, `ai-service.ts`, etc.
+- `pinia/` — Pinia stores (Composition/setup style, `defineStore`). Barrel: `pinia/index.ts`.
+  - `pinia/checkout.ts` — **the checkout layer** (the "v4 checkout"): payment-method labels, discount codes, requested-completion-date, validation, payment orchestration across Stripe/Vipps/Dintero.
+  - `pinia/cart.ts`, `pinia/order.ts`, `pinia/store.ts`, `pinia/category.ts`, `pinia/user.ts`, `pinia/settings.ts`, `pinia/theme.ts`.
+  - `pinia/services.ts` — exposes the instantiated service singletons (`useServices()`).
+  - `pinia/translation.ts` — wires `translations/{en,no,de}` and selects by `cultureCode`; calls `setTranslationProvider()` for helpers.
+- `interfaces/` — platform contracts & init: `i-http-module.ts` (`IHttpModule`), `i-persistence-module.ts` (`IPersistenceModule`), `i-core-initializer.ts` (`ICoreInitializer`: `bearerToken`, `cultureCode`, env). Barrel: `interfaces/index.ts`.
+- `platform/index.ts` — **platform registry (DI)**. Core holds no impl; apps call `setPlatform(HttpModule, PersistenceModule)` once at startup. `getHttpModule()` / `getPersistenceModule()` throw a clear error if used before registration.
+- `helpers/tools.ts` — currency + i18n helpers: `priceLabel()`, `currencyInfo()`, **`setCurrencyFormat()`** (override prefix/suffix/separators/symbol; default symbol `"kr"`), `setTranslationProvider()`. **This is the NOK→CHF formatting seam.**
+- `helpers/configuration.ts` — env/config (`API_BASE_URL`, `IS_PRODUCTION`, `STRIPE_PUBLISHABLE_KEY`, `IS_NATIVESCRIPT`, …); `helpers/ts-debounce.ts`, `helpers/variant-copy.ts`.
+- `enums/` — string enums incl. `payment-type.ts` (Stripe, Vipps, Dintero* variants, Giftcard, PayInStore, WoltMarketplace, …), `delivery-type.ts`, `order-status.ts`, `http-method.ts`. Barrel: `enums/index.ts`.
+- `translations/` — `en.ts`, `no.ts` (Norwegian), **`de.ts` (German — the Swiss locale)**. Flat `key: string` maps.
+- `svg/index.ts`, `README.md` — icon registry; submodule usage docs.
+
+## Build & run
+Core has **no build of its own** — it is bundler-agnostic TS source compiled by each consuming app. There is no `package.json`, no test runner, no scripts in this repo.
+
+Consuming projects must provide these npm packages: `typescript`, `pinia`, `vue`, `dayjs`.
+
+Add Core to a client (from the client repo root):
+```
+git submodule add https://github.com/Okam-AS/Core.git core/
+```
+Each app must, **once at startup before any service/store is used**, register its platform impl:
+```ts
+import { setPlatform } from "<core>/platform";
+import { HttpModule } from "./platform/http-module";              // app-owned IHttpModule
+import { PersistenceModule } from "./platform/persistence-module"; // app-owned IPersistenceModule
+setPlatform(HttpModule, PersistenceModule);
+```
+Required env vars (provided by the app): `IS_PRODUCTION`, `API_BASE_URL`, `IS_NATIVESCRIPT`, `VERSION`, `STRIPE_PUBLISHABLE_KEY`, `VIPPS_IOS_PATH`, `VIPPS_ANDROID_PATH`, `NOTIFICATION_HUB`.
+Resync submodule in source control if needed: `rm -rf .git/modules/Core && rm -rf .git/modules/core && git rm --cached core`.
+
+## Conventions
+- **Submodule lockstep**: a change here must be re-vendored and SHA-bumped in `Web/core`, `ConsumerWeb/core`, `ConsumerApp/core`, `AdminApp/app/core` together. Never let clients drift on different Core SHAs.
+- **No platform code in Core**: HTTP and persistence are accessed only via the registry (`getHttpModule()`/`getPersistenceModule()`); web apps adapt `axios`/`localStorage`, NativeScript apps adapt `@nativescript/core/http` + `@nativescript/background-http` + `application-settings`. Same DI pattern as the translation/currency providers.
+- **Norway → Switzerland localization**: locale is `de` (Swiss German) in `translations/de.ts`, selected via `ICoreInitializer.cultureCode`; currency is overridden via `setCurrencyFormat()` (`"kr"` → `CHF`). Translations are flat `key: string` maps, key per UI string (e.g. `checkoutPage_payInStore`); add the same key to `en.ts`, `no.ts`, `de.ts`.
+- **Market/edition model**: the Norway-vs-Switzerland configuration (`config/edition.js` in `Web`) is being **ported into Core** so all clients share it — keep new market-conditional logic here, not in individual clients.
+- **Barrels**: import models/services/enums/stores from the directory barrel (`models`, `services`, `enums`, `pinia`), not deep paths.
+- **Stores** use Pinia setup style (`defineStore("name", () => …)`) with `vue` refs/computed; **services** are classes constructed with an `ICoreInitializer` and reached through `useServices()`.
+- **Payments**: client integrations for Stripe (cards), Vipps (Norway wallet), and Dintero (host of Vipps/Billie/Klarna/Kravia variants) mirror `OkamAPI`. Swiss payment methods are configured via these provider services + `PaymentType`.
+
+## Key concepts
+- **Vendored shared core**: one TypeScript library is the single source of truth for 4 clients; it is the deliberate place to add cross-client logic once.
+- **Platform DI registry**: Core defines contracts (`IHttpModule`, `IPersistenceModule`) and a registry; apps inject implementations. Same idea powers `setTranslationProvider` / `setCurrencyFormat`.
+- **Checkout layer (`pinia/checkout.ts`)**: orchestrates cart validation, discount codes, requested completion date, payment-method selection and the multi-provider payment flow.
+- **Cart → Order**: `Cart` (calculations, line items, validation) is converted to an order; see `models/cart`, `pinia/cart.ts`, `services/cart-service.ts`, `order-service.ts`.
+- **Localization seams**: `cultureCode` (translations) + `setCurrencyFormat` (money) + the ported edition/market model are the three knobs that make okam run in a new country (NO → CH).
+- **Payment providers / `PaymentType`**: Stripe, Vipps, Dintero (+ DinteroVipps/Billie/Klarna/Kravia), Giftcard, PayInStore, WoltMarketplace.
+
+## Knowledge base
+Part of the **okam Knowledge Platform** (KP, Linear epic NOR-119; this file is NOR-120). Internal / dev-facing navigation index for the `Core` repo, following the llms.txt convention (llmstxt.org).
