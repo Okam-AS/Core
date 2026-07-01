@@ -34,12 +34,12 @@ const currencyInfoTool = () => {
   return _currencyFormatOverride ? { ...base, ..._currencyFormatOverride } : base;
 };
 
-const wholeAmountTool = (amount: Number): string => {
+const wholeAmountTool = (amount: Number, thousandSeparator: string = " "): string => {
   if (!amount) {
     return "0";
   }
   const wholeAmount = amount.toString().slice(0, -2);
-  return wholeAmount ? wholeAmount.replace(/\B(?=(\d{3})+(?!\d))/g, " ") : "0";
+  return wholeAmount ? wholeAmount.replace(/\B(?=(\d{3})+(?!\d))/g, thousandSeparator) : "0";
 };
 
 const fractionAmountTool = (amount: Number): string => {
@@ -52,10 +52,13 @@ const fractionAmountTool = (amount: Number): string => {
 
 const priceLabelTool = (totalPrice: Number, hideFractionIfZero: Boolean = false, hidePrefixAndSuffix: Boolean = false) => {
   const currencyInfo = currencyInfoTool();
-  const wholeAmount = wholeAmountTool(totalPrice);
+  // Honour the stored format separators (defaults are the Norwegian "," decimal and
+  // " " thousands from currencyInfoTool). Previously these were hardcoded here, so a
+  // setCurrencyFormat override (e.g. Swiss "." / "'") was silently ignored.
+  const wholeAmount = wholeAmountTool(totalPrice, currencyInfo.thousandSeparator);
   let fraction = "";
   if (!hideFractionIfZero || parseInt(fractionAmountTool(totalPrice)) > 0) {
-    fraction = "," + fractionAmountTool(totalPrice);
+    fraction = currencyInfo.decimalSeparator + fractionAmountTool(totalPrice);
   }
   return (hidePrefixAndSuffix ? "" : currencyInfo.prefix) + wholeAmount + fraction + (hidePrefixAndSuffix ? "" : currencyInfo.suffix);
 };
