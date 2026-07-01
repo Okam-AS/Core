@@ -221,7 +221,29 @@ export const useCheckout = defineStore("checkout", () => {
   const cvc = ref("");
   const overridePaymentMethodId = ref("");
 
+  // PCI SAQ-A gate (NOR-69). Swiss stores must NEVER capture a raw PAN/CVC in the
+  // client: CH checkout routes only to Stripe-hosted card entry or TWINT, so the raw
+  // card fields are never populated and getCardInfo() must never surface (or require)
+  // one. The single CH signal available on the store is the region charge currency
+  // "CHF" (Store.currencyCode, added by the earlier Swiss work); there is no country
+  // field to key off. Norway (and any legacy NOK/absent-currency store) is unchanged
+  // and continues to allow raw card entry exactly as before.
+  const isSwissStore = computed(() => (_store.currentStore?.currencyCode || "").toUpperCase() === "CHF");
+
   const getCardInfo = () => {
+    // SAQ-A: for a Swiss store never read the raw card refs. Return an empty,
+    // never-valid card so no PAN/CVC can leave this store and the raw-card branch
+    // can never be treated as a valid payment source. CH validity is driven solely
+    // by a selected (Stripe-hosted / TWINT) payment method — see isValid().
+    if (isSwissStore.value) {
+      return {
+        number: "",
+        expMonth: NaN,
+        expYear: NaN,
+        cvc: "",
+        isValid: false,
+      };
+    }
     return {
       number: (cardNumber.value || "").replace(/\s+/g, ""),
       expMonth: parseInt(expMonth.value),
@@ -267,6 +289,14 @@ export const useCheckout = defineStore("checkout", () => {
   };
 
   const setCardInput = (key, value) => {
+    // SAQ-A (NOR-69): on a Swiss store the raw card fields must never be written to
+    // state, so a PAN/CVC/expiry can never be captured client-side even if a caller
+    // still tries to feed one. overridePaymentMethodId is a Stripe payment-method id
+    // (a token, not card data) so it stays allowed for the CH Stripe-hosted flow.
+    if (isSwissStore.value) {
+      if (key === "overridePaymentMethodId") overridePaymentMethodId.value = value;
+      return;
+    }
     if (key === "cardNumber") cardNumber.value = value;
     if (key === "expMonth") expMonth.value = value;
     if (key === "expYear") expYear.value = value;
@@ -451,7 +481,12 @@ export const useCheckout = defineStore("checkout", () => {
         return resolve(false);
       }
 
-      if (!(selectedPaymentMethodId.value || getCardInfo().isValid)) {
+      // SAQ-A (NOR-69): a Swiss store must have a selected payment method (Stripe-hosted
+      // card or TWINT) and must never fall back to the raw-card path, so getCardInfo() is
+      // not consulted at all for CH. Norway keeps the original "saved method OR raw card"
+      // gate unchanged.
+      const paymentSourceIsValid = isSwissStore.value ? !!selectedPaymentMethodId.value : selectedPaymentMethodId.value || getCardInfo().isValid;
+      if (!paymentSourceIsValid) {
         errorMessagePrivate.value = $i("checkoutPage_paymentFailedCheckCardDetails");
         isValidating.value = false;
         return resolve(false);
@@ -546,6 +581,9 @@ export const useCheckout = defineStore("checkout", () => {
     setPaymentMethod,
     getAvailablePaymentMethods,
     setCardInput,
+    // SAQ-A signal (NOR-69): true when the current store charges in CHF, i.e. a Swiss
+    // store where raw card entry must be hidden and only Stripe-hosted / TWINT is offered.
+    isSwissStore,
 
     isLoading,
     isProcessingPayment,

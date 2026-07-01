@@ -1,6 +1,8 @@
 import en from '../translations/en'
 import no from '../translations/no'
 import de from '../translations/de'
+import fr from '../translations/fr'
+import it from '../translations/it'
 import { defineStore } from "pinia";
 import { useServices } from "./services"
 import { setTranslationProvider } from "../helpers/tools"
@@ -10,7 +12,7 @@ import { ref, computed } from "vue";
 export const useTranslation = defineStore("translation", () => {
 
   const { getCoreInitializer } = useServices()
-  const translations = ref({ en, no, de });
+  const translations = ref({ en, no, de, fr, it });
 
   const updateTranslations = (key: string, value: object) => {
     translations.value[key] = value
