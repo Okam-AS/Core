@@ -1,0 +1,19 @@
+{
+  "name": "@okam/core",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Okam Core — client-side models and core logic, vendored as source into every consumer app.",
+  "type": "module",
+  "scripts": {
+    "test": "vitest run",
+    "test:watch": "vitest"
+  },
+  "devDependencies": {
+    "dayjs": "^1.11.13",
+    "jsdom": "^25.0.1",
+    "pinia": "^2.3.0",
+    "typescript": "^5.7.0",
+    "vitest": "^2.1.9",
+    "vue": "^3.5.13"
+  }
+}

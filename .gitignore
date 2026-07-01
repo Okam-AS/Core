@@ -1,0 +1,5 @@
+# Node / test tooling. Core is vendored as pure source into the consumer apps; these
+# are only needed to run the standalone Vitest suite and must never be committed.
+node_modules/
+coverage/
+*.log
