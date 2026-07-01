@@ -18,3 +18,19 @@ jobs:
         run: npm ci
       - name: Test (money-critical Swiss/TWINT unit suite)
         run: npm test
+
+  okf-bundle:
+    # Freshness gate for the committed OKF knowledge bundle (docs/okf/), which the read-only
+    # knowledge MCP serves to LLMs. --check rebuilds the bundle in memory and fails if the
+    # committed files drift from the Core source, so a stale bundle can't merge. stdlib-only, offline.
+    name: okf bundle freshness
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+      - name: Self-test the generator (determinism + parser invariants)
+        run: python3 tools/okf/generate_okf.py --selftest
+      - name: Check docs/okf/ is in sync with the code (fails if stale)
+        run: python3 tools/okf/generate_okf.py --check

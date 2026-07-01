@@ -2,7 +2,7 @@
 type: model
 resource: "okam://model/StripeCreatePaymentIntent"
 title: "Stripe Create Payment Intent"
-description: "Shared class `StripeCreatePaymentIntent` (7 field(s)) from the okam Core library."
+description: "Shared class `StripeCreatePaymentIntent` (9 field(s)) from the okam Core library."
 domain: payment
 authority_tier: source
 data_classification: schema-only
@@ -22,7 +22,9 @@ TypeScript class `StripeCreatePaymentIntent` (vendored into okam clients via the
 | `cartId` | `string` | yes |
 | `giftcardId` | `string` | yes |
 | `amount` | `number` | no |
-| `paymentMethodId` | `string` | no |
-| `setupFutureUsage` | `boolean` | no |
-| `currency` | `string` | no |
-| `clientMajorVersion` | `number` | no |
+| `paymentMethodId` | `string` | yes |
+| `setupFutureUsage` | `boolean` | yes |
+| `currency` | `string` | yes |
+| `clientMajorVersion` | `number` | yes |
+| `paymentMethodType` | `"card" \| "twint"` | yes |
+| `isApp` | `boolean` | yes |

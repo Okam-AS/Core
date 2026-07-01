@@ -2,7 +2,7 @@
 type: enum
 resource: "okam://enum/PaymentType"
 title: "Payment Type"
-description: "Shared enum `PaymentType` (11 member(s)) from the okam Core library."
+description: "Shared enum `PaymentType` (12 member(s)) from the okam Core library."
 domain: payment
 authority_tier: source
 data_classification: schema-only
@@ -29,3 +29,4 @@ TypeScript enum `PaymentType` (vendored into okam clients via the Core library).
 | `DinteroKlarna` | string |
 | `DinteroKravia` | string |
 | `WoltMarketplace` | string |
+| `Twint` | string |

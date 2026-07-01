@@ -35,7 +35,7 @@ Shared TypeScript services (HTTP/data access) vendored into okam clients.
 * [RewardService](RewardService.md) - 12 method(s), 7 HTTP call(s) · domain `reward`
 * [StatisticsService](StatisticsService.md) - 5 method(s), 5 HTTP call(s) · domain `statistic`
 * [StoreService](StoreService.md) - 42 method(s), 17 HTTP call(s) · domain `store`
-* [StripeService](StripeService.md) - 3 method(s), 2 HTTP call(s) · domain `stripe`
+* [StripeService](StripeService.md) - 4 method(s), 3 HTTP call(s) · domain `stripe`
 * [UserService](UserService.md) - 18 method(s), 13 HTTP call(s) · domain `user`
 * [VippsService](VippsService.md) - 2 method(s), 2 HTTP call(s) · domain `vipps`
 * [WoltMenuService](WoltMenuService.md) - 8 method(s), 8 HTTP call(s) · domain `wolt`

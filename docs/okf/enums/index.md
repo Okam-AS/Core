@@ -20,7 +20,7 @@ Shared TypeScript enums vendored into okam clients.
 * [OrderPaymentTypeFilter](OrderPaymentTypeFilter.md) - 9 member(s) · domain `payment`
 * [OrderStatus](OrderStatus.md) - 8 member(s) · domain `order`
 * [OrderStatusFilter](OrderStatusFilter.md) - 3 member(s) · domain `order`
-* [PaymentType](PaymentType.md) - 11 member(s) · domain `payment`
+* [PaymentType](PaymentType.md) - 12 member(s) · domain `payment`
 * [RewardTransactionType](RewardTransactionType.md) - 4 member(s) · domain `reward`
 * [StatisticDateFilter](StatisticDateFilter.md) - 7 member(s) · domain `statistic`
 * [VippsVerifyStatus](VippsVerifyStatus.md) - 4 member(s) · domain `vipps`

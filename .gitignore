@@ -3,3 +3,7 @@
 node_modules/
 coverage/
 *.log
+
+# Python build artifacts from the OKF generator (must never be committed)
+__pycache__/
+*.pyc

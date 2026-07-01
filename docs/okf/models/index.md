@@ -79,7 +79,7 @@ Shared TypeScript models (interfaces/classes) vendored into okam clients.
 * [StatisticKeyValueData](StatisticKeyValueData.md) - 2 field(s) · domain `statistic`
 * [StatisticOrders](StatisticOrders.md) - 3 field(s) · domain `statistic`
 * [StatisticQueryOrders](StatisticQueryOrders.md) - 7 field(s) · domain `statistic`
-* [Store](Store.md) - 39 field(s) · domain `store`
+* [Store](Store.md) - 12 field(s) · domain `store`
 * [StoreFees](StoreFees.md) - 2 field(s) · domain `store`
 * [StoreOverviewModel](StoreOverviewModel.md) - 5 field(s) · domain `store`
 * [StoreOverviewResponseModel](StoreOverviewResponseModel.md) - 3 field(s) · domain `store`
@@ -88,7 +88,7 @@ Shared TypeScript models (interfaces/classes) vendored into okam clients.
 * [StoreRegistration](StoreRegistration.md) - 7 field(s) · domain `store`
 * [StoreTip](StoreTip.md) - 2 field(s) · domain `store`
 * [StoreUserSetting](StoreUserSetting.md) - 3 field(s) · domain `store`
-* [StripeCreatePaymentIntent](StripeCreatePaymentIntent.md) - 7 field(s) · domain `payment`
+* [StripeCreatePaymentIntent](StripeCreatePaymentIntent.md) - 9 field(s) · domain `payment`
 * [TaxDetail](TaxDetail.md) - 4 field(s) · domain `order`
 * [UpdateCompanyInfoModel](UpdateCompanyInfoModel.md) - 7 field(s) · domain `cart`
 * [User](User.md) - 21 field(s) · domain `user`

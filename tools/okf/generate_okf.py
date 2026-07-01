@@ -24,9 +24,17 @@ Hard rules (mirrors the raiis saladin-core reference bundle):
 
 Dependency-free: standard library only. Python 3.8+.
 
+Staleness gate. `build_bundle()` builds the whole bundle in memory as a
+`{repo_rel_path: content}` map — the single source of truth for both write mode
+and `--check`, so they can never diverge. `--check` byte-compares that map
+against the committed `docs/okf/` files and exits 1 (listing missing / changed /
+extra) on any drift, 0 when in sync. Write mode is byte-for-byte reproducible.
+This mirrors the OkamAPI OKF generator (the two are deliberate near-copies).
+
 Usage:
     python3 tools/okf/generate_okf.py            # write bundle, print summary
-    python3 tools/okf/generate_okf.py --check    # parse only, do not write
+    python3 tools/okf/generate_okf.py --check    # staleness gate: exit 1 if stale, 0 if in sync
+    python3 tools/okf/generate_okf.py --selftest # built-in invariants; exit 0 on pass
 """
 
 from __future__ import annotations
@@ -46,6 +54,11 @@ MODELS_DIR = REPO_ROOT / "models"
 SERVICES_DIR = REPO_ROOT / "services"
 ENUMS_DIR = REPO_ROOT / "enums"
 OUT_ROOT = REPO_ROOT / "docs" / "okf"
+OUTPUT_REL = OUT_ROOT.relative_to(REPO_ROOT).as_posix()  # "docs/okf"
+
+# Concept subdirectories the generator owns end-to-end. Used by write_bundle
+# (prune orphans before writing) and diff_bundle (orphan scan for --check).
+_GENERATED_SUBDIRS = ("models", "enums", "services")
 
 OKF_VERSION = "0.1"
 AUTHORITY_TIER = "source"          # generated-from-code (per task spec)
@@ -696,27 +709,27 @@ def write_file(path: Path, content: str) -> None:
 # Index emission
 # --------------------------------------------------------------------------- #
 
-def write_models_index(docs: List[ModelDoc]) -> None:
+def render_models_index(docs: List[ModelDoc]) -> str:
     lines = ["# Models", "",
              "Shared TypeScript models (interfaces/classes) vendored into okam clients.",
              ""]
     for d in docs:
         lines.append(f"* [{d.name}]({d.name}.md) - {len(d.fields)} field(s) · domain `{d.domain}`")
     lines.append("")
-    write_file(OUT_ROOT / "models" / "index.md", "\n".join(lines))
+    return "\n".join(lines)
 
 
-def write_enums_index(docs: List[EnumDoc]) -> None:
+def render_enums_index(docs: List[EnumDoc]) -> str:
     lines = ["# Enums", "",
              "Shared TypeScript enums vendored into okam clients.",
              ""]
     for d in docs:
         lines.append(f"* [{d.name}]({d.name}.md) - {len(d.members)} member(s) · domain `{d.domain}`")
     lines.append("")
-    write_file(OUT_ROOT / "enums" / "index.md", "\n".join(lines))
+    return "\n".join(lines)
 
 
-def write_services_index(docs: List[ServiceDoc]) -> None:
+def render_services_index(docs: List[ServiceDoc]) -> str:
     lines = ["# Services", "",
              "Shared TypeScript services (HTTP/data access) vendored into okam clients.",
              ""]
@@ -726,10 +739,10 @@ def write_services_index(docs: List[ServiceDoc]) -> None:
             f"{len(d.calls)} HTTP call(s) · domain `{d.domain}`"
         )
     lines.append("")
-    write_file(OUT_ROOT / "services" / "index.md", "\n".join(lines))
+    return "\n".join(lines)
 
 
-def write_root_index(n_models: int, n_services: int, n_enums: int) -> None:
+def render_root_index(n_models: int, n_services: int, n_enums: int) -> str:
     lines = [
         "---",
         f'okf_version: "{OKF_VERSION}"',
@@ -749,6 +762,50 @@ def write_root_index(n_models: int, n_services: int, n_enums: int) -> None:
         f"* [Enums](enums/index.md) - one concept per shared enum: its members. "
         f"({n_enums})",
         "",
+        "## Multi-region surface (CH + NO)",
+        "",
+        "Core is region-aware: the same vendored library drives both the Norwegian "
+        "(NOK) and Swiss (CHF) clients. An LLM reading this bundle should keep the "
+        "following in mind — some of it lives in source that is intentionally "
+        "**out of the parsed set** (see \"Parser scope\" below), so the pointers "
+        "here are the map to it.",
+        "",
+        "**Currency (NOK / CHF).** Amount formatting flows through "
+        "`setCurrencyFormat(...)` / `currencyInfo()` in `helpers/tools.ts`. The "
+        "default is the Norwegian format (prefix, `,` decimal separator, ` ` "
+        "(space) thousands separator); a client calls `setCurrencyFormat` to "
+        "override it (Swiss stores use a `.` decimal and `'` thousands separator, "
+        "CHF prefix). `priceLabel` / `priceString` in the same file honour those "
+        "stored separators rather than hardcoding them, so a Swiss override is no "
+        "longer silently ignored.",
+        "",
+        "**Payment rails.** `okam://enum/PaymentType` is the payment-method "
+        "contract. Norway uses `Vipps` (and the `Dintero*` family); Switzerland "
+        "adds `Twint` — the string value round-trips to the backend "
+        "`PaymentType.Twint` (numeric `210`, mapped server-side) and is additive, "
+        "never surfaced for NO stores. The TWINT flow is a Stripe "
+        "PaymentIntent: `okam://model/StripeCreatePaymentIntent` carries "
+        "`paymentMethodType: \"card\" | \"twint\"` and `isApp`, and "
+        "`okam://service/StripeService` exposes `Verify(...)` + the "
+        "`GET /stripe/verify/{paymentIntentId}` poll (the server is the source of "
+        "truth for a TWINT approval — the client polls after the deep-link, "
+        "mirroring `VippsService.Verify` / `PullVerifyResult`). Terminal states "
+        "are described by `okam://enum/VippsVerifyStatus` / "
+        "`okam://enum/DinteroVerifyStatus`.",
+        "",
+        "**Login phone gate.** The verification-token / login gate lives in "
+        "`pinia/user.ts` (`phoneNumberIsValid`), not in a service. It accepts "
+        "Norwegian `+47` (8-digit) numbers and Swiss `+41` (9-digit national "
+        "significant) numbers; a small `normalizePhoneNumber` helper strips "
+        "whitespace and the Swiss trunk `0` (`079…` → `79…`) so both "
+        "the E.164 and `0xx` entry forms validate.",
+        "",
+        "**Localisation.** Client copy is in `translations/{no,en,de,fr,it}.ts` "
+        "(fr/it added for Swiss go-live; de/no/en pre-existing). TWINT-facing "
+        "keys include `checkoutPage_payWithTwint`, `checkoutPage_waitingForTwint` "
+        "and `paymentType_twint`. These are flat string maps and are also outside "
+        "the parsed set.",
+        "",
         "## Conformance & scope",
         "",
         "This bundle conforms to **Open Knowledge Format v0.1**: every concept "
@@ -766,6 +823,13 @@ def write_root_index(n_models: int, n_services: int, n_enums: int) -> None:
         "* `source_ref` — the repo-relative `path:line` the concept was derived "
         "from.",
         "",
+        "**Parser scope.** Concept docs are generated only from `models/**`, "
+        "`services/**` and `enums/**`. Pinia stores (`pinia/**`, e.g. the phone "
+        "gate and checkout orchestration), helpers (`helpers/**`, e.g. currency "
+        "formatting) and translations (`translations/**`) are **not** emitted as "
+        "concept docs — the \"Multi-region surface\" section above is the pointer "
+        "to that knowledge.",
+        "",
         "**Scope.**",
         "",
         "* Internal-only — feeds the okam knowledge-MCP and the \"okam is the "
@@ -777,19 +841,29 @@ def write_root_index(n_models: int, n_services: int, n_enums: int) -> None:
         "unchanged tree is byte-identical.",
         "",
     ]
-    write_file(OUT_ROOT / "index.md", "\n".join(lines))
+    return "\n".join(lines)
 
 
-def write_log() -> None:
+def render_log() -> str:
     lines = [
         "# Log",
         "",
         "* Bundle generated offline from `models/**`, `services/**` and "
         "`enums/**` by `tools/okf/generate_okf.py`. Schema-only; deterministic "
         "(no timestamps).",
+        "* Parser scope is `models/`, `services/`, `enums/` only. Region-aware "
+        "surface that lives elsewhere — currency formatting "
+        "(`helpers/tools.ts::setCurrencyFormat`), the `+47`/`+41` login phone "
+        "gate (`pinia/user.ts`) and the `no/en/de/fr/it` translations "
+        "(`translations/**`) — is out of the parsed set and is signposted from "
+        "`index.md` (\"Multi-region surface\") instead.",
+        "* `--check` rebuilds the whole bundle in memory and byte-compares it "
+        "against the committed files; it exits non-zero on any drift so a stale "
+        "bundle cannot merge. `--selftest` asserts determinism and a few parser "
+        "invariants. Both are offline, stdlib-only and read no secrets.",
         "",
     ]
-    write_file(OUT_ROOT / "log.md", "\n".join(lines))
+    return "\n".join(lines)
 
 
 # --------------------------------------------------------------------------- #
@@ -831,49 +905,283 @@ def collect_services() -> List[ServiceDoc]:
     return docs
 
 
-def main(argv: List[str]) -> int:
-    ap = argparse.ArgumentParser(description="Generate the okam Core OKF bundle.")
-    ap.add_argument("--check", action="store_true",
-                    help="parse only; do not write any files")
-    args = ap.parse_args(argv)
+# --------------------------------------------------------------------------- #
+# In-memory bundle: single source of truth for write mode AND --check.
+# Mirrors the OkamAPI OKF generator's build_bundle/write_bundle/diff_bundle
+# hardening so the two repos' bundles are gated the same way. (The two
+# generators are deliberate near-copies — cross-repo shared source, tracked as
+# an awareness item, not unified here.)
+# --------------------------------------------------------------------------- #
 
+def _normalize_content(content: str) -> str:
+    """Match write_file's on-disk normalisation: exactly one trailing newline."""
+    if not content.endswith("\n"):
+        content += "\n"
+    return content
+
+
+def build_bundle() -> Tuple[Dict[str, str], Dict[str, object]]:
+    """Produce the entire bundle in memory as {repo_rel_path: content}.
+
+    Single source of truth for both write mode and --check, so the two can never
+    diverge. Deterministic: stable ordering, no timestamps, no randomness.
+    """
     models = collect_models()
     enums = collect_enums()
     services = collect_services()
 
-    if args.check:
-        print(f"[check] models={len(models)} services={len(services)} enums={len(enums)}")
+    files: Dict[str, str] = {}
+
+    def add(rel_within_bundle: str, content: str) -> None:
+        key = f"{OUTPUT_REL}/{rel_within_bundle}"
+        if key in files:
+            raise ValueError(f"name collision — two resources map to {key!r}")
+        files[key] = _normalize_content(content)
+
+    # Concept docs.
+    for d in models:
+        add(f"models/{d.name}.md", render_model(d))
+    for d in enums:
+        add(f"enums/{d.name}.md", render_enum(d))
+    for d in services:
+        add(f"services/{d.name}.md", render_service(d))
+
+    # Indexes + log.
+    add("models/index.md", render_models_index(models))
+    add("enums/index.md", render_enums_index(enums))
+    add("services/index.md", render_services_index(services))
+    add("index.md", render_root_index(len(models), len(services), len(enums)))
+    add("log.md", render_log())
+
+    sample_uris = (
+        [f"okam://model/{d.name}" for d in models[:3]]
+        + [f"okam://service/{d.name}" for d in services[:2]]
+        + [f"okam://enum/{d.name}" for d in enums[:2]]
+    )
+    summary = {
+        "models": len(models),
+        "services": len(services),
+        "enums": len(enums),
+        "calls": sum(len(s.calls) for s in services),
+        "concept_docs": len(models) + len(services) + len(enums),
+        "files": len(files),
+        "sample_uris": sample_uris,
+        "output_dir": f"{rel(OUT_ROOT)}/",
+    }
+    return files, summary
+
+
+def write_bundle(files: Dict[str, str]) -> None:
+    """Write the in-memory bundle to disk, pruning stale generated files first."""
+    # Prune previously generated .md so a removed model/enum/service leaves no orphan.
+    for sub in _GENERATED_SUBDIRS:
+        d = OUT_ROOT / sub
+        if d.is_dir():
+            for f in d.glob("*.md"):
+                f.unlink()
+    for relp, content in files.items():
+        write_file(REPO_ROOT / relp, content)
+
+
+def diff_bundle(files: Dict[str, str]) -> Tuple[List[str], List[str], List[str]]:
+    """Compare the freshly-built bundle against what is committed on disk.
+
+    Returns (missing, changed, extra):
+      * missing — expected files that are absent on disk,
+      * changed — files whose committed bytes differ from freshly generated,
+      * extra   — committed generated .md files no longer produced (orphans).
+    All lists are sorted, repo-relative, forward-slashed.
+    """
+    missing: List[str] = []
+    changed: List[str] = []
+    for relp, expected in sorted(files.items()):
+        abs_path = REPO_ROOT / relp
+        if not abs_path.is_file():
+            missing.append(relp)
+            continue
+        # newline="" -> read bytes verbatim (no universal-newline translation),
+        # so the comparison is truly byte-for-byte against what git tracks.
+        actual = abs_path.read_text(encoding="utf-8", newline="")
+        if actual != expected:
+            changed.append(relp)
+
+    expected_keys = set(files)
+    extra: List[str] = []
+    for sub in _GENERATED_SUBDIRS + ("",):
+        d = OUT_ROOT / sub if sub else OUT_ROOT
+        if not d.is_dir():
+            continue
+        for f in sorted(d.glob("*.md")):
+            relp = f"{OUTPUT_REL}/{sub}/{f.name}" if sub else f"{OUTPUT_REL}/{f.name}"
+            if relp not in expected_keys:
+                extra.append(relp)
+    return sorted(set(missing)), sorted(set(changed)), sorted(set(extra))
+
+
+def _print_summary(summary: Dict[str, object], header: str) -> None:
+    print(f"okam Core OKF generator — {header}")
+    print(f"  repo root : {REPO_ROOT}")
+    print(f"  output    : {summary['output_dir']}")
+    print(f"  models    : {summary['models']}")
+    print(f"  services  : {summary['services']}  ({summary['calls']} HTTP calls)")
+    print(f"  enums     : {summary['enums']}")
+    print(f"  files     : {summary['files']}")
+    print("  sample resources:")
+    for uri in summary["sample_uris"]:
+        print(f"    - {uri}")
+
+
+def run_check() -> int:
+    """Real staleness gate. Exit 0 when docs/okf/ is in sync, 1 (with a report) otherwise."""
+    files, summary = build_bundle()
+    missing, changed, extra = diff_bundle(files)
+    if not (missing or changed or extra):
+        _print_summary(summary, "CHECK — bundle is IN SYNC (no files written)")
+        print("OK: docs/okf/ matches the code. Nothing to regenerate.")
         return 0
 
-    # Concept docs
-    for d in models:
-        write_file(OUT_ROOT / "models" / f"{d.name}.md", render_model(d))
-    for d in enums:
-        write_file(OUT_ROOT / "enums" / f"{d.name}.md", render_enum(d))
-    for d in services:
-        write_file(OUT_ROOT / "services" / f"{d.name}.md", render_service(d))
+    print("okam Core OKF generator — CHECK FAILED: docs/okf/ is STALE.")
+    print(f"  repo root : {REPO_ROOT}")
+    if missing:
+        print(f"  missing ({len(missing)}) — generated but not committed:")
+        for f in missing:
+            print(f"    + {f}")
+    if changed:
+        print(f"  changed ({len(changed)}) — committed bytes differ from generated:")
+        for f in changed:
+            print(f"    ~ {f}")
+    if extra:
+        print(f"  extra ({len(extra)}) — committed but no longer generated (orphan):")
+        for f in extra:
+            print(f"    - {f}")
+    print("")
+    print("Fix: run `python3 tools/okf/generate_okf.py` and commit docs/okf/.")
+    return 1
 
-    # Indexes + log
-    write_models_index(models)
-    write_enums_index(enums)
-    write_services_index(services)
-    write_root_index(len(models), len(services), len(enums))
-    write_log()
 
-    total = len(models) + len(services) + len(enums)
-    total_calls = sum(len(s.calls) for s in services)
-    print(f"OKF bundle written to {rel(OUT_ROOT)}/")
-    print(f"  models:   {len(models)}")
-    print(f"  services: {len(services)}  ({total_calls} HTTP calls)")
-    print(f"  enums:    {len(enums)}")
-    print(f"  concept docs total: {total}")
-    print("  sample URIs:")
-    for d in models[:3]:
-        print(f"    okam://model/{d.name}   <- {d.source_ref}")
-    for d in services[:2]:
-        print(f"    okam://service/{d.name} <- {d.source_ref}")
-    for d in enums[:2]:
-        print(f"    okam://enum/{d.name}    <- {d.source_ref}")
+def _selftest() -> int:
+    """Built-in invariants — no network, no deps. Exit 0 on pass, 1 on failure."""
+    failures: List[str] = []
+
+    def check(cond: bool, msg: str) -> None:
+        if not cond:
+            failures.append(msg)
+
+    # 1) Determinism: building twice yields byte-identical maps.
+    a, _ = build_bundle()
+    b, _ = build_bundle()
+    check(a == b, "build_bundle is not deterministic across two runs")
+
+    # 2) Every emitted file ends in exactly one trailing newline (matches disk).
+    for relp, content in a.items():
+        check(content.endswith("\n") and not content.endswith("\n\n"),
+              f"{relp}: content is not normalised to a single trailing newline")
+
+    # Synthetic fixtures must live *under* REPO_ROOT because the parsers build a
+    # repo-relative source_ref via rel(); a system-temp path would raise. We use
+    # a throwaway file inside the repo and always clean it up.
+    import tempfile
+    import contextlib
+
+    @contextlib.contextmanager
+    def _repo_temp_ts(text: str):
+        fd, name = tempfile.mkstemp(suffix=".ts", prefix=".okf_selftest_", dir=str(REPO_ROOT))
+        p = Path(name)
+        try:
+            import os as _os
+            with _os.fdopen(fd, "w", encoding="utf-8") as fh:
+                fh.write(text)
+            yield p
+        finally:
+            with contextlib.suppress(FileNotFoundError):
+                p.unlink()
+
+    # 3) Enum parsing on a synthetic string enum (mirrors PaymentType shape):
+    #    members are discovered and string RHS is classified as a "string" kind,
+    #    never reproduced as a value (schema-only).
+    src = (
+        "export enum Demo {\n"
+        "  NotSet = \"NotSet\",\n"
+        "  // a leading comment\n"
+        "  Twint = \"Twint\",\n"
+        "  Auto,\n"
+        "}\n"
+    )
+    with _repo_temp_ts(src) as tmp:
+        parsed = parse_enum_file(tmp)
+    check(len(parsed) == 1, f"expected 1 enum from synthetic source, got {len(parsed)}")
+    if parsed:
+        members = dict(parsed[0].members)
+        check(list(members) == ["NotSet", "Twint", "Auto"],
+              f"enum members wrong: {list(members)}")
+        check(members.get("Twint") == "string",
+              f"string enum member kind should be 'string', got {members.get('Twint')!r}")
+        check(members.get("Auto") is None,
+              f"implicit enum member kind should be None, got {members.get('Auto')!r}")
+
+    # 4) Model parsing keeps field/type/optional shape but drops defaults/values.
+    msrc = (
+        "export class Demo {\n"
+        "  id: string;\n"
+        "  amount?: number;\n"
+        "  method: \"card\" | \"twint\";\n"
+        "  secret: string = \"do-not-emit\";\n"
+        "  greet(): void {}\n"
+        "}\n"
+    )
+    with _repo_temp_ts(msrc) as tmp:
+        mdocs = parse_model_file(tmp)
+    check(len(mdocs) == 1, f"expected 1 model, got {len(mdocs)}")
+    if mdocs:
+        fmap = {f.name: f for f in mdocs[0].fields}
+        check("greet" not in fmap, "method leaked into fields")
+        check(fmap.get("amount") is not None and fmap["amount"].optional,
+              "optional field '?' not captured")
+        check(fmap.get("method") is not None and fmap["method"].type == '"card" | "twint"',
+              f"union type not preserved: {fmap.get('method')}")
+        # schema-only: the default value string must never appear in output.
+        check("do-not-emit" not in render_model(mdocs[0]),
+              "a field default value leaked into rendered output (not schema-only)")
+
+    # 5) Real enums are discovered from the repo — the Swiss TWINT rail is present.
+    enums = {e.name: e for e in collect_enums()}
+    check("PaymentType" in enums, "PaymentType enum not discovered from repo")
+    pt = enums.get("PaymentType")
+    if pt is not None:
+        names = {m for m, _ in pt.members}
+        check("Twint" in names, "PaymentType.Twint (Swiss TWINT rail) not discovered")
+
+    if failures:
+        print("SELFTEST FAILED:")
+        for f in failures:
+            print(f"  - {f}")
+        return 1
+    print("SELFTEST OK — determinism, newline normalisation, enum/model parsing "
+          "(schema-only) and TWINT discovery all pass.")
+    return 0
+
+
+def main(argv: Optional[List[str]] = None) -> int:
+    ap = argparse.ArgumentParser(description="Generate the okam Core OKF v0.1 bundle.")
+    group = ap.add_mutually_exclusive_group()
+    group.add_argument(
+        "--check", action="store_true",
+        help="Write nothing; exit 1 if docs/okf/ is stale (prints missing/changed/extra), else 0.",
+    )
+    group.add_argument(
+        "--selftest", action="store_true",
+        help="Run built-in invariants (determinism, parsing, TWINT discovery). Exit 0 on pass.",
+    )
+    args = ap.parse_args(argv)
+
+    if args.selftest:
+        return _selftest()
+    if args.check:
+        return run_check()
+
+    files, summary = build_bundle()
+    write_bundle(files)
+    _print_summary(summary, "WROTE")
     return 0
 
 
