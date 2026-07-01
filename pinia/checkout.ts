@@ -31,6 +31,7 @@ export const useCheckout = defineStore("checkout", () => {
     if (paymentMethod?.paymentType === PaymentType.DinteroBillie) return $i("checkoutPage_payWithBillie") + (currentCart.companyName ? " " + $i("checkoutPage_payWithBillieTo") + " " + currentCart.companyName : "");
     if (paymentMethod?.paymentType === PaymentType.DinteroKravia) return $i("checkoutPage_payWithKravia") + (currentCart.companyName ? " " + $i("checkoutPage_payWithKraviaTo") + " " + currentCart.companyName : "");
     if (paymentMethod?.paymentType === PaymentType.DinteroKlarna) return $i("checkoutPage_payWithKlarna");
+    if (paymentMethod?.paymentType === PaymentType.Twint) return $i("checkoutPage_payWithTwint");
     return "";
   };
 
