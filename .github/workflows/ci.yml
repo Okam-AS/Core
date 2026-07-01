@@ -1,0 +1,20 @@
+name: CI
+
+on:
+  push:
+    branches: [feature/swiss, master, main]
+  pull_request:
+
+jobs:
+  test:
+    name: vitest
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - name: Install
+        run: npm ci
+      - name: Test (money-critical Swiss/TWINT unit suite)
+        run: npm test
