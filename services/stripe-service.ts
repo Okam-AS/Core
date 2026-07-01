@@ -50,4 +50,67 @@ export class StripeService {
     if (parsedResponse === undefined) { throw new Error('Betalingen ikke ikke gjennomføres på dette tidspunktet'); }
     return parsedResponse;
   }
+
+  // TWINT completes out-of-band: the customer approves in their banking app and the
+  // order is booked server-side (Stripe webhook). The client cannot infer success from
+  // the confirmTwintPayment call, so it polls GET /stripe/verify/{paymentIntentId} — the
+  // server is the source of truth — exactly like vippsService.Verify / PullVerifyResult.
+  public async Verify(paymentIntentId: string): Promise<any> {
+    const response = await this._requestService.GetRequest("/stripe/verify/" + paymentIntentId);
+    const parsedResponse = this._requestService.TryParseResponse(response);
+    if (parsedResponse === undefined) {
+      throw new Error("Kunne ikke verifisere TWINT-betaling");
+    }
+    return parsedResponse;
+  }
+
+  // Mirrors vippsService.PullVerifyResult: a leading verify after ~800ms (covers the
+  // common fast-approval case without a full interval of latency), then poll every
+  // 1800ms until the server reports a terminal state. The backend StripeVerifyStatus
+  // enum is Waiting=100 / Success=200 / Fail=300; it is serialized as its string name
+  // over the wire (like Vipps), so accept both the name and the numeric code to stay
+  // correct regardless of the transport's enum encoding.
+  public PullVerifyTwintResult = (paymentIntentId: string, successHandler, failHandler) => {
+    if (!paymentIntentId && failHandler) {
+      failHandler();
+    }
+    if (!paymentIntentId) {
+      return;
+    }
+    const isSuccess = (status) => status === "Success" || status === 200;
+    const isFail = (status) => status === "Fail" || status === 300;
+    let intervalId;
+    const poll = () => {
+      this.Verify(paymentIntentId)
+        .then((result) => {
+          if (isSuccess(result.status)) {
+            clearInterval(intervalId);
+            if (successHandler) successHandler(result);
+          } else if (isFail(result.status)) {
+            clearInterval(intervalId);
+            if (failHandler) failHandler(result);
+          }
+        })
+        .catch(() => {
+          clearInterval(intervalId);
+          if (failHandler) failHandler();
+        });
+    };
+
+    setTimeout(() => {
+      this.Verify(paymentIntentId)
+        .then((result) => {
+          if (isSuccess(result.status)) {
+            if (successHandler) successHandler(result);
+          } else if (isFail(result.status)) {
+            if (failHandler) failHandler(result);
+          } else {
+            intervalId = setInterval(poll, 1800);
+          }
+        })
+        .catch(() => {
+          if (failHandler) failHandler();
+        });
+    }, 800);
+  };
 }

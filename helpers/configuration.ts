@@ -10,6 +10,8 @@ class Configuration {
   stripePublishableKey: string;
   vippsiOSPath: string;
   vippsAndroidPath: string;
+  twintiOSPath: string;
+  twintAndroidPath: string;
   platformFileSuffix: string;
   notificationHub: string;
   selectedTheme: string;
@@ -22,6 +24,8 @@ class Configuration {
     this.stripePublishableKey = getEnv('STRIPE_PUBLISHABLE_KEY');
     this.vippsiOSPath = getEnv('VIPPS_IOS_PATH');
     this.vippsAndroidPath = getEnv('VIPPS_ANDROID_PATH');
+    this.twintiOSPath = getEnv('TWINT_IOS_PATH');
+    this.twintAndroidPath = getEnv('TWINT_ANDROID_PATH');
     this.platformFileSuffix = getEnv('PLATFORM_FILE_SUFFIX');
     this.notificationHub = getEnv('NOTIFICATION_HUB');
     this.selectedTheme = getEnv('SELECTED_THEME');
