@@ -305,9 +305,18 @@ export const useCheckout = defineStore("checkout", () => {
     isPaid: Boolean;
     redirectUrl: string;
     returnUrl: string;
+    // Set for web TWINT (Confirm=false): the client must run stripe.confirmTwintPayment
+    // with this secret. Completion is verified server-side (webhook + verify polling),
+    // NOT inferred from a missing nextAction.
+    clientSecret?: string;
+    requiresClientConfirmation?: boolean;
   };
 
   const createStripePaymentIntent = async (model: StripeCreatePaymentIntent): Promise<CreatePaymentResult> => {
+    // Region-aware charge currency, derived from the store context (server-driven).
+    // Falls back to Norway's "NOK" when no region currency is available, preserving
+    // existing NO behaviour; Swiss stores expose currencyCode "CHF".
+    model.currency = model.currency || _store.currentStore?.currencyCode || "NOK";
     isProcessingPaymentPrivate.value = true;
     return new Promise((resolve, reject) => {
       stripeService()
@@ -319,15 +328,39 @@ export const useCheckout = defineStore("checkout", () => {
             return reject();
           }
 
+          // WEB TWINT (server creates the intent with Confirm=false): the intent is
+          // NOT paid yet and returns NO nextAction. We must never treat a missing
+          // nextAction as success here — that would book a free order before the
+          // customer approves in TWINT. Hand the client secret back so the caller can
+          // run stripe.confirmTwintPayment; the order completes via the backend webhook
+          // and GET /stripe/verify/{paymentIntentId} polling (the server is the truth).
+          // (Native TWINT is server-confirmed and returns a redirect, so it is excluded
+          // here and falls through to the redirect branch below.)
+          if (model.paymentMethodType === "twint" && !model.isApp) {
+            if (!result.secret) {
+              // backend returns the client secret as "secret" (not "clientSecret")
+              errorMessagePrivate.value = $i("checkoutPage_couldNotProcessPayment");
+              isProcessingPaymentPrivate.value = false;
+              return reject();
+            }
+            return resolve({
+              isPaid: false,
+              requiresClientConfirmation: true,
+              clientSecret: result.secret,
+              redirectUrl: "",
+              returnUrl: "",
+            });
+          }
+
           if (!result.nextAction) {
-            //SUCCESS
+            // CARD / native TWINT confirmed server-side: no nextAction means captured.
             return resolve({
               isPaid: true,
               redirectUrl: "",
               returnUrl: "",
             });
           } else if (result.nextAction.type === "redirect_to_url") {
-            //3D SECURE
+            //3D SECURE / hosted redirect (also native TWINT server-confirm)
             return resolve({
               isPaid: false,
               redirectUrl: result.nextAction.redirect_to_url.url,

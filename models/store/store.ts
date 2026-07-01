@@ -12,6 +12,9 @@ export class Store {
   address: Address;
   homeDeliveryFromAddress: Address;
   categories: Array<Category>;
+  // ISO-4217 charge currency for this store's region (e.g. "NOK", "CHF"), server-driven.
+  // Optional/additive: absent on legacy (NOK) responses, so consumers must default to "NOK".
+  currencyCode?: string;
   allowOrdersAfterOpeningHours: boolean;
   openingHours: Array<OpeningHour>;
   isOpenNow: boolean;

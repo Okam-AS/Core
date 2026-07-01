@@ -19,7 +19,11 @@ export class StripeService {
   public async CreatePaymentIntent(
     model: StripeCreatePaymentIntent
   ): Promise<any> {
-    model.currency = "NOK";
+    // Region-aware charge currency. The real source is the store/cart context
+    // (set in pinia/checkout.ts); this is only a safety net so a caller that
+    // never set it still sends a valid ISO-4217 code. Defaults to Norway's "NOK"
+    // to preserve existing NO behaviour — Swiss stores set "CHF" upstream.
+    model.currency = model.currency || "NOK";
     model.clientMajorVersion = 4;
     const response = await this._requestService.PostRequest(
       "/stripe/createPaymentIntent/",
