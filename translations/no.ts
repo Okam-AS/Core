@@ -171,7 +171,7 @@ export default {
   rewardMembershipModal_weNeedYourInfo: "For å bli medlem og samle bonuspoeng, trenger vi ditt navn og e-postadresse.",
   rewardMembershipModal_missingInfo: "Fyll inn fornavn og etternavn for å bli medlem",
   rewardMembershipModal_emailNotConfirmed: "Bekreft e-postadressen din for å bli medlem",
-  rewardMembershipModal_termsAcceptPrefix: "Jeg akspeterer ",
+  rewardMembershipModal_termsAcceptPrefix: "Jeg aksepterer ",
   rewardMembershipModal_termsAcceptBold: "vilkårene",
   rewardMembershipModal_termsAcceptSuffix: " for medlemskap",
   payment_processing1: "Venter svar fra betalingsleverandør...",
