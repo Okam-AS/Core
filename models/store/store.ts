@@ -35,6 +35,7 @@ export class Store {
 
   selfPickUp: boolean;
   tableDeliveryEnabled: boolean;
+  tableReservationEnabled: boolean;
   homeDeliveryEnabled: boolean;
   dineHomeDeliveryEnabled: boolean;
   woltDriveEnabled: boolean;

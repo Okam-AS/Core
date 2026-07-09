@@ -9,6 +9,8 @@ export class Category {
 
   hide: boolean;
   soldOut: boolean;
+  // Kitchen printing for the category (Okam Kassa serving); products may override per item.
+  kitchenPrintEnabled: boolean;
   published: boolean;
   startPublish: Date;
   stopPublish: Date;

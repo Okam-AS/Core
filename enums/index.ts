@@ -20,3 +20,5 @@ export { GiftcardTransactionType } from "./giftcard-transaction-type";
 export { DineHomeStatus } from './dinehome-status';
 export { KeyAccountManagerStatus } from './key-account-manager-status';
 export { OfferProposalStatus } from './offer-proposal-status';
+export { DinteroTerminalStatus } from './dintero-terminal-status';
+export { ReservationStatus } from './reservation-status';

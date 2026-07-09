@@ -129,6 +129,15 @@ export { Feedback } from "./feedback/feedback";
 export { DinteroInitResponse } from "./dintero/dintero-init-response";
 export { DinteroInitiatePaymentModel } from "./dintero/dintero-initiate-payment-model";
 
+// Dintero in-person terminal (POS)
+export { DinteroTerminalInitiateModel } from "./dintero-terminal/dintero-terminal-initiate-model";
+export { DinteroTerminalInitResponse } from "./dintero-terminal/dintero-terminal-init-response";
+export { DinteroTerminalStatusResponse } from "./dintero-terminal/dintero-terminal-status-response";
+export { DinteroTerminalRawResponse } from "./dintero-terminal/dintero-terminal-raw-response";
+export { DinteroTerminalRefundModel } from "./dintero-terminal/dintero-terminal-refund-model";
+export { DinteroTerminalOperationModel } from "./dintero-terminal/dintero-terminal-operation-model";
+export { DinteroTerminalDiagnosticsResponse } from "./dintero-terminal/dintero-terminal-diagnostics-response";
+
 // Giftcard
 export { InitiateGiftcardPurchase } from "./giftcard/initiate-giftcard-purchase";
 export { Giftcard } from "./giftcard/giftcard";
@@ -136,3 +145,9 @@ export { GiftcardTransaction } from "./giftcard/giftcard-transaction";
 export { GiftcardPurchaseValidationResponse } from "./giftcard/giftcard-purchase-validation-response";
 export { UsersGiftcardBalance } from "./giftcard/users-giftcard-balance";
 export { UsersGiftcardBalanceTransaction } from "./giftcard/users-giftcard-balance-transaction";
+export { FloorPlan, FloorPlanZone, Table, TableDeleteResult } from "./floorplan/floor-plan";
+export type { TableShape } from "./floorplan/floor-plan";
+export { Reservation, ReservationTableRef } from "./reservation/reservation";
+export { ReservationAvailability, ReservationAvailabilityDay } from "./reservation/reservation-availability";
+export { ConsumerReservationRequest, ReservationConfirmation, ReservationPublic, AdminReservationPayload } from "./reservation/reservation-request";
+export { ReservationSettings, ReservationDayHours, ReservationDateOverride } from "./reservation/reservation-settings";

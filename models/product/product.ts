@@ -15,6 +15,9 @@ export class Product {
 
   productVariants: Array<ProductVariant>;
   productVariantEnabled: boolean;
+  // Kitchen-print override (Okam Kassa serving): null/undefined inherits the flag of the
+  // category the product is picked from; true/false forces printing on/off.
+  kitchenPrintEnabled?: boolean;
   errorMessage: string;
   selectedOptionsAmount: number;
   selectedOptionNames: string;
