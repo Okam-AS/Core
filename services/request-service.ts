@@ -25,15 +25,15 @@ export class RequestService {
     return task;
   }
 
-  public DeleteRequest(path: string): Promise<any> {
-    const request = this.DefaultRequest(path, undefined, HttpMethod.DELETE);
+  public DeleteRequest(path: string, extraHeaders?: Record<string, string>): Promise<any> {
+    const request = this.DefaultRequest(path, undefined, HttpMethod.DELETE, extraHeaders);
     return this._httpModule.httpClient(request).then((response) => {
       return response;
     });
   }
 
-  public GetRequest(path: string): Promise<any> {
-    const request = this.DefaultRequest(path, false, HttpMethod.GET);
+  public GetRequest(path: string, extraHeaders?: Record<string, string>): Promise<any> {
+    const request = this.DefaultRequest(path, false, HttpMethod.GET, extraHeaders);
     return this._httpModule.httpClient(request).then((response) => {
       return response;
     });
@@ -56,8 +56,8 @@ export class RequestService {
     });
   }
 
-  public PostRequest(path: string, payload?: any): Promise<any> {
-    const request = this.DefaultRequest(path, payload, HttpMethod.POST);
+  public PostRequest(path: string, payload?: any, extraHeaders?: Record<string, string>): Promise<any> {
+    const request = this.DefaultRequest(path, payload, HttpMethod.POST, extraHeaders);
     return this._httpModule.httpClient(request).then((response) => {
       return response;
     }).catch((error) => {
@@ -65,15 +65,15 @@ export class RequestService {
     });
   }
 
-  public PutRequest(path: string, payload?: any): Promise<any> {
-    const request = this.DefaultRequest(path, payload, HttpMethod.PUT);
+  public PutRequest(path: string, payload?: any, extraHeaders?: Record<string, string>): Promise<any> {
+    const request = this.DefaultRequest(path, payload, HttpMethod.PUT, extraHeaders);
     return this._httpModule.httpClient(request).then((response) => {
       return response;
     });
   }
 
-  public PatchRequest(path: string, payload?: any): Promise<any> {
-    const request = this.DefaultRequest(path, payload, HttpMethod.PATCH);
+  public PatchRequest(path: string, payload?: any, extraHeaders?: Record<string, string>): Promise<any> {
+    const request = this.DefaultRequest(path, payload, HttpMethod.PATCH, extraHeaders);
     return this._httpModule.httpClient(request).then((response) => {
       return response;
     });
@@ -120,11 +120,11 @@ export class RequestService {
     }
   }
 
-  private DefaultRequest(path: string, payload: any, method: HttpMethod): any {
-    return this.BuildRequest(path, method, payload ? JSON.stringify(payload) : "", this._coreInitializer.bearerToken);
+  private DefaultRequest(path: string, payload: any, method: HttpMethod, extraHeaders?: Record<string, string>): any {
+    return this.BuildRequest(path, method, payload ? JSON.stringify(payload) : "", this._coreInitializer.bearerToken, extraHeaders);
   }
 
-  private BuildRequest(path: string, method: HttpMethod, content?: string, bearerToken?: string): any {
+  private BuildRequest(path: string, method: HttpMethod, content?: string, bearerToken?: string, extraHeaders?: Record<string, string>): any {
     const request = { headers: {}, data: null };
     request[HttpProperty.Url] = $config.okamApiBaseUrl + path;
     request[HttpProperty.Method] = method;
@@ -133,6 +133,14 @@ export class RequestService {
     request.headers[HttpProperty.ClientAppVersion] = $config.version;
     request.headers[HttpProperty.ClientFeatures] = "kravia";
     request.headers[HttpProperty.SelectedTheme] = $config.selectedTheme || "";
+
+    if (extraHeaders) {
+      for (const key in extraHeaders) {
+        if (Object.prototype.hasOwnProperty.call(extraHeaders, key)) {
+          request.headers[key] = extraHeaders[key];
+        }
+      }
+    }
 
     if (content) {
       request.headers[HttpProperty.ContentType] = "application/json; charset=utf-8";

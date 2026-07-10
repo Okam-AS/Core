@@ -39,6 +39,8 @@ export class Store {
   dineHomeDeliveryEnabled: boolean;
   woltDriveEnabled: boolean;
   woltDriveIsConfigured: boolean;
+  tableReservationEnabled: boolean;
+  surfboardEnabled: boolean;
 
   payment: StorePayment;
 

@@ -39,4 +39,8 @@ export class Product {
 
   tableAdditionalAmount: number;
   deliveryAdditionalAmount: number;
+
+  goodsGroupId: number | null;
+  kitchenPrintEnabled: boolean | null;
+  allergenIds: Array<number>;
 }

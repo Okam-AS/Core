@@ -21,6 +21,8 @@ export class Category {
 
   storeId: number;
 
+  kitchenPrintEnabled: boolean | null;
+
   hideFromDeliveryTypes: Array<DeliveryType>;
 
   publishRules: Array<CategoryPublishRule>;

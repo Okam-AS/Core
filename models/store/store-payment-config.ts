@@ -9,4 +9,6 @@ export class StorePaymentConfig {
   dinteroKlarnaAvailable: boolean;
   dinteroBilliePrice: string;
   dinteroKlarnaPrice: string;
+  surfboardAvailable: boolean;
+  surfboardPrice: string;
 }

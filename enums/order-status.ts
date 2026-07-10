@@ -1,4 +1,5 @@
 export enum OrderStatus {
+    OpenCheck = 'OpenCheck',
     Accepted = 'Accepted',
     Processing = 'Processing',
     ReadyForPickup = 'ReadyForPickup',
