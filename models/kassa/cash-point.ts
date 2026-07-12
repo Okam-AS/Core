@@ -1,3 +1,5 @@
+import { TerminalProvider } from '../../enums';
+
 export class CashPoint {
   cashPointId: number;
   storeId: number;
@@ -9,6 +11,7 @@ export class CashPoint {
   dinteroProfileId: string;
   surfboardTerminalId: string;
   surfboardAutoPrintReceipt: boolean;
+  terminalProvider: TerminalProvider;
   isActive: boolean;
   grandTotalSales: number;
   grandTotalReturns: number;
@@ -28,6 +31,7 @@ export class CashPointUpsertModel {
   dinteroProfileId: string;
   surfboardTerminalId: string;
   surfboardAutoPrintReceipt: boolean;
+  terminalProvider: TerminalProvider;
   isActive: boolean;
   maxCashDifference: number;
 }

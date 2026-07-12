@@ -25,9 +25,11 @@ export { OfferProposalStatus } from './offer-proposal-status';
 // Kassa (POS) / fiscal
 export { OperatorRoleLevel } from './operator-role-level';
 export { OrderLineItemStatus } from './order-line-item-status';
+export { KitchenTicketSource } from './kitchen-ticket-source';
 export { OrderPaymentStatus } from './order-payment-status';
 export { PosSettlementStatus } from './pos-settlement-status';
 export { CashDrawerTransactionType } from './cash-drawer-transaction-type';
+export { TerminalProvider } from './terminal-provider';
 export { CheckSplitMode } from './check-split-mode';
 export { KassaReceiptType } from './kassa-receipt-type';
 export { KassaReceiptSeries } from './kassa-receipt-series';

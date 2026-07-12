@@ -106,17 +106,21 @@ export class RequestService {
     if (typeof response === "undefined" || !response) {
       return { error: "No response received" };
     }
-    const statusCode = $config.isNativeScript ? response.statusCode : response.status;
+    // PostRequest resolves a rejected (non-2xx) request to the axios error object, whose real
+    // status and body live under `.response`. Unwrap so the backend AppException message is read
+    // whether we were handed the raw response, an axios error, or an already-unwrapped response.
+    const actual = (!$config.isNativeScript && response.response) ? response.response : response;
+    const statusCode = $config.isNativeScript ? actual.statusCode : actual.status;
 
     try {
-      const parsedResponse = $config.isNativeScript && response.content ? response.content.toJSON() : response.data;
+      const parsedResponse = $config.isNativeScript && actual.content ? actual.content.toJSON() : actual.data;
       if (statusCode === 200) {
         return { data: parsedResponse };
       } else {
-        return { error: parsedResponse?.message || "Failed to parse response" };
+        return { error: (parsedResponse && parsedResponse.message) || response.message || "Failed to parse response" };
       }
     } catch (e) {
-      return { error: "Failed to parse response" };
+      return { error: response.message || "Failed to parse response" };
     }
   }
 

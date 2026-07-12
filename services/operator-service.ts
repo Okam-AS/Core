@@ -40,6 +40,17 @@ export class OperatorService {
     return parsed;
   }
 
+  // Restores the operator session tied to operatorSessionId (X-Operator-Session) without a PIN,
+  // e.g. after a page refresh. Rejects (401) when the session is missing / ended / expired.
+  public async GetSession(): Promise<OperatorSessionModel> {
+    const response = await this._requestService.GetRequest('/Operator/session', this.sessionHeaders());
+    const parsed = this._requestService.TryParseResponse(response);
+    if (parsed === undefined) {
+      throw new Error('Failed to get operator session');
+    }
+    return parsed;
+  }
+
   public async Create(model: OperatorUpsertModel): Promise<OperatorModel> {
     const response = await this._requestService.PostRequest('/Operator', model);
     const parsed = this._requestService.TryParseResponse(response);
@@ -70,20 +81,20 @@ export class OperatorService {
 
   public async Login(request: OperatorLoginRequest): Promise<OperatorSessionModel> {
     const response = await this._requestService.PostRequest('/Operator/login', request);
-    const parsed = this._requestService.TryParseResponse(response);
-    if (parsed === undefined) {
-      throw new Error('Failed to log in operator');
+    const { data, error } = this._requestService.TryParseResponseWithError(response);
+    if (error) {
+      throw new Error(error);
     }
-    return parsed;
+    return data;
   }
 
   public async Switch(request: OperatorLoginRequest): Promise<OperatorSessionModel> {
     const response = await this._requestService.PostRequest('/Operator/switch', request, this.sessionHeaders());
-    const parsed = this._requestService.TryParseResponse(response);
-    if (parsed === undefined) {
-      throw new Error('Failed to switch operator');
+    const { data, error } = this._requestService.TryParseResponseWithError(response);
+    if (error) {
+      throw new Error(error);
     }
-    return parsed;
+    return data;
   }
 
   public async Logout(): Promise<boolean> {

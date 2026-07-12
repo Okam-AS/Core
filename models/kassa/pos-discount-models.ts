@@ -1,12 +1,12 @@
 export class ApplyLineDiscountRequest {
   lineId: string;
-  discountReasonId: number;
+  regularDiscountId: string;
   approverOperatorId: number;
   pin: string;
 }
 
 export class ApplyOrderDiscountRequest {
-  discountReasonId: number;
+  regularDiscountId: string;
   approverOperatorId: number;
   pin: string;
 }

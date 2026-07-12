@@ -1,6 +1,6 @@
 import { defineStore } from "pinia";
 import { ICoreInitializer } from "../interfaces";
-import { ConfigService, UserService, StoreService, FeedbackService, RewardService, GiftcardService, CartService, CategoryService, PersistenceService, PaymentService, DiscountService, OrderService, StripeService, VippsService, NotificationService, LogService, ProductService, DinteroService, PlaceService, SurfboardService, AllergenService, CashPointService, DiscountReasonService, GoodsGroupService, OperatorService, CashDrawerService, PosService, OpenCheckService, JournalService, ReportService, SaftService, TableService, ReservationService, DinteroTerminalService } from "../services";
+import { ConfigService, UserService, StoreService, FeedbackService, RewardService, GiftcardService, CartService, CategoryService, PersistenceService, PaymentService, DiscountService, OrderService, StripeService, VippsService, NotificationService, LogService, ProductService, DinteroService, PlaceService, SurfboardService, AllergenService, CashPointService, GoodsGroupService, OperatorService, CashDrawerService, PosService, OpenCheckService, KitchenService, JournalService, ReportService, SaftService, TableService, ReservationService, DinteroTerminalService } from "../services";
 import { ref, computed } from "vue";
 
 export const useServices = defineStore("services", () => {
@@ -60,12 +60,12 @@ export const useServices = defineStore("services", () => {
   const surfboardService = () => new SurfboardService(coreInitializer.value);
   const allergenService = () => new AllergenService(coreInitializer.value);
   const cashPointService = () => new CashPointService(coreInitializer.value);
-  const discountReasonService = () => new DiscountReasonService(coreInitializer.value);
   const goodsGroupService = () => new GoodsGroupService(coreInitializer.value);
   const operatorService = () => new OperatorService(coreInitializer.value);
   const cashDrawerService = () => new CashDrawerService(coreInitializer.value);
   const posService = () => new PosService(coreInitializer.value);
   const openCheckService = () => new OpenCheckService(coreInitializer.value);
+  const kitchenService = () => new KitchenService(coreInitializer.value);
   const journalService = () => new JournalService(coreInitializer.value);
   const reportService = () => new ReportService(coreInitializer.value);
   const saftService = () => new SaftService(coreInitializer.value);
@@ -100,12 +100,12 @@ export const useServices = defineStore("services", () => {
     surfboardService,
     allergenService,
     cashPointService,
-    discountReasonService,
     goodsGroupService,
     operatorService,
     cashDrawerService,
     posService,
     openCheckService,
+    kitchenService,
     journalService,
     reportService,
     saftService,

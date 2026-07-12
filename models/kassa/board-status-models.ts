@@ -38,6 +38,7 @@ export class BoardOpenCheckModel {
   finalAmount: number;
   created: Date | null;
   lineCount: number;
+  comment: string | null;
   overallStatus: OrderLineItemStatus | null;
   lines: Array<BoardLineStatusModel>;
 }
@@ -48,5 +49,6 @@ export class BoardLineStatusModel {
   quantity: number;
   courseSequence: number | null;
   status: OrderLineItemStatus | null;
+  notes: string | null;
   allergens: Array<string>;
 }

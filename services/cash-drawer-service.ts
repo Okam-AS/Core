@@ -25,20 +25,35 @@ export class CashDrawerService {
 
   public async BeginDay(cashPointId: number, request: BeginDayRequest): Promise<CashDrawerSession> {
     const response = await this._requestService.PostRequest('/cashdrawer/' + cashPointId + '/begin-day', request, this.sessionHeaders());
-    const parsed = this._requestService.TryParseResponse(response);
-    if (parsed === undefined) {
-      throw new Error('Failed to begin day');
+    const { data, error } = this._requestService.TryParseResponseWithError(response);
+    if (error) {
+      throw new Error(error);
     }
-    return parsed;
+    return data;
+  }
+
+  // Returns the cash point's open trading day, or null when no day is open (HTTP 404). Used at POS
+  // startup to restore the open-day state without re-opening the day.
+  public async GetCurrentDay(cashPointId: number): Promise<CashDrawerSession | null> {
+    try {
+      const response = await this._requestService.GetRequest('/cashdrawer/' + cashPointId + '/current', this.sessionHeaders());
+      const parsed = this._requestService.TryParseResponse(response);
+      return parsed === undefined ? null : parsed;
+    } catch (e) {
+      if (e && e.response && e.response.status === 404) {
+        return null;
+      }
+      throw e;
+    }
   }
 
   public async RecordTransaction(sessionId: number, request: CashDrawerTransactionRequest): Promise<CashDrawerTransaction> {
     const response = await this._requestService.PostRequest('/cashdrawer/' + sessionId + '/transaction', request, this.sessionHeaders());
-    const parsed = this._requestService.TryParseResponse(response);
-    if (parsed === undefined) {
-      throw new Error('Failed to record cash drawer transaction');
+    const { data, error } = this._requestService.TryParseResponseWithError(response);
+    if (error) {
+      throw new Error(error);
     }
-    return parsed;
+    return data;
   }
 
   public async EodSummary(sessionId: number, countedAmount?: number, bankDepositAmount?: number): Promise<EodSummaryModel> {
@@ -63,10 +78,10 @@ export class CashDrawerService {
 
   public async EndDay(sessionId: number, request: EndDayRequest): Promise<EodSummaryModel> {
     const response = await this._requestService.PostRequest('/cashdrawer/' + sessionId + '/end-day', request, this.sessionHeaders());
-    const parsed = this._requestService.TryParseResponse(response);
-    if (parsed === undefined) {
-      throw new Error('Failed to end day');
+    const { data, error } = this._requestService.TryParseResponseWithError(response);
+    if (error) {
+      throw new Error(error);
     }
-    return parsed;
+    return data;
   }
 }

@@ -32,6 +32,15 @@ export class CardTimeoutRequest {
   reason: string;
 }
 
+// Refunds a finalized cash sale (RETREC + cash out of the drawer). Requires a Leder-level PIN.
+export class CashRefundRequest {
+  cashPointId: number;
+  amount: number | null;
+  reason: string;
+  approverOperatorId: number;
+  pin: string;
+}
+
 // Anonymous response of POST /pos/payment/card/initiate (PascalCase on the wire under the
 // Newtonsoft default resolver).
 export class CardInitiateResult {

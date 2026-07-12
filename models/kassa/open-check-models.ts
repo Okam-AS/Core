@@ -53,6 +53,9 @@ export class CheckModel {
   couverts: number | null;
   status: OrderStatus;
   deliveryType: DeliveryType;
+  // Set once the sale is finalised (e.g. a card payment auto-finalised by the terminal webhook);
+  // the POS polls this after a card tap and then fetches the receipt by journal entry id.
+  journalEntryId: number | null;
   itemsAmount: number;
   finalAmount: number;
   created: Date | null;
@@ -75,6 +78,9 @@ export class CheckLineModel {
   courseSequence: number | null;
   status: OrderLineItemStatus | null;
   isOpenPrice: boolean;
+  // Whether this line prints to the kitchen (product ?? category flag, resolved server-side; open-price
+  // lines default true). The POS "Send til kjøkken (N)" count includes only kitchen-relevant "Ny" lines.
+  kitchenPrintEnabled: boolean;
   options: Array<CheckLineOptionModel>;
 }
 

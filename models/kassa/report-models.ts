@@ -77,3 +77,11 @@ export class ZReportModel extends XReportModel {
   signature: string;
   keyVersion: string;
 }
+
+// Paged read-back history of persisted Z reports for a cash point.
+export class ZReportPageModel {
+  page: number;
+  pageSize: number;
+  totalCount: number;
+  reports: Array<ZReportModel>;
+}

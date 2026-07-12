@@ -6,6 +6,7 @@ import {
   CardCaptureRequest,
   CardVoidRequest,
   CardRefundRequest,
+  CashRefundRequest,
   CardTimeoutRequest,
   CardInitiateResult,
   CopyReceiptRequest,
@@ -21,7 +22,8 @@ import {
   PosReceiptModel,
   TerminalCaptureResult,
   TerminalVoidResult,
-  TerminalRefundResult
+  TerminalRefundResult,
+  Category
 } from '../models';
 
 // POS sale / card payment / settlement / receipt operations (PosController, base /pos). Every
@@ -43,8 +45,19 @@ export class PosService {
 
   public async PayCash(request: CashSaleRequest): Promise<PosReceiptModel> {
     const response = await this._requestService.PostRequest('/pos/payment/cash', request, this.sessionHeaders());
+    const { data, error } = this._requestService.TryParseResponseWithError(response);
+    if (error) { throw new Error(error); }
+    return data;
+  }
+
+  // --- Catalog ---
+
+  // Whole-store product catalog for the sales grid (categories with product-list items + variants).
+  // Store read access only — no operator session, so the grid can load before PIN login.
+  public async GetCatalog(storeId: number): Promise<Array<Category>> {
+    const response = await this._requestService.GetRequest('/pos/catalog/' + storeId);
     const parsed = this._requestService.TryParseResponse(response);
-    if (parsed === undefined) { throw new Error('Failed to take cash payment'); }
+    if (parsed === undefined) { throw new Error('Failed to load POS catalog'); }
     return parsed;
   }
 
@@ -90,9 +103,9 @@ export class PosService {
   // Starts an in-person card payment; poll status via the terminal provider or wait for the callback.
   public async InitiateCard(request: CardInitiateRequest): Promise<CardInitiateResult> {
     const response = await this._requestService.PostRequest('/pos/payment/card/initiate', request, this.sessionHeaders());
-    const parsed = this._requestService.TryParseResponse(response);
-    if (parsed === undefined) { throw new Error('Failed to initiate card payment'); }
-    return parsed;
+    const { data, error } = this._requestService.TryParseResponseWithError(response);
+    if (error) { throw new Error(error); }
+    return data;
   }
 
   public async CaptureCard(transactionId: string, request: CardCaptureRequest): Promise<TerminalCaptureResult> {
@@ -117,6 +130,14 @@ export class PosService {
     return parsed;
   }
 
+  // Refunds a finalized cash sale (RETREC + cash out of the drawer). Requires a Leder-level PIN.
+  public async RefundCash(journalEntryId: number, request: CashRefundRequest): Promise<PosReceiptModel> {
+    const response = await this._requestService.PostRequest('/pos/payment/cash/' + journalEntryId + '/refund', request, this.sessionHeaders());
+    const { data, error } = this._requestService.TryParseResponseWithError(response);
+    if (error) { throw new Error(error); }
+    return data;
+  }
+
   // Records a terminal timeout / offline and voids any authorization. Returns true on success.
   public async TerminalTimeout(transactionId: string, request: CardTimeoutRequest): Promise<boolean> {
     const response = await this._requestService.PostRequest('/pos/payment/card/' + transactionId + '/timeout', request, this.sessionHeaders());
@@ -127,29 +148,38 @@ export class PosService {
 
   public async OpenSettlement(request: SettlementOpenRequest): Promise<SettlementModel> {
     const response = await this._requestService.PostRequest('/pos/settlement/open', request, this.sessionHeaders());
+    const { data, error } = this._requestService.TryParseResponseWithError(response);
+    if (error) { throw new Error(error); }
+    return data;
+  }
+
+  // Resumes an in-progress (split) settlement after a refresh. Rejects when the settlement is not
+  // found or the operator session is not on its cash point / store.
+  public async GetSettlement(settlementId: string): Promise<SettlementModel> {
+    const response = await this._requestService.GetRequest('/pos/settlement/' + settlementId, this.sessionHeaders());
     const parsed = this._requestService.TryParseResponse(response);
-    if (parsed === undefined) { throw new Error('Failed to open settlement'); }
+    if (parsed === undefined) { throw new Error('Failed to get settlement'); }
     return parsed;
   }
 
   public async AddSettlementAllocation(settlementId: string, request: SettlementAllocationRequest): Promise<SettlementAllocationResult> {
     const response = await this._requestService.PostRequest('/pos/settlement/' + settlementId + '/allocation', request, this.sessionHeaders());
-    const parsed = this._requestService.TryParseResponse(response);
-    if (parsed === undefined) { throw new Error('Failed to add settlement allocation'); }
-    return parsed;
+    const { data, error } = this._requestService.TryParseResponseWithError(response);
+    if (error) { throw new Error(error); }
+    return data;
   }
 
   public async FinalizeSettlement(settlementId: string, request: SettlementActionRequest): Promise<PosReceiptModel> {
     const response = await this._requestService.PostRequest('/pos/settlement/' + settlementId + '/finalize', request, this.sessionHeaders());
-    const parsed = this._requestService.TryParseResponse(response);
-    if (parsed === undefined) { throw new Error('Failed to finalize settlement'); }
-    return parsed;
+    const { data, error } = this._requestService.TryParseResponseWithError(response);
+    if (error) { throw new Error(error); }
+    return data;
   }
 
   public async AbortSettlement(settlementId: string, request: SettlementActionRequest): Promise<SettlementModel> {
     const response = await this._requestService.PostRequest('/pos/settlement/' + settlementId + '/abort', request, this.sessionHeaders());
-    const parsed = this._requestService.TryParseResponse(response);
-    if (parsed === undefined) { throw new Error('Failed to abort settlement'); }
-    return parsed;
+    const { data, error } = this._requestService.TryParseResponseWithError(response);
+    if (error) { throw new Error(error); }
+    return data;
   }
 }

@@ -1,5 +1,5 @@
 import { Store, StoreTip, StoreRegistration, OpeningHour, Address, StoreUserSetting, BrregData, StorePayment, StoreFees, CategorySearchOptions, StoreOverviewResponseModel, StorePaymentConfig, SurfboardStoreConfiguration } from '../models';
-import { HttpMethod } from '../enums';
+import { HttpMethod, TerminalProvider } from '../enums';
 import { ICoreInitializer } from '../interfaces';
 import { RequestService, UserService } from './';
 
@@ -286,6 +286,12 @@ export class StoreService {
     const parsedResponse = this._requestService.TryParseResponse(response);
     if (parsedResponse === undefined) { throw new Error('Failed to get store payment config'); }
     return parsedResponse;
+  }
+
+  public async SetTerminalProvider (storeId: number, terminalProvider: TerminalProvider): Promise<boolean> {
+    const response = await this._requestService.PostRequest('/stores/' + storeId + '/terminal-provider', { terminalProvider })
+    const parsedResponse = this._requestService.TryParseResponse(response)
+    return parsedResponse !== undefined
   }
 
   public async UpdateSurfboardConfig (storeId: number, options: {
