@@ -32,6 +32,8 @@ export class PosReceiptModel {
   isTraining: boolean;
   isVoid: boolean;
   referencedReceiptNumber: number | null;
+  // The § 5-3-7 reason for a return, shown on the RETREC receipt. Null on non-return receipts.
+  returnReason: string | null;
   signature: string;
   keyVersion: string;
 }
@@ -60,4 +62,7 @@ export class PosReceiptTaxLineModel {
 export class PosReceiptPaymentLineModel {
   paymentType: PaymentType;
   amount: number;
+  // The terminal payment transaction behind a card line, when present, so a finalized card sale can
+  // be refunded straight from a looked-up receipt. Null for cash and other non-terminal means.
+  paymentTransactionId: string | null;
 }

@@ -1,4 +1,4 @@
-import { Address, Category, DeliveryMethod, OpeningHour, User, StorePayment, StoreTip, RewardProgram, DinteroStoreConfiguration } from "../../models";
+import { Address, Category, DeliveryMethod, OpeningHour, SpecialOpeningHour, User, StorePayment, StoreTip, RewardProgram, DinteroStoreConfiguration } from "../../models";
 export class Store {
   id: number;
   name: string;
@@ -14,6 +14,7 @@ export class Store {
   categories: Array<Category>;
   allowOrdersAfterOpeningHours: boolean;
   openingHours: Array<OpeningHour>;
+  specialOpeningHours: Array<SpecialOpeningHour>;
   isOpenNow: boolean;
   vat: number;
   admins: Array<User>;

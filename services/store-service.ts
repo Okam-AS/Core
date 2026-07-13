@@ -1,4 +1,4 @@
-import { Store, StoreTip, StoreRegistration, OpeningHour, Address, StoreUserSetting, BrregData, StorePayment, StoreFees, CategorySearchOptions, StoreOverviewResponseModel, StorePaymentConfig, SurfboardStoreConfiguration } from '../models';
+import { Store, StoreTip, StoreRegistration, OpeningHour, SpecialOpeningHour, SpecialOpeningHourAdmin, Address, StoreUserSetting, BrregData, StorePayment, StoreFees, CategorySearchOptions, StoreOverviewResponseModel, StorePaymentConfig, SurfboardStoreConfiguration } from '../models';
 import { HttpMethod, TerminalProvider } from '../enums';
 import { ICoreInitializer } from '../interfaces';
 import { RequestService, UserService } from './';
@@ -64,6 +64,32 @@ export class StoreService {
 
   public async UpdateOpeningHours (storeId: number, openingHours: Array<OpeningHour>): Promise<boolean> {
     const response = await this._requestService.PutRequest('/stores/' + storeId + '/openinghours', { openingHours });
+    const parsedResponse = this._requestService.TryParseResponse(response);
+    return parsedResponse !== undefined;
+  }
+
+  // Lists the store's special opening days for the admin UI, including the internal staff note
+  // (the consumer-facing Store payload omits it).
+  public async GetSpecialOpeningHours (storeId: number): Promise<Array<SpecialOpeningHourAdmin>> {
+    const response = await this._requestService.GetRequest('/stores/' + storeId + '/specialopeninghours');
+    return this._requestService.TryParseResponse(response) || [];
+  }
+
+  // Adds (or replaces, per date) a special opening day: a dated override that is either closed or has
+  // a manual open/close time (HH:mm; the backend rejects other formats). Returns the created override.
+  public async AddSpecialOpeningHour (storeId: number, special: SpecialOpeningHourAdmin): Promise<SpecialOpeningHourAdmin> {
+    const response = await this._requestService.PostRequest('/stores/' + storeId + '/specialopeninghours', special);
+    return this._requestService.TryParseResponse(response);
+  }
+
+  // Adds the same override (closed, or open with a HH:mm time) to several dates at once.
+  public async AddSpecialOpeningHoursBulk (storeId: number, model: { dates: Array<string>; open: boolean; openingTime: string | null; closingTime: string | null; note: string }): Promise<Array<SpecialOpeningHourAdmin>> {
+    const response = await this._requestService.PostRequest('/stores/' + storeId + '/specialopeninghours/bulk', model);
+    return this._requestService.TryParseResponse(response) || [];
+  }
+
+  public async DeleteSpecialOpeningHour (storeId: number, specialOpeningHourId: string): Promise<boolean> {
+    const response = await this._requestService.DeleteRequest('/stores/' + storeId + '/specialopeninghours/' + specialOpeningHourId);
     const parsedResponse = this._requestService.TryParseResponse(response);
     return parsedResponse !== undefined;
   }

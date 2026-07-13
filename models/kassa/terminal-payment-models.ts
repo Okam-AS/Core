@@ -35,6 +35,10 @@ export class TerminalRefundResult {
   refundedAmount: number;
   transactionStatus: string;
   returnReceipt: PosReceiptModel | null;
+  // The return transaction to poll for a still-pending refund. Populated for an unreferenced (open)
+  // card return, where the server created a fresh transaction the client does not yet know; null for
+  // a referenced refund, where the client already holds the sale transaction id.
+  paymentTransactionId: string | null;
 }
 
 // Normalized outcome of a terminal provider operation (get / capture / void / refund).

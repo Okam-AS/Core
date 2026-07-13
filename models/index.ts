@@ -9,6 +9,7 @@ export { UpdateCompanyInfoModel } from './cart/update-company-info-model';
 // Store
 export { Store } from './store/store';
 export { OpeningHour } from './store/opening-hour';
+export { SpecialOpeningHour, SpecialOpeningHourAdmin } from './store/special-opening-hour';
 export { DeliveryMethod } from './store/delivery-method';
 export { BrregData } from './store/brreg-data';
 export { StoreRegistration } from './store/store-registration';
@@ -171,9 +172,10 @@ export { TerminalReconcileResult, TerminalCaptureResult, TerminalVoidResult, Ter
 export { SettlementOpenRequest, SettlementAllocationRequest, SettlementActionRequest, SettlementAllocationResult, SettlementModel, SettlementAllocationModel } from './kassa/settlement-models';
 export { CopyReceiptRequest, ProvisionalReceiptRequest, TrainingReceiptRequest, ReceiptSmsRequest, ReceiptSmsResult } from './kassa/receipt-request-models';
 export { PosReceiptModel, PosReceiptLineModel, PosReceiptTaxLineModel, PosReceiptPaymentLineModel } from './kassa/pos-receipt-models';
+export { UnreferencedReturnLineModel, UnreferencedCashReturnRequest, UnreferencedCardReturnRequest } from './kassa/unreferenced-return-models';
 
 // Kassa (POS) — open check / board
-export { OpenCheckRequest, AddCheckLineRequest, FireCourseRequest, MoveCheckRequest, MergeCheckRequest, SetCouvertsRequest, ResumeCheckRequest, CheckModel, CheckLineModel, CheckLineOptionModel, FireCourseResult } from './kassa/open-check-models';
+export { OpenCheckRequest, AddCheckLineRequest, FireCourseRequest, MoveCheckRequest, MergeCheckRequest, SetCouvertsRequest, SetDeliveryTypeRequest, ResumeCheckRequest, CheckModel, CheckLineModel, CheckLineOptionModel, FireCourseResult } from './kassa/open-check-models';
 export { ApplyLineDiscountRequest, ApplyOrderDiscountRequest, VoidCheckRequest } from './kassa/pos-discount-models';
 export { CheckSplitRequest, CheckSplitPartRequest, CheckSplitModel, CheckSplitPartModel, CheckSplitTaxModel } from './kassa/check-split-models';
 export { BoardStatusModel, BoardTableModel, BoardReservationModel, BoardOpenCheckModel, BoardLineStatusModel } from './kassa/board-status-models';
@@ -182,7 +184,7 @@ export { KitchenBoardModel, KitchenTicketModel, KitchenTicketLineModel, KitchenT
 // Kassa (POS) — journal / reports / SAF-T
 export { JournalLine, JournalTaxLine, JournalPaymentLine, JournalEntry, JournalEntryPageModel, JournalSignatureRecord } from './kassa/journal-models';
 export { JournalVerificationIssue, JournalVerificationResult } from './kassa/journal-verification-models';
-export { PaymentMeansTotal, VatRateTotal, OperatorTotal, XReportModel, ZReportModel, ZReportPageModel } from './kassa/report-models';
+export { PaymentMeansTotal, GoodsGroupTotal, VatRateTotal, OperatorTotal, XReportModel, ZReportModel, ZReportPageModel } from './kassa/report-models';
 export { SaftEmailExportModel, SaftEmailExportResult } from './kassa/saft-export-models';
 
 // Floor plan / reservations

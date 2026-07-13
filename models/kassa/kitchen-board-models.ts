@@ -35,6 +35,9 @@ export class KitchenTicketLineModel {
   quantity: number;
   courseSequence: number | null;
   status: OrderLineItemStatus | null;
+  // Seat (guest) the line belongs to; descriptive, helps a runner deliver the plate to the right
+  // guest. Null when the line is not seat-tagged.
+  seatNumber: number | null;
   notes: string | null;
   allergens: Array<string>;
   options: Array<KitchenTicketLineOptionModel>;

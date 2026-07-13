@@ -12,6 +12,9 @@ export class AddCheckLineRequest {
   quantity: number;
   notes: string;
   courseSequence: number | null;
+  // Seat (guest) the line belongs to (1-99); descriptive, used to prefill a by-item split. Null
+  // when the line is not seat-tagged.
+  seatNumber: number | null;
   productId: string | null;
   selectedOptionIds: Array<string>;
   isOpenPrice: boolean;
@@ -37,6 +40,12 @@ export class MergeCheckRequest {
 
 export class SetCouvertsRequest {
   couverts: number;
+}
+
+// Switches the check between the POS VAT contexts (eat-in 'TableDelivery' / take-away
+// 'SelfPickup'); the server re-prices every line for the new context.
+export class SetDeliveryTypeRequest {
+  deliveryType: string;
 }
 
 export class ResumeCheckRequest {
@@ -76,8 +85,14 @@ export class CheckLineModel {
   tax: number;
   depositAmount: number;
   courseSequence: number | null;
+  // Seat (guest) the line belongs to; descriptive metadata the POS uses to prefill a by-item
+  // split. Null = unassigned.
+  seatNumber: number | null;
   status: OrderLineItemStatus | null;
   isOpenPrice: boolean;
+  // The goods group (SAF-T artGroupID) the line is classified under (own group for open-price lines,
+  // the product's otherwise), so a bill row can become an unreferenced-return line without re-asking.
+  goodsGroupId: number | null;
   // Whether this line prints to the kitchen (product ?? category flag, resolved server-side; open-price
   // lines default true). The POS "Send til kjøkken (N)" count includes only kitchen-relevant "Ny" lines.
   kitchenPrintEnabled: boolean;

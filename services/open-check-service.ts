@@ -7,6 +7,7 @@ import {
   MoveCheckRequest,
   MergeCheckRequest,
   SetCouvertsRequest,
+  SetDeliveryTypeRequest,
   ResumeCheckRequest,
   CheckModel,
   FireCourseResult,
@@ -89,6 +90,16 @@ export class OpenCheckService {
     return data;
   }
 
+  // Sets or clears a line's seat (the guest at the table it belongs to), a 1-99 descriptive tag the
+  // POS uses to prefill a by-item split. Descriptive only — not a sale (nothing is journalled) — and
+  // it does not change the line's kitchen status. Null clears the seat.
+  public async SetLineSeat(orderId: number, lineId: string, seatNumber: number | null): Promise<CheckModel> {
+    const response = await this._requestService.PostRequest('/pos/check/' + orderId + '/line/' + lineId + '/seat', { seatNumber }, this.sessionHeaders());
+    const { data, error } = this._requestService.TryParseResponseWithError(response);
+    if (error) { throw new Error(error); }
+    return data;
+  }
+
   public async FireLine(orderId: number, lineId: string, request: FireCourseRequest): Promise<FireCourseResult> {
     const response = await this._requestService.PostRequest('/pos/check/' + orderId + '/line/' + lineId + '/fire', request, this.sessionHeaders());
     const { data, error } = this._requestService.TryParseResponseWithError(response);
@@ -112,6 +123,15 @@ export class OpenCheckService {
 
   public async SetCouverts(orderId: number, request: SetCouvertsRequest): Promise<CheckModel> {
     const response = await this._requestService.PostRequest('/pos/check/' + orderId + '/couverts', request, this.sessionHeaders());
+    const { data, error } = this._requestService.TryParseResponseWithError(response);
+    if (error) { throw new Error(error); }
+    return data;
+  }
+
+  // Switches the check between eat-in and take-away; the server re-prices every line for the new
+  // VAT context and returns the updated check.
+  public async SetDeliveryType(orderId: number, request: SetDeliveryTypeRequest): Promise<CheckModel> {
+    const response = await this._requestService.PostRequest('/pos/check/' + orderId + '/delivery-type', request, this.sessionHeaders());
     const { data, error } = this._requestService.TryParseResponseWithError(response);
     if (error) { throw new Error(error); }
     return data;

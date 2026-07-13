@@ -9,6 +9,8 @@ import {
   CashRefundRequest,
   CardTimeoutRequest,
   CardInitiateResult,
+  UnreferencedCashReturnRequest,
+  UnreferencedCardReturnRequest,
   CopyReceiptRequest,
   ProvisionalReceiptRequest,
   TrainingReceiptRequest,
@@ -133,6 +135,34 @@ export class PosService {
   // Refunds a finalized cash sale (RETREC + cash out of the drawer). Requires a Leder-level PIN.
   public async RefundCash(journalEntryId: number, request: CashRefundRequest): Promise<PosReceiptModel> {
     const response = await this._requestService.PostRequest('/pos/payment/cash/' + journalEntryId + '/refund', request, this.sessionHeaders());
+    const { data, error } = this._requestService.TryParseResponseWithError(response);
+    if (error) { throw new Error(error); }
+    return data;
+  }
+
+  // Polls a card refund awaiting cardholder approval on the terminal (the in-person refund is
+  // asynchronous). Returns Confirmed with the Return receipt once it settles, otherwise Pending.
+  public async RefundStatusCard(transactionId: string, cashPointId: number): Promise<TerminalRefundResult> {
+    const response = await this._requestService.GetRequest('/pos/payment/card/' + transactionId + '/refund-status?cashPointId=' + encodeURIComponent(cashPointId), this.sessionHeaders());
+    const parsed = this._requestService.TryParseResponse(response);
+    if (parsed === undefined) { throw new Error('Failed to get refund status'); }
+    return parsed;
+  }
+
+  // --- Unreferenced (open) returns: a refund rung in without an original sale ---
+
+  // Unreferenced cash return: RETREC + cash out of the drawer, from operator-entered lines. Leder PIN.
+  public async ReturnCash(request: UnreferencedCashReturnRequest): Promise<PosReceiptModel> {
+    const response = await this._requestService.PostRequest('/pos/return/cash', request, this.sessionHeaders());
+    const { data, error } = this._requestService.TryParseResponseWithError(response);
+    if (error) { throw new Error(error); }
+    return data;
+  }
+
+  // Initiate an unreferenced card return on the terminal (cardholder taps any card). Asynchronous —
+  // poll the returned paymentTransactionId via RefundStatusCard until the RETREC is written.
+  public async InitiateReturnCard(request: UnreferencedCardReturnRequest): Promise<TerminalRefundResult> {
+    const response = await this._requestService.PostRequest('/pos/return/card/initiate', request, this.sessionHeaders());
     const { data, error } = this._requestService.TryParseResponseWithError(response);
     if (error) { throw new Error(error); }
     return data;

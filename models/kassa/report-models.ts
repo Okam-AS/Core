@@ -6,6 +6,15 @@ export class PaymentMeansTotal {
   amount: number;
 }
 
+// Net turnover for one goods group over the period (Gruppe | Antall | Omsetn. | Rabatt).
+export class GoodsGroupTotal {
+  code: string | null;
+  name: string | null;
+  quantity: number;
+  amount: number;
+  discountAmount: number;
+}
+
 export class VatRateTotal {
   vatPercent: number;
   vatCode: SafTVatCode;
@@ -37,8 +46,14 @@ export class XReportModel {
   salesNetAmount: number;
   salesVatAmount: number;
   tipsAmount: number;
+  // returnsCount/Amount = all RETREC; the two buckets below split it into referenced returns
+  // ("Retur") and unreferenced negative sales ("Negativ salg").
   returnsCount: number;
   returnsAmount: number;
+  referencedReturnsCount: number;
+  referencedReturnsAmount: number;
+  negativeSalesCount: number;
+  negativeSalesAmount: number;
   discountCount: number;
   discountAmount: number;
   correctionCount: number;
@@ -56,10 +71,13 @@ export class XReportModel {
   cardTotal: number;
   otherTotal: number;
   paymentMeans: Array<PaymentMeansTotal>;
+  goodsGroups: Array<GoodsGroupTotal>;
   vatRates: Array<VatRateTotal>;
   operators: Array<OperatorTotal>;
   grandTotalSales: number;
   grandTotalReturns: number;
+  grandTotalNegativeSales: number;
+  grandTotalErrors: number;
   grandTotalNet: number;
   grandTotalTips: number;
 }

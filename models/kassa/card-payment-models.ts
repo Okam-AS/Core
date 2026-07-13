@@ -22,7 +22,10 @@ export class CardVoidRequest {
 export class CardRefundRequest {
   cashPointId: number;
   amount: number | null;
+  // § 5-3-7 documentation: reason + customer phone are required. The cardholder's terminal approval
+  // is the signature for a card refund, so no on-screen signature is captured here.
   reason: string;
+  customerPhone: string;
   approverOperatorId: number;
   pin: string;
 }
@@ -35,8 +38,14 @@ export class CardTimeoutRequest {
 // Refunds a finalized cash sale (RETREC + cash out of the drawer). Requires a Leder-level PIN.
 export class CashRefundRequest {
   cashPointId: number;
+  // Client-generated idempotency key (one fresh GUID per logical refund). Optional, but when sent
+  // a retried request returns the already-journalled RETREC instead of a duplicate.
+  returnId: string | null;
   amount: number | null;
+  // § 5-3-7 documentation: reason + customer phone + an on-screen signature are all required.
   reason: string;
+  customerPhone: string;
+  customerSignature: string;
   approverOperatorId: number;
   pin: string;
 }
