@@ -10,8 +10,6 @@ export class WoltDeliveryInfo {
   woltDriveVenueId: string;
   status: string;
   pickupEta: Date | null;
-  dropoffEtaMin: Date | null;
-  dropoffEtaMax: Date | null;
   priceAmount: number | null;
   priceCurrency: string;
   orderNumber: string;
