@@ -46,7 +46,11 @@ export {
   TripletexConnectionStatus,
   TripletexVoucherLogEntry,
   AccountingExportResult,
-  TripletexPayoutReconciliation
+  TripletexPayoutReconciliation,
+  TripletexVoucher,
+  TripletexVoucherPosting,
+  TripletexVoucherAccount,
+  TripletexVoucherVatType
 } from './tripletex/tripletex-admin-models';
 export type {
   TripletexTokenType,
@@ -174,6 +178,7 @@ export { UsersGiftcardBalanceTransaction } from './giftcard/users-giftcard-balan
 export { Allergen, AllergenUpsertModel } from './kassa/allergen';
 export { CashPoint, CashPointUpsertModel } from './kassa/cash-point';
 export { GoodsGroup, GoodsGroupUpsertModel } from './kassa/goods-group';
+export { OpenPricePreset, OpenPricePresetUpsertModel } from './kassa/open-price-preset';
 
 // Kassa (POS) — operators & cash drawer
 export { OperatorUpsertModel, SetOperatorPinRequest, OperatorModel, OperatorLoginRequest, OperatorSessionModel } from './kassa/operator-models';

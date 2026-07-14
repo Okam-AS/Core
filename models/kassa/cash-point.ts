@@ -18,6 +18,12 @@ export class CashPoint {
   grandTotalNet: number;
   grandTotalTips: number;
   maxCashDifference: number;
+  // Internal-control gates (default true): require a Godkjenner to authorize money-out actions.
+  requireManagerForVoid: boolean;
+  requireManagerForRefund: boolean;
+  requireManagerForReturn: boolean;
+  // When true, switching the active operator needs no PIN (default false).
+  allowFastOperatorSwitch: boolean;
   created: Date;
 }
 
@@ -34,4 +40,8 @@ export class CashPointUpsertModel {
   terminalProvider: TerminalProvider;
   isActive: boolean;
   maxCashDifference: number;
+  requireManagerForVoid: boolean;
+  requireManagerForRefund: boolean;
+  requireManagerForReturn: boolean;
+  allowFastOperatorSwitch: boolean;
 }

@@ -1,4 +1,4 @@
-import { DiscountType, DiscountApplicability, StaffPriceGroup } from "../../enums";
+import { DiscountType, DiscountApplicability } from "../../enums";
 import { DiscountProducts, DiscountUsages } from "../../models";
 export class Discount {
   id: string;
@@ -30,11 +30,10 @@ export class Discount {
   validTo?: Date;
 
   // POS (kassa) discount fields: the POS uses this shared catalogue instead of a separate entity.
-  // showInPos gates which discounts the cashier can pick; requiresManagerPin forces a Leder PIN;
-  // staffGroup marks a staff-price variant; sortOrder orders the POS discount list.
+  // showInPos gates which discounts the cashier can pick; requiresManagerPin forces a Godkjenner PIN;
+  // sortOrder orders the POS discount list.
   showInPos: boolean;
   requiresManagerPin: boolean;
-  staffGroup?: StaffPriceGroup;
   sortOrder: number;
 
   discountUsages: Array<DiscountUsages>;

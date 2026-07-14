@@ -22,6 +22,9 @@ export class AddCheckLineRequest {
   amount: number;
   tax: number;
   goodsGroupId: number | null;
+  // When set, name + goodsGroupId are taken from the preset server-side (the operator taps a button
+  // instead of typing). A blank value keeps the typed open-price fallback.
+  openPricePresetId: number | null;
 }
 
 export class FireCourseRequest {

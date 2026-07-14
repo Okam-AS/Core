@@ -1,4 +1,4 @@
-import { CashDrawerTransactionType } from '../../enums';
+import { CashDrawerTransactionType, PosReasonType } from '../../enums';
 
 export class BeginDayRequest {
   startFloat: number;
@@ -12,7 +12,10 @@ export class CashDrawerTransactionRequest {
 export class EndDayRequest {
   endCountedAmount: number;
   bankDepositAmount: number;
-  differenceExplanation: string | null;
+  // Predefined reason for any cash difference (§ 5-3-14). Required for ANY non-zero difference.
+  // differenceText is the operator's free-text note, only required when differenceReasonType is Annet.
+  differenceReasonType: PosReasonType;
+  differenceText: string | null;
   email: string | null;
 }
 
@@ -40,7 +43,11 @@ export class EodSummaryModel {
   otherTotal: number;
   cashTotal: number;
   maxCashDifference: number;
+  // A reason is required whenever difference !== 0 (§ 5-3-14). outOfTolerance is a separate signal
+  // for the |difference| > maxCashDifference warning.
   explanationRequired: boolean;
+  outOfTolerance: boolean;
+  differenceReasonType: PosReasonType | null;
   differenceExplanation: string | null;
   eodReceiptEmail: string | null;
 }
@@ -68,6 +75,7 @@ export class CashDrawerSession {
   expectedAmount: number | null;
   difference: number | null;
   bankDepositAmount: number | null;
+  differenceReasonType: PosReasonType | null;
   differenceExplanation: string | null;
   eodReceiptEmail: string | null;
   transactions: Array<CashDrawerTransaction>;

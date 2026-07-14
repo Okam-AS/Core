@@ -3,7 +3,9 @@ import {
   UpsertTripletexConnectionModel,
   TripletexConnectionStatus,
   AccountingExportResult,
-  TripletexPayoutReconciliation
+  TripletexPayoutReconciliation,
+  TripletexVoucher,
+  TripletexVoucherLogEntry
 } from '../models';
 import { RequestService } from './request-service';
 
@@ -47,6 +49,33 @@ export class TripletexService {
     const response = await this._requestService.GetRequest('/tripletex-admin/stores/' + storeId + '/reconciliation');
     const parsed = this._requestService.TryParseResponse(response);
     if (parsed === undefined) { throw new Error('Failed to load reconciliation'); }
+    return parsed;
+  }
+
+  // Fetch a single posted voucher (with its posting lines) live from Tripletex, to verify it
+  // line-for-line against what Okam posted.
+  public async getVoucher (storeId: number, voucherId: number): Promise<TripletexVoucher> {
+    const response = await this._requestService.GetRequest('/tripletex-admin/stores/' + storeId + '/voucher/' + voucherId);
+    const parsed = this._requestService.TryParseResponse(response);
+    if (parsed === undefined) { throw new Error('Failed to load voucher'); }
+    return parsed;
+  }
+
+  // Reverse (credit) a wrongly-posted voucher on the given date (today when omitted). Returns the
+  // reversal voucher; the original's local log entry is marked Reversed server-side.
+  public async reverseVoucher (storeId: number, voucherId: number, date?: string): Promise<TripletexVoucher> {
+    const query = date ? ('?date=' + encodeURIComponent(date)) : '';
+    const response = await this._requestService.PostRequest('/tripletex-admin/stores/' + storeId + '/voucher/' + voucherId + '/reverse' + query, {});
+    const parsed = this._requestService.TryParseResponse(response);
+    if (parsed === undefined) { throw new Error('Failed to reverse voucher'); }
+    return parsed;
+  }
+
+  // The store's failed voucher-log entries (what did not post, why), for the go-live monitor.
+  public async getFailedVouchers (storeId: number): Promise<TripletexVoucherLogEntry[]> {
+    const response = await this._requestService.GetRequest('/tripletex-admin/stores/' + storeId + '/failed-vouchers');
+    const parsed = this._requestService.TryParseResponse(response);
+    if (parsed === undefined) { throw new Error('Failed to load failed vouchers'); }
     return parsed;
   }
 

@@ -1,6 +1,6 @@
 import { defineStore } from "pinia";
 import { ICoreInitializer } from "../interfaces";
-import { ConfigService, UserService, StoreService, FeedbackService, RewardService, GiftcardService, CartService, CategoryService, PersistenceService, PaymentService, DiscountService, OrderService, StripeService, VippsService, NotificationService, LogService, ProductService, DinteroService, PlaceService, SurfboardService, TripletexService, AllergenService, CashPointService, GoodsGroupService, OperatorService, CashDrawerService, PosService, OpenCheckService, KitchenService, JournalService, ReportService, SaftService, TableService, ReservationService, DinteroTerminalService } from "../services";
+import { ConfigService, UserService, StoreService, FeedbackService, RewardService, GiftcardService, CartService, CategoryService, PersistenceService, PaymentService, DiscountService, OrderService, StripeService, VippsService, NotificationService, LogService, ProductService, DinteroService, PlaceService, SurfboardService, TripletexService, AllergenService, CashPointService, GoodsGroupService, OpenPricePresetService, OperatorService, CashDrawerService, PosService, OpenCheckService, KitchenService, JournalService, ReportService, SaftService, TableService, ReservationService, DinteroTerminalService } from "../services";
 import { ref, computed } from "vue";
 
 export const useServices = defineStore("services", () => {
@@ -62,6 +62,7 @@ export const useServices = defineStore("services", () => {
   const allergenService = () => new AllergenService(coreInitializer.value);
   const cashPointService = () => new CashPointService(coreInitializer.value);
   const goodsGroupService = () => new GoodsGroupService(coreInitializer.value);
+  const openPricePresetService = () => new OpenPricePresetService(coreInitializer.value);
   const operatorService = () => new OperatorService(coreInitializer.value);
   const cashDrawerService = () => new CashDrawerService(coreInitializer.value);
   const posService = () => new PosService(coreInitializer.value);
@@ -103,6 +104,7 @@ export const useServices = defineStore("services", () => {
     allergenService,
     cashPointService,
     goodsGroupService,
+    openPricePresetService,
     operatorService,
     cashDrawerService,
     posService,

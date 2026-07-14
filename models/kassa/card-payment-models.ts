@@ -1,3 +1,5 @@
+import { PosReasonType } from '../../enums';
+
 export class CashSaleRequest {
   cashPointId: number;
   orderId: number;
@@ -22,10 +24,14 @@ export class CardVoidRequest {
 export class CardRefundRequest {
   cashPointId: number;
   amount: number | null;
-  // § 5-3-7 documentation: reason + customer phone are required. The cardholder's terminal approval
-  // is the signature for a card refund, so no on-screen signature is captured here.
-  reason: string;
+  // § 5-3-7 documentation: a predefined reason type + customer phone are required. reasonText is the
+  // operator's free-text note, only required when reasonType is Annet. The cardholder's terminal
+  // approval is the signature for a card refund, so no on-screen signature is captured here.
+  reasonType: PosReasonType;
+  reasonText: string;
   customerPhone: string;
+  // Only consulted when the acting operator is not already a Godkjenner and the register keeps the
+  // refund gate on.
   approverOperatorId: number;
   pin: string;
 }
@@ -35,15 +41,18 @@ export class CardTimeoutRequest {
   reason: string;
 }
 
-// Refunds a finalized cash sale (RETREC + cash out of the drawer). Requires a Leder-level PIN.
+// Refunds a finalized cash sale (RETREC + cash out of the drawer). Authorized per the register's
+// internal-control refund gate.
 export class CashRefundRequest {
   cashPointId: number;
   // Client-generated idempotency key (one fresh GUID per logical refund). Optional, but when sent
   // a retried request returns the already-journalled RETREC instead of a duplicate.
   returnId: string | null;
   amount: number | null;
-  // § 5-3-7 documentation: reason + customer phone + an on-screen signature are all required.
-  reason: string;
+  // § 5-3-7 documentation: a predefined reason type + customer phone + an on-screen signature are
+  // all required. reasonText is only required when reasonType is Annet.
+  reasonType: PosReasonType;
+  reasonText: string;
   customerPhone: string;
   customerSignature: string;
   approverOperatorId: number;

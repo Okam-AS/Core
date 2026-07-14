@@ -61,6 +61,40 @@ export class AccountingExportResult {
   warnings: string[];
 }
 
+// A live voucher fetched from Tripletex for verification
+// (GET /tripletex-admin/stores/{id}/voucher/{voucherId}). Mirrors Tripletex's own voucher shape.
+export class TripletexVoucherAccount {
+  id: number;
+  number: number;
+  name: string;
+}
+
+export class TripletexVoucherVatType {
+  id: number;
+  name: string;
+}
+
+export class TripletexVoucherPosting {
+  id: number;
+  row: number;
+  description: string;
+  amount: number;
+  amountGross: number;
+  systemGenerated: boolean;
+  account?: TripletexVoucherAccount;
+  vatType?: TripletexVoucherVatType;
+}
+
+export class TripletexVoucher {
+  id: number;
+  number?: number;
+  year?: number;
+  date: string;
+  description: string;
+  externalVoucherNumber?: string;
+  postings: TripletexVoucherPosting[];
+}
+
 // Coarse reconciliation health signal (GET /tripletex-admin/stores/{id}/reconciliation).
 export class TripletexPayoutReconciliation {
   storeId: number;

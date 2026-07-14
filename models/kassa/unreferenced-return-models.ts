@@ -1,4 +1,4 @@
-import { DeliveryType } from '../../enums';
+import { DeliveryType, PosReasonType } from '../../enums';
 
 // Unreferenced (open) return: a refund rung in without looking up the original sale. Each line
 // classifies the refunded goods with a goods group (for VAT / SAF-T), like an open-price sale line.
@@ -11,8 +11,8 @@ export class UnreferencedReturnLineModel {
   goodsGroupId: number | null;
 }
 
-// Unreferenced cash return: cash paid back out of the drawer. Leder PIN authorizes. Reason + phone +
-// on-screen signature are all required (§ 5-3-7).
+// Unreferenced cash return: cash paid back out of the drawer, authorized per the register's return
+// gate. A predefined reason type + phone + on-screen signature are all required (§ 5-3-7).
 export class UnreferencedCashReturnRequest {
   cashPointId: number;
   // Client-generated idempotency key (one fresh GUID per logical return). Required: with no
@@ -21,7 +21,8 @@ export class UnreferencedCashReturnRequest {
   returnId: string;
   approverOperatorId: number;
   pin: string;
-  reason: string;
+  reasonType: PosReasonType;
+  reasonText: string;
   customerPhone: string;
   customerSignature: string;
   // Per-document eat-in/take-away context (SelfPickup = take-away, default; TableDelivery = eat-in).
@@ -38,7 +39,8 @@ export class UnreferencedCardReturnRequest {
   cashPointId: number;
   approverOperatorId: number;
   pin: string;
-  reason: string;
+  reasonType: PosReasonType;
+  reasonText: string;
   customerPhone: string;
   // Per-document eat-in/take-away context (see UnreferencedCashReturnRequest.vatContext).
   vatContext: DeliveryType | null;
