@@ -1,3 +1,5 @@
+import { DeliveryType } from '../../enums';
+
 // Unreferenced (open) return: a refund rung in without looking up the original sale. Each line
 // classifies the refunded goods with a goods group (for VAT / SAF-T), like an open-price sale line.
 // Amounts are ore. § 5-3-7 documentation (reason + phone + signature) is captured on the request.
@@ -22,6 +24,10 @@ export class UnreferencedCashReturnRequest {
   reason: string;
   customerPhone: string;
   customerSignature: string;
+  // Per-document eat-in/take-away context (SelfPickup = take-away, default; TableDelivery = eat-in).
+  // When set, a line whose goods group has a VAT profile takes its rate from group x this context
+  // (superseding the submitted vatPercent). Null leaves the submitted rates untouched.
+  vatContext: DeliveryType | null;
   lines: Array<UnreferencedReturnLineModel>;
 }
 
@@ -34,5 +40,7 @@ export class UnreferencedCardReturnRequest {
   pin: string;
   reason: string;
   customerPhone: string;
+  // Per-document eat-in/take-away context (see UnreferencedCashReturnRequest.vatContext).
+  vatContext: DeliveryType | null;
   lines: Array<UnreferencedReturnLineModel>;
 }

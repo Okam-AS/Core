@@ -49,4 +49,26 @@ export class GoodsGroupService {
     const response = await this._requestService.DeleteRequest('/GoodsGroup/' + id);
     return this._requestService.TryParseResponse(response) !== undefined;
   }
+
+  // Seeds the Norway default goods groups (with VAT profiles) into a store, skipping codes it
+  // already has. Idempotent; used to onboard a store created before the defaults existed.
+  public async SeedStandard(storeId: number): Promise<Array<GoodsGroup>> {
+    const response = await this._requestService.PostRequest('/GoodsGroup/seed-standard/' + storeId, {});
+    const parsed = this._requestService.TryParseResponse(response);
+    if (parsed === undefined) {
+      throw new Error('Failed to seed standard goods groups');
+    }
+    return parsed;
+  }
+
+  // Rollout backfill: seeds the default groups into every store (PowerUser). Idempotent; returns how
+  // many stores gained groups.
+  public async BackfillAll(): Promise<{ seededStores: number }> {
+    const response = await this._requestService.PostRequest('/GoodsGroup/backfill-all', {});
+    const parsed = this._requestService.TryParseResponse(response);
+    if (parsed === undefined) {
+      throw new Error('Failed to backfill goods groups');
+    }
+    return parsed;
+  }
 }
