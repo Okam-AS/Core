@@ -1,6 +1,6 @@
 import { defineStore } from "pinia";
 import { ICoreInitializer } from "../interfaces";
-import { ConfigService, UserService, StoreService, FeedbackService, RewardService, GiftcardService, CartService, CategoryService, PersistenceService, PaymentService, DiscountService, OrderService, StripeService, VippsService, NotificationService, LogService, ProductService, DinteroService, PlaceService, SurfboardService, AllergenService, CashPointService, GoodsGroupService, OperatorService, CashDrawerService, PosService, OpenCheckService, KitchenService, JournalService, ReportService, SaftService, TableService, ReservationService, DinteroTerminalService } from "../services";
+import { ConfigService, UserService, StoreService, FeedbackService, RewardService, GiftcardService, CartService, CategoryService, PersistenceService, PaymentService, DiscountService, OrderService, StripeService, VippsService, NotificationService, LogService, ProductService, DinteroService, PlaceService, SurfboardService, TripletexService, AllergenService, CashPointService, GoodsGroupService, OperatorService, CashDrawerService, PosService, OpenCheckService, KitchenService, JournalService, ReportService, SaftService, TableService, ReservationService, DinteroTerminalService } from "../services";
 import { ref, computed } from "vue";
 
 export const useServices = defineStore("services", () => {
@@ -58,6 +58,7 @@ export const useServices = defineStore("services", () => {
   const dinteroService = () => new DinteroService(coreInitializer.value);
   const placeService = () => new PlaceService(coreInitializer.value);
   const surfboardService = () => new SurfboardService(coreInitializer.value);
+  const tripletexService = () => new TripletexService(coreInitializer.value);
   const allergenService = () => new AllergenService(coreInitializer.value);
   const cashPointService = () => new CashPointService(coreInitializer.value);
   const goodsGroupService = () => new GoodsGroupService(coreInitializer.value);
@@ -98,6 +99,7 @@ export const useServices = defineStore("services", () => {
     dinteroService,
     placeService,
     surfboardService,
+    tripletexService,
     allergenService,
     cashPointService,
     goodsGroupService,

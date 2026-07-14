@@ -41,6 +41,19 @@ export {
   SurfboardVerifyResult,
   SurfboardTipsConfigRequest
 } from './surfboard/surfboard-online-models';
+export {
+  UpsertTripletexConnectionModel,
+  TripletexConnectionStatus,
+  TripletexVoucherLogEntry,
+  AccountingExportResult,
+  TripletexPayoutReconciliation
+} from './tripletex/tripletex-admin-models';
+export type {
+  TripletexTokenType,
+  TripletexVoucherKind,
+  TripletexVoucherStatus,
+  AccountingExportTarget
+} from './tripletex/tripletex-admin-models';
 
 // Discount
 export { Discount } from './discount/discount';
