@@ -41,10 +41,16 @@ export class XReportModel {
   generatedAt: Date;
   localDate: string;
   localTime: string;
+  // Enterprise identity (§ 2-8-2 bokstav b) and the trading day's opening change float
+  // (bokstav k; the open day's float on an X, the settled day's on a Z).
+  sellerLegalName: string;
+  sellerOrgNumber: string;
+  startFloat: number | null;
   salesCount: number;
   salesAmount: number;
   salesNetAmount: number;
   salesVatAmount: number;
+  tipsCount: number;
   tipsAmount: number;
   // returnsCount/Amount = all RETREC; the two buckets below split it into referenced returns
   // ("Retur") and unreferenced negative sales ("Negativ salg").
@@ -62,9 +68,13 @@ export class XReportModel {
   drawerOpenCount: number;
   manualDrawerOpenCount: number;
   copyReceiptCount: number;
+  copyReceiptAmount: number;
   provisionalReceiptCount: number;
+  provisionalReceiptAmount: number;
   trainingCount: number;
   trainingAmount: number;
+  lineCorrectionCount: number;
+  lineCorrectionAmount: number;
   abortedSalesCount: number;
   abortedSalesAmount: number;
   cashTotal: number;
@@ -86,7 +96,6 @@ export class ZReportModel extends XReportModel {
   zReportId: number;
   zNumber: number;
   cashDrawerSessionId: number | null;
-  startFloat: number | null;
   cashExpected: number | null;
   cashCounted: number | null;
   cashDifference: number | null;
