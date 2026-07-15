@@ -11,6 +11,9 @@ export class CashPoint {
   dinteroProfileId: string;
   surfboardTerminalId: string;
   surfboardAutoPrintReceipt: boolean;
+  // Store-level rollout flag for split payments (partial payments), projected onto the cash point
+  // by the backend so the POS can hide the action when it is off (the server enforces it anyway).
+  partialPaymentsEnabled: boolean;
   terminalProvider: TerminalProvider;
   isActive: boolean;
   grandTotalSales: number;
