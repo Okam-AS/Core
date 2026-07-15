@@ -185,7 +185,7 @@ export { OperatorUpsertModel, SetOperatorPinRequest, OperatorModel, OperatorLogi
 export { BeginDayRequest, CashDrawerTransactionRequest, EndDayRequest, EodSummaryModel, CashDrawerTransaction, CashDrawerSession } from './kassa/cash-drawer-models';
 
 // Kassa (POS) — sale / card / settlement / receipt
-export { CashSaleRequest, CardInitiateRequest, CardCaptureRequest, CardVoidRequest, CardRefundRequest, CardTimeoutRequest, CardInitiateResult, CashRefundRequest } from './kassa/card-payment-models';
+export { CashSaleRequest, CardInitiateRequest, CardReconcileRequest, CardReconcileResult, CardCaptureRequest, CardVoidRequest, CardRefundRequest, CardTimeoutRequest, CardInitiateResult, CashRefundRequest } from './kassa/card-payment-models';
 export { TerminalReconcileResult, TerminalCaptureResult, TerminalVoidResult, TerminalRefundResult, TerminalProviderResult, TerminalInitiateResult } from './kassa/terminal-payment-models';
 export { SettlementOpenRequest, SettlementAllocationRequest, SettlementActionRequest, SettlementAllocationResult, SettlementModel, SettlementAllocationModel } from './kassa/settlement-models';
 export { CopyReceiptRequest, ProvisionalReceiptRequest, TrainingReceiptRequest, ReceiptSmsRequest, ReceiptSmsResult } from './kassa/receipt-request-models';

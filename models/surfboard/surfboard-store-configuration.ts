@@ -15,6 +15,9 @@ export class SurfboardStoreConfiguration {
   swishEnabled: boolean;
   klarnaEnabled: boolean;
   tipsEnabled: boolean;
+  // Rollout gate: split bills as Surfboard partial payments (one bill-level order, one payment per
+  // portion). Off until the store has passed a physical terminal test.
+  partialPaymentsEnabled: boolean;
   commissionPercentage: number;
   terminalCommissionPercentage: number;
   woltDeliveryFeePercent: number;

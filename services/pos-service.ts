@@ -3,6 +3,8 @@ import { ICoreInitializer } from '../interfaces';
 import {
   CashSaleRequest,
   CardInitiateRequest,
+  CardReconcileRequest,
+  CardReconcileResult,
   CardCaptureRequest,
   CardVoidRequest,
   CardRefundRequest,
@@ -108,6 +110,16 @@ export class PosService {
     const { data, error } = this._requestService.TryParseResponseWithError(response);
     if (error) { throw new Error(error); }
     return data;
+  }
+
+  // Polls the authoritative provider state for one terminal payment. The split-payment flow polls
+  // this per portion (a completed portion never completes the check); 'Captured' means the portion
+  // is ready to be allocated to the settlement.
+  public async ReconcileCard(transactionId: string, request: CardReconcileRequest): Promise<CardReconcileResult> {
+    const response = await this._requestService.PostRequest('/pos/payment/card/' + transactionId + '/reconcile', request, this.sessionHeaders());
+    const parsed = this._requestService.TryParseResponse(response);
+    if (parsed === undefined) { throw new Error('Failed to reconcile card payment'); }
+    return parsed;
   }
 
   public async CaptureCard(transactionId: string, request: CardCaptureRequest): Promise<TerminalCaptureResult> {

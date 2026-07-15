@@ -10,6 +10,25 @@ export class CardInitiateRequest {
   cashPointId: number;
   orderId: number;
   currency: string;
+
+  // Partial payment (split bill): the portion (øre) to charge on this tap and the open settlement
+  // that owns the bill-level provider order. Both set → the portion flow (one provider order for
+  // the whole check, one payment per portion); both omitted → the legacy full-order flow.
+  amount?: number | null;
+  posSettlementId?: string | null;
+}
+
+// Operator-facing status poll for a terminal payment (POST /pos/payment/card/{id}/reconcile).
+// The split-payment flow polls this per portion — a completed portion never completes the check.
+export class CardReconcileRequest {
+  cashPointId: number;
+}
+
+export class CardReconcileResult {
+  state: string; // TerminalPaymentState name, e.g. 'Captured', 'Authorized', 'Failed'
+  rawStatus: string | null;
+  capturedAmount: number;
+  finalized: boolean;
 }
 
 export class CardCaptureRequest {
