@@ -11,16 +11,14 @@ export class UnreferencedReturnLineModel {
   goodsGroupId: number | null;
 }
 
-// Unreferenced cash return: cash paid back out of the drawer, authorized per the register's return
-// gate. A predefined reason type + phone + on-screen signature are all required (§ 5-3-7).
+// Unreferenced cash return: cash paid back out of the drawer; the acting operator authorizes it.
+// A predefined reason type + phone + on-screen signature are all required (§ 5-3-7).
 export class UnreferencedCashReturnRequest {
   cashPointId: number;
   // Client-generated idempotency key (one fresh GUID per logical return). Required: with no
   // original sale to reconcile against, this is what lets a retried request (lost response) get
   // the already-journalled RETREC back instead of paying out twice.
   returnId: string;
-  approverOperatorId: number;
-  pin: string;
   reasonType: PosReasonType;
   reasonText: string;
   customerPhone: string;
@@ -37,8 +35,6 @@ export class UnreferencedCashReturnRequest {
 // RefundStatusCard. The terminal approval is the signature, so only reason + phone are captured.
 export class UnreferencedCardReturnRequest {
   cashPointId: number;
-  approverOperatorId: number;
-  pin: string;
   reasonType: PosReasonType;
   reasonText: string;
   customerPhone: string;

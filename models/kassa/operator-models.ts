@@ -1,9 +1,6 @@
-import { OperatorRoleLevel } from '../../enums';
-
 export class OperatorUpsertModel {
   storeId: number;
   displayName: string;
-  roleLevel: OperatorRoleLevel;
   applicationUserId: string | null;
   isActive: boolean;
   pin: string | null;
@@ -17,7 +14,6 @@ export class OperatorModel {
   operatorId: number;
   storeId: number;
   displayName: string;
-  roleLevel: OperatorRoleLevel;
   isActive: boolean;
   hasPin: boolean;
   isLockedOut: boolean;
@@ -36,7 +32,6 @@ export class OperatorSessionModel {
   operatorSessionId: string;
   operatorId: number;
   operatorName: string | null;
-  roleLevel: OperatorRoleLevel;
   storeId: number;
   cashPointId: number;
   startedAt: Date;

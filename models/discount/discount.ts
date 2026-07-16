@@ -30,10 +30,8 @@ export class Discount {
   validTo?: Date;
 
   // POS (kassa) discount fields: the POS uses this shared catalogue instead of a separate entity.
-  // showInPos gates which discounts the cashier can pick; requiresManagerPin forces a Godkjenner PIN;
-  // sortOrder orders the POS discount list.
+  // showInPos gates which discounts the cashier can pick; sortOrder orders the POS discount list.
   showInPos: boolean;
-  requiresManagerPin: boolean;
   sortOrder: number;
 
   discountUsages: Array<DiscountUsages>;

@@ -23,7 +23,6 @@ export { KeyAccountManagerStatus } from './key-account-manager-status';
 export { OfferProposalStatus } from './offer-proposal-status';
 
 // Kassa (POS) / fiscal
-export { OperatorRoleLevel } from './operator-role-level';
 export { PosReasonType } from './pos-reason-type';
 export { OrderLineItemStatus } from './order-line-item-status';
 export { KitchenTicketSource } from './kitchen-ticket-source';

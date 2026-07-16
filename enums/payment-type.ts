@@ -13,5 +13,6 @@ export enum PaymentType {
   Cash = "Cash",
   DinteroTerminal = "DinteroTerminal",
   Surfboard = "Surfboard",
+  SurfboardVipps = "SurfboardVipps",
   SurfboardTerminal = "SurfboardTerminal"
 }

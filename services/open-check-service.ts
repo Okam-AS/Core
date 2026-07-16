@@ -193,6 +193,16 @@ export class OpenCheckService {
     return data;
   }
 
+  // Discards an empty open check (no line, nothing journalled) with no VOIDTRANS — e.g. a table the
+  // operator opened and left without ringing anything in. Returns whether it was discarded; a check
+  // that carries any line or journalled event is left untouched (discarded = false).
+  public async DiscardEmptyCheck(orderId: number): Promise<{ discarded: boolean }> {
+    const response = await this._requestService.PostRequest('/pos/check/' + orderId + '/discard-empty', {}, this.sessionHeaders());
+    const { data, error } = this._requestService.TryParseResponseWithError(response);
+    if (error) { throw new Error(error); }
+    return data;
+  }
+
   public async BoardStatus(storeId: number): Promise<BoardStatusModel> {
     const response = await this._requestService.GetRequest('/pos/board-status/' + storeId, this.sessionHeaders());
     const parsed = this._requestService.TryParseResponse(response);

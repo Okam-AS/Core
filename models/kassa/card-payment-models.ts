@@ -49,10 +49,6 @@ export class CardRefundRequest {
   reasonType: PosReasonType;
   reasonText: string;
   customerPhone: string;
-  // Only consulted when the acting operator is not already a Godkjenner and the register keeps the
-  // refund gate on.
-  approverOperatorId: number;
-  pin: string;
 }
 
 export class CardTimeoutRequest {
@@ -60,8 +56,7 @@ export class CardTimeoutRequest {
   reason: string;
 }
 
-// Refunds a finalized cash sale (RETREC + cash out of the drawer). Authorized per the register's
-// internal-control refund gate.
+// Refunds a finalized cash sale (RETREC + cash out of the drawer). The acting operator authorizes it.
 export class CashRefundRequest {
   cashPointId: number;
   // Client-generated idempotency key (one fresh GUID per logical refund). Optional, but when sent
@@ -74,8 +69,6 @@ export class CashRefundRequest {
   reasonText: string;
   customerPhone: string;
   customerSignature: string;
-  approverOperatorId: number;
-  pin: string;
 }
 
 // Anonymous response of POST /pos/payment/card/initiate (PascalCase on the wire under the
