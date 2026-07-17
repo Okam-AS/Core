@@ -24,6 +24,10 @@ const productScope = {
   storeId: 6,
   currencyCode: 'CHF',
 } as const;
+// Frozen 21-byte values from the admitted local C0 media manifest.
+const seededGeschnetzeltesThumbHash =
+  'WTkOFYTfmZiDeHejeLeHeTDCB0R5';
+const seededRoestiThumbHash = 'qBgGDYJQqloOdJdScUTUbC+080Rc';
 
 function expectScopeMismatch(action: () => void): void {
   try {
@@ -45,7 +49,7 @@ const configurableProduct = {
   image: {
     imageUrl: 'http://127.0.0.1:5081/images/hero.jpg',
     thumbnailUrl: 'http://127.0.0.1:5081/images/thumb.jpg',
-    thumbHash: 'VKF5?x00_3t7~q%MRjof',
+    thumbHash: seededGeschnetzeltesThumbHash,
   },
   soldOut: false,
   currency: 'CHF',
@@ -442,7 +446,7 @@ describe('consumer C0 catalogue parity', () => {
     }
   });
 
-  it('rejects unsafe media schemes and blank ThumbHashes', () => {
+  it('rejects unsafe media schemes', () => {
     for (const imageUrl of [
       'ftp://cdn.example.test/product.jpg',
       'data:image/png;base64,AA==',
@@ -460,20 +464,86 @@ describe('consumer C0 catalogue parity', () => {
         normalizeConsumerMediaUrl(imageUrl, apiBaseUrl),
       ).toThrow(TypeError);
     }
+  });
 
-    for (const image of [
-      { thumbHash: '' },
-      { thumbHash: '   ' },
-      { thumbhash: '\n\t' },
+  it('preserves real seeded ThumbHashes and projects unsafe optional hashes to absent', () => {
+    for (const thumbHash of [
+      seededGeschnetzeltesThumbHash,
+      seededRoestiThumbHash,
     ]) {
+      const product = consumerLineItemSchema.parse({
+        product: {
+          ...configurableProduct,
+          image: { thumbHash },
+        },
+      }).product;
+      expect(product.image?.thumbHash).toBe(thumbHash);
       expect(
-        consumerLineItemSchema.safeParse({
+        mapConsumerProduct(
+          product,
+          apiBaseUrl,
+          configurableProduct.id,
+          productScope,
+        ).item.media,
+      ).toEqual({ thumbHash });
+    }
+
+    for (const thumbHash of [
+      '',
+      '   ',
+      ` ${seededGeschnetzeltesThumbHash}`,
+      `${seededGeschnetzeltesThumbHash} `,
+      'WTkOFYTf mZiDeHejeLeHeTDCB0R5',
+      'not-base64',
+      'AAAA=',
+      'AQIDBA==',
+      'A'.repeat(136),
+    ]) {
+      const product = consumerLineItemSchema.parse({
+        product: {
+          ...configurableProduct,
+          image: { thumbHash },
+        },
+      }).product;
+      expect(product.image?.thumbHash).toBeUndefined();
+      expect(
+        mapConsumerProduct(
+          product,
+          apiBaseUrl,
+          configurableProduct.id,
+          productScope,
+        ).item.media,
+      ).toBeUndefined();
+    }
+  });
+
+  it('enforces the backend ThumbHash decoded-byte safety bounds', () => {
+    const minimumLengthHash = 'AQIDBAU=';
+    const maximumLengthHash = `${'AAAA'.repeat(33)}AA==`;
+
+    for (const thumbHash of [minimumLengthHash, maximumLengthHash]) {
+      expect(
+        consumerLineItemSchema.parse({
           product: {
             ...configurableProduct,
-            image,
+            image: { thumbHash },
           },
-        }).success,
-      ).toBe(false);
+        }).product.image?.thumbHash,
+      ).toBe(thumbHash);
+    }
+
+    for (const thumbHash of [
+      'AQIDBA==',
+      `${'AAAA'.repeat(33)}AAA=`,
+    ]) {
+      expect(
+        consumerLineItemSchema.parse({
+          product: {
+            ...configurableProduct,
+            image: { thumbHash },
+          },
+        }).product.image?.thumbHash,
+      ).toBeUndefined();
     }
   });
 
@@ -551,8 +621,8 @@ describe('consumer C0 catalogue parity', () => {
         image: {
           imageUrl: null,
           thumbnailUrl: 'https://cdn.example.test/thumbnail.jpg',
-          thumbHash: null,
-          thumbhash: 'legacy-thumbhash',
+          thumbHash: 'not-base64',
+          thumbhash: seededRoestiThumbHash,
         },
       },
     }).product;
@@ -567,7 +637,7 @@ describe('consumer C0 catalogue parity', () => {
     ).toEqual({
       thumbnailUrl: 'https://cdn.example.test/thumbnail.jpg',
       heroUrl: 'https://cdn.example.test/thumbnail.jpg',
-      thumbHash: 'legacy-thumbhash',
+      thumbHash: seededRoestiThumbHash,
     });
   });
 });

@@ -1,10 +1,35 @@
 import { z } from 'zod';
 
 const consumerRemoteMediaUrlSchema = z.url({ protocol: /^https?$/u });
-const consumerThumbHashSchema = z.string().refine(
-  (value) => value.trim().length > 0,
-  'ThumbHash cannot be blank',
-);
+const consumerThumbHashBase64Pattern =
+  /^(?:[A-Za-z0-9+/]{4})*(?:[A-Za-z0-9+/]{2}==|[A-Za-z0-9+/]{3}=)?$/u;
+const minimumThumbHashBytes = 5;
+const maximumThumbHashBytes = 100;
+
+function normalizeConsumerThumbHash(value: string): string | undefined {
+  if (
+    value.trim() !== value ||
+    !consumerThumbHashBase64Pattern.test(value)
+  ) {
+    return undefined;
+  }
+
+  let paddingBytes = 0;
+  if (value.endsWith('==')) {
+    paddingBytes = 2;
+  } else if (value.endsWith('=')) {
+    paddingBytes = 1;
+  }
+  const decodedBytes = (value.length / 4) * 3 - paddingBytes;
+  return decodedBytes >= minimumThumbHashBytes &&
+    decodedBytes <= maximumThumbHashBytes
+    ? value
+    : undefined;
+}
+
+const consumerThumbHashSchema = z
+  .string()
+  .transform(normalizeConsumerThumbHash);
 
 export const consumerStoreIdResponseSchema = z.object({
   id: z.number().int().positive(),

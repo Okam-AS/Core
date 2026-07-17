@@ -63,8 +63,12 @@ for mapping that structural error to its transport-facing error.
 Media URLs accept HTTP and HTTPS only. Empty media (`null`, `undefined`, or an
 object with null fields) remains valid and maps to no metadata. Bundled app
 assets remain adapter-owned fallbacks and never pass through the remote URL
-contract. ThumbHashes preserve their exact value but reject empty and
-whitespace-only strings.
+contract. The pinned OpenAPI field remains an additive nullable string. Core
+projects malformed, non-base64, under-5-byte, over-100-byte, and
+surrounding-whitespace ThumbHashes to absent metadata without rejecting an
+otherwise valid catalogue. Valid base64 values are preserved exactly. This
+matches the backend compatibility bridge's 5–100 decoded-byte safety bound
+while making whitespace handling deterministic.
 
 Loopback media rebasing recognizes the URL API's bracketed IPv6 hostname
 representation (`[::1]`) as well as `localhost`, `127.0.0.1` and `0.0.0.0`.
