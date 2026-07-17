@@ -46,8 +46,11 @@ describe('consumer C0 package boundary', () => {
     expect(packageJson.exports).toMatchObject({
       './consumer/c0': './consumer/c0/index.ts',
       './consumer/c0/domain': './consumer/c0/domain/index.ts',
+      './consumer/c0/domain/v1': './consumer/c0/domain/v1/index.ts',
       './consumer/c0/contracts': './consumer/c0/contracts/index.ts',
       './consumer/c0/application': './consumer/c0/application/index.ts',
+      './consumer/c0/application/v1':
+        './consumer/c0/application/v1/index.ts',
       './consumer/c0/ports': './consumer/c0/ports/index.ts',
     });
   });

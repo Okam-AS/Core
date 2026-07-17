@@ -17,6 +17,12 @@ code remains framework-neutral:
 - Host apps own providers, store lifetimes, validated persistence, secure
   storage, lifecycle handling, and TanStack Query server caches.
 
+The React adapter requires the host to provide React 18 or newer. React is an
+optional package peer because legacy Vue/Pinia consumers use other Core
+subpaths and must not be forced to install a renderer they do not execute.
+Zustand 5.0.14 publishes a React Native export condition and accepts React 19,
+matching the native app's React 19 / React Native 0.86 toolchain.
+
 Do not export a global store singleton. Create one store per native app root,
 web client root, or server-rendering request. Do not put API response caches in
 this client-state adapter.

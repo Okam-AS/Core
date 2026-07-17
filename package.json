@@ -9,7 +9,9 @@
     "./consumer/c0/domain": "./consumer/c0/domain/index.ts",
     "./consumer/c0/contracts": "./consumer/c0/contracts/index.ts",
     "./consumer/c0/application": "./consumer/c0/application/index.ts",
+    "./consumer/c0/application/v1": "./consumer/c0/application/v1/index.ts",
     "./consumer/c0/ports": "./consumer/c0/ports/index.ts",
+    "./consumer/c0/domain/v1": "./consumer/c0/domain/v1/index.ts",
     "./consumer/adapters/state": "./consumer/adapters/state/index.ts",
     "./consumer/adapters/react": "./consumer/adapters/react/index.ts",
     "./package.json": "./package.json",
@@ -20,11 +22,20 @@
     "test:watch": "vitest",
     "typecheck:consumer-c0": "tsc -p tsconfig.consumer-c0.json",
     "typecheck:consumer-adapters": "tsc -p tsconfig.consumer-adapters.json",
+    "typecheck:consumer-package": "tsc -p tsconfig.consumer-package.json",
     "guard:consumer-c0": "vitest run tests/consumer-c0-boundaries.test.ts",
     "guard:consumer-adapters": "vitest run tests/consumer-state-adapters.test.ts"
   },
   "dependencies": {
     "zustand": "5.0.14"
+  },
+  "peerDependencies": {
+    "react": ">=18.0.0"
+  },
+  "peerDependenciesMeta": {
+    "react": {
+      "optional": true
+    }
   },
   "devDependencies": {
     "@types/node": "^22.10.0",

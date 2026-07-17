@@ -145,12 +145,20 @@ describe('consumer adapter boundaries', () => {
     const packageJson = JSON.parse(
       readFileSync(join(repositoryRoot, 'package.json'), 'utf8'),
     ) as {
+      dependencies: Record<string, string>;
       exports: Record<string, string>;
+      peerDependencies: Record<string, string>;
+      peerDependenciesMeta: Record<string, { optional?: boolean }>;
     };
 
     expect(packageJson.exports).toMatchObject({
       './consumer/adapters/state': './consumer/adapters/state/index.ts',
       './consumer/adapters/react': './consumer/adapters/react/index.ts',
+    });
+    expect(packageJson.dependencies.zustand).toBe('5.0.14');
+    expect(packageJson.peerDependencies.react).toBe('>=18.0.0');
+    expect(packageJson.peerDependenciesMeta.react).toEqual({
+      optional: true,
     });
   });
 });
