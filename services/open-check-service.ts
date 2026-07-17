@@ -151,6 +151,14 @@ export class OpenCheckService {
     return data;
   }
 
+  // Reverts a split while no part is paid: the parts are cancelled and the original check
+  // reopens with all its lines. The backend refuses as soon as any part has registered a payment.
+  public async Unsplit(orderId: number): Promise<void> {
+    const response = await this._requestService.PostRequest('/pos/check/' + orderId + '/unsplit', undefined, this.sessionHeaders());
+    const { error } = this._requestService.TryParseResponseWithError(response);
+    if (error) { throw new Error(error); }
+  }
+
   public async Resume(orderId: number, request: ResumeCheckRequest): Promise<CheckModel> {
     const response = await this._requestService.PostRequest('/pos/check/' + orderId + '/resume', request, this.sessionHeaders());
     const { data, error } = this._requestService.TryParseResponseWithError(response);
