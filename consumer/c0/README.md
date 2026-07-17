@@ -52,7 +52,21 @@ an optional ThumbHash. React Native `ImageSourcePropType`, Expo image objects,
 generated HTTP clients, store authorization and transport errors remain in the
 application-specific adapter until their own migration slices are accepted.
 
-Loopback media rebasing also matches the native app: a `localhost`,
-`127.0.0.1`, `0.0.0.0` or `::1` media origin is rebased to the API hostname only
-when that API hostname is non-loopback. Production and CDN origins are never
-rewritten.
+Storefront mapping requires the store ID and slug established by the preceding
+lookup and rejects any mismatch. It also rejects a foreign-store product before
+visibility filtering, including one hidden in a draft or disabled category.
+Product mapping requires the requested product ID plus
+`ConsumerProductScope`, and compares ID, store ID and currency exactly. Core
+throws `ConsumerCatalogueScopeError`; the native adapter remains responsible
+for mapping that structural error to its transport-facing error.
+
+Media URLs accept HTTP and HTTPS only. Empty media (`null`, `undefined`, or an
+object with null fields) remains valid and maps to no metadata. Bundled app
+assets remain adapter-owned fallbacks and never pass through the remote URL
+contract. ThumbHashes preserve their exact value but reject empty and
+whitespace-only strings.
+
+Loopback media rebasing recognizes the URL API's bracketed IPv6 hostname
+representation (`[::1]`) as well as `localhost`, `127.0.0.1` and `0.0.0.0`.
+Those media origins are rebased to the API hostname only when that API hostname
+is non-loopback. Production and CDN origins are never rewritten.

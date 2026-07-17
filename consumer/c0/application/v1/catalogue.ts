@@ -12,17 +12,29 @@ import type {
   ConsumerMediaMetadata,
   ConsumerMenuItem,
   ConsumerProduct,
+  ConsumerProductScope,
+  ConsumerStorefrontScope,
   StorefrontCatalog,
 } from '../../domain/v1/catalogue';
 
 type ImageVariant = 'thumbnail' | 'hero';
+
+export class ConsumerCatalogueScopeError extends Error {
+  readonly code: 'store-mismatch' = 'store-mismatch';
+
+  constructor(message: string) {
+    super(message);
+    this.name = 'ConsumerCatalogueScopeError';
+  }
+}
 
 function isLoopbackHost(hostname: string): boolean {
   return (
     hostname === 'localhost' ||
     hostname === '0.0.0.0' ||
     hostname === '127.0.0.1' ||
-    hostname === '::1'
+    hostname === '::1' ||
+    hostname === '[::1]'
   );
 }
 
@@ -32,6 +44,10 @@ export function normalizeConsumerMediaUrl(
 ): string {
   const media = new URL(mediaUrl);
   const api = new URL(apiBaseUrl);
+
+  if (media.protocol !== 'http:' && media.protocol !== 'https:') {
+    throw new TypeError('Consumer media URL must use HTTP or HTTPS');
+  }
 
   if (isLoopbackHost(media.hostname) && !isLoopbackHost(api.hostname)) {
     media.hostname = api.hostname;
@@ -79,7 +95,7 @@ function addressLabel(address: ConsumerAddressWire): string | undefined {
   return line || undefined;
 }
 
-export function mapConsumerMenuItem(
+function mapConsumerMenuItem(
   product: ConsumerProductWire,
   apiBaseUrl: string,
 ): ConsumerMenuItem {
@@ -127,10 +143,36 @@ function mapCategoryEntries(
     });
 }
 
+function assertStorefrontScope(
+  response: ConsumerStorefrontWire,
+  scope: ConsumerStorefrontScope,
+): void {
+  if (response.id !== scope.storeId || response.slug !== scope.slug) {
+    throw new ConsumerCatalogueScopeError(
+      'Store lookup and storefront response do not match',
+    );
+  }
+
+  const foreignProduct = response.categories
+    .flatMap((category) => category.categoryProductListItems)
+    .find(
+      (listItem) =>
+        listItem.product !== null &&
+        listItem.product.storeId !== response.id,
+    );
+  if (foreignProduct) {
+    throw new ConsumerCatalogueScopeError(
+      'Storefront response contains a product from another store',
+    );
+  }
+}
+
 export function mapConsumerStorefront(
   response: ConsumerStorefrontWire,
   apiBaseUrl: string,
+  scope: ConsumerStorefrontScope,
 ): StorefrontCatalog {
+  assertStorefrontScope(response, scope);
   const mappedAddressLabel = addressLabel(response.address);
   const categories = response.categories
     .filter(
@@ -172,17 +214,38 @@ export function mapConsumerStorefront(
 export function parseAndMapConsumerStorefront(
   payload: unknown,
   apiBaseUrl: string,
+  scope: ConsumerStorefrontScope,
 ): StorefrontCatalog {
   return mapConsumerStorefront(
     consumerStorefrontSchema.parse(payload),
     apiBaseUrl,
+    scope,
   );
+}
+
+function assertProductScope(
+  product: ConsumerProductWire,
+  productId: string,
+  scope: ConsumerProductScope,
+): void {
+  if (
+    product.id !== productId ||
+    product.storeId !== scope.storeId ||
+    product.currency !== scope.currencyCode
+  ) {
+    throw new ConsumerCatalogueScopeError(
+      'Requested product does not belong to the active store and currency',
+    );
+  }
 }
 
 export function mapConsumerProduct(
   product: ConsumerProductWire,
   apiBaseUrl: string,
+  productId: string,
+  scope: ConsumerProductScope,
 ): ConsumerProduct {
+  assertProductScope(product, productId, scope);
   return {
     item: mapConsumerMenuItem(product, apiBaseUrl),
     variants: product.productVariants
@@ -211,9 +274,13 @@ export function mapConsumerProduct(
 export function parseAndMapConsumerProduct(
   payload: unknown,
   apiBaseUrl: string,
+  productId: string,
+  scope: ConsumerProductScope,
 ): ConsumerProduct {
   return mapConsumerProduct(
     consumerLineItemSchema.parse(payload).product,
     apiBaseUrl,
+    productId,
+    scope,
   );
 }

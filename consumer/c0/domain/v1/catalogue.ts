@@ -72,6 +72,19 @@ export type StorefrontCatalog = Readonly<{
   categories: readonly ConsumerCategory[];
 }>;
 
+/**
+ * Identity established by the store-slug lookup before the storefront payload
+ * is accepted. Both values are compared exactly and fail closed.
+ */
+export type ConsumerStorefrontScope = Readonly<{
+  storeId: number;
+  slug: string;
+}>;
+
+/**
+ * Store and currency selected by the active storefront. The requested product
+ * ID remains a separate argument to mirror the native catalogue client.
+ */
 export type ConsumerProductScope = Readonly<{
   storeId: number;
   currencyCode: string;

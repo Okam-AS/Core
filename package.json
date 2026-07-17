@@ -14,8 +14,7 @@
     "./consumer/c0/domain/v1": "./consumer/c0/domain/v1/index.ts",
     "./consumer/adapters/state": "./consumer/adapters/state/index.ts",
     "./consumer/adapters/react": "./consumer/adapters/react/index.ts",
-    "./package.json": "./package.json",
-    "./*": "./*"
+    "./package.json": "./package.json"
   },
   "scripts": {
     "test": "vitest run",

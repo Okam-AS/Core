@@ -1,16 +1,22 @@
 import { z } from 'zod';
 
+const consumerRemoteMediaUrlSchema = z.url({ protocol: /^https?$/u });
+const consumerThumbHashSchema = z.string().refine(
+  (value) => value.trim().length > 0,
+  'ThumbHash cannot be blank',
+);
+
 export const consumerStoreIdResponseSchema = z.object({
   id: z.number().int().positive(),
 });
 
 export const consumerImageSchema = z
   .object({
-    imageUrl: z.string().url().nullable().optional(),
-    thumbnailUrl: z.string().url().nullable().optional(),
-    thumbHash: z.string().min(1).nullable().optional(),
+    imageUrl: consumerRemoteMediaUrlSchema.nullable().optional(),
+    thumbnailUrl: consumerRemoteMediaUrlSchema.nullable().optional(),
+    thumbHash: consumerThumbHashSchema.nullable().optional(),
     // Compatibility with pre-contract experimental payloads.
-    thumbhash: z.string().min(1).nullable().optional(),
+    thumbhash: consumerThumbHashSchema.nullable().optional(),
   })
   .nullable()
   .optional();

@@ -36,14 +36,14 @@ describe('consumer C0 package boundary', () => {
     }
   });
 
-  it('publishes every C0 layer through an explicit package subpath', () => {
+  it('publishes only intentional explicit package subpaths', () => {
     const packageJson = JSON.parse(
       readFileSync(join(repositoryRoot, 'package.json'), 'utf8'),
     ) as {
       exports: Record<string, string>;
     };
 
-    expect(packageJson.exports).toMatchObject({
+    expect(packageJson.exports).toEqual({
       './consumer/c0': './consumer/c0/index.ts',
       './consumer/c0/domain': './consumer/c0/domain/index.ts',
       './consumer/c0/domain/v1': './consumer/c0/domain/v1/index.ts',
@@ -52,6 +52,9 @@ describe('consumer C0 package boundary', () => {
       './consumer/c0/application/v1':
         './consumer/c0/application/v1/index.ts',
       './consumer/c0/ports': './consumer/c0/ports/index.ts',
+      './consumer/adapters/state': './consumer/adapters/state/index.ts',
+      './consumer/adapters/react': './consumer/adapters/react/index.ts',
+      './package.json': './package.json',
     });
   });
 });

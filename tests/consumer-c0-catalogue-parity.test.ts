@@ -7,6 +7,7 @@ import {
   type ConsumerStorefrontWire,
 } from '../consumer/c0/contracts';
 import {
+  ConsumerCatalogueScopeError,
   mapConsumerProduct,
   mapConsumerStorefront,
   normalizeConsumerMediaUrl,
@@ -15,6 +16,25 @@ import {
 } from '../consumer/c0/application/v1';
 
 const apiBaseUrl = 'http://10.0.2.2:5080';
+const storefrontScope = {
+  storeId: 6,
+  slug: 'bahnhof-beizli',
+} as const;
+const productScope = {
+  storeId: 6,
+  currencyCode: 'CHF',
+} as const;
+
+function expectScopeMismatch(action: () => void): void {
+  try {
+    action();
+  } catch (error) {
+    expect(error).toBeInstanceOf(ConsumerCatalogueScopeError);
+    expect(error).toMatchObject({ code: 'store-mismatch' });
+    return;
+  }
+  throw new Error('Expected catalogue scope validation to fail closed');
+}
 
 const configurableProduct = {
   id: '66666666-6666-6666-6666-6666666600a1',
@@ -215,7 +235,11 @@ function nativeReferenceStorefront(response: ConsumerStorefrontWire) {
 describe('consumer C0 catalogue parity', () => {
   it('dual-runs the shared storefront mapper against the frozen native projection and golden result', () => {
     const parsed = consumerStorefrontSchema.parse(storefrontPayload);
-    const shared = mapConsumerStorefront(parsed, apiBaseUrl);
+    const shared = mapConsumerStorefront(
+      parsed,
+      apiBaseUrl,
+      storefrontScope,
+    );
     const native = nativeReferenceStorefront(parsed);
 
     expect(shared).toEqual(native);
@@ -248,17 +272,33 @@ describe('consumer C0 catalogue parity', () => {
         },
       ],
     });
-    expect(parseAndMapConsumerStorefront(storefrontPayload, apiBaseUrl)).toEqual(
-      shared,
-    );
+    expect(
+      parseAndMapConsumerStorefront(
+        storefrontPayload,
+        apiBaseUrl,
+        storefrontScope,
+      ),
+    ).toEqual(shared);
   });
 
   it('dual-runs product modifiers, negative amounts and media metadata', () => {
     const payload = { product: configurableProduct };
     const parsed = consumerLineItemSchema.parse(payload);
-    const shared = mapConsumerProduct(parsed.product, apiBaseUrl);
+    const shared = mapConsumerProduct(
+      parsed.product,
+      apiBaseUrl,
+      configurableProduct.id,
+      productScope,
+    );
 
-    expect(parseAndMapConsumerProduct(payload, apiBaseUrl)).toEqual(shared);
+    expect(
+      parseAndMapConsumerProduct(
+        payload,
+        apiBaseUrl,
+        configurableProduct.id,
+        productScope,
+      ),
+    ).toEqual(shared);
     expect(shared.item).toEqual(nativeReferenceProduct(parsed.product));
     expect(shared.variants).toEqual([
       {
@@ -305,6 +345,167 @@ describe('consumer C0 catalogue parity', () => {
     ).toBe('http://127.0.0.1:5081/p/hero.jpg');
   });
 
+  it('recognizes bracketed IPv6 loopback hosts on both media and API URLs', () => {
+    expect(
+      normalizeConsumerMediaUrl(
+        'http://[::1]:5081/p/hero.jpg',
+        apiBaseUrl,
+      ),
+    ).toBe('http://10.0.2.2:5081/p/hero.jpg');
+    expect(
+      normalizeConsumerMediaUrl(
+        'http://[::1]:5081/p/hero.jpg',
+        'http://[::1]:5080',
+      ),
+    ).toBe('http://[::1]:5081/p/hero.jpg');
+    expect(
+      normalizeConsumerMediaUrl(
+        'http://127.0.0.1:5081/p/hero.jpg',
+        'http://[::1]:5080',
+      ),
+    ).toBe('http://127.0.0.1:5081/p/hero.jpg');
+  });
+
+  it('fails closed when store lookup identity or any storefront product store differs', () => {
+    for (const mismatchedScope of [
+      { ...storefrontScope, storeId: 7 },
+      { ...storefrontScope, slug: 'another-store' },
+    ]) {
+      expectScopeMismatch(() =>
+        parseAndMapConsumerStorefront(
+          storefrontPayload,
+          apiBaseUrl,
+          mismatchedScope,
+        ),
+      );
+    }
+
+    expectScopeMismatch(() =>
+      parseAndMapConsumerStorefront(
+        {
+          ...storefrontPayload,
+          categories: [
+            {
+              id: 'draft-foreign-category',
+              name: 'Draft',
+              orderIndex: 0,
+              published: false,
+              categoryProductListEnabled: false,
+              categoryProductListItems: [
+                {
+                  id: 'hidden-foreign-product',
+                  orderIndex: 0,
+                  isHeading: false,
+                  heading: null,
+                  product: {
+                    ...configurableProduct,
+                    hide: true,
+                    storeId: 7,
+                  },
+                },
+              ],
+            },
+          ],
+        },
+        apiBaseUrl,
+        storefrontScope,
+      ),
+    );
+  });
+
+  it('fails closed when requested product ID, store, or currency differs', () => {
+    const payload = { product: configurableProduct };
+    const mismatches = [
+      {
+        productId: 'another-product',
+        scope: productScope,
+      },
+      {
+        productId: configurableProduct.id,
+        scope: { ...productScope, storeId: 7 },
+      },
+      {
+        productId: configurableProduct.id,
+        scope: { ...productScope, currencyCode: 'NOK' },
+      },
+    ];
+
+    for (const mismatch of mismatches) {
+      expectScopeMismatch(() =>
+        parseAndMapConsumerProduct(
+          payload,
+          apiBaseUrl,
+          mismatch.productId,
+          mismatch.scope,
+        ),
+      );
+    }
+  });
+
+  it('rejects unsafe media schemes and blank ThumbHashes', () => {
+    for (const imageUrl of [
+      'ftp://cdn.example.test/product.jpg',
+      'data:image/png;base64,AA==',
+      'javascript:alert(1)',
+    ]) {
+      expect(
+        consumerLineItemSchema.safeParse({
+          product: {
+            ...configurableProduct,
+            image: { imageUrl },
+          },
+        }).success,
+      ).toBe(false);
+      expect(() =>
+        normalizeConsumerMediaUrl(imageUrl, apiBaseUrl),
+      ).toThrow(TypeError);
+    }
+
+    for (const image of [
+      { thumbHash: '' },
+      { thumbHash: '   ' },
+      { thumbhash: '\n\t' },
+    ]) {
+      expect(
+        consumerLineItemSchema.safeParse({
+          product: {
+            ...configurableProduct,
+            image,
+          },
+        }).success,
+      ).toBe(false);
+    }
+  });
+
+  it('preserves empty media while leaving bundled fallbacks adapter-owned', () => {
+    for (const image of [
+      undefined,
+      null,
+      {
+        imageUrl: null,
+        thumbnailUrl: null,
+        thumbHash: null,
+        thumbhash: null,
+      },
+    ]) {
+      const product = consumerLineItemSchema.parse({
+        product: {
+          ...configurableProduct,
+          image,
+        },
+      }).product;
+
+      expect(
+        mapConsumerProduct(
+          product,
+          apiBaseUrl,
+          configurableProduct.id,
+          productScope,
+        ).item.media,
+      ).toBeUndefined();
+    }
+  });
+
   it('keeps the native fail-closed heading and configuration contracts', () => {
     expect(() =>
       parseAndMapConsumerStorefront(
@@ -325,6 +526,7 @@ describe('consumer C0 catalogue parity', () => {
           ],
         },
         apiBaseUrl,
+        storefrontScope,
       ),
     ).toThrow();
     expect(() =>
@@ -336,6 +538,8 @@ describe('consumer C0 catalogue parity', () => {
           },
         },
         apiBaseUrl,
+        configurableProduct.id,
+        productScope,
       ),
     ).toThrow();
   });
@@ -353,7 +557,14 @@ describe('consumer C0 catalogue parity', () => {
       },
     }).product;
 
-    expect(mapConsumerProduct(product, apiBaseUrl).item.media).toEqual({
+    expect(
+      mapConsumerProduct(
+        product,
+        apiBaseUrl,
+        configurableProduct.id,
+        productScope,
+      ).item.media,
+    ).toEqual({
       thumbnailUrl: 'https://cdn.example.test/thumbnail.jpg',
       heroUrl: 'https://cdn.example.test/thumbnail.jpg',
       thumbHash: 'legacy-thumbhash',

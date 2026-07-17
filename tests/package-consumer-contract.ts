@@ -1,9 +1,12 @@
 import {
+  ConsumerCatalogueScopeError,
   mapConsumerStorefront,
   normalizePhoneNumber,
   type PhoneInput,
 } from '@okam/core/consumer/c0/application/v1';
 import {
+  type ConsumerProductScope,
+  type ConsumerStorefrontScope,
   type StorefrontCatalog,
   formatMoneyMinor,
   type ConsumerMarket,
@@ -55,7 +58,21 @@ const packageStorefrontWire: ConsumerStorefrontWire =
     categories: [],
   });
 
+const packageStorefrontScope: ConsumerStorefrontScope = {
+  storeId: 6,
+  slug: 'bahnhof-beizli',
+};
+
+export const packageProductScope: ConsumerProductScope = {
+  storeId: packageStorefrontScope.storeId,
+  currencyCode: packageStorefrontWire.currencyCode,
+};
+
+export const packageCatalogueMismatchCode =
+  new ConsumerCatalogueScopeError('contract probe').code;
+
 export const packageStorefront: StorefrontCatalog = mapConsumerStorefront(
   packageStorefrontWire,
   'https://api.example.test',
+  packageStorefrontScope,
 );
