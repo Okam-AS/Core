@@ -1,11 +1,17 @@
 import {
+  mapConsumerStorefront,
   normalizePhoneNumber,
   type PhoneInput,
 } from '@okam/core/consumer/c0/application/v1';
 import {
+  type StorefrontCatalog,
   formatMoneyMinor,
   type ConsumerMarket,
 } from '@okam/core/consumer/c0/domain/v1';
+import {
+  consumerStorefrontSchema,
+  type ConsumerStorefrontWire,
+} from '@okam/core/consumer/c0/contracts';
 import {
   createReducerStore,
   type StateTransition,
@@ -37,3 +43,19 @@ export const packageConsumerExamples = {
   formatted: formatMoneyMinor(1_234, 'CH'),
   phone: normalizePhoneNumber(phone),
 };
+
+const packageStorefrontWire: ConsumerStorefrontWire =
+  consumerStorefrontSchema.parse({
+    id: 6,
+    name: 'Bahnhof Beizli',
+    slug: 'bahnhof-beizli',
+    currencyCode: 'CHF',
+    isOpenNow: true,
+    selfPickUp: true,
+    categories: [],
+  });
+
+export const packageStorefront: StorefrontCatalog = mapConsumerStorefront(
+  packageStorefrontWire,
+  'https://api.example.test',
+);

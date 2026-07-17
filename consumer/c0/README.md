@@ -44,3 +44,15 @@ rounds to one krone, with exact ties away from zero.
 Legacy Pinia remains unchanged. Its NO-only validator accepts the exact
 `40 000 000` boundary and performs weaker parsing; those behaviors are recorded
 compatibility gaps, not rules copied into the new C0 surface.
+
+Catalogue v1 preserves the current native C0 wire validation, ordering,
+visibility, modifier-price and address-label behavior. The shared domain stays
+platform-neutral: media is represented only by thumbnail/hero URL strings and
+an optional ThumbHash. React Native `ImageSourcePropType`, Expo image objects,
+generated HTTP clients, store authorization and transport errors remain in the
+application-specific adapter until their own migration slices are accepted.
+
+Loopback media rebasing also matches the native app: a `localhost`,
+`127.0.0.1`, `0.0.0.0` or `::1` media origin is rebased to the API hostname only
+when that API hostname is non-loopback. Production and CDN origins are never
+rewritten.

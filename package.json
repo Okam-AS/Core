@@ -27,6 +27,7 @@
     "guard:consumer-adapters": "vitest run tests/consumer-state-adapters.test.ts"
   },
   "dependencies": {
+    "zod": "4.4.3",
     "zustand": "5.0.14"
   },
   "peerDependencies": {
