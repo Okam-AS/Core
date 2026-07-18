@@ -52,6 +52,11 @@ describe('consumer C0 package boundary', () => {
       './consumer/c0/application/v1':
         './consumer/c0/application/v1/index.ts',
       './consumer/c0/ports': './consumer/c0/ports/index.ts',
+      './consumer/c1': './consumer/c1/index.ts',
+      './consumer/c1/contracts': './consumer/c1/contracts/index.ts',
+      './consumer/c1/contracts/v1': './consumer/c1/contracts/v1/index.ts',
+      './consumer/c1/domain': './consumer/c1/domain/index.ts',
+      './consumer/c1/domain/v1': './consumer/c1/domain/v1/index.ts',
       './consumer/adapters/state': './consumer/adapters/state/index.ts',
       './consumer/adapters/react': './consumer/adapters/react/index.ts',
       './package.json': './package.json',

@@ -12,6 +12,11 @@
     "./consumer/c0/application/v1": "./consumer/c0/application/v1/index.ts",
     "./consumer/c0/ports": "./consumer/c0/ports/index.ts",
     "./consumer/c0/domain/v1": "./consumer/c0/domain/v1/index.ts",
+    "./consumer/c1": "./consumer/c1/index.ts",
+    "./consumer/c1/contracts": "./consumer/c1/contracts/index.ts",
+    "./consumer/c1/contracts/v1": "./consumer/c1/contracts/v1/index.ts",
+    "./consumer/c1/domain": "./consumer/c1/domain/index.ts",
+    "./consumer/c1/domain/v1": "./consumer/c1/domain/v1/index.ts",
     "./consumer/adapters/state": "./consumer/adapters/state/index.ts",
     "./consumer/adapters/react": "./consumer/adapters/react/index.ts",
     "./package.json": "./package.json"
@@ -20,9 +25,11 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "typecheck:consumer-c0": "tsc -p tsconfig.consumer-c0.json",
+    "typecheck:consumer-c1": "tsc -p tsconfig.consumer-c1.json",
     "typecheck:consumer-adapters": "tsc -p tsconfig.consumer-adapters.json",
     "typecheck:consumer-package": "tsc -p tsconfig.consumer-package.json",
     "guard:consumer-c0": "vitest run tests/consumer-c0-boundaries.test.ts",
+    "guard:consumer-c1": "vitest run tests/consumer-c1-boundaries.test.ts",
     "guard:consumer-adapters": "vitest run tests/consumer-state-adapters.test.ts"
   },
   "dependencies": {
