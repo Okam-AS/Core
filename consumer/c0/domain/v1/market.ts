@@ -5,16 +5,31 @@ export type ConsumerMarket = (typeof CONSUMER_MARKETS)[number];
  * Stable translation-catalog identifiers. `no` remains the public catalog key
  * while the standards-based locale used for formatting is `nb-NO`.
  */
-export const CONSUMER_LOCALES = ['en', 'de', 'fr', 'it', 'no'] as const;
-export type ConsumerLocale = (typeof CONSUMER_LOCALES)[number];
+export const CONSUMER_UI_LANGUAGES = [
+  'en',
+  'de',
+  'fr',
+  'it',
+  'no',
+] as const;
+export type ConsumerUiLanguage =
+  (typeof CONSUMER_UI_LANGUAGES)[number];
 
-export type ConsumerLocaleTag =
+/**
+ * Compatibility aliases retained while callers move from the ambiguous
+ * "locale" name to the explicit UI-language axis.
+ */
+export const CONSUMER_LOCALES = CONSUMER_UI_LANGUAGES;
+export type ConsumerLocale = ConsumerUiLanguage;
+
+export type ConsumerRegionalFormatTag =
   | 'de-CH'
   | 'en-CH'
   | 'en-NO'
   | 'fr-CH'
   | 'it-CH'
   | 'nb-NO';
+export type ConsumerLocaleTag = ConsumerRegionalFormatTag;
 
 export type ConsumerCurrency = 'CHF' | 'NOK';
 
@@ -49,7 +64,10 @@ export const CONSUMER_MARKET_PROFILES: Readonly<
 };
 
 const LOCALE_TAGS: Readonly<
-  Record<ConsumerMarket, Partial<Record<ConsumerLocale, ConsumerLocaleTag>>>
+  Record<
+    ConsumerMarket,
+    Partial<Record<ConsumerUiLanguage, ConsumerRegionalFormatTag>>
+  >
 > = {
   CH: {
     de: 'de-CH',
@@ -89,9 +107,11 @@ export function isConsumerMarket(value: unknown): value is ConsumerMarket {
 export function isConsumerLocale(value: unknown): value is ConsumerLocale {
   return (
     typeof value === 'string' &&
-    CONSUMER_LOCALES.includes(value as ConsumerLocale)
+    CONSUMER_UI_LANGUAGES.includes(value as ConsumerUiLanguage)
   );
 }
+
+export const isConsumerUiLanguage = isConsumerLocale;
 
 export function getConsumerMarketProfile(
   market: ConsumerMarket,
@@ -106,9 +126,9 @@ export function resolveConsumerLocale({
   locale,
   market,
 }: {
-  locale: ConsumerLocale;
+  locale: ConsumerUiLanguage;
   market: ConsumerMarket;
-}): ConsumerLocaleTag {
+}): ConsumerRegionalFormatTag {
   const parsedMarket = parseConsumerMarket(market);
   const parsedLocale = parseConsumerLocale(locale);
   const tag = LOCALE_TAGS[parsedMarket][parsedLocale];
@@ -123,6 +143,8 @@ export function resolveConsumerLocale({
   return tag;
 }
 
+export const resolveConsumerRegionalFormatTag = resolveConsumerLocale;
+
 export function parseConsumerMarket(value: unknown): ConsumerMarket {
   if (!isConsumerMarket(value)) {
     throw new MarketLocaleError('unknown-market', 'Unknown consumer market.');
@@ -136,3 +158,5 @@ export function parseConsumerLocale(value: unknown): ConsumerLocale {
   }
   return value;
 }
+
+export const parseConsumerUiLanguage = parseConsumerLocale;

@@ -1,3 +1,4 @@
+export * from './app-profile';
 export * from './cart';
 export * from './fulfilment';
 export * from './immutable';

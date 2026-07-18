@@ -22,14 +22,26 @@ import {
 import { useOkamStore } from '@okam/core/consumer/adapters/react';
 import {
   compileAuthorizedStoreScopeV1,
+  createInstalledAppProfileVerifierV1,
   createInstalledManifestVerifierV1,
+  createInstalledMarketPolicyVerifierV1,
   createConsumerCartV1,
   parseConsumerManifestV1,
+  parseConsumerAppProfileV1,
+  parseMarketPaymentPolicyV1,
   reduceConsumerCartV1,
+  resolveConsumerPaymentCapabilitiesV1,
+  resolveConsumerUiLanguageV1,
+  verifyInstalledConsumerAppProfileV1,
   verifyInstalledConsumerManifestV1,
+  verifyInstalledMarketPaymentPolicyV1,
   type ConsumerCartV1,
 } from '@okam/core/consumer/c1/domain/v1';
 import { cartEventV1Schema } from '@okam/core/consumer/c1/contracts/v1';
+import {
+  consumerAppProfileV1Schema,
+  type ConsumerAppProfileWireV1,
+} from '@okam/core/consumer/c1/contracts/v1';
 
 type State = Readonly<{ market: ConsumerMarket }>;
 type Event = { type: 'market-selected'; market: ConsumerMarket };
@@ -134,3 +146,132 @@ export const packageC1CartReduction = reduceConsumerCartV1({
   scope: packageC1Scope.scope,
   event: packageC1CartEvent,
 });
+
+const packageConsumerAppProfileWire: ConsumerAppProfileWireV1 =
+  consumerAppProfileV1Schema.parse({
+    version: 1,
+    id: 'okam.ch.package',
+    environment: 'production',
+    market: 'CH',
+    currency: 'CHF',
+    apiOrigin: 'https://api.okam.ch',
+    themeManifest: {
+      id: 'okam',
+      version: 1,
+      sha256: 'a'.repeat(64),
+    },
+    marketManifest: {
+      id: 'market-ch',
+      version: 1,
+      sha256: 'b'.repeat(64),
+    },
+    storeScope: {
+      kind: 'explicit',
+      allowedStoreIds: ['6'],
+    },
+    identity: {
+      iosBundleId: 'no.okam.consumer.ch',
+      androidPackageName: 'no.okam.consumer.ch',
+      appScheme: 'okam-ch',
+      notificationHubName: 'okam-consumer-ch',
+    },
+    storeLinks: {
+      appleAppStore: null,
+      googlePlayStore: null,
+    },
+    languagePolicy: {
+      defaultLanguage: 'de',
+      offeredLanguages: ['de', 'fr', 'it', 'en'],
+    },
+    compiledPaymentAdapters: ['stripe'],
+  });
+const packageConsumerAppProfileParsed = parseConsumerAppProfileV1(
+  packageConsumerAppProfileWire,
+);
+if (!packageConsumerAppProfileParsed.ok) {
+  throw new Error('Package profile must parse.');
+}
+const packageConsumerAppProfileProvenance = {
+  kind: 'compiled-install' as const,
+  fingerprint: 'package-profile:v1',
+};
+const packageConsumerAppProfileVerifier =
+  createInstalledAppProfileVerifierV1({
+    expectedProfile: packageConsumerAppProfileWire,
+    provenance: packageConsumerAppProfileProvenance,
+  });
+const packageConsumerAppProfileVerified =
+  verifyInstalledConsumerAppProfileV1({
+    profile: packageConsumerAppProfileParsed.profile,
+    verifier: packageConsumerAppProfileVerifier,
+    provenance: packageConsumerAppProfileProvenance,
+  });
+if (!packageConsumerAppProfileVerified.ok) {
+  throw new Error('Package profile must verify.');
+}
+
+export const packageConsumerLanguage = resolveConsumerUiLanguageV1({
+  profile: packageConsumerAppProfileVerified.profile,
+  persistedPreference: {
+    version: 1,
+    appProfileId: packageConsumerAppProfileVerified.profile.id,
+    appProfileFingerprint: packageConsumerAppProfileProvenance.fingerprint,
+    market: packageConsumerAppProfileVerified.profile.market,
+    language: 'fr',
+  },
+  deviceLanguages: ['de-CH'],
+});
+
+const packageMarketPaymentPolicyWire = {
+  market: 'CH' as const,
+  currency: 'CHF' as const,
+  manifest: packageConsumerAppProfileWire.marketManifest,
+  publicProviders: ['PayInStore'] as const,
+};
+const packageMarketPaymentPolicyParsed = parseMarketPaymentPolicyV1(
+  packageMarketPaymentPolicyWire,
+);
+if (!packageMarketPaymentPolicyParsed.ok) {
+  throw new Error('Package market policy must parse.');
+}
+const packageMarketPaymentPolicyProvenance = {
+  kind: 'generated-projection' as const,
+  fingerprint: 'package-market-policy:v1',
+};
+const packageMarketPaymentPolicyVerifier =
+  createInstalledMarketPolicyVerifierV1({
+    expectedPolicy: packageMarketPaymentPolicyWire,
+    provenance: packageMarketPaymentPolicyProvenance,
+  });
+const packageMarketPaymentPolicyVerified =
+  verifyInstalledMarketPaymentPolicyV1({
+    policy: packageMarketPaymentPolicyParsed.policy,
+    verifier: packageMarketPaymentPolicyVerifier,
+    provenance: packageMarketPaymentPolicyProvenance,
+  });
+if (!packageMarketPaymentPolicyVerified.ok) {
+  throw new Error('Package market policy must verify.');
+}
+
+export const packagePaymentCapabilityResolution =
+  resolveConsumerPaymentCapabilitiesV1({
+    profile: packageConsumerAppProfileVerified.profile,
+    storeScope: {
+      appProfileId: packageConsumerAppProfileVerified.profile.id,
+      appProfileFingerprint:
+        packageConsumerAppProfileProvenance.fingerprint,
+      storeId: '6',
+      cartId: 'package-cart',
+      market: 'CH',
+      currency: 'CHF',
+    },
+    marketPolicy: packageMarketPaymentPolicyVerified.policy,
+    serverCapabilities: {
+      version: 1,
+      storeId: '6',
+      cartId: 'package-cart',
+      market: 'CH',
+      currency: 'CHF',
+      capabilities: [],
+    },
+  });
