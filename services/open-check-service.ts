@@ -34,15 +34,15 @@ export class OpenCheckService {
   public async OpenCheck(request: OpenCheckRequest): Promise<CheckModel> {
     const response = await this._requestService.PostRequest('/pos/check/open', request, this.sessionHeaders());
     const { data, error } = this._requestService.TryParseResponseWithError(response);
-    if (error) { throw new Error(error); }
+    if (error) { throw this._requestService.BuildError(error, response); }
     return data;
   }
 
   public async GetCheck(orderId: number): Promise<CheckModel> {
-    const response = await this._requestService.GetRequest('/pos/check/' + orderId, this.sessionHeaders());
+    const response = await this._requestService.SafeGetRequest('/pos/check/' + orderId, this.sessionHeaders());
     const parsed = this._requestService.TryParseResponse(response);
     if (parsed === undefined) {
-      throw new Error('Failed to get check');
+      throw this._requestService.BuildError('Failed to get check', response);
     }
     return parsed;
   }
@@ -50,7 +50,7 @@ export class OpenCheckService {
   public async AddLine(orderId: number, request: AddCheckLineRequest): Promise<CheckModel> {
     const response = await this._requestService.PostRequest('/pos/check/' + orderId + '/line', request, this.sessionHeaders());
     const { data, error } = this._requestService.TryParseResponseWithError(response);
-    if (error) { throw new Error(error); }
+    if (error) { throw this._requestService.BuildError(error, response); }
     return data;
   }
 
@@ -59,14 +59,14 @@ export class OpenCheckService {
   public async DuplicateLine(orderId: number, lineId: string): Promise<CheckModel> {
     const response = await this._requestService.PostRequest('/pos/check/' + orderId + '/line/' + lineId + '/duplicate', {}, this.sessionHeaders());
     const { data, error } = this._requestService.TryParseResponseWithError(response);
-    if (error) { throw new Error(error); }
+    if (error) { throw this._requestService.BuildError(error, response); }
     return data;
   }
 
   public async RemoveLine(orderId: number, lineId: string): Promise<CheckModel> {
-    const response = await this._requestService.DeleteRequest('/pos/check/' + orderId + '/line/' + lineId, this.sessionHeaders());
+    const response = await this._requestService.SafeDeleteRequest('/pos/check/' + orderId + '/line/' + lineId, this.sessionHeaders());
     const { data, error } = this._requestService.TryParseResponseWithError(response);
-    if (error) { throw new Error(error); }
+    if (error) { throw this._requestService.BuildError(error, response); }
     return data;
   }
 
@@ -76,7 +76,7 @@ export class OpenCheckService {
   public async SendToKitchen(orderId: number): Promise<CheckModel> {
     const response = await this._requestService.PostRequest('/pos/check/' + orderId + '/send', undefined, this.sessionHeaders());
     const { data, error } = this._requestService.TryParseResponseWithError(response);
-    if (error) { throw new Error(error); }
+    if (error) { throw this._requestService.BuildError(error, response); }
     return data;
   }
 
@@ -86,7 +86,7 @@ export class OpenCheckService {
   public async SetLineNote(orderId: number, lineId: string, notes: string): Promise<CheckModel> {
     const response = await this._requestService.PostRequest('/pos/check/' + orderId + '/line/' + lineId + '/note', { notes }, this.sessionHeaders());
     const { data, error } = this._requestService.TryParseResponseWithError(response);
-    if (error) { throw new Error(error); }
+    if (error) { throw this._requestService.BuildError(error, response); }
     return data;
   }
 
@@ -96,35 +96,35 @@ export class OpenCheckService {
   public async SetLineSeat(orderId: number, lineId: string, seatNumber: number | null): Promise<CheckModel> {
     const response = await this._requestService.PostRequest('/pos/check/' + orderId + '/line/' + lineId + '/seat', { seatNumber }, this.sessionHeaders());
     const { data, error } = this._requestService.TryParseResponseWithError(response);
-    if (error) { throw new Error(error); }
+    if (error) { throw this._requestService.BuildError(error, response); }
     return data;
   }
 
   public async FireLine(orderId: number, lineId: string, request: FireCourseRequest): Promise<FireCourseResult> {
     const response = await this._requestService.PostRequest('/pos/check/' + orderId + '/line/' + lineId + '/fire', request, this.sessionHeaders());
     const { data, error } = this._requestService.TryParseResponseWithError(response);
-    if (error) { throw new Error(error); }
+    if (error) { throw this._requestService.BuildError(error, response); }
     return data;
   }
 
   public async Move(orderId: number, request: MoveCheckRequest): Promise<CheckModel> {
     const response = await this._requestService.PostRequest('/pos/check/' + orderId + '/move', request, this.sessionHeaders());
     const { data, error } = this._requestService.TryParseResponseWithError(response);
-    if (error) { throw new Error(error); }
+    if (error) { throw this._requestService.BuildError(error, response); }
     return data;
   }
 
   public async Merge(orderId: number, request: MergeCheckRequest): Promise<CheckModel> {
     const response = await this._requestService.PostRequest('/pos/check/' + orderId + '/merge', request, this.sessionHeaders());
     const { data, error } = this._requestService.TryParseResponseWithError(response);
-    if (error) { throw new Error(error); }
+    if (error) { throw this._requestService.BuildError(error, response); }
     return data;
   }
 
   public async SetCouverts(orderId: number, request: SetCouvertsRequest): Promise<CheckModel> {
     const response = await this._requestService.PostRequest('/pos/check/' + orderId + '/couverts', request, this.sessionHeaders());
     const { data, error } = this._requestService.TryParseResponseWithError(response);
-    if (error) { throw new Error(error); }
+    if (error) { throw this._requestService.BuildError(error, response); }
     return data;
   }
 
@@ -133,21 +133,21 @@ export class OpenCheckService {
   public async SetDeliveryType(orderId: number, request: SetDeliveryTypeRequest): Promise<CheckModel> {
     const response = await this._requestService.PostRequest('/pos/check/' + orderId + '/delivery-type', request, this.sessionHeaders());
     const { data, error } = this._requestService.TryParseResponseWithError(response);
-    if (error) { throw new Error(error); }
+    if (error) { throw this._requestService.BuildError(error, response); }
     return data;
   }
 
   public async Park(orderId: number): Promise<CheckModel> {
     const response = await this._requestService.PostRequest('/pos/check/' + orderId + '/park', undefined, this.sessionHeaders());
     const { data, error } = this._requestService.TryParseResponseWithError(response);
-    if (error) { throw new Error(error); }
+    if (error) { throw this._requestService.BuildError(error, response); }
     return data;
   }
 
   public async Split(orderId: number, request: CheckSplitRequest): Promise<CheckSplitModel> {
     const response = await this._requestService.PostRequest('/pos/check/' + orderId + '/split', request, this.sessionHeaders());
     const { data, error } = this._requestService.TryParseResponseWithError(response);
-    if (error) { throw new Error(error); }
+    if (error) { throw this._requestService.BuildError(error, response); }
     return data;
   }
 
@@ -156,48 +156,48 @@ export class OpenCheckService {
   public async Unsplit(orderId: number): Promise<void> {
     const response = await this._requestService.PostRequest('/pos/check/' + orderId + '/unsplit', undefined, this.sessionHeaders());
     const { error } = this._requestService.TryParseResponseWithError(response);
-    if (error) { throw new Error(error); }
+    if (error) { throw this._requestService.BuildError(error, response); }
   }
 
   public async Resume(orderId: number, request: ResumeCheckRequest): Promise<CheckModel> {
     const response = await this._requestService.PostRequest('/pos/check/' + orderId + '/resume', request, this.sessionHeaders());
     const { data, error } = this._requestService.TryParseResponseWithError(response);
-    if (error) { throw new Error(error); }
+    if (error) { throw this._requestService.BuildError(error, response); }
     return data;
   }
 
   public async ApplyLineDiscount(orderId: number, request: ApplyLineDiscountRequest): Promise<CheckModel> {
     const response = await this._requestService.PostRequest('/pos/check/' + orderId + '/discount/line', request, this.sessionHeaders());
     const { data, error } = this._requestService.TryParseResponseWithError(response);
-    if (error) { throw new Error(error); }
+    if (error) { throw this._requestService.BuildError(error, response); }
     return data;
   }
 
   public async ApplyOrderDiscount(orderId: number, request: ApplyOrderDiscountRequest): Promise<CheckModel> {
     const response = await this._requestService.PostRequest('/pos/check/' + orderId + '/discount/order', request, this.sessionHeaders());
     const { data, error } = this._requestService.TryParseResponseWithError(response);
-    if (error) { throw new Error(error); }
+    if (error) { throw this._requestService.BuildError(error, response); }
     return data;
   }
 
   public async RemoveLineDiscount(orderId: number, lineId: string): Promise<CheckModel> {
-    const response = await this._requestService.DeleteRequest('/pos/check/' + orderId + '/discount/line/' + lineId, this.sessionHeaders());
+    const response = await this._requestService.SafeDeleteRequest('/pos/check/' + orderId + '/discount/line/' + lineId, this.sessionHeaders());
     const { data, error } = this._requestService.TryParseResponseWithError(response);
-    if (error) { throw new Error(error); }
+    if (error) { throw this._requestService.BuildError(error, response); }
     return data;
   }
 
   public async RemoveOrderDiscount(orderId: number): Promise<CheckModel> {
-    const response = await this._requestService.DeleteRequest('/pos/check/' + orderId + '/discount/order', this.sessionHeaders());
+    const response = await this._requestService.SafeDeleteRequest('/pos/check/' + orderId + '/discount/order', this.sessionHeaders());
     const { data, error } = this._requestService.TryParseResponseWithError(response);
-    if (error) { throw new Error(error); }
+    if (error) { throw this._requestService.BuildError(error, response); }
     return data;
   }
 
   public async VoidCheck(orderId: number, request: VoidCheckRequest): Promise<CheckModel> {
     const response = await this._requestService.PostRequest('/pos/check/' + orderId + '/void', request, this.sessionHeaders());
     const { data, error } = this._requestService.TryParseResponseWithError(response);
-    if (error) { throw new Error(error); }
+    if (error) { throw this._requestService.BuildError(error, response); }
     return data;
   }
 
@@ -207,15 +207,15 @@ export class OpenCheckService {
   public async DiscardEmptyCheck(orderId: number): Promise<{ discarded: boolean }> {
     const response = await this._requestService.PostRequest('/pos/check/' + orderId + '/discard-empty', {}, this.sessionHeaders());
     const { data, error } = this._requestService.TryParseResponseWithError(response);
-    if (error) { throw new Error(error); }
+    if (error) { throw this._requestService.BuildError(error, response); }
     return data;
   }
 
   public async BoardStatus(storeId: number): Promise<BoardStatusModel> {
-    const response = await this._requestService.GetRequest('/pos/board-status/' + storeId, this.sessionHeaders());
+    const response = await this._requestService.SafeGetRequest('/pos/board-status/' + storeId, this.sessionHeaders());
     const parsed = this._requestService.TryParseResponse(response);
     if (parsed === undefined) {
-      throw new Error('Failed to get board status');
+      throw this._requestService.BuildError('Failed to get board status', response);
     }
     return parsed;
   }

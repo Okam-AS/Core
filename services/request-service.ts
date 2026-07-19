@@ -102,6 +102,64 @@ export class RequestService {
     }
   }
 
+  // Axios errors carry the real response under `.response`; NativeScript resolves the
+  // response directly. One unwrap for every consumer, so status and message extraction can
+  // never diverge.
+  private UnwrapResponse(responseOrError) {
+    return (!$config.isNativeScript && responseOrError && responseOrError.response)
+      ? responseOrError.response
+      : responseOrError;
+  }
+
+  // Best-effort HTTP status of a resolved response (or an axios error object on web).
+  // undefined when the request never reached the server (network failure), letting callers
+  // distinguish "server said no" (e.g. 401) from "offline".
+  public TryGetStatusCode(response): number | undefined {
+    if (!response) { return undefined; }
+    const actual = this.UnwrapResponse(response);
+    const statusCode = $config.isNativeScript ? actual.statusCode : actual.status;
+    return typeof statusCode === "number" ? statusCode : undefined;
+  }
+
+  // The backend AppException message from a failed response's body, when one exists.
+  private TryGetErrorMessage(response): string | undefined {
+    if (!response) { return undefined; }
+    const actual = this.UnwrapResponse(response);
+    try {
+      const parsed = $config.isNativeScript && actual.content ? actual.content.toJSON() : actual.data;
+      return parsed && parsed.message ? String(parsed.message) : undefined;
+    } catch (e) {
+      return undefined;
+    }
+  }
+
+  // Builds the Error thrown when a response can't be parsed, carrying the HTTP status (when
+  // the server responded) so callers can branch on e.statusCode — e.g. 401 => session expired,
+  // undefined => network failure.
+  public BuildError(message: string, responseOrError: any): Error {
+    // Prefer the backend's own message (an AppException reason the operator can act on)
+    // over the caller's generic fallback.
+    const error: any = new Error(this.TryGetErrorMessage(responseOrError) || message);
+    error.statusCode = this.TryGetStatusCode(responseOrError);
+    return error;
+  }
+
+  // Settled variants: resolve transport rejections (axios rejects on any non-2xx; NativeScript
+  // rejects on network failure) into the returned value, so TryParseResponse/-WithError and
+  // BuildError see the failed response uniformly on both platforms. PostRequest already
+  // behaves this way.
+  public SafeGetRequest(path: string, extraHeaders?: Record<string, string>): Promise<any> {
+    return this.GetRequest(path, extraHeaders).catch((error) => error);
+  }
+
+  public SafePutRequest(path: string, payload?: any, extraHeaders?: Record<string, string>): Promise<any> {
+    return this.PutRequest(path, payload, extraHeaders).catch((error) => error);
+  }
+
+  public SafeDeleteRequest(path: string, extraHeaders?: Record<string, string>): Promise<any> {
+    return this.DeleteRequest(path, extraHeaders).catch((error) => error);
+  }
+
   public TryParseResponseWithError(response) {
     if (typeof response === "undefined" || !response) {
       return { error: "No response received" };
@@ -109,7 +167,7 @@ export class RequestService {
     // PostRequest resolves a rejected (non-2xx) request to the axios error object, whose real
     // status and body live under `.response`. Unwrap so the backend AppException message is read
     // whether we were handed the raw response, an axios error, or an already-unwrapped response.
-    const actual = (!$config.isNativeScript && response.response) ? response.response : response;
+    const actual = this.UnwrapResponse(response);
     const statusCode = $config.isNativeScript ? actual.statusCode : actual.status;
 
     try {

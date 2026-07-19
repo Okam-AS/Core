@@ -27,7 +27,7 @@ export class CashDrawerService {
     const response = await this._requestService.PostRequest('/cashdrawer/' + cashPointId + '/begin-day', request, this.sessionHeaders());
     const { data, error } = this._requestService.TryParseResponseWithError(response);
     if (error) {
-      throw new Error(error);
+      throw this._requestService.BuildError(error, response);
     }
     return data;
   }
@@ -35,23 +35,20 @@ export class CashDrawerService {
   // Returns the cash point's open trading day, or null when no day is open (HTTP 404). Used at POS
   // startup to restore the open-day state without re-opening the day.
   public async GetCurrentDay(cashPointId: number): Promise<CashDrawerSession | null> {
-    try {
-      const response = await this._requestService.GetRequest('/cashdrawer/' + cashPointId + '/current', this.sessionHeaders());
-      const parsed = this._requestService.TryParseResponse(response);
-      return parsed === undefined ? null : parsed;
-    } catch (e) {
-      if (e && e.response && e.response.status === 404) {
-        return null;
-      }
-      throw e;
-    }
+    const response = await this._requestService.SafeGetRequest('/cashdrawer/' + cashPointId + '/current', this.sessionHeaders());
+    const parsed = this._requestService.TryParseResponse(response);
+    if (parsed !== undefined) { return parsed; }
+    // Only a 404 means "no trading day open"; a 401/500/network failure must surface, or a
+    // transient error would wrongly show the Begin Day flow over an already-open day.
+    if (this._requestService.TryGetStatusCode(response) === 404) { return null; }
+    throw this._requestService.BuildError('Failed to get current day', response);
   }
 
   public async RecordTransaction(sessionId: number, request: CashDrawerTransactionRequest): Promise<CashDrawerTransaction> {
     const response = await this._requestService.PostRequest('/cashdrawer/' + sessionId + '/transaction', request, this.sessionHeaders());
     const { data, error } = this._requestService.TryParseResponseWithError(response);
     if (error) {
-      throw new Error(error);
+      throw this._requestService.BuildError(error, response);
     }
     return data;
   }
@@ -68,10 +65,10 @@ export class CashDrawerService {
     if (params.length > 0) {
       path += '?' + params.join('&');
     }
-    const response = await this._requestService.GetRequest(path, this.sessionHeaders());
+    const response = await this._requestService.SafeGetRequest(path, this.sessionHeaders());
     const parsed = this._requestService.TryParseResponse(response);
     if (parsed === undefined) {
-      throw new Error('Failed to get end-of-day summary');
+      throw this._requestService.BuildError('Failed to get end-of-day summary', response);
     }
     return parsed;
   }
@@ -80,7 +77,7 @@ export class CashDrawerService {
     const response = await this._requestService.PostRequest('/cashdrawer/' + sessionId + '/end-day', request, this.sessionHeaders());
     const { data, error } = this._requestService.TryParseResponseWithError(response);
     if (error) {
-      throw new Error(error);
+      throw this._requestService.BuildError(error, response);
     }
     return data;
   }

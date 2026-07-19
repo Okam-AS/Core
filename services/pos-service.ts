@@ -50,7 +50,7 @@ export class PosService {
   public async PayCash(request: CashSaleRequest): Promise<PosReceiptModel> {
     const response = await this._requestService.PostRequest('/pos/payment/cash', request, this.sessionHeaders());
     const { data, error } = this._requestService.TryParseResponseWithError(response);
-    if (error) { throw new Error(error); }
+    if (error) { throw this._requestService.BuildError(error, response); }
     return data;
   }
 
@@ -59,46 +59,46 @@ export class PosService {
   // Whole-store product catalog for the sales grid (categories with product-list items + variants).
   // Store read access only — no operator session, so the grid can load before PIN login.
   public async GetCatalog(storeId: number): Promise<Array<Category>> {
-    const response = await this._requestService.GetRequest('/pos/catalog/' + storeId);
+    const response = await this._requestService.SafeGetRequest('/pos/catalog/' + storeId);
     const parsed = this._requestService.TryParseResponse(response);
-    if (parsed === undefined) { throw new Error('Failed to load POS catalog'); }
+    if (parsed === undefined) { throw this._requestService.BuildError('Failed to load POS catalog', response); }
     return parsed;
   }
 
   // --- Receipts ---
 
   public async GetReceipt(journalEntryId: number): Promise<PosReceiptModel> {
-    const response = await this._requestService.GetRequest('/pos/receipt/' + journalEntryId, this.sessionHeaders());
+    const response = await this._requestService.SafeGetRequest('/pos/receipt/' + journalEntryId, this.sessionHeaders());
     const parsed = this._requestService.TryParseResponse(response);
-    if (parsed === undefined) { throw new Error('Failed to get receipt'); }
+    if (parsed === undefined) { throw this._requestService.BuildError('Failed to get receipt', response); }
     return parsed;
   }
 
   public async CopyReceipt(journalEntryId: number, request: CopyReceiptRequest): Promise<PosReceiptModel> {
     const response = await this._requestService.PostRequest('/pos/receipt/' + journalEntryId + '/copy', request, this.sessionHeaders());
     const parsed = this._requestService.TryParseResponse(response);
-    if (parsed === undefined) { throw new Error('Failed to copy receipt'); }
+    if (parsed === undefined) { throw this._requestService.BuildError('Failed to copy receipt', response); }
     return parsed;
   }
 
   public async ProvisionalReceipt(request: ProvisionalReceiptRequest): Promise<PosReceiptModel> {
     const response = await this._requestService.PostRequest('/pos/receipt/provisional', request, this.sessionHeaders());
     const parsed = this._requestService.TryParseResponse(response);
-    if (parsed === undefined) { throw new Error('Failed to produce provisional receipt'); }
+    if (parsed === undefined) { throw this._requestService.BuildError('Failed to produce provisional receipt', response); }
     return parsed;
   }
 
   public async TrainingReceipt(request: TrainingReceiptRequest): Promise<PosReceiptModel> {
     const response = await this._requestService.PostRequest('/pos/receipt/training', request, this.sessionHeaders());
     const parsed = this._requestService.TryParseResponse(response);
-    if (parsed === undefined) { throw new Error('Failed to produce training receipt'); }
+    if (parsed === undefined) { throw this._requestService.BuildError('Failed to produce training receipt', response); }
     return parsed;
   }
 
   public async SendReceiptSms(journalEntryId: number, request: ReceiptSmsRequest): Promise<ReceiptSmsResult> {
     const response = await this._requestService.PostRequest('/pos/receipt/' + journalEntryId + '/sms', request, this.sessionHeaders());
     const parsed = this._requestService.TryParseResponse(response);
-    if (parsed === undefined) { throw new Error('Failed to send receipt SMS'); }
+    if (parsed === undefined) { throw this._requestService.BuildError('Failed to send receipt SMS', response); }
     return parsed;
   }
 
@@ -108,7 +108,7 @@ export class PosService {
   public async InitiateCard(request: CardInitiateRequest): Promise<CardInitiateResult> {
     const response = await this._requestService.PostRequest('/pos/payment/card/initiate', request, this.sessionHeaders());
     const { data, error } = this._requestService.TryParseResponseWithError(response);
-    if (error) { throw new Error(error); }
+    if (error) { throw this._requestService.BuildError(error, response); }
     return data;
   }
 
@@ -118,21 +118,21 @@ export class PosService {
   public async ReconcileCard(transactionId: string, request: CardReconcileRequest): Promise<CardReconcileResult> {
     const response = await this._requestService.PostRequest('/pos/payment/card/' + transactionId + '/reconcile', request, this.sessionHeaders());
     const parsed = this._requestService.TryParseResponse(response);
-    if (parsed === undefined) { throw new Error('Failed to reconcile card payment'); }
+    if (parsed === undefined) { throw this._requestService.BuildError('Failed to reconcile card payment', response); }
     return parsed;
   }
 
   public async CaptureCard(transactionId: string, request: CardCaptureRequest): Promise<TerminalCaptureResult> {
     const response = await this._requestService.PostRequest('/pos/payment/card/' + transactionId + '/capture', request, this.sessionHeaders());
     const parsed = this._requestService.TryParseResponse(response);
-    if (parsed === undefined) { throw new Error('Failed to capture card payment'); }
+    if (parsed === undefined) { throw this._requestService.BuildError('Failed to capture card payment', response); }
     return parsed;
   }
 
   public async VoidCard(transactionId: string, request: CardVoidRequest): Promise<TerminalVoidResult> {
     const response = await this._requestService.PostRequest('/pos/payment/card/' + transactionId + '/void', request, this.sessionHeaders());
     const parsed = this._requestService.TryParseResponse(response);
-    if (parsed === undefined) { throw new Error('Failed to void card payment'); }
+    if (parsed === undefined) { throw this._requestService.BuildError('Failed to void card payment', response); }
     return parsed;
   }
 
@@ -140,7 +140,7 @@ export class PosService {
   public async RefundCard(transactionId: string, request: CardRefundRequest): Promise<TerminalRefundResult> {
     const response = await this._requestService.PostRequest('/pos/payment/card/' + transactionId + '/refund', request, this.sessionHeaders());
     const parsed = this._requestService.TryParseResponse(response);
-    if (parsed === undefined) { throw new Error('Failed to refund card payment'); }
+    if (parsed === undefined) { throw this._requestService.BuildError('Failed to refund card payment', response); }
     return parsed;
   }
 
@@ -148,16 +148,16 @@ export class PosService {
   public async RefundCash(journalEntryId: number, request: CashRefundRequest): Promise<PosReceiptModel> {
     const response = await this._requestService.PostRequest('/pos/payment/cash/' + journalEntryId + '/refund', request, this.sessionHeaders());
     const { data, error } = this._requestService.TryParseResponseWithError(response);
-    if (error) { throw new Error(error); }
+    if (error) { throw this._requestService.BuildError(error, response); }
     return data;
   }
 
   // Polls a card refund awaiting cardholder approval on the terminal (the in-person refund is
   // asynchronous). Returns Confirmed with the Return receipt once it settles, otherwise Pending.
   public async RefundStatusCard(transactionId: string, cashPointId: number): Promise<TerminalRefundResult> {
-    const response = await this._requestService.GetRequest('/pos/payment/card/' + transactionId + '/refund-status?cashPointId=' + encodeURIComponent(cashPointId), this.sessionHeaders());
+    const response = await this._requestService.SafeGetRequest('/pos/payment/card/' + transactionId + '/refund-status?cashPointId=' + encodeURIComponent(cashPointId), this.sessionHeaders());
     const parsed = this._requestService.TryParseResponse(response);
-    if (parsed === undefined) { throw new Error('Failed to get refund status'); }
+    if (parsed === undefined) { throw this._requestService.BuildError('Failed to get refund status', response); }
     return parsed;
   }
 
@@ -167,7 +167,7 @@ export class PosService {
   public async ReturnCash(request: UnreferencedCashReturnRequest): Promise<PosReceiptModel> {
     const response = await this._requestService.PostRequest('/pos/return/cash', request, this.sessionHeaders());
     const { data, error } = this._requestService.TryParseResponseWithError(response);
-    if (error) { throw new Error(error); }
+    if (error) { throw this._requestService.BuildError(error, response); }
     return data;
   }
 
@@ -176,7 +176,7 @@ export class PosService {
   public async InitiateReturnCard(request: UnreferencedCardReturnRequest): Promise<TerminalRefundResult> {
     const response = await this._requestService.PostRequest('/pos/return/card/initiate', request, this.sessionHeaders());
     const { data, error } = this._requestService.TryParseResponseWithError(response);
-    if (error) { throw new Error(error); }
+    if (error) { throw this._requestService.BuildError(error, response); }
     return data;
   }
 
@@ -191,37 +191,37 @@ export class PosService {
   public async OpenSettlement(request: SettlementOpenRequest): Promise<SettlementModel> {
     const response = await this._requestService.PostRequest('/pos/settlement/open', request, this.sessionHeaders());
     const { data, error } = this._requestService.TryParseResponseWithError(response);
-    if (error) { throw new Error(error); }
+    if (error) { throw this._requestService.BuildError(error, response); }
     return data;
   }
 
   // Resumes an in-progress (split) settlement after a refresh. Rejects when the settlement is not
   // found or the operator session is not on its cash point / store.
   public async GetSettlement(settlementId: string): Promise<SettlementModel> {
-    const response = await this._requestService.GetRequest('/pos/settlement/' + settlementId, this.sessionHeaders());
+    const response = await this._requestService.SafeGetRequest('/pos/settlement/' + settlementId, this.sessionHeaders());
     const parsed = this._requestService.TryParseResponse(response);
-    if (parsed === undefined) { throw new Error('Failed to get settlement'); }
+    if (parsed === undefined) { throw this._requestService.BuildError('Failed to get settlement', response); }
     return parsed;
   }
 
   public async AddSettlementAllocation(settlementId: string, request: SettlementAllocationRequest): Promise<SettlementAllocationResult> {
     const response = await this._requestService.PostRequest('/pos/settlement/' + settlementId + '/allocation', request, this.sessionHeaders());
     const { data, error } = this._requestService.TryParseResponseWithError(response);
-    if (error) { throw new Error(error); }
+    if (error) { throw this._requestService.BuildError(error, response); }
     return data;
   }
 
   public async FinalizeSettlement(settlementId: string, request: SettlementActionRequest): Promise<PosReceiptModel> {
     const response = await this._requestService.PostRequest('/pos/settlement/' + settlementId + '/finalize', request, this.sessionHeaders());
     const { data, error } = this._requestService.TryParseResponseWithError(response);
-    if (error) { throw new Error(error); }
+    if (error) { throw this._requestService.BuildError(error, response); }
     return data;
   }
 
   public async AbortSettlement(settlementId: string, request: SettlementActionRequest): Promise<SettlementModel> {
     const response = await this._requestService.PostRequest('/pos/settlement/' + settlementId + '/abort', request, this.sessionHeaders());
     const { data, error } = this._requestService.TryParseResponseWithError(response);
-    if (error) { throw new Error(error); }
+    if (error) { throw this._requestService.BuildError(error, response); }
     return data;
   }
 }

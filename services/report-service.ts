@@ -18,32 +18,32 @@ export class ReportService {
   }
 
   public async XReport(cashPointId: number): Promise<XReportModel> {
-    const response = await this._requestService.GetRequest('/report/cashpoint/' + cashPointId + '/x', this.sessionHeaders());
+    const response = await this._requestService.SafeGetRequest('/report/cashpoint/' + cashPointId + '/x', this.sessionHeaders());
     const parsed = this._requestService.TryParseResponse(response);
-    if (parsed === undefined) { throw new Error('Failed to get X report'); }
+    if (parsed === undefined) { throw this._requestService.BuildError('Failed to get X report', response); }
     return parsed;
   }
 
   public async ZReport(cashPointId: number): Promise<ZReportModel> {
     const response = await this._requestService.PostRequest('/report/cashpoint/' + cashPointId + '/z', undefined, this.sessionHeaders());
     const parsed = this._requestService.TryParseResponse(response);
-    if (parsed === undefined) { throw new Error('Failed to produce Z report'); }
+    if (parsed === undefined) { throw this._requestService.BuildError('Failed to produce Z report', response); }
     return parsed;
   }
 
   // Reads back previously cut Z reports for a cash point (newest first, paged).
   public async GetZHistory(cashPointId: number, page: number = 1, pageSize: number = 20): Promise<ZReportPageModel> {
-    const response = await this._requestService.GetRequest(
+    const response = await this._requestService.SafeGetRequest(
       '/report/cashpoint/' + cashPointId + '/z?page=' + page + '&pageSize=' + pageSize, this.sessionHeaders());
     const parsed = this._requestService.TryParseResponse(response);
-    if (parsed === undefined) { throw new Error('Failed to get Z history'); }
+    if (parsed === undefined) { throw this._requestService.BuildError('Failed to get Z history', response); }
     return parsed;
   }
 
   public async GetZReport(zReportId: number): Promise<ZReportModel> {
-    const response = await this._requestService.GetRequest('/report/z/' + zReportId, this.sessionHeaders());
+    const response = await this._requestService.SafeGetRequest('/report/z/' + zReportId, this.sessionHeaders());
     const parsed = this._requestService.TryParseResponse(response);
-    if (parsed === undefined) { throw new Error('Failed to get Z report'); }
+    if (parsed === undefined) { throw this._requestService.BuildError('Failed to get Z report', response); }
     return parsed;
   }
 }

@@ -23,19 +23,19 @@ export class OperatorService {
   }
 
   public async GetForStore(storeId: number): Promise<Array<OperatorModel>> {
-    const response = await this._requestService.GetRequest('/Operator?storeId=' + encodeURIComponent(storeId));
+    const response = await this._requestService.SafeGetRequest('/Operator?storeId=' + encodeURIComponent(storeId));
     const parsed = this._requestService.TryParseResponse(response);
     if (parsed === undefined) {
-      throw new Error('Failed to get operators');
+      throw this._requestService.BuildError('Failed to get operators', response);
     }
     return parsed;
   }
 
   public async Get(id: number): Promise<OperatorModel> {
-    const response = await this._requestService.GetRequest('/Operator/' + id);
+    const response = await this._requestService.SafeGetRequest('/Operator/' + id);
     const parsed = this._requestService.TryParseResponse(response);
     if (parsed === undefined) {
-      throw new Error('Failed to get operator');
+      throw this._requestService.BuildError('Failed to get operator', response);
     }
     return parsed;
   }
@@ -43,10 +43,10 @@ export class OperatorService {
   // Restores the operator session tied to operatorSessionId (X-Operator-Session) without a PIN,
   // e.g. after a page refresh. Rejects (401) when the session is missing / ended / expired.
   public async GetSession(): Promise<OperatorSessionModel> {
-    const response = await this._requestService.GetRequest('/Operator/session', this.sessionHeaders());
+    const response = await this._requestService.SafeGetRequest('/Operator/session', this.sessionHeaders());
     const parsed = this._requestService.TryParseResponse(response);
     if (parsed === undefined) {
-      throw new Error('Failed to get operator session');
+      throw this._requestService.BuildError('Failed to get operator session', response);
     }
     return parsed;
   }
@@ -55,16 +55,16 @@ export class OperatorService {
     const response = await this._requestService.PostRequest('/Operator', model);
     const parsed = this._requestService.TryParseResponse(response);
     if (parsed === undefined) {
-      throw new Error('Failed to create operator');
+      throw this._requestService.BuildError('Failed to create operator', response);
     }
     return parsed;
   }
 
   public async Update(id: number, model: OperatorUpsertModel): Promise<OperatorModel> {
-    const response = await this._requestService.PutRequest('/Operator/' + id, model);
+    const response = await this._requestService.SafePutRequest('/Operator/' + id, model);
     const parsed = this._requestService.TryParseResponse(response);
     if (parsed === undefined) {
-      throw new Error('Failed to update operator');
+      throw this._requestService.BuildError('Failed to update operator', response);
     }
     return parsed;
   }
@@ -75,7 +75,7 @@ export class OperatorService {
   }
 
   public async Delete(id: number): Promise<boolean> {
-    const response = await this._requestService.DeleteRequest('/Operator/' + id);
+    const response = await this._requestService.SafeDeleteRequest('/Operator/' + id);
     return this._requestService.TryParseResponse(response) !== undefined;
   }
 
@@ -83,7 +83,7 @@ export class OperatorService {
     const response = await this._requestService.PostRequest('/Operator/login', request);
     const { data, error } = this._requestService.TryParseResponseWithError(response);
     if (error) {
-      throw new Error(error);
+      throw this._requestService.BuildError(error, response);
     }
     return data;
   }
@@ -92,7 +92,7 @@ export class OperatorService {
     const response = await this._requestService.PostRequest('/Operator/switch', request, this.sessionHeaders());
     const { data, error } = this._requestService.TryParseResponseWithError(response);
     if (error) {
-      throw new Error(error);
+      throw this._requestService.BuildError(error, response);
     }
     return data;
   }
