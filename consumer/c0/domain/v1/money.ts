@@ -8,7 +8,6 @@ export type MoneyErrorCode =
   | 'invalid-minor-amount'
   | 'invalid-rounding-increment'
   | 'invalid-quantity'
-  | 'invalid-vat-rate'
   | 'currency-mismatch'
   | 'unknown-currency';
 
@@ -125,24 +124,14 @@ export type Money = Readonly<{
 }>;
 
 /**
- * A VAT rate expressed in integer per-mille (‰). Consumer markets use rates the
- * decimal-percent world cannot represent exactly (Swiss 8.1 / 2.6 / 3.8); ten
- * times the percent is always a whole number (81 / 26 / 38, Norwegian 250 / 150
- * / 120), so per-mille keeps the whole VAT computation in exact integer math.
+ * This module intentionally provides NO client-side VAT computation. The
+ * backend (`OrderModelBuilder`) is the sole VAT authority: it floors the
+ * per-unit decimal division `(int)floor((Amount / (1 + Tax/100)) * Quantity)`
+ * in C# `decimal`, which a gross-only integer split cannot reproduce (for
+ * quantity ≥ 2 the two disagree by a minor unit on most rates, and float64
+ * cannot reproduce the decimal even per-unit). The consumer app consumes the
+ * server's VAT breakdown verbatim; it never recomputes tax.
  */
-export type Permille = number;
-
-/**
- * The consumer-market VAT breakdown of one gross line, mirroring the backend
- * `TaxDetail`: `net + vat === gross`, with the sign carried through so a credit
- * line stays a signed, never-dropped bucket.
- */
-export type VatBreakdown = Readonly<{
-  gross: Money;
-  net: Money;
-  vat: Money;
-  ratePermille: Permille;
-}>;
 
 const CURRENCY_TO_MARKET: Readonly<Record<ConsumerCurrency, ConsumerMarket>> = {
   CHF: 'CH',
@@ -226,52 +215,6 @@ export function multiplyMoneyByQuantity(
   const minor = amount.minor * quantity;
   assertMinorAmount(minor);
   return { minor, currency: amount.currency };
-}
-
-function assertPermille(ratePermille: Permille): void {
-  if (!Number.isSafeInteger(ratePermille) || ratePermille < 0) {
-    throw new MoneyError(
-      'invalid-vat-rate',
-      'VAT rate must be a non-negative integer per-mille value.',
-    );
-  }
-}
-
-/**
- * Splits a gross line into net + VAT using the backend per-line-floor rule
- * (`OrderModelBuilder`): `net = floor(gross / (1 + rate))`, `vat = gross - net`,
- * with the floor taken on the whole line. Backend money math runs in exact
- * decimal; per-mille keeps this in exact integer arithmetic that reproduces it
- * byte-for-byte for every representable consumer amount. The sign is carried on
- * both parts so `net + vat === gross` holds for credits too.
- */
-export function vatFromGross(
-  gross: Money,
-  ratePermille: Permille,
-  mode: 'line-floor' = 'line-floor',
-): VatBreakdown {
-  assertMinorAmount(gross.minor);
-  assertConsumerCurrency(gross.currency);
-  assertPermille(ratePermille);
-  if (mode !== 'line-floor') {
-    throw new MoneyError(
-      'invalid-vat-rate',
-      `Unsupported VAT mode: ${String(mode)}`,
-    );
-  }
-
-  const sign = gross.minor < 0 ? -1 : 1;
-  const absoluteGross = Math.abs(gross.minor);
-  const netMinor =
-    sign * Math.floor((absoluteGross * 1000) / (1000 + ratePermille));
-  const vatMinor = gross.minor - netMinor;
-
-  return {
-    gross,
-    net: { minor: netMinor, currency: gross.currency },
-    vat: { minor: vatMinor, currency: gross.currency },
-    ratePermille,
-  };
 }
 
 /**

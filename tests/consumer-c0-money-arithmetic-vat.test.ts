@@ -9,23 +9,21 @@ import {
   MoneyError,
   multiplyMoneyByQuantity,
   subtractMoney,
-  vatFromGross,
   type Money,
 } from '../consumer/c0/domain/v1';
 
 /**
  * The money module unifies the native Intl formatters, the pinned Core C0
- * formatter, Ali's øre helpers, and the backend per-line-floor VAT rule into
- * one minor-unit domain (FRONTEND-PLATFORM-SPEC XXVI.4, money slice S1).
+ * formatter, and Ali's øre helpers into one minor-unit domain
+ * (FRONTEND-PLATFORM-SPEC XXVI.4, money slice S1).
  *
- * The VAT oracle is the backend `OrderModelBuilder` per-line-floor rule
- * (`ModelBuilders/OrderModelBuilder.cs`): `Tax` is a C# `decimal`, `Amount`
- * and `Quantity` are `int`, so `basis = (int)Math.Floor(Amount / (1 + Tax/100)
- * * Quantity)` and `vat = totalAmount - basis` run in EXACT decimal. Expressing
- * the rate in integer per-mille keeps the same computation in exact integer
- * arithmetic, which reproduces the decimal result byte-for-byte for every
- * representable consumer amount. Each row below was cross-checked against the
- * decimal formula.
+ * It intentionally provides NO client-side VAT. The backend
+ * (`OrderModelBuilder`) is the sole VAT authority: it floors the PER-UNIT
+ * decimal division `(int)floor((Amount / (1 + Tax/100)) * Quantity)` in C#
+ * `decimal`. A gross-only integer split cannot reproduce that — for quantity
+ * ≥ 2 the two disagree by a minor unit on most rates, and float64 cannot
+ * reproduce the decimal even per unit — so the module offers no `vatFromGross`
+ * and the consumer app consumes the server VAT breakdown verbatim.
  */
 describe('consumer money — minor-unit construction', () => {
   it('builds a currency-tagged minor amount', () => {
@@ -97,61 +95,17 @@ describe('consumer money — arithmetic in minor units', () => {
   );
 });
 
-describe('consumer VAT — backend per-line-floor oracle', () => {
-  it.each([
-    // [grossMinor, ratePermille, expectedNet, expectedVat]
-    [1000, 81, 925, 75], // CH standard 8.1%
-    [3650, 81, 3376, 274],
-    [12_500, 81, 11_563, 937],
-    [100_000, 81, 92_506, 7494],
-    [890, 26, 867, 23], // CH reduced 2.6%
-    [10_000, 26, 9746, 254],
-    [3650, 38, 3516, 134], // CH accommodation 3.8%
-    [1000, 250, 800, 200], // NO standard 25%
-    [12_500, 250, 10_000, 2500],
-    [10_000, 150, 8695, 1305], // NO reduced 15%
-    [10_000, 120, 8928, 1072], // NO low 12%
-    [1, 250, 0, 1],
-    [0, 81, 0, 0],
-  ] as const)(
-    'splits gross %i at %i‰ into net %i + vat %i',
-    (grossMinor, ratePermille, expectedNet, expectedVat) => {
-      const breakdown = vatFromGross(makeMoney(grossMinor, 'CHF'), ratePermille);
-      expect(breakdown.net.minor).toBe(expectedNet);
-      expect(breakdown.vat.minor).toBe(expectedVat);
-      // The backend invariant: basis + amount === totalAmount.
-      expect(breakdown.net.minor + breakdown.vat.minor).toBe(grossMinor);
-      expect(breakdown.gross).toEqual(makeMoney(grossMinor, 'CHF'));
-      expect(breakdown.ratePermille).toBe(ratePermille);
-    },
-  );
-
-  it('carries the sign through a credit line, never dropping the bucket', () => {
-    const breakdown = vatFromGross(makeMoney(-1000, 'NOK'), 250);
-    expect(breakdown.net.minor).toBe(-800);
-    expect(breakdown.vat.minor).toBe(-200);
-    expect(breakdown.net.minor + breakdown.vat.minor).toBe(-1000);
-  });
-
-  it('treats a zero rate as all-net', () => {
-    const breakdown = vatFromGross(makeMoney(4200, 'NOK'), 0);
-    expect(breakdown.net.minor).toBe(4200);
-    expect(breakdown.vat.minor).toBe(0);
-  });
-
-  it.each([-1, 1.5, Number.NaN])(
-    'rejects a malformed per-mille rate %j',
-    (ratePermille) => {
-      expect(() =>
-        vatFromGross(makeMoney(1000, 'CHF'), ratePermille),
-      ).toThrowError(expect.objectContaining({ code: 'invalid-vat-rate' }));
-    },
-  );
-
-  it('rejects an unsupported VAT mode', () => {
-    expect(() =>
-      vatFromGross(makeMoney(1000, 'CHF'), 81, 'per-unit' as 'line-floor'),
-    ).toThrowError(expect.objectContaining({ code: 'invalid-vat-rate' }));
+describe('consumer money — no client-side VAT (server is the VAT authority)', () => {
+  it('exposes no VAT computation on the money module', async () => {
+    // The backend flooring is per-unit decimal —
+    // `(int)floor((Amount / (1 + Tax/100)) * Quantity)` — which no gross-only
+    // integer (or float64 per-unit) split can reproduce for quantity ≥ 2. The
+    // module therefore deliberately ships no `vatFromGross`; the app consumes
+    // the server breakdown. This guards against the capability reappearing.
+    const money = await import('../consumer/c0/domain/v1');
+    expect('vatFromGross' in money).toBe(false);
+    expect('VatBreakdown' in money).toBe(false);
+    expect('Permille' in money).toBe(false);
   });
 });
 
