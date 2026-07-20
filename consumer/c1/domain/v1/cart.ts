@@ -130,10 +130,30 @@ function lineConfigurationEqualsV1(
 }
 
 /**
- * Matches the current native cartLineKey exactly while preserving full line
- * metadata separately for persistence and conflict review.
+ * The exact fields the line-identity rule reads. Deliberately narrower than a
+ * full validated `ConsumerCartLineV1`: a consuming platform (e.g. the native
+ * app) can single-source its own line-key off this rule by projecting its cart
+ * line onto these fields, without constructing a scope-authorized wire cart.
+ * `ConsumerCartLineV1` structurally satisfies it, so internal callers are
+ * unchanged.
  */
-export function cartLineIdentityV1(line: ConsumerCartLineV1): string {
+export type CartLineIdentityInputV1 = Readonly<{
+  product: Readonly<{ id: string; unitPriceMinor: number }>;
+  modifier?: string | undefined;
+  note?: string | undefined;
+  selections: readonly Readonly<{
+    variantId: string;
+    options: readonly Readonly<{ optionId: string }>[];
+  }>[];
+}>;
+
+/**
+ * The single source of the consumer cart line identity. Matches the current
+ * native cartLineKey exactly while preserving full line metadata separately for
+ * persistence and conflict review. Accepts the minimal identity projection so a
+ * platform can delegate to this rule instead of re-implementing it.
+ */
+export function cartLineIdentityV1(line: CartLineIdentityInputV1): string {
   return JSON.stringify({
     itemId: line.product.id,
     unitPriceMinor: line.product.unitPriceMinor,
