@@ -19,6 +19,12 @@ import { RequestService } from './request-service';
 // PowerUser-only Surfboard partner administration (WP4): onboard merchants, manage stores and
 // terminals through the Okam backend (SurfboardAdminController) instead of the Surfboard Partner
 // Portal. Per-store credential config stays on StoreService (Get/UpdateSurfboardConfig).
+//
+// Every administration call surfaces the backend's own failure reason rather than a generic
+// "Failed to ..." string: the backend forwards Surfboard's error verbatim (for example
+// "TM_0014: Registration code expired/already used"), which is the only thing that tells an
+// operator what to do next. The Safe* request variants resolve non-2xx responses instead of
+// rejecting, so BuildError can read the message off the failed response on both platforms.
 export class SurfboardService {
   private _requestService: RequestService;
 
@@ -52,7 +58,7 @@ export class SurfboardService {
   }): Promise<SurfboardCreateMerchantResult> {
     const response = await this._requestService.PostRequest('/surfboard-admin/stores/' + okamStoreId + '/onboard', model);
     const parsedResponse = this._requestService.TryParseResponse(response);
-    if (parsedResponse === undefined) { throw new Error('Failed to onboard store'); }
+    if (parsedResponse === undefined) { throw this._requestService.BuildError('Failed to onboard store', response); }
     return parsedResponse;
   }
 
@@ -60,7 +66,7 @@ export class SurfboardService {
   public async syncOnboarding (okamStoreId: number): Promise<SurfboardApplicationStatusResult> {
     const response = await this._requestService.PostRequest('/surfboard-admin/stores/' + okamStoreId + '/sync', {});
     const parsedResponse = this._requestService.TryParseResponse(response);
-    if (parsedResponse === undefined) { throw new Error('Failed to sync onboarding'); }
+    if (parsedResponse === undefined) { throw this._requestService.BuildError('Failed to sync onboarding', response); }
     return parsedResponse;
   }
 
@@ -71,36 +77,39 @@ export class SurfboardService {
     onlineTerminalId?: string
   }): Promise<boolean> {
     const response = await this._requestService.PostRequest('/surfboard-admin/stores/' + okamStoreId + '/link', model);
-    return this._requestService.TryParseResponse(response) !== undefined;
+    if (this._requestService.TryParseResponse(response) === undefined) {
+      throw this._requestService.BuildError('Failed to link Surfboard config', response);
+    }
+    return true;
   }
 
   // --- Merchants & applications ---
 
   public async getMerchants (): Promise<SurfboardMerchant[]> {
-    const response = await this._requestService.GetRequest('/surfboard-admin/merchants');
+    const response = await this._requestService.SafeGetRequest('/surfboard-admin/merchants');
     const parsedResponse = this._requestService.TryParseResponse(response);
-    if (parsedResponse === undefined) { throw new Error('Failed to fetch merchants'); }
+    if (parsedResponse === undefined) { throw this._requestService.BuildError('Failed to fetch merchants', response); }
     return parsedResponse;
   }
 
   public async getMerchant (merchantId: string): Promise<SurfboardMerchant> {
-    const response = await this._requestService.GetRequest('/surfboard-admin/merchants/' + merchantId);
+    const response = await this._requestService.SafeGetRequest('/surfboard-admin/merchants/' + merchantId);
     const parsedResponse = this._requestService.TryParseResponse(response);
-    if (parsedResponse === undefined) { throw new Error('Failed to fetch merchant'); }
+    if (parsedResponse === undefined) { throw this._requestService.BuildError('Failed to fetch merchant', response); }
     return parsedResponse;
   }
 
   public async getApplications (): Promise<SurfboardApplication[]> {
-    const response = await this._requestService.GetRequest('/surfboard-admin/applications');
+    const response = await this._requestService.SafeGetRequest('/surfboard-admin/applications');
     const parsedResponse = this._requestService.TryParseResponse(response);
-    if (parsedResponse === undefined) { throw new Error('Failed to fetch applications'); }
+    if (parsedResponse === undefined) { throw this._requestService.BuildError('Failed to fetch applications', response); }
     return parsedResponse;
   }
 
   public async getApplicationStatus (applicationId: string): Promise<SurfboardApplicationStatusResult> {
-    const response = await this._requestService.GetRequest('/surfboard-admin/applications/' + applicationId + '/status');
+    const response = await this._requestService.SafeGetRequest('/surfboard-admin/applications/' + applicationId + '/status');
     const parsedResponse = this._requestService.TryParseResponse(response);
-    if (parsedResponse === undefined) { throw new Error('Failed to fetch application status'); }
+    if (parsedResponse === undefined) { throw this._requestService.BuildError('Failed to fetch application status', response); }
     return parsedResponse;
   }
 
@@ -122,37 +131,40 @@ export class SurfboardService {
   }): Promise<SurfboardCreateStoreResult> {
     const response = await this._requestService.PostRequest('/surfboard-admin/merchants/' + merchantId + '/stores', model);
     const parsedResponse = this._requestService.TryParseResponse(response);
-    if (parsedResponse === undefined) { throw new Error('Failed to create store'); }
+    if (parsedResponse === undefined) { throw this._requestService.BuildError('Failed to create store', response); }
     return parsedResponse;
   }
 
   public async getStores (merchantId: string): Promise<SurfboardStoreDetails[]> {
-    const response = await this._requestService.GetRequest('/surfboard-admin/merchants/' + merchantId + '/stores');
+    const response = await this._requestService.SafeGetRequest('/surfboard-admin/merchants/' + merchantId + '/stores');
     const parsedResponse = this._requestService.TryParseResponse(response);
-    if (parsedResponse === undefined) { throw new Error('Failed to fetch stores'); }
+    if (parsedResponse === undefined) { throw this._requestService.BuildError('Failed to fetch stores', response); }
     return parsedResponse;
   }
 
   public async getStore (merchantId: string, storeId: string): Promise<SurfboardStoreDetails> {
-    const response = await this._requestService.GetRequest('/surfboard-admin/merchants/' + merchantId + '/stores/' + storeId);
+    const response = await this._requestService.SafeGetRequest('/surfboard-admin/merchants/' + merchantId + '/stores/' + storeId);
     const parsedResponse = this._requestService.TryParseResponse(response);
-    if (parsedResponse === undefined) { throw new Error('Failed to fetch store'); }
+    if (parsedResponse === undefined) { throw this._requestService.BuildError('Failed to fetch store', response); }
     return parsedResponse;
   }
 
   public async verifyDomain (merchantId: string, storeId: string, domainType: string = 'MERCHANT_WEBSHOP_URL'): Promise<boolean> {
     const response = await this._requestService.PostRequest(
       '/surfboard-admin/merchants/' + merchantId + '/stores/' + storeId + '/verify?domainType=' + encodeURIComponent(domainType), {});
-    return this._requestService.TryParseResponse(response) !== undefined;
+    if (this._requestService.TryParseResponse(response) === undefined) {
+      throw this._requestService.BuildError('Failed to verify domain', response);
+    }
+    return true;
   }
 
   // --- Terminals ---
 
   public async getStoreTerminals (merchantId: string, storeId: string): Promise<SurfboardTerminal[]> {
-    const response = await this._requestService.GetRequest(
+    const response = await this._requestService.SafeGetRequest(
       '/surfboard-admin/merchants/' + merchantId + '/stores/' + storeId + '/terminals');
     const parsedResponse = this._requestService.TryParseResponse(response);
-    if (parsedResponse === undefined) { throw new Error('Failed to fetch terminals'); }
+    if (parsedResponse === undefined) { throw this._requestService.BuildError('Failed to fetch terminals', response); }
     return parsedResponse;
   }
 
@@ -164,21 +176,24 @@ export class SurfboardService {
   }): Promise<SurfboardRegisterDeviceResult> {
     const response = await this._requestService.PostRequest('/surfboard-admin/terminals/register', model);
     const parsedResponse = this._requestService.TryParseResponse(response);
-    if (parsedResponse === undefined) { throw new Error('Failed to register terminal'); }
+    if (parsedResponse === undefined) { throw this._requestService.BuildError('Failed to register terminal', response); }
     return parsedResponse;
   }
 
   public async activateTerminal (serialNo: string): Promise<boolean> {
     const response = await this._requestService.PostRequest('/surfboard-admin/terminals/activate', { serialNo });
-    return this._requestService.TryParseResponse(response) !== undefined;
+    if (this._requestService.TryParseResponse(response) === undefined) {
+      throw this._requestService.BuildError('Failed to activate terminal', response);
+    }
+    return true;
   }
 
   // --- Brreg prefill ---
 
   public async brregLookup (orgNumber: number): Promise<SurfboardBrregPrefill> {
-    const response = await this._requestService.GetRequest('/surfboard-admin/brreg/' + orgNumber);
+    const response = await this._requestService.SafeGetRequest('/surfboard-admin/brreg/' + orgNumber);
     const parsedResponse = this._requestService.TryParseResponse(response);
-    if (parsedResponse === undefined) { throw new Error('Failed to look up organisation'); }
+    if (parsedResponse === undefined) { throw this._requestService.BuildError('Failed to look up organisation', response); }
     return parsedResponse;
   }
 
