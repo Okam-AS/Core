@@ -8,6 +8,7 @@ import {
   SurfboardCreateStoreResult,
   SurfboardTerminal,
   SurfboardRegisterDeviceResult,
+  SurfboardDeviceRegistrationCode,
   SurfboardBrregPrefill,
   SurfboardInitiateOnlineModel,
   SurfboardOnlineInitiateResult,
@@ -177,6 +178,18 @@ export class SurfboardService {
     const response = await this._requestService.PostRequest('/surfboard-admin/terminals/register', model);
     const parsedResponse = this._requestService.TryParseResponse(response);
     if (parsedResponse === undefined) { throw this._requestService.BuildError('Failed to register terminal', response); }
+    return parsedResponse;
+  }
+
+  // Generate the pairing code the operator types into the terminal. Short-lived, so it is fetched
+  // when the operator asks for it rather than cached.
+  public async getDeviceRegistrationCode (merchantId: string, storeId: string): Promise<SurfboardDeviceRegistrationCode> {
+    const response = await this._requestService.SafeGetRequest(
+      '/surfboard-admin/merchants/' + merchantId + '/stores/' + storeId + '/device-registration');
+    const parsedResponse = this._requestService.TryParseResponse(response);
+    if (parsedResponse === undefined) {
+      throw this._requestService.BuildError('Failed to generate registration code', response);
+    }
     return parsedResponse;
   }
 

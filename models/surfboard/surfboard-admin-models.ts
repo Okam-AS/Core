@@ -112,3 +112,11 @@ export class SurfboardBrregPrefill {
   postalCode: string;
   countryCode: string;
 }
+
+// GET /surfboard-admin/merchants/{merchantId}/stores/{storeId}/device-registration — the short-lived
+// code the operator types into the terminal to pair it with the store, plus a deep link carrying the
+// same code for QR pairing.
+export class SurfboardDeviceRegistrationCode {
+  registrationCode: string;
+  registrationLink: string;
+}

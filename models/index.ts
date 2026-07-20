@@ -33,6 +33,7 @@ export {
   SurfboardCreateStoreResult,
   SurfboardTerminal,
   SurfboardRegisterDeviceResult,
+  SurfboardDeviceRegistrationCode,
   SurfboardBrregPrefill
 } from './surfboard/surfboard-admin-models';
 export {
