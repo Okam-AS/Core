@@ -168,4 +168,44 @@ describe('consumer money — the ONE deterministic formatter', () => {
   ] as const)('formats %i %s as %s', (minor, currency, expected) => {
     expect(formatMoney(makeMoney(minor, currency))).toBe(expected);
   });
+
+  /**
+   * The ratified canon (Sven, 2026-07-20) is byte-exact. These assertions pin
+   * the individual glyphs — grouping separator, decimal separator, symbol
+   * placement, and crucially a plain ASCII space (never NBSP) — so the render
+   * cannot silently drift toward a locale/ICU convention.
+   */
+  it('pins the Swiss glyphs: ISO code, plain space, apostrophe grouping, period decimal', () => {
+    const formatted = formatMoney(makeMoney(1_234_567, 'CHF'));
+    expect(formatted).toBe("CHF 12'345.67");
+    // No non-breaking space anywhere.
+    expect(formatted).not.toContain(' ');
+    expect(formatted).not.toContain(' ');
+    // The separator after the ISO code is a plain ASCII space (U+0020).
+    expect(formatted.charCodeAt(3)).toBe(0x20);
+    // Thousands are grouped with a straight apostrophe (U+0027), decimal is a period.
+    expect(formatted).toContain("'");
+    expect(formatted.split('.')[1]).toBe('67');
+  });
+
+  it('pins the Norwegian glyphs: plain-space grouping, comma decimal, kr symbol (not the ISO code)', () => {
+    const formatted = formatMoney(makeMoney(1_234_567, 'NOK'));
+    expect(formatted).toBe('12 345,67 kr');
+    expect(formatted).not.toContain(' ');
+    expect(formatted).not.toContain(' ');
+    expect(formatted).not.toContain('NOK');
+    expect(formatted.endsWith(' kr')).toBe(true);
+    // The thousands separator (index 2 of "12 345,67 kr") is a plain ASCII space.
+    expect(formatted.charCodeAt(2)).toBe(0x20);
+    expect(formatted.split(',')[1]).toBe('67 kr');
+  });
+
+  it('is market-fixed: the render depends only on the currency, taking no locale', () => {
+    // formatMoney's only input is the currency-tagged Money — there is no
+    // content-locale parameter for fr-CH / it-CH to diverge through.
+    expect(formatMoney).toHaveLength(1);
+    expect(formatMoney(makeMoney(123_450, 'CHF'))).toBe(
+      formatMoney(makeMoney(123_450, 'CHF')),
+    );
+  });
 });
