@@ -45,6 +45,7 @@ export {
 export {
   UpsertTripletexConnectionModel,
   TripletexConnectionStatus,
+  TripletexCreatedAccount,
   TripletexVoucherLogEntry,
   AccountingExportResult,
   TripletexPayoutReconciliation,
