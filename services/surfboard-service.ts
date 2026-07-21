@@ -201,6 +201,76 @@ export class SurfboardService {
     return true;
   }
 
+  // --- Self-serve terminal onboarding (StoreAdmin) ---
+
+  // Onboard a terminal that Surfboard shipped directly to the store, by its serial number. The
+  // backend ships the hardware to the store's merchant, registers it to the store, and (when a cash
+  // point is given) binds it — all in one call. Works for a store admin in the app and a power user
+  // in /admin; the Surfboard merchant/store ids are resolved server-side from the Okam store id.
+  public async onboardTerminalBySerial (storeId: number, model: {
+    serialNo: string,
+    terminalName?: string,
+    cashPointId?: number
+  }): Promise<{ terminalId: string, serialNo: string, registrationStatus: string, cashPointBound: boolean }> {
+    const response = await this._requestService.PostRequest('/stores/' + storeId + '/surfboard/terminals/onboard', model);
+    const parsedResponse = this._requestService.TryParseResponse(response);
+    if (parsedResponse === undefined) { throw this._requestService.BuildError('Failed to onboard terminal', response); }
+    return parsedResponse;
+  }
+
+  // List a store's Surfboard terminals (store-admin self-serve); resolves the Surfboard merchant/store
+  // ids server-side from the Okam store id. Empty when the store is not yet configured.
+  public async getStoreTerminalsForStore (storeId: number): Promise<SurfboardTerminal[]> {
+    const response = await this._requestService.SafeGetRequest('/stores/' + storeId + '/surfboard/terminals');
+    const parsedResponse = this._requestService.TryParseResponse(response);
+    if (parsedResponse === undefined) { throw this._requestService.BuildError('Failed to fetch terminals', response); }
+    return parsedResponse;
+  }
+
+  // --- Terminal test harness (PowerUser) ---
+
+  // Push a self-contained CARD test sale to a physical terminal to verify it end to end. No Okam
+  // order or fiscal journal entry is created. A completed test charge is a REAL card charge — cancel
+  // it (before the tap) or void it (after) with cancelTestPayment. Returns the order/payment ids.
+  public async startTestPayment (merchantId: string, terminalId: string, model: {
+    amount: number,
+    currency?: string,
+    message?: string
+  }): Promise<{ orderId: string, paymentId: string, referenceId: string, amount: number }> {
+    const response = await this._requestService.PostRequest(
+      '/surfboard-admin/merchants/' + merchantId + '/terminals/' + terminalId + '/test-payment', model);
+    const parsedResponse = this._requestService.TryParseResponse(response);
+    if (parsedResponse === undefined) { throw this._requestService.BuildError('Failed to start test payment', response); }
+    return parsedResponse;
+  }
+
+  // Poll a terminal test sale's status by its Surfboard order id.
+  public async getTestPaymentStatus (merchantId: string, orderId: string): Promise<{
+    orderStatus: string,
+    effectiveStatus: string,
+    paymentId: string,
+    capturedAmount: number,
+    isCompleted: boolean,
+    isFailed: boolean,
+    isCancelled: boolean
+  }> {
+    const response = await this._requestService.SafeGetRequest(
+      '/surfboard-admin/merchants/' + merchantId + '/orders/' + orderId + '/test-status');
+    const parsedResponse = this._requestService.TryParseResponse(response);
+    if (parsedResponse === undefined) { throw this._requestService.BuildError('Failed to fetch test status', response); }
+    return parsedResponse;
+  }
+
+  // Cancel (or void) a terminal test sale by its Surfboard payment id. action is 'CANCELLED' when the
+  // payment had not completed, or 'VOIDED' when it had.
+  public async cancelTestPayment (merchantId: string, paymentId: string): Promise<{ action: string }> {
+    const response = await this._requestService.PostRequest(
+      '/surfboard-admin/merchants/' + merchantId + '/payments/' + paymentId + '/test-cancel', {});
+    const parsedResponse = this._requestService.TryParseResponse(response);
+    if (parsedResponse === undefined) { throw this._requestService.BuildError('Failed to cancel test payment', response); }
+    return parsedResponse;
+  }
+
   // --- Brreg prefill ---
 
   public async brregLookup (orgNumber: number): Promise<SurfboardBrregPrefill> {
@@ -238,15 +308,15 @@ export class SurfboardService {
         .then((result) => {
           if (result.status === 'success') {
             clearInterval(intervalId);
-            if (successHandler) successHandler(result);
+            if (successHandler) { successHandler(result); }
           } else if (result.status === 'fail') {
             clearInterval(intervalId);
-            if (failHandler) failHandler(result);
+            if (failHandler) { failHandler(result); }
           }
         })
         .catch(() => {
           clearInterval(intervalId);
-          if (failHandler) failHandler();
+          if (failHandler) { failHandler(); }
         });
     };
 
@@ -254,15 +324,15 @@ export class SurfboardService {
       this.verify(reference)
         .then((result) => {
           if (result.status === 'success') {
-            if (successHandler) successHandler(result);
+            if (successHandler) { successHandler(result); }
           } else if (result.status === 'fail') {
-            if (failHandler) failHandler(result);
+            if (failHandler) { failHandler(result); }
           } else {
             intervalId = setInterval(poll, 1800);
           }
         })
         .catch(() => {
-          if (failHandler) failHandler();
+          if (failHandler) { failHandler(); }
         });
     }, 800);
   }
