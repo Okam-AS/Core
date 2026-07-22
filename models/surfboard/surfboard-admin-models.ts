@@ -95,6 +95,32 @@ export class SurfboardTerminal {
   terminalName: string;
   terminalPaymentMethods: string[];
   lastAliveAt: string;
+  // Device-health fields (present on fetch-by-id; may be absent in the list response).
+  isCharging?: boolean;
+  batteryPercentage?: number;
+  powerSource?: string; // EXTERNAL_POWER | BATTERY
+  deviceNetwork?: string; // WIFI | GSM
+  turnOnTime?: string;
+}
+
+// GET /stores/{storeId}/cashpoints/{cashPointId}/terminal-status — connectivity/health for the
+// terminal bound to a cash point (POS status badge + cash-point settings). Provider-neutral:
+// a Dintero register reports provider + bound only.
+export class CashPointTerminalStatus {
+  provider: string; // Surfboard | Dintero
+  bound: boolean;
+  terminalId: string | null;
+  terminalName: string | null;
+  serialNo: string | null;
+  terminalStatus: string | null; // REGISTERED | ACTIVE | IN_ACTIVE | DE_REGISTERED
+  lastAliveAt: string | null;
+  online: boolean | null; // null = liveness unknown
+  secondsSinceAlive: number | null;
+  deviceNetwork: string | null; // WIFI | GSM
+  batteryPercentage: number | null;
+  isCharging: boolean | null;
+  powerSource: string | null; // EXTERNAL_POWER | BATTERY
+  statusError: string | null; // set when the provider status lookup failed
 }
 
 // Result of registering an in-store device (POST /surfboard-admin/terminals/register).

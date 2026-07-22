@@ -32,6 +32,7 @@ export {
   SurfboardOnlineInfo,
   SurfboardCreateStoreResult,
   SurfboardTerminal,
+  CashPointTerminalStatus,
   SurfboardRegisterDeviceResult,
   SurfboardDeviceRegistrationCode,
   SurfboardBrregPrefill

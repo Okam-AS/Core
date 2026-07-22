@@ -7,6 +7,7 @@ import {
   SurfboardStoreDetails,
   SurfboardCreateStoreResult,
   SurfboardTerminal,
+  CashPointTerminalStatus,
   SurfboardRegisterDeviceResult,
   SurfboardDeviceRegistrationCode,
   SurfboardBrregPrefill,
@@ -224,6 +225,24 @@ export class SurfboardService {
     const response = await this._requestService.SafeGetRequest('/stores/' + storeId + '/surfboard/terminals');
     const parsedResponse = this._requestService.TryParseResponse(response);
     if (parsedResponse === undefined) { throw this._requestService.BuildError('Failed to fetch terminals', response); }
+    return parsedResponse;
+  }
+
+  // Bind an already-onboarded terminal (picked from getStoreTerminalsForStore) to a cash point —
+  // no serial number or typing. The backend validates the terminal is in the store's Surfboard
+  // terminal list and pins the cash point's provider to Surfboard.
+  public async bindTerminal (storeId: number, model: { terminalId: string, cashPointId: number }): Promise<SurfboardTerminal> {
+    const response = await this._requestService.PostRequest('/stores/' + storeId + '/surfboard/terminals/bind', model);
+    const parsedResponse = this._requestService.TryParseResponse(response);
+    if (parsedResponse === undefined) { throw this._requestService.BuildError('Failed to bind terminal', response); }
+    return parsedResponse;
+  }
+
+  // Connectivity/health for the terminal bound to a cash point (POS status badge + settings).
+  public async getCashPointTerminalStatus (storeId: number, cashPointId: number): Promise<CashPointTerminalStatus> {
+    const response = await this._requestService.SafeGetRequest('/stores/' + storeId + '/cashpoints/' + cashPointId + '/terminal-status');
+    const parsedResponse = this._requestService.TryParseResponse(response);
+    if (parsedResponse === undefined) { throw this._requestService.BuildError('Failed to fetch terminal status', response); }
     return parsedResponse;
   }
 
