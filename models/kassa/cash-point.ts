@@ -14,6 +14,10 @@ export class CashPoint {
   // Store-level rollout flag for split payments (partial payments), projected onto the cash point
   // by the backend so the POS can hide the action when it is off (the server enforces it anyway).
   partialPaymentsEnabled: boolean;
+  // Whether the resolved terminal provider supports unreferenced (open) card returns AND the
+  // acquirer has enabled them on the account; projected by the backend so the POS hides the card
+  // option in the unreferenced-return flow (the server refuses the initiate regardless).
+  unreferencedCardReturnEnabled: boolean;
   terminalProvider: TerminalProvider;
   isActive: boolean;
   grandTotalSales: number;

@@ -95,6 +95,16 @@ export class PosService {
     return parsed;
   }
 
+
+  // Prints the receipt on the cash point's Surfboard terminal printer (ESC/POS). Printing does
+  // not journal anything: a reprint must go through CopyReceipt first and print the copy model.
+  public async PrintReceipt(journalEntryId: number, cashPointId: number): Promise<boolean> {
+    const response = await this._requestService.PostRequest('/pos/receipt/' + journalEntryId + '/print', { cashPointId }, this.sessionHeaders());
+    const { error } = this._requestService.TryParseResponseWithError(response);
+    if (error) { throw this._requestService.BuildError(error, response); }
+    return true;
+  }
+
   public async SendReceiptSms(journalEntryId: number, request: ReceiptSmsRequest): Promise<ReceiptSmsResult> {
     const response = await this._requestService.PostRequest('/pos/receipt/' + journalEntryId + '/sms', request, this.sessionHeaders());
     const parsed = this._requestService.TryParseResponse(response);
