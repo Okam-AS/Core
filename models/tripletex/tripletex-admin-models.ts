@@ -45,6 +45,12 @@ export class TripletexVoucherLogEntry {
   postedUtc?: string;
 }
 
+// An account that onboarding auto-created in the Tripletex chart of accounts.
+export class TripletexCreatedAccount {
+  number: string;
+  name: string;
+}
+
 // Connection status (GET /tripletex-admin/stores/{id}/status, and the response of upsert/validate).
 export class TripletexConnectionStatus {
   exists: boolean;
@@ -79,12 +85,6 @@ export class TripletexConnectionStatus {
   receivablesAccount?: string;
   // Current stored state of the accounting-export toggle, for hydrating the form checkbox.
   accountingConfigEnabled: boolean;
-}
-
-// An account that onboarding auto-created in the Tripletex chart of accounts.
-export class TripletexCreatedAccount {
-  number: string;
-  name: string;
 }
 
 // Outcome of exporting one day/Z-report/payout to one target.
