@@ -228,6 +228,41 @@ export class SurfboardService {
     return parsedResponse;
   }
 
+  // Store-scoped pairing code + QR deep link for a terminal that is powered on, connected to the
+  // network and waiting on its "Register terminal" screen. Short-lived, so fetched on demand.
+  public async getStoreRegistrationCode (storeId: number): Promise<SurfboardDeviceRegistrationCode> {
+    const response = await this._requestService.SafeGetRequest('/stores/' + storeId + '/surfboard/terminals/registration-code');
+    const parsedResponse = this._requestService.TryParseResponse(response);
+    if (parsedResponse === undefined) {
+      throw this._requestService.BuildError('Failed to generate registration code', response);
+    }
+    return parsedResponse;
+  }
+
+  // Assign a physical terminal to the store's merchant by serial (store-admin scoped). Needed when a
+  // terminal pairing by code/QR answers "Terminal Hardware not shipped yet" — that failure happens
+  // between the terminal and Surfboard, so the backend cannot repair it on its own.
+  public async shipHardwareForStore (storeId: number, serialNo: string): Promise<boolean> {
+    const response = await this._requestService.PostRequest('/stores/' + storeId + '/surfboard/terminals/ship-hardware', { serialNo });
+    if (this._requestService.TryParseResponse(response) === undefined) {
+      throw this._requestService.BuildError('Failed to ship terminal hardware', response);
+    }
+    return true;
+  }
+
+  // Register from the code the terminal itself displays (store-admin scoped). Some terminals reject
+  // this direction ("TM_0011") and must use getStoreRegistrationCode instead.
+  public async registerTerminalByCode (storeId: number, model: {
+    registrationIdentifier: string,
+    terminalName?: string,
+    cashPointId?: number
+  }): Promise<{ terminalId: string, serialNo: string, registrationStatus: string, cashPointBound: boolean, bindError?: string }> {
+    const response = await this._requestService.PostRequest('/stores/' + storeId + '/surfboard/terminals/register', model);
+    const parsedResponse = this._requestService.TryParseResponse(response);
+    if (parsedResponse === undefined) { throw this._requestService.BuildError('Failed to register terminal', response); }
+    return parsedResponse;
+  }
+
   // Bind an already-onboarded terminal (picked from getStoreTerminalsForStore) to a cash point —
   // no serial number or typing. The backend validates the terminal is in the store's Surfboard
   // terminal list and pins the cash point's provider to Surfboard.
