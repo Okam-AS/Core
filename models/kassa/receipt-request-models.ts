@@ -34,3 +34,16 @@ export class ReceiptSmsResult {
   // The public receipt link that was sent (returned so the client can display / retry it).
   link: string;
 }
+
+// One field on screen: the operator types whatever the customer offers and the server routes it.
+export class SendReceiptRequest {
+  recipient: string;
+}
+
+export class SendReceiptResult {
+  sent: boolean;
+  // 'Sms' | 'Email' — the channel actually used, so the confirmation is never a guess.
+  channel: string;
+  recipient: string;
+  link: string;
+}

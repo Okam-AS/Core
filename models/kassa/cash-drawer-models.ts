@@ -7,6 +7,9 @@ export class BeginDayRequest {
 export class CashDrawerTransactionRequest {
   type: CashDrawerTransactionType;
   amount: number;
+  // Client-generated key, one fresh Guid per logical movement. A retry after a lost response
+  // returns the movement already recorded instead of posting the cash a second time.
+  idempotencyKey: string | null;
 }
 
 export class EndDayRequest {

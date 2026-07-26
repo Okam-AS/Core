@@ -18,6 +18,8 @@ import {
   TrainingReceiptRequest,
   ReceiptSmsRequest,
   ReceiptSmsResult,
+  SendReceiptRequest,
+  SendReceiptResult,
   SettlementOpenRequest,
   SettlementAllocationRequest,
   SettlementActionRequest,
@@ -103,6 +105,15 @@ export class PosService {
     const { error } = this._requestService.TryParseResponseWithError(response);
     if (error) { throw this._requestService.BuildError(error, response); }
     return true;
+  }
+
+  // One field on screen, one call: the server decides SMS or email from the recipient string, so
+  // the classification rule cannot drift between the web register and the app.
+  public async SendReceipt(journalEntryId: number, request: SendReceiptRequest): Promise<SendReceiptResult> {
+    const response = await this._requestService.PostRequest('/pos/receipt/' + journalEntryId + '/send', request, this.sessionHeaders());
+    const { data, error } = this._requestService.TryParseResponseWithError(response);
+    if (error) { throw this._requestService.BuildError(error, response); }
+    return data;
   }
 
   public async SendReceiptSms(journalEntryId: number, request: ReceiptSmsRequest): Promise<ReceiptSmsResult> {

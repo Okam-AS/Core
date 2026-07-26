@@ -26,6 +26,20 @@ export class JournalService {
     return parsed;
   }
 
+  // Store-wide history, newest first — the register's receipt browser. Same auth as the
+  // per-cash-point read; it exists because a customer returns to whichever register is free.
+  // receiptsOnly (server default true) drops the events that are not documents issued to a
+  // customer — drawer opens, day open/close, X reports — so paging counts purchases, not noise.
+  public async GetForStore(storeId: number, from?: string, to?: string, page: number = 1, pageSize: number = 100, receiptsOnly: boolean = true): Promise<JournalEntryPageModel> {
+    let path = '/journal/store/' + storeId + '?page=' + encodeURIComponent(page) + '&pageSize=' + encodeURIComponent(pageSize) + '&receiptsOnly=' + (receiptsOnly ? 'true' : 'false');
+    if (from) { path += '&from=' + encodeURIComponent(from); }
+    if (to) { path += '&to=' + encodeURIComponent(to); }
+    const response = await this._requestService.GetRequest(path);
+    const parsed = this._requestService.TryParseResponse(response);
+    if (parsed === undefined) { throw new Error('Failed to get journal entries'); }
+    return parsed;
+  }
+
   public async GetEntry(journalEntryId: number): Promise<JournalEntry> {
     const response = await this._requestService.GetRequest('/journal/entry/' + journalEntryId);
     const parsed = this._requestService.TryParseResponse(response);

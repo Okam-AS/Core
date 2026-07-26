@@ -191,7 +191,7 @@ export { BeginDayRequest, CashDrawerTransactionRequest, EndDayRequest, EodSummar
 export { CashSaleRequest, CardInitiateRequest, CardReconcileRequest, CardReconcileResult, CardCaptureRequest, CardVoidRequest, CardRefundRequest, CardTimeoutRequest, CardInitiateResult, CashRefundRequest } from './kassa/card-payment-models';
 export { TerminalReconcileResult, TerminalCaptureResult, TerminalVoidResult, TerminalRefundResult, TerminalProviderResult, TerminalInitiateResult } from './kassa/terminal-payment-models';
 export { SettlementOpenRequest, SettlementAllocationRequest, SettlementActionRequest, SettlementAllocationResult, SettlementModel, SettlementAllocationModel } from './kassa/settlement-models';
-export { CopyReceiptRequest, ProvisionalReceiptRequest, TrainingReceiptRequest, ReceiptSmsRequest, ReceiptSmsResult } from './kassa/receipt-request-models';
+export { CopyReceiptRequest, ProvisionalReceiptRequest, TrainingReceiptRequest, ReceiptSmsRequest, ReceiptSmsResult, SendReceiptRequest, SendReceiptResult } from './kassa/receipt-request-models';
 export { PosReceiptModel, PosReceiptLineModel, PosReceiptTaxLineModel, PosReceiptPaymentLineModel } from './kassa/pos-receipt-models';
 export { UnreferencedReturnLineModel, UnreferencedCashReturnRequest, UnreferencedCardReturnRequest } from './kassa/unreferenced-return-models';
 
