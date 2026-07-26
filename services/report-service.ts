@@ -40,6 +40,23 @@ export class ReportService {
     return parsed;
   }
 
+  // Prints the current X projection on the cash point's Surfboard terminal. Reprojecting has no
+  // side effects, so printing an X never cuts the period.
+  public async PrintXReport(cashPointId: number): Promise<boolean> {
+    const response = await this._requestService.PostRequest('/report/cashpoint/' + cashPointId + '/x/print', undefined, this.sessionHeaders());
+    const { error } = this._requestService.TryParseResponseWithError(response);
+    if (error) { throw this._requestService.BuildError(error, response); }
+    return true;
+  }
+
+  // Prints an already-cut Z report; reprinting a settled report is allowed.
+  public async PrintZReport(zReportId: number): Promise<boolean> {
+    const response = await this._requestService.PostRequest('/report/z/' + zReportId + '/print', undefined, this.sessionHeaders());
+    const { error } = this._requestService.TryParseResponseWithError(response);
+    if (error) { throw this._requestService.BuildError(error, response); }
+    return true;
+  }
+
   public async GetZReport(zReportId: number): Promise<ZReportModel> {
     const response = await this._requestService.SafeGetRequest('/report/z/' + zReportId, this.sessionHeaders());
     const parsed = this._requestService.TryParseResponse(response);

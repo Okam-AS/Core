@@ -50,6 +50,8 @@ export class EodSummaryModel {
   differenceReasonType: PosReasonType | null;
   differenceExplanation: string | null;
   eodReceiptEmail: string | null;
+  // The Z report the close produced; null only if the Z has to be run standalone after a failure.
+  zReportId: number | null;
 }
 
 export class CashDrawerTransaction {

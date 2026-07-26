@@ -8,6 +8,8 @@ export class PosReceiptModel {
   receiptNumber: number | null;
   sequenceNumber: number;
   copyNumber: number | null;
+  // The COPYREC entry's own id; printing must address this so the paper carries the copy marking.
+  copyJournalEntryId: number | null;
   registerId: string;
   cashPointId: number;
   operatorId: number;
