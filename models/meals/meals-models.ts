@@ -50,6 +50,11 @@ export class CreateMealsQuoteRequest {
   currency: string;
   // See helpers/meals-quote-hash — the algorithm is pinned there, not chosen at the call site.
   quoteHash: string;
+  // OPTIONAL. The authorization token of the reservation this quote replaces, so a re-quote stops
+  // holding the employee's allowance twice for one cart. The server releases it only for the caller
+  // who owns it, and ignores it when it names nothing releasable — so it is never a reason a quote
+  // fails. Only ever a token this client minted and still holds; never persisted, never logged.
+  supersedesToken?: string;
 }
 
 /**

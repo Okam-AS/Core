@@ -656,10 +656,11 @@ export const useCheckout = defineStore("checkout", () => {
    *
    * The re-quote watcher and the pay button can both want a fresh reservation at the same moment, and
    * a quote is not idempotent across keys: each one adds its cap to the member's MealsBudgetGuards
-   * reserved total, and NOTHING releases a superseded reservation — the API exposes no release route,
-   * so a duplicate holds the guest's own allowance hostage until it expires. Two in flight would
-   * therefore cost the guest twice for one cart. Callers that arrive while a quote is running share
-   * its result instead of starting another.
+   * reserved total. A quote that names its predecessor gives that one back, but two quotes racing here
+   * would both name the SAME held token, so the second would find it already released and reserve on
+   * top — the guest would pay their allowance twice for one cart, which is the defect the supersede
+   * exists to close. Callers that arrive while a quote is running share its result instead of starting
+   * another, which is what keeps "one held reservation per checkout" true on this side.
    */
   let mealsQuoteInFlight: Promise<boolean> = null;
 
@@ -686,10 +687,18 @@ export const useCheckout = defineStore("checkout", () => {
     const hash = currentQuoteHash();
     if (hash !== mealsQuotedHash || !mealsIdempotencyKey) { mealsIdempotencyKey = newIdempotencyKey(); }
 
+    // The token this quote is about to replace. Only the server can give a reservation back — no client
+    // can — so the one thing this client can do is SAY which one it is superseding, and it is the only
+    // party that knows: at the endpoint a re-quote and a second independent cart are the same request.
+    // Sent on the re-quote itself rather than as a separate release call, so the release and the new
+    // hold are one transaction: a re-quote the allowance cannot fund must leave the guest holding what
+    // they already had, not nothing.
+    const supersedes = mealsToken || undefined;
+
     try {
       const quote = await mealsService().CreateQuote(
         _store.currentStore.id,
-        { companyId, cartTotalMinor: mealsCartTotalMinor(), currency: mealsCurrency(), quoteHash: hash },
+        { companyId, cartTotalMinor: mealsCartTotalMinor(), currency: mealsCurrency(), quoteHash: hash, supersedesToken: supersedes },
         mealsIdempotencyKey
       );
       mealsToken = quote.authorizationToken;
@@ -750,10 +759,13 @@ export const useCheckout = defineStore("checkout", () => {
    * The checkout page can change the total after a quote is minted (a tip, a discount code). What
    * makes that dangerous is not that the cart changed — it is that the cart may no longer fit under
    * the cap, and the bind refuses over-cap. A cart that still fits is fully funded by the reservation
-   * already held, and re-quoting it anyway would mint a SECOND reservation whose cap is added to the
-   * same allowance, with no way to give the first one back: the guest would be refused
-   * MEALS_ALLOWANCE_EXCEEDED for a cart their company can plainly afford. Measured, not reasoned —
-   * see artifacts/journeys/meals-stale-token-refused.
+   * already held, so re-quoting it anyway would spend a round trip to mint a reservation identical in
+   * effect to the one it hands back. Measured, not reasoned — see
+   * artifacts/journeys/meals-stale-token-refused.
+   *
+   * A re-quote that does happen names the token it replaces (see `quoteCompanyAccount`), so it no longer
+   * costs the guest their allowance twice; until it did, this gate was the only thing standing between a
+   * changed cart and a MEALS_ALLOWANCE_EXCEEDED refusal for a cart their company could plainly afford.
    *
    * Returns whether the checkout may proceed on a reservation that funds THIS cart. It is deliberately
    * callable outside the debounce: pressing pay must never wait on a timer.
