@@ -598,6 +598,22 @@ export const useCheckout = defineStore("checkout", () => {
   const mealsCartTotalMinor = () => _cart.getCurrentCart()?.calculations?.finalAmount ?? 0;
   const currentQuoteHash = () => mealsQuoteHash(_cart.getCurrentCart(), mealsCurrency(), mealsCartTotalMinor());
 
+  /**
+   * Whether the reservation this client is holding can still fund the cart in front of the guest.
+   *
+   * A reservation is a CAP, not a price: the bind compares `cartTotalMinor <= reservedCapMinor` and
+   * never looks at the quote hash (verified against MealsFundingAuthority.ValidateAndBindAsync — the
+   * hash is only ever an idempotency fingerprint at quote time). So a cart that changed but still fits
+   * under the cap is fundable by the reservation already held, and a cart that grew past it is not
+   * fundable by ANY amount of hoping.
+   */
+  const heldReservationCoversCart = () => {
+    const reservation = mealsReservationPrivate.value;
+    if (!reservation) return false;
+    const total = mealsCartTotalMinor();
+    return total > 0 && total <= reservation.reservedCapMinor;
+  };
+
   const newIdempotencyKey = () => {
     return "meals-quote-" + Date.now().toString(36) + "-" + Math.random().toString(36).slice(2, 10);
   };
@@ -636,13 +652,32 @@ export const useCheckout = defineStore("checkout", () => {
   };
 
   /**
-   * Mints (or re-mints) the reservation and puts the company tender on the cart.
+   * ONE quote at a time, whatever asks for it.
+   *
+   * The re-quote watcher and the pay button can both want a fresh reservation at the same moment, and
+   * a quote is not idempotent across keys: each one adds its cap to the member's MealsBudgetGuards
+   * reserved total, and NOTHING releases a superseded reservation — the API exposes no release route,
+   * so a duplicate holds the guest's own allowance hostage until it expires. Two in flight would
+   * therefore cost the guest twice for one cart. Callers that arrive while a quote is running share
+   * its result instead of starting another.
+   */
+  let mealsQuoteInFlight: Promise<boolean> = null;
+
+  const chooseCompanyAccount = (): Promise<boolean> => {
+    if (mealsQuoteInFlight) return mealsQuoteInFlight;
+    mealsQuoteInFlight = quoteCompanyAccount().finally(() => { mealsQuoteInFlight = null; });
+    return mealsQuoteInFlight;
+  };
+
+  /**
+   * Mints (or re-mints) the reservation and puts the company tender on the cart. Always through
+   * `chooseCompanyAccount`, never directly, so two callers cannot reserve the allowance twice.
    *
    * The idempotency key is per CART VERSION, not per click: pressing the option twice must not
    * reserve the allowance twice, but a cart whose total changed is a different thing to fund and
    * gets a new key. That is why the quote hash is remembered alongside it.
    */
-  const chooseCompanyAccount = async (): Promise<boolean> => {
+  const quoteCompanyAccount = async (): Promise<boolean> => {
     const companyId = mealsSelectedCompanyIdPrivate.value;
     if (!companyId || !_store.currentStore?.id) return false;
     mealsErrorPrivate.value = "";
@@ -709,14 +744,36 @@ export const useCheckout = defineStore("checkout", () => {
     return map[reasonCode] || "";
   };
 
-  // A quote is pinned to the cart that produced it, and the checkout page can still change the
-  // total after one is minted (a tip, a discount code). Leaving the stale reservation in place
-  // would let the guest press "pay" and be refused at the very last step with MEALS_OVER_RESERVED_CAP.
-  // So the held reservation follows the cart.
+  /**
+   * The held reservation follows the cart, but only when it has to.
+   *
+   * The checkout page can change the total after a quote is minted (a tip, a discount code). What
+   * makes that dangerous is not that the cart changed — it is that the cart may no longer fit under
+   * the cap, and the bind refuses over-cap. A cart that still fits is fully funded by the reservation
+   * already held, and re-quoting it anyway would mint a SECOND reservation whose cap is added to the
+   * same allowance, with no way to give the first one back: the guest would be refused
+   * MEALS_ALLOWANCE_EXCEEDED for a cart their company can plainly afford. Measured, not reasoned —
+   * see artifacts/journeys/meals-stale-token-refused.
+   *
+   * Returns whether the checkout may proceed on a reservation that funds THIS cart. It is deliberately
+   * callable outside the debounce: pressing pay must never wait on a timer.
+   */
+  const ensureFundableReservation = async (): Promise<boolean> => {
+    if (!mealsToken) return false;
+    if (currentQuoteHash() === mealsQuotedHash) return true;
+    if (heldReservationCoversCart()) return true;
+    const quoted = await chooseCompanyAccount();
+    // The re-quote may have raced another cart change, so the answer is re-read rather than assumed.
+    return quoted && !!mealsToken && (currentQuoteHash() === mealsQuotedHash || heldReservationCoversCart());
+  };
+
   watch(
     () => (companyAccountSelected.value ? currentQuoteHash() : ""),
     debounce(function (hash: string) {
       if (!hash || !mealsToken || hash === mealsQuotedHash) return;
+      // Nothing to do while the cart still fits the cap the guest already holds; the strip keeps
+      // stating that cap, which remains true.
+      if (heldReservationCoversCart()) return;
       chooseCompanyAccount();
     }, 400)
   );
@@ -725,6 +782,24 @@ export const useCheckout = defineStore("checkout", () => {
     if (isValidating.value || !_store.currentStore.id) return Promise.reject();
     errorMessagePrivate.value = "";
     isValidating.value = true;
+
+    // THE LAST GATE BEFORE THE WIRE. The watcher above is debounced by 400ms and its re-quote is a
+    // round trip, so a guest who adds a tip and presses pay immediately would otherwise send the
+    // PREVIOUS cart's token — the exact last-step refusal the watcher exists to prevent, and one the
+    // backend can only answer AFTER it has saved the order row. Nothing server-side can catch it: the
+    // bind never compares the quote hash to anything, so the client is the only place this exists to
+    // be caught. A token that cannot fund the cart in front of the guest is never sent; the checkout
+    // is refused here instead, before an order exists to cancel.
+    if (_cart.getCurrentCart()?.paymentType === PaymentType.CompanyAccount) {
+      const fundable = await ensureFundableReservation();
+      if (!fundable) {
+        errorMessagePrivate.value = mealsErrorPrivate.value || $i("checkoutPage_mealsQuoteFailed");
+        isValidating.value = false;
+        isProcessingPaymentPrivate.value = false;
+        return undefined;
+      }
+    }
+
     // Company-funded orders and only those carry the reservation token; every other tender sends
     // nothing, exactly as before.
     const token = _cart.getCurrentCart()?.paymentType === PaymentType.CompanyAccount ? mealsToken : "";
