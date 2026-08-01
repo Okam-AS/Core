@@ -54,11 +54,29 @@ export class CartService {
     return parsedResponse;
   }
 
-  public async Complete(storeId: number): Promise<Order> {
-    const response = await this._requestService.PostRequest("/carts/complete/" + storeId);
+  /**
+   * Promotes the cart to an order.
+   *
+   * `reservationToken` is the Company Meals funding authorization the quote returned once
+   * (MealsService.CreateQuote). It is REQUIRED whenever the cart's tender is
+   * `PaymentType.CompanyAccount`: the backend binds it to the created order and, without it, cancels
+   * the just-created order and refuses with a stable `MEALS_*` reason. It travels in the query
+   * string because that is the only inbound path the API exposes for it. Every other tender ignores
+   * it, so it is passed only when present.
+   *
+   * On refusal the backend answers `{ message }` — for a funded order that message IS the reason
+   * code, so it is carried out on the thrown error as `reasonCode` rather than flattened into one
+   * untranslatable sentence.
+   */
+  public async Complete(storeId: number, reservationToken?: string): Promise<Order> {
+    const query = reservationToken ? "?reservationToken=" + encodeURIComponent(reservationToken) : "";
+    const response = await this._requestService.PostRequest("/carts/complete/" + storeId + query);
     const parsedResponse = this._requestService.TryParseResponse(response);
     if (parsedResponse === undefined) {
-      throw new Error("Kunne ikke fullføre ordre");
+      const problem = this._requestService.TryParseProblem(response);
+      const error: any = new Error(problem?.message || problem?.detail || "Kunne ikke fullføre ordre");
+      error.reasonCode = typeof problem?.message === "string" && problem.message.indexOf("MEALS_") === 0 ? problem.message : (problem?.code || null);
+      throw error;
     }
     return parsedResponse;
   }

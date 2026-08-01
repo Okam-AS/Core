@@ -56,8 +56,17 @@ export class RequestService {
     });
   }
 
-  public PostRequest(path: string, payload?: any): Promise<any> {
-    const request = this.DefaultRequest(path, payload, HttpMethod.POST);
+  /**
+   * `extraHeaders` exists for the endpoints whose CONTRACT is a header rather than a body field —
+   * today that is the Meals `Idempotency-Key`, which the API refuses a mutation without. Building a
+   * header bag at the call site instead would put the contract somewhere no other client can see it.
+   *
+   * Note the `.catch` below: a non-2xx does NOT reject out of this method, it resolves with the
+   * axios error. Callers that need a typed refusal (an RFC 9457 `problem+json`) must read it with
+   * `TryParseProblem`, because `TryParseResponse` answers `undefined` for every failure alike.
+   */
+  public PostRequest(path: string, payload?: any, extraHeaders?: Record<string, string>): Promise<any> {
+    const request = this.DefaultRequest(path, payload, HttpMethod.POST, extraHeaders);
     return this._httpModule.httpClient(request).then((response) => {
       return response;
     }).catch((error) => {
@@ -120,11 +129,25 @@ export class RequestService {
     }
   }
 
-  private DefaultRequest(path: string, payload: any, method: HttpMethod): any {
-    return this.BuildRequest(path, method, payload ? JSON.stringify(payload) : "", this._coreInitializer.bearerToken);
+  /**
+   * The body of an RFC 9457 `problem+json` refusal, from either shape this class can hand back: a
+   * resolved non-2xx response, or the axios error `PostRequest` resolves with. Returns `undefined`
+   * when there is no problem body to read, so a caller can tell "the server refused and said why"
+   * apart from "the request never arrived".
+   */
+  public TryParseProblem(responseOrError: any): any {
+    const body = responseOrError?.response?.data ?? responseOrError?.data;
+    if (!body || typeof body !== "object") { return undefined; }
+    const status = responseOrError?.response?.status ?? responseOrError?.status;
+    if (status && status >= 200 && status < 300) { return undefined; }
+    return body;
   }
 
-  private BuildRequest(path: string, method: HttpMethod, content?: string, bearerToken?: string): any {
+  private DefaultRequest(path: string, payload: any, method: HttpMethod, extraHeaders?: Record<string, string>): any {
+    return this.BuildRequest(path, method, payload ? JSON.stringify(payload) : "", this._coreInitializer.bearerToken, extraHeaders);
+  }
+
+  private BuildRequest(path: string, method: HttpMethod, content?: string, bearerToken?: string, extraHeaders?: Record<string, string>): any {
     const request = { headers: {}, data: null };
     request[HttpProperty.Url] = $config.okamApiBaseUrl + path;
     request[HttpProperty.Method] = method;
@@ -145,6 +168,12 @@ export class RequestService {
 
     if (bearerToken) {
       request.headers[HttpProperty.Authorization] = "Bearer " + bearerToken;
+    }
+
+    if (extraHeaders) {
+      Object.keys(extraHeaders).forEach((name) => {
+        if (extraHeaders[name] !== undefined && extraHeaders[name] !== null) { request.headers[name] = extraHeaders[name]; }
+      });
     }
     return request;
   }

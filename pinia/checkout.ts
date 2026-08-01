@@ -3,14 +3,15 @@ import { useCart, useTranslation, useServices, useStore } from ".";
 import { ref, computed, watch } from "vue";
 import { debounce } from "../helpers/ts-debounce";
 import { priceLabel } from "../helpers/tools";
-import { PaymentMethod, CartValidation, StripeCreatePaymentIntent, DinteroInitResponse, DinteroInitiatePaymentModel } from "../models";
+import { PaymentMethod, CartValidation, StripeCreatePaymentIntent, DinteroInitResponse, DinteroInitiatePaymentModel, MealsCompany, MealsContext } from "../models";
 import { DeliveryType, PaymentType } from "../enums";
+import { mealsQuoteHash } from "../helpers/meals-quote-hash";
 
 export const useCheckout = defineStore("checkout", () => {
   const { $i } = useTranslation();
   const _cart = useCart();
   const _store = useStore();
-  const { paymentService, persistenceService, discountService, cartService, stripeService, vippsService, dinteroService } = useServices();
+  const { paymentService, persistenceService, discountService, cartService, stripeService, vippsService, dinteroService, mealsService } = useServices();
   const invoiceCustomerReference = ref("");
 
   const totalAmountText = () => {
@@ -254,6 +255,12 @@ export const useCheckout = defineStore("checkout", () => {
   };
 
   const setPaymentMethod = (item) => {
+    // Choosing a rail is choosing NOT to put it on the company tab. Releasing the reservation here
+    // (rather than leaving it to the page) is what makes the two tenders mutually exclusive
+    // wherever the choice is made from: a held reservation plus a card tender would send a token
+    // the backend ignores and strand the member's allowance until it expires.
+    if (mealsReservationHeld()) { clearCompanyAccountTender(false); }
+
     selectedPaymentMethodIdPrivate.value = item === undefined ? "" : item.id;
     selectedPaymentType.value = item === undefined ? PaymentType.NotSet : item.paymentType;
 
@@ -485,7 +492,18 @@ export const useCheckout = defineStore("checkout", () => {
       // card or TWINT) and must never fall back to the raw-card path, so getCardInfo() is
       // not consulted at all for CH. Norway keeps the original "saved method OR raw card"
       // gate unchanged.
-      const paymentSourceIsValid = isSwissStore.value ? !!selectedPaymentMethodId.value : selectedPaymentMethodId.value || getCardInfo().isValid;
+      // A company-funded order has no card and no rail: its payment source IS the funding
+      // reservation, so the card gate below would refuse a perfectly valid checkout. The token is
+      // still re-validated server-side at completion — this branch decides what to ASK for, never
+      // what to trust.
+      const isCompanyAccount = currentCart.paymentType === PaymentType.CompanyAccount;
+      if (isCompanyAccount && !mealsReservationHeld()) {
+        errorMessagePrivate.value = mealsErrorPrivate.value || $i("checkoutPage_mealsQuoteFailed");
+        isValidating.value = false;
+        return resolve(false);
+      }
+
+      const paymentSourceIsValid = isCompanyAccount ? true : isSwissStore.value ? !!selectedPaymentMethodId.value : selectedPaymentMethodId.value || getCardInfo().isValid;
       if (!paymentSourceIsValid) {
         errorMessagePrivate.value = $i("checkoutPage_paymentFailedCheckCardDetails");
         isValidating.value = false;
@@ -540,14 +558,186 @@ export const useCheckout = defineStore("checkout", () => {
     });
   };
 
+  // ---- Company Meals: the company tab as a tender -----------------------------------------------
+  //
+  // This is the ONLY thing in any client that puts `PaymentType.CompanyAccount` on a cart, and the
+  // only thing that carries a funding reservation token into cart completion. The backend has
+  // refused a company-account tender without one since the module shipped; nothing had ever sent it.
+  //
+  // THE TOKEN IS NOT STATE. It is returned exactly once (the API persists only its hash), it
+  // authorises money, and every other ref in this store is mirrored into localStorage by
+  // `persistenceService.watchAndStore`. So it is held in a plain closure variable — not a ref, not
+  // returned from the store, never logged — and dies with the tab. What IS exposed is whether one
+  // is held, which is all a page needs to render the choice.
+  let mealsToken = "";
+  let mealsIdempotencyKey = "";
+  let mealsQuotedHash = "";
+
+  const mealsCompaniesPrivate = ref([] as MealsCompany[]);
+  const mealsContextPrivate = ref(null as MealsContext);
+  const mealsSelectedCompanyIdPrivate = ref("");
+  const mealsIsLoadingPrivate = ref(false);
+  const mealsErrorPrivate = ref("");
+  const mealsReservationPrivate = ref(null as { reservationId: string; reservedCapMinor: number; currency: string; expiresAtUtc: string });
+
+  const mealsCompanies = computed(() => mealsCompaniesPrivate.value);
+  const mealsContext = computed(() => mealsContextPrivate.value);
+  const mealsSelectedCompanyId = computed(() => mealsSelectedCompanyIdPrivate.value);
+  const mealsIsLoading = computed(() => mealsIsLoadingPrivate.value);
+  const mealsError = computed(() => mealsErrorPrivate.value);
+  const mealsReservation = computed(() => mealsReservationPrivate.value);
+  const mealsReservationHeld = () => !!mealsToken;
+  const companyAccountSelected = computed(() => !!mealsReservationPrivate.value);
+
+  /** Only a company whose agreement corridor IS this store, and whose membership is live, can pay here. */
+  const mealsAvailableCompanies = computed(() =>
+    mealsCompaniesPrivate.value.filter((c) => c.storeId && c.storeId === _store.currentStore?.id && (c.membershipState || "").toLowerCase() === "active")
+  );
+
+  const mealsCurrency = () => (_store.currentStore?.currencyCode || "NOK").toUpperCase();
+  const mealsCartTotalMinor = () => _cart.getCurrentCart()?.calculations?.finalAmount ?? 0;
+  const currentQuoteHash = () => mealsQuoteHash(_cart.getCurrentCart(), mealsCurrency(), mealsCartTotalMinor());
+
+  const newIdempotencyKey = () => {
+    return "meals-quote-" + Date.now().toString(36) + "-" + Math.random().toString(36).slice(2, 10);
+  };
+
+  /**
+   * The entry read. Silent by design: a guest who belongs to no company, or a deployment with the
+   * module dark, must see an ordinary checkout rather than an error about a feature they have never
+   * heard of (the API answers those two cases with the same opaque 404).
+   */
+  const loadMealsCompanies = async () => {
+    if (!_store.currentStore?.id) return;
+    mealsIsLoadingPrivate.value = true;
+    try {
+      const result = await mealsService().GetMyCompanies();
+      mealsCompaniesPrivate.value = result?.companies || [];
+      const only = mealsAvailableCompanies.value;
+      if (only.length && !mealsSelectedCompanyIdPrivate.value) {
+        await selectMealsCompany(only[0].companyId);
+      }
+    } finally {
+      mealsIsLoadingPrivate.value = false;
+    }
+  };
+
+  /** Loads one company's eligibility. An INELIGIBLE answer is kept — its reason is what the guest is owed. */
+  const selectMealsCompany = async (companyId: string) => {
+    mealsSelectedCompanyIdPrivate.value = companyId || "";
+    mealsContextPrivate.value = null;
+    if (!companyId) return;
+    mealsIsLoadingPrivate.value = true;
+    try {
+      mealsContextPrivate.value = await mealsService().GetContext(companyId);
+    } finally {
+      mealsIsLoadingPrivate.value = false;
+    }
+  };
+
+  /**
+   * Mints (or re-mints) the reservation and puts the company tender on the cart.
+   *
+   * The idempotency key is per CART VERSION, not per click: pressing the option twice must not
+   * reserve the allowance twice, but a cart whose total changed is a different thing to fund and
+   * gets a new key. That is why the quote hash is remembered alongside it.
+   */
+  const chooseCompanyAccount = async (): Promise<boolean> => {
+    const companyId = mealsSelectedCompanyIdPrivate.value;
+    if (!companyId || !_store.currentStore?.id) return false;
+    mealsErrorPrivate.value = "";
+    mealsIsLoadingPrivate.value = true;
+
+    const hash = currentQuoteHash();
+    if (hash !== mealsQuotedHash || !mealsIdempotencyKey) { mealsIdempotencyKey = newIdempotencyKey(); }
+
+    try {
+      const quote = await mealsService().CreateQuote(
+        _store.currentStore.id,
+        { companyId, cartTotalMinor: mealsCartTotalMinor(), currency: mealsCurrency(), quoteHash: hash },
+        mealsIdempotencyKey
+      );
+      mealsToken = quote.authorizationToken;
+      mealsQuotedHash = hash;
+      mealsReservationPrivate.value = {
+        reservationId: quote.reservationId,
+        reservedCapMinor: quote.reservedCapMinor,
+        currency: quote.currency,
+        expiresAtUtc: quote.expiresAtUtc
+      };
+
+      // The tender only goes on the cart once the reservation exists, so the cart can never carry a
+      // CompanyAccount tender this client has no token for.
+      selectedPaymentMethodIdPrivate.value = "";
+      selectedPaymentType.value = PaymentType.CompanyAccount;
+      _cart.setCartRootProperties({ paymentType: PaymentType.CompanyAccount });
+      return true;
+    } catch (error: any) {
+      clearCompanyAccountTender(false);
+      mealsErrorPrivate.value = mealsRefusalText(error?.reasonCode) || error?.message || $i("checkoutPage_mealsQuoteFailed");
+      return false;
+    } finally {
+      mealsIsLoadingPrivate.value = false;
+    }
+  };
+
+  /** Drops the reservation this client holds. `resetTender` puts the cart back to an unchosen tender. */
+  const clearCompanyAccountTender = (resetTender: boolean = true) => {
+    mealsToken = "";
+    mealsQuotedHash = "";
+    mealsIdempotencyKey = "";
+    mealsReservationPrivate.value = null;
+    if (resetTender) {
+      selectedPaymentType.value = PaymentType.NotSet;
+      _cart.setCartRootProperties({ paymentType: PaymentType.NotSet });
+    }
+  };
+
+  /** The MEALS_* vocabulary, in the guest's language. An unknown code falls through to the server's prose. */
+  const mealsRefusalText = (reasonCode: string) => {
+    if (!reasonCode) return "";
+    const map = {
+      MEALS_INELIGIBLE_TIME_WINDOW: $i("checkoutPage_mealsIneligibleTimeWindow"),
+      MEALS_ALLOWANCE_EXCEEDED: $i("checkoutPage_mealsAllowanceExceeded"),
+      MEALS_MEMBERSHIP_REVOKED: $i("checkoutPage_mealsMembershipRevoked"),
+      MEALS_OVER_RESERVED_CAP: $i("checkoutPage_mealsOverReservedCap"),
+      MEALS_RESERVATION_EXPIRED: $i("checkoutPage_mealsReservationExpired"),
+      MEALS_RESERVATION_NOT_FOUND: $i("checkoutPage_mealsReservationExpired"),
+      MEALS_CURRENCY_MISMATCH: $i("checkoutPage_mealsCurrencyMismatch"),
+      MEALS_MODULE_UNAVAILABLE: $i("checkoutPage_mealsUnavailable")
+    };
+    return map[reasonCode] || "";
+  };
+
+  // A quote is pinned to the cart that produced it, and the checkout page can still change the
+  // total after one is minted (a tip, a discount code). Leaving the stale reservation in place
+  // would let the guest press "pay" and be refused at the very last step with MEALS_OVER_RESERVED_CAP.
+  // So the held reservation follows the cart.
+  watch(
+    () => (companyAccountSelected.value ? currentQuoteHash() : ""),
+    debounce(function (hash: string) {
+      if (!hash || !mealsToken || hash === mealsQuotedHash) return;
+      chooseCompanyAccount();
+    }, 400)
+  );
+
   const completeCart = async () => {
     if (isValidating.value || !_store.currentStore.id) return Promise.reject();
     errorMessagePrivate.value = "";
     isValidating.value = true;
+    // Company-funded orders and only those carry the reservation token; every other tender sends
+    // nothing, exactly as before.
+    const token = _cart.getCurrentCart()?.paymentType === PaymentType.CompanyAccount ? mealsToken : "";
     return cartService()
-      .Complete(_store.currentStore.id)
-      .catch(() => {
-        errorMessagePrivate.value = $i("checkoutPage_completeCartFailedError");
+      .Complete(_store.currentStore.id, token)
+      .then((order) => {
+        // The reservation is spent the moment the order binds it: holding the token afterwards
+        // could only produce a second, refused attempt.
+        if (token) { clearCompanyAccountTender(false); }
+        return order;
+      })
+      .catch((error: any) => {
+        errorMessagePrivate.value = mealsRefusalText(error?.reasonCode) || $i("checkoutPage_completeCartFailedError");
       })
       .finally(() => {
         isValidating.value = false;
@@ -601,5 +791,19 @@ export const useCheckout = defineStore("checkout", () => {
     initiateVippsPayment,
     initiateDinteroPayment,
     completeCart,
+
+    // Company Meals. `mealsToken` is deliberately NOT here — see the section header above.
+    mealsCompanies,
+    mealsAvailableCompanies,
+    mealsContext,
+    mealsSelectedCompanyId,
+    mealsIsLoading,
+    mealsError,
+    mealsReservation,
+    companyAccountSelected,
+    loadMealsCompanies,
+    selectMealsCompany,
+    chooseCompanyAccount,
+    clearCompanyAccountTender,
   };
 });

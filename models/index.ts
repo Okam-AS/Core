@@ -136,3 +136,6 @@ export { GiftcardTransaction } from "./giftcard/giftcard-transaction";
 export { GiftcardPurchaseValidationResponse } from "./giftcard/giftcard-purchase-validation-response";
 export { UsersGiftcardBalance } from "./giftcard/users-giftcard-balance";
 export { UsersGiftcardBalanceTransaction } from "./giftcard/users-giftcard-balance-transaction";
+
+// Company Meals
+export { MealsCompany, MealsCompaniesResponse, MealsContext, CreateMealsQuoteRequest, MealsQuote } from "./meals/meals-models";
