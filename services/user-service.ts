@@ -15,7 +15,7 @@ export class UserService {
 
   public async ConfirmEmail(code: string): Promise<boolean> {
     if (!this._bearerToken) return false;
-    const response = await this._requestService.PostRequest("/user/confirm-email/", { code });
+    const response = await this._requestService.PostRequest("/user/confirm-email", { code });
     const parsedResponse = this._requestService.TryParseResponse(response);
     if (parsedResponse === undefined) return false;
     return parsedResponse;
@@ -23,7 +23,7 @@ export class UserService {
 
   public async SendEmailConfirmationCode(email: string): Promise<boolean> {
     if (!this._bearerToken) return false;
-    const response = await this._requestService.PostRequest("/user/send-email-confirmation-code/", { email });
+    const response = await this._requestService.PostRequest("/user/send-email-confirmation-code", { email });
     const parsedResponse = this._requestService.TryParseResponse(response);
     if (parsedResponse === undefined) return false;
     return parsedResponse;
@@ -40,7 +40,7 @@ export class UserService {
 
   public async GetRewardCards(): Promise<RewardCard> {
     if (!this._bearerToken) return null;
-    const response = await this._requestService.GetRequest("/user/rewardcards/");
+    const response = await this._requestService.GetRequest("/user/rewardcards");
     const parsedResponse = this._requestService.TryParseResponse(response);
     if (parsedResponse === undefined) return null;
     return parsedResponse;
@@ -48,13 +48,13 @@ export class UserService {
 
   public async UpdateAddress(fullAddress: string, zipCode: string, city: string, deliveryInstructions?: string): Promise<boolean> {
     if (!this._bearerToken) return false;
-    await this._requestService.PostRequest("/user/address/", { fullAddress, zipCode, city, deliveryInstructions });
+    await this._requestService.PostRequest("/user/address", { fullAddress, zipCode, city, deliveryInstructions });
     return true;
   }
 
   public async UpdateName(firstName: string, lastName: string): Promise<boolean> {
     if (!this._bearerToken) return false;
-    await this._requestService.PostRequest("/user/name/", { firstName, lastName });
+    await this._requestService.PostRequest("/user/name", { firstName, lastName });
     return true;
   }
 

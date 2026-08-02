@@ -56,7 +56,7 @@ export class OrderService {
   }
 
   public async UpdateStatus(orderId: string, status: OrderStatus): Promise<Order> {
-    const response = await this._requestService.PutRequest("/orders/update/", { id: orderId, status });
+    const response = await this._requestService.PutRequest("/orders/update", { id: orderId, status });
     const parsedResponse = this._requestService.TryParseResponse(response);
     if (parsedResponse === undefined) {
       throw new Error("Failed to update orderstatus");
@@ -74,7 +74,7 @@ export class OrderService {
   }
 
   public async Processing(orderId: string, remainingMinutes: number, remainingMinutesToStartProcessing: number = 0): Promise<Order> {
-    const response = await this._requestService.PutRequest("/orders/processing/", { id: orderId, remainingMinutes, remainingMinutesToStartProcessing });
+    const response = await this._requestService.PutRequest("/orders/processing", { id: orderId, remainingMinutes, remainingMinutesToStartProcessing });
     const { data, error } = this._requestService.TryParseResponseWithError(response);
     if (error) {
       throw new Error(error);

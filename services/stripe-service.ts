@@ -22,7 +22,7 @@ export class StripeService {
     model.currency = "NOK";
     model.clientMajorVersion = 4;
     const response = await this._requestService.PostRequest(
-      "/stripe/createPaymentIntent/",
+      "/stripe/createPaymentIntent",
       model
     );
 
@@ -34,7 +34,7 @@ export class StripeService {
   }
 
   public async CreatePaymentIntentLegacy(amount: number, currency: string, paymentMethodId: string, cartId: string, setupFutureUsage: boolean): Promise<any> {
-    const response = await this._requestService.PostRequest('/stripe/createPaymentIntent/', {
+    const response = await this._requestService.PostRequest('/stripe/createPaymentIntent', {
       amount,
       currency,
       paymentMethodId,

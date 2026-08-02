@@ -10,7 +10,7 @@ export class GiftcardService {
   }
 
   public async Validate(giftcard: Giftcard) {
-    const response = await this._requestService.PostRequest("/giftcard/validate/", giftcard);
+    const response = await this._requestService.PostRequest("/giftcard/validate", giftcard);
     const parsedResponse = this._requestService.TryParseResponse(response);
     if (parsedResponse === undefined) {
       throw new Error("Failed to validate gift card");

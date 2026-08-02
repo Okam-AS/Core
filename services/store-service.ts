@@ -57,7 +57,7 @@ export class StoreService {
   }
 
   public async RemoveEmployee (storeId: number, userId: string): Promise<boolean> {
-    const response = await this._requestService.PostRequest('/stores/removeemployee/', { storeId, userId });
+    const response = await this._requestService.PostRequest('/stores/removeemployee', { storeId, userId });
     const parsedResponse = this._requestService.TryParseResponse(response);
     return parsedResponse !== undefined;
   }
