@@ -14,6 +14,11 @@ function getTranslation() {
   return { $i: (key: string) => key };
 }
 
+// `suffix` is NOT a trailing currency unit. It holds the notation a locale uses to say "and no øre" —
+// the Norwegian ",–" — which stands IN PLACE OF the fraction digits and is printed only when no
+// fraction is. Every format any client installs today spells it that way: NOK ",–", CHF and both
+// admin surfaces "". A locale that wants a trailing unit ("206,80 kr") needs a field of its own; it
+// cannot borrow this one, because this one is suppressed exactly when øre are shown.
 type CurrencyFormatOverride = Partial<{ prefix: string; suffix: string; decimalSeparator: string; thousandSeparator: string; fractionLength: number; symbol: string }>;
 let _currencyFormatOverride: CurrencyFormatOverride | null = null;
 
@@ -47,7 +52,10 @@ const fractionAmountTool = (amount: Number): string => {
     return "00";
   }
   const fractionAmount = amount.toString().slice(-2);
-  return fractionAmount.length < 2 ? "00" : fractionAmount;
+  // A single-digit minor amount is 1-9 øre, so it is padded on the LEFT: 4 -> "04". Widening it to
+  // "00" both erased the øre and, through the parseInt below, told priceLabel the total carried
+  // none — 4 øre printed as "0,–".
+  return fractionAmount.padStart(2, "0");
 };
 
 const priceLabelTool = (totalPrice: Number, hideFractionIfZero: Boolean = false, hidePrefixAndSuffix: Boolean = false) => {
@@ -60,7 +68,12 @@ const priceLabelTool = (totalPrice: Number, hideFractionIfZero: Boolean = false,
   if (!hideFractionIfZero || parseInt(fractionAmountTool(totalPrice)) > 0) {
     fraction = currencyInfo.decimalSeparator + fractionAmountTool(totalPrice);
   }
-  return (hidePrefixAndSuffix ? "" : currencyInfo.prefix) + wholeAmount + fraction + (hidePrefixAndSuffix ? "" : currencyInfo.suffix);
+  // The suffix is the "and no øre" notation, so it and the fraction are mutually exclusive: printing
+  // both produced "206,80,–", which is not a price in any locale and reads as a total that was
+  // rounded when it was not. No client is affected in the other direction — the only non-empty
+  // suffix any of them installs is the NOK ",–".
+  const noFractionSuffix = fraction ? "" : currencyInfo.suffix;
+  return (hidePrefixAndSuffix ? "" : currencyInfo.prefix) + wholeAmount + fraction + (hidePrefixAndSuffix ? "" : noFractionSuffix);
 };
 
 const orderStatusLabelTool = (type: OrderStatus) => {
