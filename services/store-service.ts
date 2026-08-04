@@ -266,7 +266,14 @@ export class StoreService {
     googlePayEnabled: boolean,
     klarnaEnabled: boolean,
     billieEnabled: boolean,
+    kraviaEnabled?: boolean,
+    kraviaMessage?: string,
     commissionPercentage: number,
+    // Wolt fees are stored alongside the Dintero configuration server-side. The endpoint overwrites
+    // every field it receives, so always send a full configuration read back from GetDinteroConfig.
+    woltDeliveryFeePercent?: number,
+    woltCustomerDeliveryFeeAmount?: number,
+    woltServiceFeeAmount?: number,
     splitSellerId: string
   }): Promise<boolean> {
     const response = await this._requestService.PostRequest('/stores/' + storeId + '/dintero-configuration', options);
