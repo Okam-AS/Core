@@ -307,6 +307,25 @@ export class StoreService {
     return parsedResponse !== undefined;
   }
 
+  // Wolt Drive credentials only. Sent to the same endpoint as ConfigureWolt, but without the
+  // Marketplace fields so the Marketplace token branch is left untouched. The backend also
+  // re-creates the Drive webhook for the merchant as part of this call.
+  public async ConfigureWoltDrive(storeId: number, options: {
+    merchantId: string,
+    merchantKey: string,
+    venueId: string
+  }): Promise<boolean> {
+    const payload = {
+      MerchantId: options.merchantId,
+      MerchantKey: options.merchantKey,
+      VenueId: options.venueId
+    };
+    const response = await this._requestService.PostRequest('/stores/' + storeId + '/wolt-configuration', payload);
+    const { error } = this._requestService.TryParseResponseWithError(response);
+    if (error) { throw new Error(error); }
+    return true;
+  }
+
   public async UpdateWoltMarketplaceConfiguration(storeId: number, configuration: { Enabled: boolean }): Promise<any> {
     const response = await this._requestService.PutRequest('/stores/' + storeId + '/wolt-marketplace-config', configuration);
     const parsedResponse = this._requestService.TryParseResponse(response);

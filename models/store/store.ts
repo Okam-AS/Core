@@ -39,6 +39,8 @@ export class Store {
   dineHomeDeliveryEnabled: boolean;
   woltDriveEnabled: boolean;
   woltDriveIsConfigured: boolean;
+  // Read-only Marketplace status; tokens are stored server-side and never returned.
+  woltMarketplaceConfiguration: { enabled: boolean; venueId: string; merchantPortalUrl: string };
 
   payment: StorePayment;
 
