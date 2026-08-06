@@ -47,7 +47,10 @@ const fractionAmountTool = (amount: Number): string => {
     return "00";
   }
   const fractionAmount = amount.toString().slice(-2);
-  return fractionAmount.length < 2 ? "00" : fractionAmount;
+  // A single-digit minor amount is 1-9 øre, so it is padded on the LEFT: 4 -> "04". Widening it to
+  // "00" both erased the øre and, through the parseInt below, told priceLabel the total carried
+  // none — 4 øre printed as "kr 0" on a screen an operator reads.
+  return fractionAmount.padStart(2, "0");
 };
 
 const priceLabelTool = (totalPrice: Number, hideFractionIfZero: Boolean = false, hidePrefixAndSuffix: Boolean = false) => {
