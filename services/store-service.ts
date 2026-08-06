@@ -1,7 +1,69 @@
 import { Store, StoreTip, StoreRegistration, OpeningHour, SpecialOpeningHour, SpecialOpeningHourAdmin, Address, StoreUserSetting, BrregData, StorePayment, StoreFees, CategorySearchOptions, StoreOverviewResponseModel, StorePaymentConfig, SurfboardStoreConfiguration } from '../models';
 import { HttpMethod, TerminalProvider } from '../enums';
 import { ICoreInitializer } from '../interfaces';
+import { registerFullReplaceContract, noteRecordLoaded, forgetRecordLoaded, assertFullReplaceIsSafe } from './full-replace-guard';
 import { RequestService, UserService } from './';
+
+// ---- FULL-REPLACE ENDPOINTS ---------------------------------------------------------------------
+//
+// Both store payment-configuration endpoints REPLACE the whole record: the backend assigns every
+// field of its write model unconditionally, so a key the client omits is not left alone — it is set
+// to the C# default (false / null / 0). See core/services/full-replace-guard.ts for the two defects
+// this cost, and for what the guard enforces.
+//
+// The field lists below are the backend write models, field for field:
+//   Models/Dintero/UpdateDinteroStoreConfigurationModel.cs
+//   Models/Surfboard/UpdateSurfboardStoreConfigurationModel.cs
+// (OkamAPI 8e2b57de). They are asserted against the TypeScript signatures of the two Update methods
+// in test/store-config-full-replace.test.js, so a field added to one and not the other reds.
+export const DINTERO_CONFIG_KIND = 'store.dintero-configuration';
+export const SURFBOARD_CONFIG_KIND = 'store.surfboard-configuration';
+
+registerFullReplaceContract({
+  kind: DINTERO_CONFIG_KIND,
+  writableFields: [
+    'dinteroEnabled',
+    'dinteroAccountId',
+    'clientId',
+    'clientSecret',
+    'vippsEnabled',
+    'applePayEnabled',
+    'creditCardEnabled',
+    'googlePayEnabled',
+    'klarnaEnabled',
+    'billieEnabled',
+    'kraviaEnabled',
+    'kraviaMessage',
+    'splitSellerId',
+    'commissionPercentage',
+    'woltDeliveryFeePercent',
+    'woltCustomerDeliveryFeeAmount',
+    'woltServiceFeeAmount'
+  ]
+});
+
+registerFullReplaceContract({
+  kind: SURFBOARD_CONFIG_KIND,
+  writableFields: [
+    'surfboardEnabled',
+    'merchantId',
+    'storeExternalId',
+    'onlineTerminalId',
+    'webhookSecret',
+    'cardEnabled',
+    'vippsEnabled',
+    'mobilePayEnabled',
+    'swishEnabled',
+    'klarnaEnabled',
+    'tipsEnabled',
+    'partialPaymentsEnabled',
+    'commissionPercentage',
+    'terminalCommissionPercentage',
+    'woltDeliveryFeePercent',
+    'woltCustomerDeliveryFeeAmount',
+    'woltServiceFeeAmount'
+  ]
+});
 
 export class StoreService {
   private _requestService: RequestService;
@@ -281,6 +343,8 @@ export class StoreService {
     return parsedResponse !== undefined;
   }
 
+  // FULL REPLACE. Refuses unless GetDinteroConfig read this store's record first and every field of
+  // the backend write model is carried — see full-replace-guard.ts.
   public async UpdateDinteroConfig (storeId: number, options: {
     dinteroEnabled: boolean,
     dinteroAccountId: string,
@@ -292,9 +356,15 @@ export class StoreService {
     googlePayEnabled: boolean,
     klarnaEnabled: boolean,
     billieEnabled: boolean,
+    kraviaEnabled: boolean,
+    kraviaMessage: string,
+    splitSellerId: string,
     commissionPercentage: number,
-    splitSellerId: string
+    woltDeliveryFeePercent: number,
+    woltCustomerDeliveryFeeAmount: number,
+    woltServiceFeeAmount: number
   }): Promise<boolean> {
+    assertFullReplaceIsSafe(DINTERO_CONFIG_KIND, storeId, options);
     const response = await this._requestService.PostRequest('/stores/' + storeId + '/dintero-configuration', options);
     const parsedResponse = this._requestService.TryParseResponse(response);
     return parsedResponse !== undefined;
@@ -303,7 +373,13 @@ export class StoreService {
   public async GetDinteroConfig (storeId: number): Promise<any> {
     const response = await this._requestService.GetRequest('/stores/' + storeId + '/dintero-configuration');
     const parsedResponse = this._requestService.TryParseResponse(response);
-    if (parsedResponse === undefined) { throw new Error('Failed to get Dintero configuration'); }
+    // Recorded only on a parsed response, and dropped otherwise: a form filled from a read that
+    // failed holds blank defaults, and posting those is the destruction this guards against.
+    if (parsedResponse === undefined) {
+      forgetRecordLoaded(DINTERO_CONFIG_KIND, storeId);
+      throw new Error('Failed to get Dintero configuration');
+    }
+    noteRecordLoaded(DINTERO_CONFIG_KIND, storeId);
     return parsedResponse;
   }
 
@@ -320,6 +396,8 @@ export class StoreService {
     return parsedResponse !== undefined
   }
 
+  // FULL REPLACE. Refuses unless GetSurfboardConfig read this store's record first and every field
+  // of the backend write model is carried — see full-replace-guard.ts.
   public async UpdateSurfboardConfig (storeId: number, options: {
     surfboardEnabled: boolean,
     merchantId: string,
@@ -332,12 +410,14 @@ export class StoreService {
     swishEnabled: boolean,
     klarnaEnabled: boolean,
     tipsEnabled: boolean,
+    partialPaymentsEnabled: boolean,
     commissionPercentage: number,
     terminalCommissionPercentage: number,
     woltDeliveryFeePercent: number,
     woltCustomerDeliveryFeeAmount: number,
     woltServiceFeeAmount: number
   }): Promise<boolean> {
+    assertFullReplaceIsSafe(SURFBOARD_CONFIG_KIND, storeId, options);
     const response = await this._requestService.PostRequest('/stores/' + storeId + '/surfboard-configuration', options);
     const parsedResponse = this._requestService.TryParseResponse(response);
     return parsedResponse !== undefined;
@@ -346,7 +426,12 @@ export class StoreService {
   public async GetSurfboardConfig (storeId: number): Promise<SurfboardStoreConfiguration> {
     const response = await this._requestService.GetRequest('/stores/' + storeId + '/surfboard-configuration');
     const parsedResponse = this._requestService.TryParseResponse(response);
-    if (parsedResponse === undefined) { throw new Error('Failed to get Surfboard configuration'); }
+    // See GetDinteroConfig: recorded only on a parsed response, dropped otherwise.
+    if (parsedResponse === undefined) {
+      forgetRecordLoaded(SURFBOARD_CONFIG_KIND, storeId);
+      throw new Error('Failed to get Surfboard configuration');
+    }
+    noteRecordLoaded(SURFBOARD_CONFIG_KIND, storeId);
     return parsedResponse;
   }
 

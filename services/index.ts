@@ -2,7 +2,18 @@ export { CartService } from './cart-service'
 export { RequestService } from './request-service'
 export { UserService } from './user-service'
 export { OrderService } from './order-service'
-export { StoreService } from './store-service'
+export { StoreService, DINTERO_CONFIG_KIND, SURFBOARD_CONFIG_KIND } from './store-service'
+export {
+  FullReplaceGuardError,
+  registerFullReplaceContract,
+  fullReplaceContractFor,
+  registeredFullReplaceKinds,
+  noteRecordLoaded,
+  hasRecordBeenLoaded,
+  forgetRecordLoaded,
+  resetFullReplaceLedger,
+  assertFullReplaceIsSafe
+} from './full-replace-guard'
 export { RewardService } from './reward-service'
 export { GiftcardService } from './giftcard-service'
 export { NotificationService } from './notification-service'
