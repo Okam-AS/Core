@@ -139,8 +139,14 @@ export class RequestService {
   public BuildError(message: string, responseOrError: any): Error {
     // Prefer the backend's own message (an AppException reason the operator can act on)
     // over the caller's generic fallback.
-    const error: any = new Error(this.TryGetErrorMessage(responseOrError) || message);
+    const backendMessage = this.TryGetErrorMessage(responseOrError);
+    const error: any = new Error(backendMessage || message);
     error.statusCode = this.TryGetStatusCode(responseOrError);
+    // Whether that sentence came from the SERVER or is this client's own fallback. The server
+    // localises its AppException reasons from the Language header, so a caller that wants to write
+    // its own copy per status needs to know which of the two it is holding — and comparing the
+    // message back against the fallback string it just passed in is the fragile way to find out.
+    error.hasBackendMessage = Boolean(backendMessage);
     return error;
   }
 
