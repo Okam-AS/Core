@@ -1,5 +1,6 @@
 import { DeliveryType, OrderStatus } from "../enums";
 import dayjs from "dayjs";
+import { formatLegacyPriceLabelV1 } from "../consumer-domain/legacy/money";
 
 let _translationProvider: (() => { $i: (key: string) => string }) | null = null;
 
@@ -52,15 +53,15 @@ const fractionAmountTool = (amount: Number): string => {
 
 const priceLabelTool = (totalPrice: Number, hideFractionIfZero: Boolean = false, hidePrefixAndSuffix: Boolean = false) => {
   const currencyInfo = currencyInfoTool();
-  // Honour the stored format separators (defaults are the Norwegian "," decimal and
-  // " " thousands from currencyInfoTool). Previously these were hardcoded here, so a
-  // setCurrencyFormat override (e.g. Swiss "." / "'") was silently ignored.
-  const wholeAmount = wholeAmountTool(totalPrice, currencyInfo.thousandSeparator);
-  let fraction = "";
-  if (!hideFractionIfZero || parseInt(fractionAmountTool(totalPrice)) > 0) {
-    fraction = currencyInfo.decimalSeparator + fractionAmountTool(totalPrice);
-  }
-  return (hidePrefixAndSuffix ? "" : currencyInfo.prefix) + wholeAmount + fraction + (hidePrefixAndSuffix ? "" : currencyInfo.suffix);
+  // Keep the legacy public helper's permissive behavior while moving the
+  // formatting implementation behind the framework-free compatibility adapter.
+  return formatLegacyPriceLabelV1(totalPrice, {
+    prefix: currencyInfo.prefix,
+    suffix: currencyInfo.suffix,
+    decimalSeparator: currencyInfo.decimalSeparator,
+    thousandSeparator: currencyInfo.thousandSeparator,
+    fractionDigits: currencyInfo.fractionLength,
+  }, hideFractionIfZero, hidePrefixAndSuffix);
 };
 
 const orderStatusLabelTool = (type: OrderStatus) => {

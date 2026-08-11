@@ -4,6 +4,7 @@ import { useServices } from "./services";
 import { useStore, useCart, useCheckout, useOrder } from ".";
 import { ref, computed } from "vue";
 import { debounce } from "../helpers/ts-debounce";
+import { isLegacyPhoneNumberValidV1, normalizeLegacyPhoneNumberV1 } from "../consumer-domain/legacy/phone";
 
 export const useUser = defineStore("user", () => {
   const { userService, persistenceService, productService, feedbackService, setBearerToken, paymentService, stripeService } = useServices();
@@ -140,26 +141,10 @@ export const useUser = defineStore("user", () => {
     }, 1000);
   };
 
-  // Normalizes a national significant number for the given landcode. Kept dependency-free on purpose:
-  // Core is vendored as pure source into the clients, so adding a phone lib here is risky.
-  // TODO(NOR-99): libphonenumber for full international coverage.
-  const normalizePhoneNumber = (landcode, phoneNumber) => {
-    let nsn = phoneNumber?.replace(/\s+/g, "") || "";
-    // Swiss numbers are commonly entered in national trunk form (0xx xxx xx xx). Drop the trunk 0
-    // so it becomes the E.164 national significant number that concatenates onto +41. NO is left as-is.
-    if (landcode === "+41" && nsn.startsWith("0")) nsn = nsn.slice(1);
-    return nsn;
-  };
-
-  const phoneNumberIsValid = (landcode, phoneNumber) => {
-    const phoneNumberTrimmed = normalizePhoneNumber(landcode, phoneNumber);
-    // Norway (unchanged): 8-digit mobile/landline, numeric range >= 40000000.
-    const isValidNo = landcode === "+47" && phoneNumberTrimmed.length === 8 && parseInt(phoneNumberTrimmed) >= 40000000;
-    // Switzerland (additive): 9-digit national significant number, digits only. Accepts the 0xx trunk
-    // form too because normalizePhoneNumber strips the leading 0 above.
-    const isValidCh = landcode === "+41" && /^[0-9]{9}$/.test(phoneNumberTrimmed);
-    return isValidNo || isValidCh;
-  };
+  // The Pinia contract continues to accept national significant numbers. V1's
+  // E.164 API is deliberately separate until a consumer opts into that change.
+  const normalizePhoneNumber = normalizeLegacyPhoneNumberV1;
+  const phoneNumberIsValid = isLegacyPhoneNumberValidV1;
 
   const sendVerificationToken = async (landcode, phoneNumber) => {
     if (!phoneNumberIsValid(landcode, phoneNumber)) return Promise.reject();

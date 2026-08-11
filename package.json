@@ -4,12 +4,27 @@
   "private": true,
   "description": "Okam Core — client-side models and core logic, vendored as source into every consumer app.",
   "type": "module",
+  "sideEffects": false,
+  "exports": {
+    "./consumer-domain": {
+      "types": "./consumer-domain/index.ts",
+      "import": "./consumer-domain/index.ts",
+      "default": "./consumer-domain/index.ts"
+    },
+    "./consumer-domain/v1": {
+      "types": "./consumer-domain/v1/index.ts",
+      "import": "./consumer-domain/v1/index.ts",
+      "default": "./consumer-domain/v1/index.ts"
+    }
+  },
   "scripts": {
     "test": "vitest run",
-    "test:watch": "vitest"
+    "test:watch": "vitest",
+    "typecheck": "tsc --noEmit --project tsconfig.consumer-domain.json"
   },
   "devDependencies": {
     "dayjs": "^1.11.13",
+    "esbuild": "^0.21.5",
     "jsdom": "^25.0.1",
     "pinia": "^2.3.0",
     "typescript": "^5.7.0",
