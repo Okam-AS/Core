@@ -1,4 +1,4 @@
-import { Address, Category, DeliveryMethod, OpeningHour, User, StorePayment, StoreTip, RewardProgram, DinteroStoreConfiguration } from "../../models";
+import { Address, Category, DeliveryMethod, OpeningHour, SpecialOpeningHour, User, StorePayment, StoreTip, RewardProgram, DinteroStoreConfiguration } from "../../models";
 export class Store {
   id: number;
   name: string;
@@ -17,6 +17,7 @@ export class Store {
   currencyCode?: string;
   allowOrdersAfterOpeningHours: boolean;
   openingHours: Array<OpeningHour>;
+  specialOpeningHours: Array<SpecialOpeningHour>;
   isOpenNow: boolean;
   vat: number;
   admins: Array<User>;
@@ -42,6 +43,10 @@ export class Store {
   dineHomeDeliveryEnabled: boolean;
   woltDriveEnabled: boolean;
   woltDriveIsConfigured: boolean;
+  // Read-only Marketplace status; tokens are stored server-side and never returned.
+  woltMarketplaceConfiguration: { enabled: boolean; venueId: string; merchantPortalUrl: string };
+  tableReservationEnabled: boolean;
+  surfboardEnabled: boolean;
 
   payment: StorePayment;
 

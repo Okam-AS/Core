@@ -9,8 +9,8 @@ export class PaymentService {
     this._requestService = new RequestService(coreInitializer);
   }
 
-  public async GetPaymentMethods(cartId?: string, clientSupportsDintero: boolean = false): Promise<PaymentMethod> {
-    const response = await this._requestService.PostRequest("/payment/paymentMethods/", { cartId: cartId || "", clientSupportsDintero });
+  public async GetPaymentMethods(cartId?: string, clientSupportsDintero: boolean = false, clientSupportsSurfboard: boolean = false): Promise<PaymentMethod> {
+    const response = await this._requestService.PostRequest("/payment/paymentMethods", { cartId: cartId || "", clientSupportsDintero, clientSupportsSurfboard });
     const parsedResponse = this._requestService.TryParseResponse(response);
     if (parsedResponse === undefined) {
       throw new Error("Kunne ikke hente betalingsmetoder");

@@ -8,4 +8,6 @@ export enum OrderPaymentTypeFilter {
     DinteroBillie = 'DinteroBillie',
     DinteroKlarna = 'DinteroKlarna',
     WoltMarketplace = 'WoltMarketplace',
+    Surfboard = 'Surfboard',
+    SurfboardTerminal = 'SurfboardTerminal',
 }

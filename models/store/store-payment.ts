@@ -14,4 +14,9 @@ export class StorePayment {
   dinteroEnabled?: boolean;
   dinteroBillieEnabled?: boolean;
   dinteroKlarnaEnabled?: boolean;
+
+  surfboardEnabled?: boolean;
+  surfboardVippsEnabled?: boolean;
+  surfboardMobilePayEnabled?: boolean;
+  surfboardKlarnaEnabled?: boolean;
 }

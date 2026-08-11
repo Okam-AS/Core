@@ -2,7 +2,18 @@ export { CartService } from './cart-service'
 export { RequestService } from './request-service'
 export { UserService } from './user-service'
 export { OrderService } from './order-service'
-export { StoreService } from './store-service'
+export { StoreService, DINTERO_CONFIG_KIND, SURFBOARD_CONFIG_KIND } from './store-service'
+export {
+  FullReplaceGuardError,
+  registerFullReplaceContract,
+  fullReplaceContractFor,
+  registeredFullReplaceKinds,
+  noteRecordLoaded,
+  hasRecordBeenLoaded,
+  forgetRecordLoaded,
+  resetFullReplaceLedger,
+  assertFullReplaceIsSafe
+} from './full-replace-guard'
 export { RewardService } from './reward-service'
 export { GiftcardService } from './giftcard-service'
 export { NotificationService } from './notification-service'
@@ -26,6 +37,8 @@ export { BootstrapService } from './bootstrap-service'
 export { PlaceService } from './place-service'
 export { FeedbackService } from './feedback-service'
 export { DinteroService } from './dintero-service'
+export { SurfboardService } from './surfboard-service'
+export { TripletexService } from './tripletex-service'
 export { PayoutService } from './payout-service'
 export { DineHomeService } from './dinehome-service'
 export { AIService } from './ai-service'
@@ -40,3 +53,20 @@ export { WrappedService } from './wrapped-service'
 export { EmailCampaignService } from './email-campaign-service'
 export { KraviaInvoiceService } from './kravia-invoice-service'
 export { MealsService } from './meals-service'
+
+// Kassa (POS) / floor plan
+export { AllergenService } from './allergen-service'
+export { CashPointService } from './cash-point-service'
+export { GoodsGroupService } from './goods-group-service'
+export { OpenPricePresetService } from './open-price-preset-service'
+export { OperatorService } from './operator-service'
+export { CashDrawerService } from './cash-drawer-service'
+export { PosService } from './pos-service'
+export { OpenCheckService } from './open-check-service'
+export { KitchenService } from './kitchen-service'
+export { JournalService } from './journal-service'
+export { ReportService } from './report-service'
+export { SaftService } from './saft-service'
+export { TableService } from './table-service'
+export { ReservationService } from './reservation-service'
+export { DinteroTerminalService } from './dintero-terminal-service'

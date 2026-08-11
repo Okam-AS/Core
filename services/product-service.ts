@@ -15,6 +15,13 @@ export class ProductService {
     return this.ParsedResponse(response, 'Kunne ikke kopiere produkt');
   }
 
+  public async CopyToStores(productId: string, storeIds: number[]): Promise<boolean> {
+    const response = await this._requestService.PostRequest('/products/' + productId + '/copy-to-stores', {
+      storeIds: storeIds
+    });
+    return this.ParsedResponse(response, 'Kunne ikke kopiere produkt til valgte butikker');
+  }
+
   public async GetByBarcode(storeId: number, barcode: string): Promise<Product> {
     const response = await this._requestService.GetRequest("/products/consumer/search/" + storeId + "/" + (barcode || false));
     return this.ParsedResponse(response, "Butikken har ikke registrert denne varen");

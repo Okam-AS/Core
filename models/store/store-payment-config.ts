@@ -1,3 +1,5 @@
+import { TerminalProvider } from '../../enums/terminal-provider'
+
 export class StorePaymentConfig {
   payInStoreAvailable: boolean;
   stripeAvailable: boolean;
@@ -9,4 +11,8 @@ export class StorePaymentConfig {
   dinteroKlarnaAvailable: boolean;
   dinteroBilliePrice: string;
   dinteroKlarnaPrice: string;
+  surfboardAvailable: boolean;
+  surfboardPrice: string;
+  // In-person (POS/terminal) card acquirer for the store. Auto falls back to the per-cash-point rule.
+  terminalProvider: TerminalProvider;
 }

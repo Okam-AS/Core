@@ -25,15 +25,15 @@ export class RequestService {
     return task;
   }
 
-  public DeleteRequest(path: string): Promise<any> {
-    const request = this.DefaultRequest(path, undefined, HttpMethod.DELETE);
+  public DeleteRequest(path: string, extraHeaders?: Record<string, string>): Promise<any> {
+    const request = this.DefaultRequest(path, undefined, HttpMethod.DELETE, extraHeaders);
     return this._httpModule.httpClient(request).then((response) => {
       return response;
     });
   }
 
-  public GetRequest(path: string): Promise<any> {
-    const request = this.DefaultRequest(path, false, HttpMethod.GET);
+  public GetRequest(path: string, extraHeaders?: Record<string, string>): Promise<any> {
+    const request = this.DefaultRequest(path, false, HttpMethod.GET, extraHeaders);
     return this._httpModule.httpClient(request).then((response) => {
       return response;
     });
@@ -74,15 +74,15 @@ export class RequestService {
     });
   }
 
-  public PutRequest(path: string, payload?: any): Promise<any> {
-    const request = this.DefaultRequest(path, payload, HttpMethod.PUT);
+  public PutRequest(path: string, payload?: any, extraHeaders?: Record<string, string>): Promise<any> {
+    const request = this.DefaultRequest(path, payload, HttpMethod.PUT, extraHeaders);
     return this._httpModule.httpClient(request).then((response) => {
       return response;
     });
   }
 
-  public PatchRequest(path: string, payload?: any): Promise<any> {
-    const request = this.DefaultRequest(path, payload, HttpMethod.PATCH);
+  public PatchRequest(path: string, payload?: any, extraHeaders?: Record<string, string>): Promise<any> {
+    const request = this.DefaultRequest(path, payload, HttpMethod.PATCH, extraHeaders);
     return this._httpModule.httpClient(request).then((response) => {
       return response;
     });
@@ -111,21 +111,89 @@ export class RequestService {
     }
   }
 
+  // Axios errors carry the real response under `.response`; NativeScript resolves the
+  // response directly. One unwrap for every consumer, so status and message extraction can
+  // never diverge.
+  private UnwrapResponse(responseOrError) {
+    return (!$config.isNativeScript && responseOrError && responseOrError.response)
+      ? responseOrError.response
+      : responseOrError;
+  }
+
+  // Best-effort HTTP status of a resolved response (or an axios error object on web).
+  // undefined when the request never reached the server (network failure), letting callers
+  // distinguish "server said no" (e.g. 401) from "offline".
+  public TryGetStatusCode(response): number | undefined {
+    if (!response) { return undefined; }
+    const actual = this.UnwrapResponse(response);
+    const statusCode = $config.isNativeScript ? actual.statusCode : actual.status;
+    return typeof statusCode === "number" ? statusCode : undefined;
+  }
+
+  // The backend AppException message from a failed response's body, when one exists.
+  private TryGetErrorMessage(response): string | undefined {
+    if (!response) { return undefined; }
+    const actual = this.UnwrapResponse(response);
+    try {
+      const parsed = $config.isNativeScript && actual.content ? actual.content.toJSON() : actual.data;
+      return parsed && parsed.message ? String(parsed.message) : undefined;
+    } catch (e) {
+      return undefined;
+    }
+  }
+
+  // Builds the Error thrown when a response can't be parsed, carrying the HTTP status (when
+  // the server responded) so callers can branch on e.statusCode — e.g. 401 => session expired,
+  // undefined => network failure.
+  public BuildError(message: string, responseOrError: any): Error {
+    // Prefer the backend's own message (an AppException reason the operator can act on)
+    // over the caller's generic fallback.
+    const backendMessage = this.TryGetErrorMessage(responseOrError);
+    const error: any = new Error(backendMessage || message);
+    error.statusCode = this.TryGetStatusCode(responseOrError);
+    // Whether that sentence came from the SERVER or is this client's own fallback. The server
+    // localises its AppException reasons from the Language header, so a caller that wants to write
+    // its own copy per status needs to know which of the two it is holding — and comparing the
+    // message back against the fallback string it just passed in is the fragile way to find out.
+    error.hasBackendMessage = Boolean(backendMessage);
+    return error;
+  }
+
+  // Settled variants: resolve transport rejections (axios rejects on any non-2xx; NativeScript
+  // rejects on network failure) into the returned value, so TryParseResponse/-WithError and
+  // BuildError see the failed response uniformly on both platforms. PostRequest already
+  // behaves this way.
+  public SafeGetRequest(path: string, extraHeaders?: Record<string, string>): Promise<any> {
+    return this.GetRequest(path, extraHeaders).catch((error) => error);
+  }
+
+  public SafePutRequest(path: string, payload?: any, extraHeaders?: Record<string, string>): Promise<any> {
+    return this.PutRequest(path, payload, extraHeaders).catch((error) => error);
+  }
+
+  public SafeDeleteRequest(path: string, extraHeaders?: Record<string, string>): Promise<any> {
+    return this.DeleteRequest(path, extraHeaders).catch((error) => error);
+  }
+
   public TryParseResponseWithError(response) {
     if (typeof response === "undefined" || !response) {
       return { error: "No response received" };
     }
-    const statusCode = $config.isNativeScript ? response.statusCode : response.status;
+    // PostRequest resolves a rejected (non-2xx) request to the axios error object, whose real
+    // status and body live under `.response`. Unwrap so the backend AppException message is read
+    // whether we were handed the raw response, an axios error, or an already-unwrapped response.
+    const actual = this.UnwrapResponse(response);
+    const statusCode = $config.isNativeScript ? actual.statusCode : actual.status;
 
     try {
-      const parsedResponse = $config.isNativeScript && response.content ? response.content.toJSON() : response.data;
+      const parsedResponse = $config.isNativeScript && actual.content ? actual.content.toJSON() : actual.data;
       if (statusCode === 200) {
         return { data: parsedResponse };
       } else {
-        return { error: parsedResponse?.message || "Failed to parse response" };
+        return { error: (parsedResponse && parsedResponse.message) || response.message || "Failed to parse response" };
       }
     } catch (e) {
-      return { error: "Failed to parse response" };
+      return { error: response.message || "Failed to parse response" };
     }
   }
 
@@ -156,6 +224,14 @@ export class RequestService {
     request.headers[HttpProperty.ClientAppVersion] = $config.version;
     request.headers[HttpProperty.ClientFeatures] = "kravia";
     request.headers[HttpProperty.SelectedTheme] = $config.selectedTheme || "";
+
+    if (extraHeaders) {
+      for (const key in extraHeaders) {
+        if (Object.prototype.hasOwnProperty.call(extraHeaders, key)) {
+          request.headers[key] = extraHeaders[key];
+        }
+      }
+    }
 
     if (content) {
       request.headers[HttpProperty.ContentType] = "application/json; charset=utf-8";

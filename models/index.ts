@@ -1,31 +1,71 @@
 // Cart
-export { Cart } from "./cart/cart";
-export { CartValidation } from "./cart/cart-validation";
-export { CartCalculation } from "./cart/cart-calculation";
-export { CartLineItem } from "./cart/cart-line-item";
-export { RecommendProductsRequest } from "./cart/recommend-products-request";
-export { UpdateCompanyInfoModel } from "./cart/update-company-info-model";
+export { Cart } from './cart/cart';
+export { CartValidation } from './cart/cart-validation';
+export { CartCalculation } from './cart/cart-calculation';
+export { CartLineItem } from './cart/cart-line-item';
+export { RecommendProductsRequest } from './cart/recommend-products-request';
+export { UpdateCompanyInfoModel } from './cart/update-company-info-model';
 
 // Store
-export { Store } from "./store/store";
-export { OpeningHour } from "./store/opening-hour";
-export { DeliveryMethod } from "./store/delivery-method";
-export { BrregData } from "./store/brreg-data";
-export { StoreRegistration } from "./store/store-registration";
-export { StoreUserSetting } from "./store/store-user-setting";
-export { StoreTip } from "./store/store-tip";
-export { StorePayment } from "./store/store-payment";
-export { StoreFees } from "./store/store-fees";
+export { Store } from './store/store';
+export { OpeningHour } from './store/opening-hour';
+export { SpecialOpeningHour, SpecialOpeningHourAdmin } from './store/special-opening-hour';
+export { DeliveryMethod } from './store/delivery-method';
+export { BrregData } from './store/brreg-data';
+export { StoreRegistration } from './store/store-registration';
+export { StoreUserSetting } from './store/store-user-setting';
+export { StoreTip } from './store/store-tip';
+export { StorePayment } from './store/store-payment';
+export { StoreFees } from './store/store-fees';
 export { StoreOverviewModel } from './store/store-overview';
 export { StoreOverviewResponseModel } from './store/store-overview-response';
 export { StorePaymentConfig } from './store/store-payment-config';
 export { AccountingConfiguration } from './store/accounting-configuration';
-export { DinteroStoreConfiguration } from "./store/dintero-store-configuration";
+export { DinteroStoreConfiguration } from './store/dintero-store-configuration';
+export { SurfboardStoreConfiguration } from './surfboard/surfboard-store-configuration';
+export {
+  SurfboardMerchant,
+  SurfboardApplication,
+  SurfboardApplicationStatusResult,
+  SurfboardCreateMerchantResult,
+  SurfboardStoreDetails,
+  SurfboardOnlineInfo,
+  SurfboardCreateStoreResult,
+  SurfboardTerminal,
+  CashPointTerminalStatus,
+  SurfboardRegisterDeviceResult,
+  SurfboardDeviceRegistrationCode,
+  SurfboardBrregPrefill
+} from './surfboard/surfboard-admin-models';
+export {
+  SurfboardInitiateOnlineModel,
+  SurfboardOnlineInitiateResult,
+  SurfboardVerifyResult,
+  SurfboardTipsConfigRequest
+} from './surfboard/surfboard-online-models';
+export {
+  UpsertTripletexConnectionModel,
+  TripletexConnectionStatus,
+  TripletexCreatedAccount,
+  TripletexVoucherLogEntry,
+  AccountingExportResult,
+  TripletexPayoutReconciliation,
+  TripletexVoucher,
+  TripletexVoucherPosting,
+  TripletexVoucherAccount,
+  TripletexVoucherVatType
+} from './tripletex/tripletex-admin-models';
+export type {
+  TripletexTokenType,
+  TripletexVoucherKind,
+  TripletexVoucherStatus,
+  AccountingExportTarget
+} from './tripletex/tripletex-admin-models';
 
 // Discount
-export { Discount } from "./discount/discount";
-export { DiscountUsages } from "./discount/discount-usages";
-export { DiscountProducts } from "./discount/discount-products";
+export { Discount } from './discount/discount';
+export { DiscountUsages } from './discount/discount-usages';
+export { DiscountProducts } from './discount/discount-products';
 
 // Reward
 export { RewardProgram } from './reward/reward-program';
@@ -38,63 +78,63 @@ export { RewardStore } from './reward/reward-store';
 export { RewardBarData } from './reward/reward-bar-data';
 
 // User
-export { User } from "./user/user";
-export { Login } from "./user/login";
-export { SendVerificationToken } from "./user/send-verification-token";
-export { Address } from "./address/address";
+export { User } from './user/user';
+export { Login } from './user/login';
+export { SendVerificationToken } from './user/send-verification-token';
+export { Address } from './address/address';
 export { ApplicationUser } from './user/application-user';
 export { UserForStore } from './user/user-for-store';
 
 // Order
-export { Order } from "./order/order";
-export { OrderLineItem } from "./order/order-line-item";
-export { OrderLineItemOption } from "./order/order-line-item-option";
-export { TaxDetail } from "./order/tax-detail";
+export { Order } from './order/order';
+export { OrderLineItem } from './order/order-line-item';
+export { OrderLineItemOption } from './order/order-line-item-option';
+export { TaxDetail } from './order/tax-detail';
 export { WoltDeliveryInfo } from './order/wolt-delivery-info';
 
 // Notification
-export { NotificationRegistration } from "./notification/notification-registration";
+export { NotificationRegistration } from './notification/notification-registration';
 
 // Product
-export { Product } from "./product/product";
-export { ProductImage } from "./product/product-image";
-export { ProductVariant } from "./product/product-variant";
-export { ProductVariantOption } from "./product/product-variant-option";
-export { BulkImportRow } from "./product/bulk-import-row";
-export { BulkImport } from "./product/bulk-import";
+export { Product } from './product/product';
+export { ProductImage } from './product/product-image';
+export { ProductVariant } from './product/product-variant';
+export { ProductVariantOption } from './product/product-variant-option';
+export { BulkImportRow } from './product/bulk-import-row';
+export { BulkImport } from './product/bulk-import';
 
 // Category
-export { Category } from "./category/category";
-export { ImageCarouselItem } from "./category/image-carousel-item";
-export { ImageCarouselItemMarker } from "./category/image-carousel-item-marker";
-export { CategoryProductListItem } from "./category/category-product-list-item";
-export { CategoryImageSelection } from "./category/category-image-selection";
-export { CategorySearchOptions } from "./category/category-search-options";
+export { Category } from './category/category';
+export { ImageCarouselItem } from './category/image-carousel-item';
+export { ImageCarouselItemMarker } from './category/image-carousel-item-marker';
+export { CategoryProductListItem } from './category/category-product-list-item';
+export { CategoryImageSelection } from './category/category-image-selection';
+export { CategorySearchOptions } from './category/category-search-options';
 export { CategoryPublishRule } from './category/category-publish-rule';
 
 // Image
-export { ImageSource } from "./image/image-source";
+export { ImageSource } from './image/image-source';
 
 // Statistic
-export { OrderSummaryItem } from "./statistic/order-summary-item";
-export { OrderSummaryItemOption } from "./statistic/order-summary-item-option";
-export { StatisticChart } from "./statistic/statistic-chart";
-export { StatisticKeyValueData } from "./statistic/statistic-key-value-data";
-export { StatisticQueryOrders } from "./statistic/statistic-query-orders";
-export { StatisticOrders } from "./statistic/statistic-orders";
+export { OrderSummaryItem } from './statistic/order-summary-item';
+export { OrderSummaryItemOption } from './statistic/order-summary-item-option';
+export { StatisticChart } from './statistic/statistic-chart';
+export { StatisticKeyValueData } from './statistic/statistic-key-value-data';
+export { StatisticQueryOrders } from './statistic/statistic-query-orders';
+export { StatisticOrders } from './statistic/statistic-orders';
 
 // BankAccount
-export { BankAccount } from "./bankaccount/bank-account";
+export { BankAccount } from './bankaccount/bank-account';
 
 // Culture
-export { Culture } from "./culture/culture";
+export { Culture } from './culture/culture';
 
 // Payment
-export { VippsInitiateResponse } from "./payment/vipps-initiate-response";
-export { VippsVerifyResponse } from "./payment/vipps-verify-response";
-export { DinteroVerifyResponse } from "./payment/dintero-verify-response";
-export { PaymentMethod } from "./payment/payment-method";
-export { StripeCreatePaymentIntent } from "./payment/stripe-create-payment-intent";
+export { VippsInitiateResponse } from './payment/vipps-initiate-response';
+export { VippsVerifyResponse } from './payment/vipps-verify-response';
+export { DinteroVerifyResponse } from './payment/dintero-verify-response';
+export { PaymentMethod } from './payment/payment-method';
+export { StripeCreatePaymentIntent } from './payment/stripe-create-payment-intent';
 
 // Payout
 export { Payout } from './payout/payout';
@@ -120,22 +160,61 @@ export { AssignManagerModel } from './kam/assign-manager-model';
 export { KamDirectorRelationshipModel } from './kam/kam-director-relationship-model';
 
 // Log
-export { EventLog } from "./log/event-log";
+export { EventLog } from './log/event-log';
 
 // Feedback
-export { Feedback } from "./feedback/feedback";
+export { Feedback } from './feedback/feedback';
 
 // Dintero
-export { DinteroInitResponse } from "./dintero/dintero-init-response";
-export { DinteroInitiatePaymentModel } from "./dintero/dintero-initiate-payment-model";
+export { DinteroInitResponse } from './dintero/dintero-init-response';
+export { DinteroInitiatePaymentModel } from './dintero/dintero-initiate-payment-model';
 
 // Giftcard
-export { InitiateGiftcardPurchase } from "./giftcard/initiate-giftcard-purchase";
-export { Giftcard } from "./giftcard/giftcard";
-export { GiftcardTransaction } from "./giftcard/giftcard-transaction";
-export { GiftcardPurchaseValidationResponse } from "./giftcard/giftcard-purchase-validation-response";
-export { UsersGiftcardBalance } from "./giftcard/users-giftcard-balance";
-export { UsersGiftcardBalanceTransaction } from "./giftcard/users-giftcard-balance-transaction";
+export { InitiateGiftcardPurchase } from './giftcard/initiate-giftcard-purchase';
+export { Giftcard } from './giftcard/giftcard';
+export { GiftcardTransaction } from './giftcard/giftcard-transaction';
+export { GiftcardPurchaseValidationResponse } from './giftcard/giftcard-purchase-validation-response';
+export { UsersGiftcardBalance } from './giftcard/users-giftcard-balance';
+export { UsersGiftcardBalanceTransaction } from './giftcard/users-giftcard-balance-transaction';
 
 // Company Meals
-export { MealsCompany, MealsCompaniesResponse, MealsContext, CreateMealsQuoteRequest, MealsQuote } from "./meals/meals-models";
+export { MealsCompany, MealsCompaniesResponse, MealsContext, CreateMealsQuoteRequest, MealsQuote } from './meals/meals-models';
+
+// Kassa (POS) — catalogue
+export { Allergen, AllergenUpsertModel } from './kassa/allergen';
+export { CashPoint, CashPointUpsertModel } from './kassa/cash-point';
+export { GoodsGroup, GoodsGroupUpsertModel } from './kassa/goods-group';
+export { OpenPricePreset, OpenPricePresetUpsertModel } from './kassa/open-price-preset';
+
+// Kassa (POS) — operators & cash drawer
+export { OperatorUpsertModel, SetOperatorPinRequest, OperatorModel, OperatorLoginRequest, OperatorSessionModel } from './kassa/operator-models';
+export { BeginDayRequest, CashDrawerTransactionRequest, EndDayRequest, EodSummaryModel, CashDrawerTransaction, CashDrawerSession } from './kassa/cash-drawer-models';
+
+// Kassa (POS) — sale / card / settlement / receipt
+export { CashSaleRequest, CardInitiateRequest, CardReconcileRequest, CardReconcileResult, CardCaptureRequest, CardVoidRequest, CardRefundRequest, CardTimeoutRequest, CardInitiateResult, CashRefundRequest } from './kassa/card-payment-models';
+export { TerminalReconcileResult, TerminalCaptureResult, TerminalVoidResult, TerminalRefundResult, TerminalProviderResult, TerminalInitiateResult } from './kassa/terminal-payment-models';
+export { SettlementOpenRequest, SettlementAllocationRequest, SettlementActionRequest, SettlementAllocationResult, SettlementModel, SettlementAllocationModel } from './kassa/settlement-models';
+export { CopyReceiptRequest, ProvisionalReceiptRequest, TrainingReceiptRequest, ReceiptSmsRequest, ReceiptSmsResult, SendReceiptRequest, SendReceiptResult } from './kassa/receipt-request-models';
+export { PosReceiptModel, PosReceiptLineModel, PosReceiptTaxLineModel, PosReceiptPaymentLineModel } from './kassa/pos-receipt-models';
+export { UnreferencedReturnLineModel, UnreferencedCashReturnRequest, UnreferencedCardReturnRequest } from './kassa/unreferenced-return-models';
+
+// Kassa (POS) — open check / board
+export { OpenCheckRequest, AddCheckLineRequest, FireCourseRequest, MoveCheckRequest, MergeCheckRequest, SetCouvertsRequest, SetDeliveryTypeRequest, ResumeCheckRequest, CheckModel, CheckLineModel, CheckLineOptionModel, FireCourseResult } from './kassa/open-check-models';
+export { ApplyLineDiscountRequest, ApplyOrderDiscountRequest, VoidCheckRequest } from './kassa/pos-discount-models';
+export { CheckSplitRequest, CheckSplitPartRequest, CheckSplitModel, CheckSplitPartModel, CheckSplitTaxModel } from './kassa/check-split-models';
+export { BoardStatusModel, BoardTableModel, BoardReservationModel, BoardOpenCheckModel, BoardLineStatusModel } from './kassa/board-status-models';
+export { KitchenBoardModel, KitchenTicketModel, KitchenTicketLineModel, KitchenTicketLineOptionModel, KitchenBumpRequest } from './kassa/kitchen-board-models';
+
+// Kassa (POS) — journal / reports / SAF-T
+export { JournalLine, JournalTaxLine, JournalPaymentLine, JournalEntry, JournalEntryPageModel, JournalSignatureRecord } from './kassa/journal-models';
+export { JournalVerificationIssue, JournalVerificationResult } from './kassa/journal-verification-models';
+export { PaymentMeansTotal, GoodsGroupTotal, VatRateTotal, OperatorTotal, XReportModel, ZReportModel, ZReportPageModel } from './kassa/report-models';
+export { SaftEmailExportModel, SaftEmailExportResult } from './kassa/saft-export-models';
+
+// Floor plan / reservations
+export { FloorPlanModel, FloorPlanZoneModel, TableModel, TableDeleteResult } from './floorplan/floor-plan-models';
+export { ReservationModel, ReservationTableRefModel, AdminReservationModel, ConsumerReservationRequestModel, ReservationConfirmationModel, ReservationPublicModel, ReservationAvailabilityModel, ReservationAvailabilityDayModel, ReservationSuggestionRequestModel, ReservationSuggestionModel } from './floorplan/reservation-models';
+export { ReservationSettingsModel, ReservationDateOverrideModel, ReservationDayHoursModel } from './floorplan/reservation-settings-models';
+
+// Dintero terminal (PowerUser sandbox)
+export { DinteroTerminalInitiateModel, DinteroTerminalInitResponse, DinteroTerminalStatusResponse, DinteroTerminalRawResponse, DinteroTerminalTransactionResult, DinteroTerminalDiagnosticsResponse, DinteroTerminalRefundModel, DinteroTerminalOperationModel } from './dintero-terminal/dintero-terminal-models';

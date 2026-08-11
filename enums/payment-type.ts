@@ -20,5 +20,12 @@ export enum PaymentType {
   // travels with it (CartService.Complete's reservationToken). Never offer it from
   // GetPaymentMethods — the backend does not return it there; the only thing that may surface
   // it is an eligible Meals context (MealsService.GetContext).
-  CompanyAccount = "CompanyAccount"
+  CompanyAccount = "CompanyAccount",
+
+  // In-person tenders from the restaurant-modules line (POS/kassa).
+  Cash = "Cash",
+  DinteroTerminal = "DinteroTerminal",
+  Surfboard = "Surfboard",
+  SurfboardVipps = "SurfboardVipps",
+  SurfboardTerminal = "SurfboardTerminal"
 }

@@ -1,6 +1,6 @@
 import { defineStore } from "pinia";
 import { ICoreInitializer } from "../interfaces";
-import { ConfigService, BootstrapService, UserService, StoreService, FeedbackService, RewardService, GiftcardService, CartService, CategoryService, PersistenceService, PaymentService, DiscountService, OrderService, StripeService, VippsService, NotificationService, LogService, ProductService, DinteroService, PlaceService, MealsService } from "../services";
+import { ConfigService, BootstrapService, UserService, StoreService, FeedbackService, RewardService, GiftcardService, CartService, CategoryService, PersistenceService, PaymentService, DiscountService, OrderService, StripeService, VippsService, NotificationService, LogService, ProductService, DinteroService, PlaceService, MealsService, SurfboardService, TripletexService, AllergenService, CashPointService, GoodsGroupService, OpenPricePresetService, OperatorService, CashDrawerService, PosService, OpenCheckService, KitchenService, JournalService, ReportService, SaftService, TableService, ReservationService, DinteroTerminalService } from "../services";
 import { ref, computed } from "vue";
 
 export const useServices = defineStore("services", () => {
@@ -59,6 +59,23 @@ export const useServices = defineStore("services", () => {
   const dinteroService = () => new DinteroService(coreInitializer.value);
   const placeService = () => new PlaceService(coreInitializer.value);
   const mealsService = () => new MealsService(coreInitializer.value);
+  const surfboardService = () => new SurfboardService(coreInitializer.value);
+  const tripletexService = () => new TripletexService(coreInitializer.value);
+  const allergenService = () => new AllergenService(coreInitializer.value);
+  const cashPointService = () => new CashPointService(coreInitializer.value);
+  const goodsGroupService = () => new GoodsGroupService(coreInitializer.value);
+  const openPricePresetService = () => new OpenPricePresetService(coreInitializer.value);
+  const operatorService = () => new OperatorService(coreInitializer.value);
+  const cashDrawerService = () => new CashDrawerService(coreInitializer.value);
+  const posService = () => new PosService(coreInitializer.value);
+  const openCheckService = () => new OpenCheckService(coreInitializer.value);
+  const kitchenService = () => new KitchenService(coreInitializer.value);
+  const journalService = () => new JournalService(coreInitializer.value);
+  const reportService = () => new ReportService(coreInitializer.value);
+  const saftService = () => new SaftService(coreInitializer.value);
+  const tableService = () => new TableService(coreInitializer.value);
+  const reservationService = () => new ReservationService(coreInitializer.value);
+  const dinteroTerminalService = () => new DinteroTerminalService(coreInitializer.value);
 
   return {
     persistenceService,
@@ -86,5 +103,22 @@ export const useServices = defineStore("services", () => {
     dinteroService,
     placeService,
     mealsService,
+    surfboardService,
+    tripletexService,
+    allergenService,
+    cashPointService,
+    goodsGroupService,
+    openPricePresetService,
+    operatorService,
+    cashDrawerService,
+    posService,
+    openCheckService,
+    kitchenService,
+    journalService,
+    reportService,
+    saftService,
+    tableService,
+    reservationService,
+    dinteroTerminalService,
   };
 });
