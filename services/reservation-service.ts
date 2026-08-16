@@ -12,6 +12,13 @@ import {
 } from "../models";
 
 export class ReservationService {
+  /**
+   * The cancellation capability must never become part of the request URL. URLs
+   * are retained by browser history, server/proxy logs, telemetry and referrers;
+   * this header is deliberately only attached to the two anonymous reservation
+   * capability calls below.
+   */
+  private static readonly CancelTokenHeader = "X-Reservation-Cancel-Token";
   private _requestService: RequestService;
 
   constructor(coreInitializer: ICoreInitializer) {
@@ -88,7 +95,7 @@ export class ReservationService {
   }
 
   public async GetByToken(token: string): Promise<ReservationPublicModel> {
-    const response = await this._requestService.GetRequest("/Reservation/by-token/" + token);
+    const response = await this._requestService.GetRequest("/Reservation/by-token", this.cancelTokenHeader(token));
     const parsed = this._requestService.TryParseResponse(response);
     if (parsed === undefined) {
       throw new Error("Failed to get reservation by token");
@@ -97,11 +104,15 @@ export class ReservationService {
   }
 
   public async Cancel(token: string): Promise<ReservationPublicModel> {
-    const response = await this._requestService.PostRequest("/Reservation/cancel/" + token);
+    const response = await this._requestService.PostRequest("/Reservation/cancel", undefined, this.cancelTokenHeader(token));
     const parsed = this._requestService.TryParseResponse(response);
     if (parsed === undefined) {
       throw new Error("Failed to cancel reservation");
     }
     return parsed;
+  }
+
+  private cancelTokenHeader(token: string): Record<string, string> {
+    return { [ReservationService.CancelTokenHeader]: token };
   }
 }
