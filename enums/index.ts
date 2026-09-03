@@ -22,6 +22,13 @@ export { DineHomeStatus } from './dinehome-status';
 export { KeyAccountManagerStatus } from './key-account-manager-status';
 export { OfferProposalStatus } from './offer-proposal-status';
 
+// Invoicing / accounting system
+export { AccountingSystem } from './accounting-system';
+export { InvoiceChannel } from './invoice-channel';
+export { InvoiceCustomerKind } from './invoice-customer-kind';
+export { InvoiceIssueStatus } from './invoice-issue-status';
+export { InvoiceSendMethod } from './invoice-send-method';
+
 // Kassa (POS) / fiscal
 export { PosReasonType } from './pos-reason-type';
 export { OrderLineItemStatus } from './order-line-item-status';

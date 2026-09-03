@@ -14,5 +14,7 @@ export enum PaymentType {
   DinteroTerminal = "DinteroTerminal",
   Surfboard = "Surfboard",
   SurfboardVipps = "SurfboardVipps",
-  SurfboardTerminal = "SurfboardTerminal"
+  SurfboardTerminal = "SurfboardTerminal",
+  // Invoiced through the store's own accounting system: a credit sale, not a cash sale.
+  Invoice = "Invoice"
 }

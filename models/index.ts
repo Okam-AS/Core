@@ -177,6 +177,11 @@ export { GiftcardPurchaseValidationResponse } from './giftcard/giftcard-purchase
 export { UsersGiftcardBalance } from './giftcard/users-giftcard-balance';
 export { UsersGiftcardBalanceTransaction } from './giftcard/users-giftcard-balance-transaction';
 
+// Invoicing / accounting system
+export { StoreAccountingSettings, UpdateStoreAccountingSettingsModel, EffectiveAccountingSettings } from './invoice/store-accounting-settings';
+export { InvoiceCustomer, UpsertInvoiceCustomerModel, InvoiceCustomerLookup } from './invoice/invoice-customer';
+export { AdminKraviaCompany, AdminKraviaCompanyHistory, AdminKraviaInvoiceLineRequest, AdminKraviaInvoiceRequest, AdminKraviaInvoiceResult } from './invoice/admin-kravia-invoice-models';
+
 // Kassa (POS) — catalogue
 export { Allergen, AllergenUpsertModel } from './kassa/allergen';
 export { CashPoint, CashPointUpsertModel } from './kassa/cash-point';
