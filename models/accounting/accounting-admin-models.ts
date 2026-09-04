@@ -70,11 +70,8 @@ export class AccountingOnboardingTask {
 
 // One row of a store's posting history.
 export class AccountingPostingLogModel {
-  // NOT SENT BY THE BACKEND YET. AccountingPostingLogModel carries no key, yet the retry endpoint is
-  // addressed by AccountingPostingLogId — so a client cannot retry a row it was shown, only an id it
-  // was told out of band. Typed as optional so the row-level retry lights up the day the projection
-  // includes it.
-  accountingPostingLogId?: number;
+  // The row's own key. The retry endpoint is addressed by it, so a shown row is a retryable row.
+  accountingPostingLogId: number;
   provider: AccountingSystem;
   kind: AccountingPostingKind;
   businessDate: string;
@@ -103,11 +100,10 @@ export class AccountingConnectionStatus {
   createdAccounts: string[];
   manualTasks: AccountingOnboardingTask[];
   recentPostings: AccountingPostingLogModel[];
-  // NOT SENT BY THE BACKEND YET. No accounting-admin endpoint returns AccountingCapabilities as of
-  // the AccountingProviderSeam release, so a capability-driven client has to fall back to a local
-  // table keyed by system until one does. Typed here so the fallback disappears the day the status
-  // response carries it.
-  capabilities?: AccountingCapabilities;
+  // What the answering provider can and cannot do. Carried on the status so a client is driven by
+  // capabilities it was TOLD; a local table keyed by system is a second source of truth that goes
+  // stale the first time a provider gains or loses an ability.
+  capabilities: AccountingCapabilities;
 }
 
 // A store's posting history summed, in provider-neutral terms.
@@ -115,6 +111,10 @@ export class AccountingReconciliation {
   storeId: number;
   // Null when the figures span every system the store has ever posted through.
   system: AccountingSystem | null;
+  // The inclusive business-date range the figures were summed over, echoed back; null when
+  // unbounded. The totals are of the filtered range, not of the whole history.
+  from: string | null;
+  to: string | null;
   onlineGrossOre: number;
   posGrossOre: number;
   paidOutGrossOre: number;

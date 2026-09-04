@@ -184,7 +184,8 @@ export { AdminKraviaCompany, AdminKraviaCompanyHistory, AdminKraviaInvoiceLineRe
 
 // Provider-neutral accounting administration (/accounting-admin)
 export { AccountingCapabilities, AccountRoleRequirement, AccountingOnboardingTask, AccountingPostingLogModel, AccountingConnectionStatus, AccountingReconciliation, SaveAccountRoleModel, RerunPayoutModel, AccountingPostingResult } from './accounting/accounting-admin-models';
-export { FikenConnectStart, FikenCompany, FikenSelectCompanyModel } from './accounting/fiken-connect-models';
+export { FikenConnectStart, FikenCompany, FikenSelectCompanyModel, FikenBankAccount, FikenBankAccountModel } from './accounting/fiken-connect-models';
+export type { FikenConnectResult } from './accounting/fiken-connect-models';
 
 // Kassa (POS) — catalogue
 export { Allergen, AllergenUpsertModel } from './kassa/allergen';
