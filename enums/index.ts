@@ -24,6 +24,11 @@ export { OfferProposalStatus } from './offer-proposal-status';
 
 // Invoicing / accounting system
 export { AccountingSystem } from './accounting-system';
+export { AccountRole } from './account-role';
+export { AccountingPostingKind } from './accounting-posting-kind';
+export { AccountingPostingStatus } from './accounting-posting-status';
+export { CompanyForm } from './company-form';
+export { VatCategory } from './vat-category';
 export { InvoiceChannel } from './invoice-channel';
 export { InvoiceCustomerKind } from './invoice-customer-kind';
 export { InvoiceIssueStatus } from './invoice-issue-status';

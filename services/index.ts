@@ -42,6 +42,8 @@ export { EmailCampaignService } from './email-campaign-service'
 export { KraviaInvoiceService } from './kravia-invoice-service'
 export { StoreAccountingSettingsService } from './store-accounting-settings-service'
 export { InvoiceCustomerService } from './invoice-customer-service'
+export { AccountingAdminService } from './accounting-admin-service'
+export { FikenConnectService } from './fiken-connect-service'
 
 // Kassa (POS) / floor plan
 export { AllergenService } from './allergen-service'

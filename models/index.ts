@@ -182,6 +182,10 @@ export { StoreAccountingSettings, UpdateStoreAccountingSettingsModel, EffectiveA
 export { InvoiceCustomer, UpsertInvoiceCustomerModel, InvoiceCustomerLookup } from './invoice/invoice-customer';
 export { AdminKraviaCompany, AdminKraviaCompanyHistory, AdminKraviaInvoiceLineRequest, AdminKraviaInvoiceRequest, AdminKraviaInvoiceResult } from './invoice/admin-kravia-invoice-models';
 
+// Provider-neutral accounting administration (/accounting-admin)
+export { AccountingCapabilities, AccountRoleRequirement, AccountingOnboardingTask, AccountingPostingLogModel, AccountingConnectionStatus, AccountingReconciliation, SaveAccountRoleModel, RerunPayoutModel, AccountingPostingResult } from './accounting/accounting-admin-models';
+export { FikenConnectStart, FikenCompany, FikenSelectCompanyModel } from './accounting/fiken-connect-models';
+
 // Kassa (POS) — catalogue
 export { Allergen, AllergenUpsertModel } from './kassa/allergen';
 export { CashPoint, CashPointUpsertModel } from './kassa/cash-point';
