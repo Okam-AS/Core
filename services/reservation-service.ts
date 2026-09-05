@@ -87,8 +87,12 @@ export class ReservationService {
     return parsed;
   }
 
+  // The cancellation token is a capability: it must travel in the header and never in the
+  // path or query. The SMS link keeps it in a URL fragment, which browsers never send to the
+  // server; a URL form would leak it into access logs, analytics and Referer headers. The
+  // backend rejects the request outright when a `token` query parameter is present.
   public async GetByToken(token: string): Promise<ReservationPublicModel> {
-    const response = await this._requestService.GetRequest("/Reservation/by-token/" + token);
+    const response = await this._requestService.GetRequest("/Reservation/by-token", this.CancelTokenHeader(token));
     const parsed = this._requestService.TryParseResponse(response);
     if (parsed === undefined) {
       throw new Error("Failed to get reservation by token");
@@ -97,11 +101,15 @@ export class ReservationService {
   }
 
   public async Cancel(token: string): Promise<ReservationPublicModel> {
-    const response = await this._requestService.PostRequest("/Reservation/cancel/" + token);
+    const response = await this._requestService.PostRequest("/Reservation/cancel", undefined, this.CancelTokenHeader(token));
     const parsed = this._requestService.TryParseResponse(response);
     if (parsed === undefined) {
       throw new Error("Failed to cancel reservation");
     }
     return parsed;
+  }
+
+  private CancelTokenHeader(token: string): Record<string, string> {
+    return { "X-Reservation-Cancel-Token": token };
   }
 }
