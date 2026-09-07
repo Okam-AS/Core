@@ -71,7 +71,7 @@ export const useCart = defineStore("cart", () => {
     return !!selectedOption;
   });
 
-  const disabledProperties = ["storeId", "items", "homeDeliveryMethod", "calculations"];
+  const disabledProperties = ["storeId", "revision", "items", "homeDeliveryMethod", "calculations"];
   const availableProperties = Object.keys(new Cart()).filter((x) => !disabledProperties.includes(x));
   const setCartRootProperties = (payload: Partial<Cart>) => {
     const currentCart = getCurrentCart();
@@ -174,12 +174,24 @@ export const useCart = defineStore("cart", () => {
           }
           const latestCart = cartsRef.value.find((cart) => cart.storeId === storeId);
           // An older response must not replace edits made while it was in flight.
-          if (JSON.stringify(latestCart) !== snapshot) continue;
+          if (JSON.stringify(latestCart) !== snapshot) {
+            // PUT accepted this revision. Carry only its replacement precondition into queued edits.
+            if (backendCart.revision != null) {
+              if (!latestCart || latestCart.revision !== cartToSync.revision) {
+                throw new Error("Cart revision changed during synchronization");
+              }
+              latestCart.revision = backendCart.revision;
+            }
+            continue;
+          }
           setCart(backendCart);
           delete failedSyncUsers.value[storeId];
           return;
         }
       } catch (error) {
+        const queuedTimer = syncTimers.get(storeId);
+        if (queuedTimer !== undefined) clearTimeout(queuedTimer);
+        syncTimers.delete(storeId);
         if (userId && _user.user?.id === userId) failedSyncUsers.value[storeId] = userId;
         throw error;
       } finally {

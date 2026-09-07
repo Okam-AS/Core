@@ -15,7 +15,7 @@ const pinia = dependencies('pinia');
 const clone = value => JSON.parse(JSON.stringify(value));
 const tick = async () => { for (let i = 0; i < 12; i++) await Promise.resolve(); };
 
-function fixture({ loggedIn = true, savedCarts = [] } = {}) {
+function fixture({ loggedIn = true, savedCarts = [], serverRevision } = {}) {
   const timers = new Map();
   let timerId = 0;
   const setTimeout = fn => { timers.set(++timerId, fn); return timerId; };
@@ -41,7 +41,7 @@ function fixture({ loggedIn = true, savedCarts = [] } = {}) {
     const source = readFileSync(filename, 'utf8');
     const { outputText, diagnostics } = ts.transpileModule(source, {
       fileName: filename, reportDiagnostics: true,
-      compilerOptions: { target: ts.ScriptTarget.ES2020, module: ts.ModuleKind.CommonJS },
+      compilerOptions: { target: ts.ScriptTarget.ES2020, module: ts.ModuleKind.CommonJS, useDefineForClassFields: true },
     });
     assert.equal(diagnostics.filter(d => d.category === ts.DiagnosticCategory.Error).length, 0);
     const module = { exports: {} };
@@ -71,7 +71,12 @@ function fixture({ loggedIn = true, savedCarts = [] } = {}) {
   function addLine() { cart.getCurrentCart().items.push(line()); }
   function respond(index, transform = value => value) {
     const request = requests[index];
+    if (serverRevision !== undefined && request.payload.revision != null && request.payload.revision !== serverRevision) {
+      request.reject(new Error('412 cart precondition failed'));
+      return;
+    }
     const response = clone(request.payload);
+    if (serverRevision !== undefined) response.revision = ++serverRevision;
     // Synthetic server owns totals; deliberately no client calculation implementation here.
     response.calculations = { finalAmount: response.items.reduce((sum, item) => sum + 18900 * item.quantity, 0) };
     request.resolve(transform(response));
@@ -79,7 +84,7 @@ function fixture({ loggedIn = true, savedCarts = [] } = {}) {
   async function fireTimers() {
     const queued = [...timers.values()]; timers.clear(); queued.forEach(fn => fn()); await tick();
   }
-  return { cart, store, user, requests, timers, line, addLine, respond, fireTimers, service };
+  return { cart, store, user, requests, timers, line, addLine, respond, fireTimers, service, externalWrite: () => { serverRevision++; } };
 }
 
 test('product save cannot report success/navigation before the server confirms the item', async () => {
@@ -247,4 +252,60 @@ test('removing a line while a request is pending drains an empty cart and keeps 
   assert.deepEqual(f.requests.map(r => r.payload.items.length), [1, 0]);
   f.respond(1); await sync; assert.equal(f.cart.getCurrentCart().calculations.finalAmount, 0);
   await f.fireTimers(); assert.equal(f.requests.length, 2);
+});
+
+test('queued edits use only the successful server revision while keeping newer quantity and notes', async () => {
+  const f = fixture({ serverRevision: 7 }); f.addLine(); f.cart.getCurrentCart().revision = 7;
+  const result = f.cart.syncWithDb().then(() => ({ ok: true }), error => ({ error })); await tick();
+  f.cart.cartLineItemAddQuantity('line-1', 1); f.cart.getCurrentCart().items[0].notes = 'new local note';
+  f.respond(0); await tick();
+  assert.deepEqual(f.requests.map(r => r.payload.revision), [7, 8]);
+  assert.deepEqual(f.requests.map(r => r.payload.items[0].quantity), [1, 2]);
+  assert.equal(f.requests[1].payload.items[0].notes, 'new local note');
+  assert.equal(f.requests[1].payload.calculations.finalAmount, undefined, 'old response totals are not copied over local state');
+  f.respond(1); assert.equal((await result).ok, true);
+  assert.equal(f.cart.getCurrentCart().revision, 9); assert.equal(f.cart.getCurrentCart().calculations.finalAmount, 37800);
+});
+
+test('first legacy-shaped request adopts the returned revision before its queued write', async () => {
+  const f = fixture({ serverRevision: 0 }); f.addLine();
+  const result = f.cart.syncWithDb(); await tick(); f.cart.removeLineItem('line-1'); f.respond(0); await tick();
+  assert.deepEqual(f.requests.map(r => r.payload.revision), [undefined, 1]);
+  f.respond(1); await result; assert.equal(f.cart.getCurrentCart().revision, 2); assert.deepEqual(f.cart.getCurrentCart().items, []);
+});
+
+test('a real 412 conflict rejects, preserves edits and token, and never retries automatically', async () => {
+  const f = fixture({ serverRevision: 7 }); f.addLine(); f.cart.getCurrentCart().revision = 7;
+  const result = assert.rejects(f.cart.syncWithDb(), /412/); await tick();
+  f.cart.cartLineItemAddQuantity('line-1', 1); f.externalWrite(); f.respond(0); await result;
+  assert.equal(f.cart.syncError, true); assert.equal(f.cart.getCurrentCart().revision, 7);
+  assert.equal(f.cart.getCurrentCart().items[0].quantity, 2);
+  await f.fireTimers(); assert.equal(f.requests.length, 1);
+});
+
+test('an external update between accepted queued writes remains a visible 412', async () => {
+  const f = fixture({ serverRevision: 7 }); f.addLine(); f.cart.getCurrentCart().revision = 7;
+  const result = assert.rejects(f.cart.syncWithDb(), /412/); await tick();
+  f.cart.cartLineItemAddQuantity('line-1', 1); f.respond(0); await tick();
+  f.externalWrite(); f.respond(1); await result;
+  assert.equal(f.cart.getCurrentCart().revision, 8); assert.equal(f.cart.getCurrentCart().items[0].quantity, 2);
+  await f.fireTimers(); assert.equal(f.requests.length, 2); assert.equal(f.cart.syncError, true);
+});
+
+test('a separately changed revision is not replaced by an older successful acknowledgement', async () => {
+  const f = fixture({ serverRevision: 7 }); f.addLine(); f.cart.getCurrentCart().revision = 7;
+  const result = assert.rejects(f.cart.syncWithDb(), /revision changed/); await tick();
+  f.cart.getCurrentCart().revision = 9; f.cart.getCurrentCart().items[0].notes = 'newer state';
+  f.respond(0); await result;
+  assert.equal(f.cart.getCurrentCart().revision, 9); assert.equal(f.cart.getCurrentCart().items[0].notes, 'newer state');
+  await f.fireTimers(); assert.equal(f.requests.length, 1); assert.equal(f.cart.syncError, true);
+});
+
+test('root-property edits cannot change the server-owned revision even with enumerable class fields', async () => {
+  const f = fixture({ serverRevision: 7 }); f.addLine(); f.cart.getCurrentCart().revision = 7;
+  assert.ok(Object.keys(f.cart.getCurrentCart()).includes('revision'));
+  f.cart.setCartRootProperties({ revision: 100, comment: 'legitimate edit' }); await tick();
+  assert.equal(f.cart.getCurrentCart().revision, 7); assert.equal(f.requests[0].payload.revision, 7);
+  assert.equal(f.requests[0].payload.comment, 'legitimate edit'); f.respond(0); await tick();
+  assert.equal(f.cart.getCurrentCart().revision, 8);
 });

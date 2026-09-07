@@ -2,6 +2,7 @@ import { DeliveryType, PaymentType } from "../../enums";
 import { DeliveryMethod, CartLineItem, CartCalculation } from "../../models";
 export class Cart {
   id: string = "";
+  revision?: number | null;
   items: Array<CartLineItem> = [];
   storeId: number = 0;
 
