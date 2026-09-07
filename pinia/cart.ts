@@ -4,7 +4,6 @@ import { DeliveryType } from "../enums";
 import { useServices, useStore, useUser, useTranslation, useCheckout } from "./";
 import { ref, computed, toRaw } from "vue";
 import { priceLabel } from "../helpers/tools";
-import { debounce } from "../helpers/ts-debounce";
 
 export const useCart = defineStore("cart", () => {
   const { cartService, persistenceService } = useServices();
@@ -84,7 +83,7 @@ export const useCart = defineStore("cart", () => {
       }
     });
 
-    syncWithDb();
+    if (_user.isLoggedIn()) void syncWithDb().catch(() => {});
   };
 
   const loadRecommendations = async (): Promise<Product[]> => {
@@ -132,53 +131,80 @@ export const useCart = defineStore("cart", () => {
       });
   };
 
-  let cartSyncVersion = 0;
-  let isCartSyncing = false;
-  let lastGoodCartState = null;
-  let pendingCartSync = false;
+  const failedSyncUsers = ref<Record<number, string>>({});
+  const syncError = computed(() => _user.isLoggedIn() && !!_user.user?.id &&
+    failedSyncUsers.value[_store.currentStore.id] === _user.user.id);
+  const pendingSyncs = new Map<number, Promise<void>>();
+  const syncTimers = new Map<number, ReturnType<typeof setTimeout>>();
 
-  const syncWithDb = async () => {
-    if (!_user.isLoggedIn()) return Promise.reject();
-    const currentCart = getCurrentCart();
-    if (!currentCart || !currentCart.storeId) return Promise.reject();
+  const syncStoreWithDb = (storeId: number): Promise<void> => {
+    const timer = syncTimers.get(storeId);
+    if (timer !== undefined) clearTimeout(timer);
+    syncTimers.delete(storeId);
 
-    if (isCartSyncing) {
-      pendingCartSync = true;
-      return Promise.resolve();
-    }
-    isCartSyncing = true;
-    const syncVersion = ++cartSyncVersion;
-    const cartToSync = JSON.parse(JSON.stringify(getCurrentCart()));
+    const pending = pendingSyncs.get(storeId);
+    if (pending) return pending;
 
-    // Save last good cart state for rollback
-    lastGoodCartState = JSON.parse(JSON.stringify(getCurrentCart()));
-
-    try {
-      // Set default delivery address
-      cartToSync.fullAddress = cartToSync.fullAddress || _user.user.fullAddress;
-      cartToSync.city = cartToSync.city || _user.user.city;
-      cartToSync.zipCode = cartToSync.zipCode || _user.user.zipCode;
-      cartToSync.deliveryInstructions = cartToSync.deliveryInstructions || _user.user.deliveryInstructions;
-      const backendCart = await cartService().Update(cartToSync);
-      if (syncVersion === cartSyncVersion) {
-        setCart(backendCart); // safe to update
-        lastGoodCartState = JSON.parse(JSON.stringify(backendCart));
+    const userId = _user.user?.id;
+    const requireSession = () => {
+      if (!_user.isLoggedIn() || !userId || _user.user?.id !== userId) {
+        throw new Error("Cart synchronization requires the same signed-in user");
       }
-    } catch (e) {
-      // Rollback to last good state
-      if (lastGoodCartState) {
-        setCart(lastGoodCartState);
+    };
+    // Start in a microtask so every caller joins the registered drain, including failures.
+    const drain = Promise.resolve().then(async () => {
+      try {
+        while (true) {
+          requireSession();
+          const queuedTimer = syncTimers.get(storeId);
+          if (queuedTimer !== undefined) clearTimeout(queuedTimer);
+          syncTimers.delete(storeId);
+          const currentCart = cartsRef.value.find((cart) => cart.storeId === storeId);
+          if (!storeId || !currentCart) throw new Error("No cart to synchronize");
+          const snapshot = JSON.stringify(currentCart);
+          const cartToSync = JSON.parse(snapshot);
+          cartToSync.fullAddress = cartToSync.fullAddress || _user.user.fullAddress;
+          cartToSync.city = cartToSync.city || _user.user.city;
+          cartToSync.zipCode = cartToSync.zipCode || _user.user.zipCode;
+          cartToSync.deliveryInstructions = cartToSync.deliveryInstructions || _user.user.deliveryInstructions;
+          const backendCart = await cartService().Update(cartToSync);
+          requireSession();
+          if (!backendCart || backendCart.storeId !== storeId || !Array.isArray(backendCart.items)) {
+            throw new Error("Unexpected cart synchronization response");
+          }
+          const latestCart = cartsRef.value.find((cart) => cart.storeId === storeId);
+          // An older response must not replace edits made while it was in flight.
+          if (JSON.stringify(latestCart) !== snapshot) continue;
+          setCart(backendCart);
+          delete failedSyncUsers.value[storeId];
+          return;
+        }
+      } catch (error) {
+        if (userId && _user.user?.id === userId) failedSyncUsers.value[storeId] = userId;
+        throw error;
+      } finally {
+        pendingSyncs.delete(storeId);
       }
-    } finally {
-      isCartSyncing = false;
-      if (pendingCartSync) {
-        pendingCartSync = false;
-        syncWithDb();
-      }
-    }
+    });
+    pendingSyncs.set(storeId, drain);
+    return drain;
   };
 
-  const syncWithDbDebounced = debounce(syncWithDb, 300);
+  const syncWithDb = (): Promise<void> => syncStoreWithDb(getCurrentCart().storeId);
+
+  const syncWithDbDebounced = () => {
+    if (!_user.isLoggedIn()) return;
+    const storeId = getCurrentCart().storeId;
+    const userId = _user.user?.id;
+    const timer = syncTimers.get(storeId);
+    if (timer !== undefined) clearTimeout(timer);
+    syncTimers.set(storeId, setTimeout(() => {
+      syncTimers.delete(storeId);
+      if (!_user.isLoggedIn() || _user.user?.id !== userId) return;
+      // Background edits stay local on failure; an explicit save/checkout retries and reports it.
+      void syncStoreWithDb(storeId).catch(() => {});
+    }, 300));
+  };
 
   const loadCartFromServer = async (storeId?: number) => {
     if (!_user.isLoggedIn()) return Promise.reject();
@@ -230,12 +256,12 @@ export const useCart = defineStore("cart", () => {
       currentCart.items.unshift(toRaw(unsavedLineItem.value));
     }
 
-    syncWithDbDebounced();
+    if (_user.isLoggedIn()) await syncStoreWithDb(currentCart.storeId);
     return true;
   };
 
   const setCart = (cart: Cart) => {
-    const cartIndex = cartsRef.value.findIndex((c) => c.storeId === _store.currentStore.id);
+    const cartIndex = cartsRef.value.findIndex((c) => c.storeId === cart.storeId);
     if (cartIndex >= 0) {
       cartsRef.value[cartIndex] = cart;
     }
@@ -401,6 +427,7 @@ export const useCart = defineStore("cart", () => {
     isHomeDelivery,
     deliveryAddressInCartIsValid,
     syncWithDb,
+    syncError,
     loadCartFromServer,
     getCurrentCart,
     getQuanityOfProductInCart,
