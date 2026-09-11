@@ -13,8 +13,6 @@ export const useStore = defineStore("store", () => {
   const _cart = useCart();
   const stores = ref([] as Store[]);
   const isLoading = ref(false);
-  const isLoadingDeliveryAvailability = ref(false);
-  const deliveryAvailability = ref<{ canDeliver: boolean; price: { amount: number; currency: string }; error: string } | null>(null);
 
   const store = ref(persistenceService.load<Store>("store") || ({} as Store));
   persistenceService.watchAndStore(store, "store");
@@ -104,30 +102,61 @@ export const useStore = defineStore("store", () => {
     return result;
   });
 
-  const checkDeliveryAvailability = async (address) => {
-    // Use provided address or fall back to user's address
-    const addressToCheck = address || {
-      fullAddress: _user.user?.fullAddress,
-      zipCode: _user.user?.zipCode,
-      city: _user.user?.city,
+  type DeliveryAvailability = { canDeliver: boolean; price: { amount: number; currency: string }; error: string };
+  type DeliveryAddress = { fullAddress?: string; zipCode?: string; city?: string };
+  const availabilityResult = ref<{ key: string; value: DeliveryAvailability | null } | null>(null);
+  const pendingAvailabilityKey = ref<string | null>(null);
+  let availabilityRequest = 0;
+
+  // Only untouched cart fields inherit the profile, so an explicit clear never falls back to an old address.
+  const cartDeliveryAddress = (): DeliveryAddress => {
+    const cart = _cart.getCurrentCart();
+    return {
+      fullAddress: cart?.fullAddress ?? _user.user?.fullAddress,
+      zipCode: cart?.zipCode ?? _user.user?.zipCode,
+      city: cart?.city ?? _user.user?.city,
     };
+  };
+
+  const availabilityKey = (storeId: number, address: DeliveryAddress) => JSON.stringify([storeId, address.fullAddress, address.zipCode, address.city]);
+
+  // A result only describes the store, delivery type and address it was requested for; any change hides it.
+  const currentAvailabilityKey = () => {
+    if (!store.value?.id || _cart.getCurrentCart()?.deliveryType !== DeliveryType.WoltDelivery) return null;
+    const address = cartDeliveryAddress();
+    return address.fullAddress ? availabilityKey(store.value.id, address) : null;
+  };
+
+  const deliveryAvailability = computed(() => {
+    const result = availabilityResult.value;
+    return result && result.key === currentAvailabilityKey() ? result.value : null;
+  });
+
+  const isLoadingDeliveryAvailability = computed(() => pendingAvailabilityKey.value !== null && pendingAvailabilityKey.value === currentAvailabilityKey());
+
+  const checkDeliveryAvailability = async (address?: DeliveryAddress) => {
+    const addressToCheck = address || cartDeliveryAddress();
+    // Every call supersedes earlier in-flight requests so a slow old address cannot land after a new one.
+    const request = ++availabilityRequest;
+    pendingAvailabilityKey.value = null;
 
     if (!store.value?.id || !addressToCheck.fullAddress || _cart.getCurrentCart()?.deliveryType !== DeliveryType.WoltDelivery) {
-      deliveryAvailability.value = null;
+      availabilityResult.value = null;
       return;
     }
 
-    isLoadingDeliveryAvailability.value = true;
+    const key = availabilityKey(store.value.id, addressToCheck);
+    pendingAvailabilityKey.value = key;
     return storeService()
       .CheckDeliveryAvailability(store.value.id, addressToCheck.fullAddress, addressToCheck.zipCode, addressToCheck.city)
       .then((result) => {
-        deliveryAvailability.value = result;
+        if (request === availabilityRequest) availabilityResult.value = { key, value: result };
       })
-      .catch((e) => {
-        deliveryAvailability.value = null;
+      .catch(() => {
+        if (request === availabilityRequest) availabilityResult.value = { key, value: null };
       })
       .finally(() => {
-        isLoadingDeliveryAvailability.value = false;
+        if (request === availabilityRequest) pendingAvailabilityKey.value = null;
       });
   };
 
