@@ -48,8 +48,10 @@ export class UserService {
 
   public async UpdateAddress(fullAddress: string, zipCode: string, city: string, deliveryInstructions?: string): Promise<boolean> {
     if (!this._bearerToken) return false;
-    await this._requestService.PostRequest("/user/address", { fullAddress, zipCode, city, deliveryInstructions });
-    return true;
+    const response = await this._requestService.PostRequest("/user/address", { fullAddress, zipCode, city, deliveryInstructions });
+    // PostRequest also resolves HTTP/network failures; only the endpoint's true
+    // response confirms that the address was saved.
+    return this._requestService.TryParseResponse(response) === true;
   }
 
   public async UpdateName(firstName: string, lastName: string): Promise<boolean> {

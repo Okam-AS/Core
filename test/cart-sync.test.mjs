@@ -104,6 +104,46 @@ test('persisted local cart recovery explicitly awaits server totals', async () =
   assert.equal(f.cart.getCurrentCart().calculations.finalAmount, 18900);
 });
 
+test('untouched delivery fields inherit profile defaults for both missing and null values', async () => {
+  for (const initial of [undefined, null]) {
+    const f = fixture(); f.addLine();
+    f.user.user.deliveryInstructions = 'Use the side entrance';
+    const fields = ['fullAddress', 'city', 'zipCode', 'deliveryInstructions'];
+    for (const field of fields) f.cart.getCurrentCart()[field] = initial;
+    const sync = f.cart.syncWithDb(); await tick();
+    for (const field of fields) assert.equal(f.requests[0].payload[field], f.user.user[field]);
+    f.respond(0); await sync;
+    for (const field of fields) assert.equal(f.cart.getCurrentCart()[field], f.user.user[field]);
+  }
+});
+
+test('clearing delivery details during synchronization survives the old response and profile defaults', async () => {
+  const f = fixture(); f.addLine();
+  f.user.user.deliveryInstructions = 'Old profile instruction';
+  const fields = ['fullAddress', 'city', 'zipCode', 'deliveryInstructions'];
+  const first = f.cart.syncWithDb(); await tick();
+  f.cart.setCartRootProperties(Object.fromEntries(fields.map(field => [field, ''])));
+  const latest = f.cart.syncWithDb();
+  f.respond(0); await tick();
+  assert.equal(f.requests.length, 2);
+  for (const field of fields) {
+    assert.equal(f.cart.getCurrentCart()[field], '');
+    assert.equal(f.requests[1].payload[field], '');
+  }
+  f.respond(1); await Promise.all([first, latest]);
+  for (const field of fields) assert.equal(f.cart.getCurrentCart()[field], '');
+});
+
+test('whitespace delivery instructions stay empty for validation after synchronization', async () => {
+  const f = fixture(); f.addLine();
+  f.user.user.deliveryInstructions = 'Old profile instruction';
+  f.cart.setCartRootProperties({ deliveryInstructions: ' \t\n ' });
+  const sync = f.cart.syncWithDb(); await tick();
+  assert.equal(f.requests[0].payload.deliveryInstructions, ' \t\n ');
+  f.respond(0); await sync;
+  assert.equal(f.cart.getCurrentCart().deliveryInstructions.trim(), '');
+});
+
 test('503 rejects save, keeps local edits, and a retry confirms them', async () => {
   const f = fixture(); f.cart.unsavedLineItem = f.line();
   const failure = new Error('synthetic 503');

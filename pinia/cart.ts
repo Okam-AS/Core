@@ -163,10 +163,11 @@ export const useCart = defineStore("cart", () => {
           if (!storeId || !currentCart) throw new Error("No cart to synchronize");
           const snapshot = JSON.stringify(currentCart);
           const cartToSync = JSON.parse(snapshot);
-          cartToSync.fullAddress = cartToSync.fullAddress || _user.user.fullAddress;
-          cartToSync.city = cartToSync.city || _user.user.city;
-          cartToSync.zipCode = cartToSync.zipCode || _user.user.zipCode;
-          cartToSync.deliveryInstructions = cartToSync.deliveryInstructions || _user.user.deliveryInstructions;
+          // Only untouched fields inherit the profile. Explicit clears must survive a sync.
+          cartToSync.fullAddress = cartToSync.fullAddress ?? _user.user.fullAddress;
+          cartToSync.city = cartToSync.city ?? _user.user.city;
+          cartToSync.zipCode = cartToSync.zipCode ?? _user.user.zipCode;
+          cartToSync.deliveryInstructions = cartToSync.deliveryInstructions ?? _user.user.deliveryInstructions;
           const backendCart = await cartService().Update(cartToSync);
           requireSession();
           if (!backendCart || backendCart.storeId !== storeId || !Array.isArray(backendCart.items)) {
