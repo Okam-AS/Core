@@ -3,6 +3,7 @@ import {
   AccountingConnectionStatus,
   FikenBankAccount,
   FikenCompany,
+  FikenCompleteResult,
   FikenConnectStart,
   FikenSelectCompanyModel
 } from '../models';
@@ -26,13 +27,21 @@ export class FikenConnectService {
   //
   // `returnUrl` is where the merchant should end up afterwards. The backend keeps it but does NOT
   // redirect to it verbatim — a target that arrived on a query string is an open redirect — so the
-  // browser comes back to the configured admin URL with ?storeId= and
-  // ?fiken=connected|choose-company|no-companies|denied|error.
+  // browser comes back to the configured admin URL with ?storeId= and ?fiken=authorized&state=&code=
+  // (then call Complete) or ?fiken=denied.
   public Start (storeId: number, returnUrl: string): Promise<FikenConnectStart> {
     return this.Send(
       this._requestService.GetRequest(
         '/fiken/connect/start?storeId=' + storeId + '&returnUrl=' + encodeURIComponent(returnUrl)),
       'Kunne ikke starte Fiken-tilkoblingen');
+  }
+
+  // The anonymous callback binds nothing: the signed-in admin of the store the flow was started for
+  // turns the consent into a connection here. Answers connected | choose-company | no-companies.
+  public Complete (state: string, code: string): Promise<FikenCompleteResult> {
+    return this.Send(
+      this._requestService.PostRequest('/fiken/connect/complete', { state, code }),
+      'Kunne ikke fullføre Fiken-tilkoblingen');
   }
 
   // The companies the consented account holds. Only the ones with a slug can be selected.

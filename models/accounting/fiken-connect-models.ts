@@ -11,10 +11,16 @@ export class FikenConnectStart {
   state: string;
 }
 
-// What the callback appends to the return URL, alongside ?storeId=. `choose-company` means the
-// consent succeeded but the account holds several companies and none could be picked for the
-// merchant; `no-companies` means none of them exposes a usable slug.
-export type FikenConnectResult = 'connected' | 'choose-company' | 'no-companies' | 'denied' | 'error';
+// What the callback appends to the return URL, alongside ?storeId=: `authorized` (with state and
+// code, to be completed) or `denied`. Completion answers one of the other three: `choose-company`
+// means the account holds several companies and none could be picked for the merchant;
+// `no-companies` means none of them exposes a usable slug.
+export type FikenConnectResult = 'authorized' | 'connected' | 'choose-company' | 'no-companies' | 'denied' | 'error';
+
+export class FikenCompleteResult {
+  storeId: number;
+  status: 'connected' | 'choose-company' | 'no-companies';
+}
 
 // One company on the connected Fiken account. Nothing can be posted until one is selected, because
 // the company slug is part of every Fiken write path.
